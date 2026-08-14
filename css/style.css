@@ -149,7 +149,7 @@ body {
 
 .toc {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(118px, 1fr));
   gap: 8px;
   margin: 12px 0 16px;
 }
@@ -243,16 +243,20 @@ figure {
 }
 
 .diagram {
-  width: 100%;
-  max-width: 100%;
-  height: auto;
-  padding: 8px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
   display: block;
+  width: auto;
+  height: auto;
+  max-width: 100%;
+  max-height: 200px;
+  margin: 0 auto;
+  padding: 6px;
+  background: linear-gradient(180deg, #f8fafc 0%, #eef6ff 100%);
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
   overflow: visible;
 }
+.diagram-lg { max-height: 230px; }
+.diagram-sm { max-height: 150px; }
 
 .caption {
   text-align: center;
@@ -534,6 +538,34 @@ ol.q li, ul.q li { margin: 3px 0; }
   margin: 8px 0 2px;
   font-size: 13px;
 }
+.gifted {
+  background: linear-gradient(90deg, #faf5ff, #fff);
+  border: 1px solid #ddd6fe;
+  border-left: 6px solid #6d28d9;
+  border-radius: 12px;
+  padding: 8px 12px;
+  margin: 10px 0 2px;
+}
+.gifted p, .gifted li { margin: 4px 0; }
+.tag-gifted { background: #6d28d9; }
+.drill-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+  align-items: start;
+}
+.drill-col {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 8px 10px;
+}
+.drill-col h3 {
+  margin: 0 0 6px;
+  font-size: 15px;
+  color: var(--green-800);
+}
+.drill-col p { margin: 0 0 8px; font-size: 13.5px; }
 
 .toast {
   position: fixed;
@@ -552,38 +584,76 @@ ol.q li, ul.q li { margin: 3px 0; }
   .section-cards { grid-template-columns: 1fr; }
 }
 @media (max-width: 800px) {
-  .split, .two-col { grid-template-columns: 1fr; }
-  .card, .hero { padding: 20px; }
+  .split, .two-col, .drill-grid { grid-template-columns: 1fr; }
+  .card, .hero { padding: 16px; }
   .toolbar { padding: 8px 10px; }
   .db-scale, .choice-grid, .exp-grid { grid-template-columns: 1fr; }
 }
 
 @media print {
   * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
-  body { background: #fff !important; line-height: 1.32; font-size: 10.5pt; }
+  html, body {
+    background: #fff !important;
+    height: auto !important;
+    overflow: visible !important;
+    margin: 0;
+    line-height: 1.25;
+    font-size: 10pt;
+  }
   .toolbar, .toc, .footer, .toast, .wave-deco, .section-nav, .no-print { display: none !important; }
-  .wrap { width: auto; margin: 0; }
+  .wrap { width: auto; max-width: none; margin: 0; padding: 0; }
   .hero {
     box-shadow: none;
     border-radius: 0;
-    padding: 8px 10px;
-    break-inside: avoid;
+    padding: 4px 8px;
+    margin: 0 0 6px;
+    overflow: visible;
+    break-inside: auto;
   }
-  .card, .ex-box, .extra, .tips, .wrong-note {
-    box-shadow: none;
-    break-inside: avoid;
+  .hero h1 { font-size: 15pt; margin: 2px 0; }
+  .hero p { font-size: 9pt; }
+  .card, .ex-box, .extra, .tips, .wrong-note, .gifted, .teacher, .drill-col, .drill-grid, .split, .two-col {
+    break-inside: auto !important;
+    page-break-inside: auto !important;
+    box-shadow: none !important;
     overflow: visible;
   }
-  .card { padding: 4px 0 6px; margin: 0 0 6px; border: none; }
+  .card {
+    padding: 2px 0 4px;
+    margin: 0 0 5px;
+    border: none;
+    border-radius: 0;
+    background: #fff;
+  }
+  .section-head { margin: 0 0 4px; }
+  .section-head, h2, h3.subh, .formula, table {
+    break-inside: avoid;
+    break-after: avoid;
+  }
+  svg.diagram,
   .diagram {
-    max-width: 100%;
-    height: auto;
-    overflow: visible;
-    break-inside: avoid;
-    page-break-inside: avoid;
+    display: block !important;
+    width: auto !important;
+    max-width: 100% !important;
+    height: 28mm !important;
+    max-height: 28mm !important;
+    margin: 1mm auto !important;
+    padding: 1mm !important;
+    break-inside: auto !important;
+    page-break-inside: auto !important;
   }
-  .split, .two-col { gap: 6px; }
+  .diagram-lg { height: 32mm !important; max-height: 32mm !important; }
+  .diagram-sm { height: 22mm !important; max-height: 22mm !important; }
+  .split, .two-col, .drill-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 4px;
+  }
+  .db-scale { grid-template-columns: repeat(5, 1fr) !important; }
   .blank { background: #fde68a; }
   .blank.revealed { background: #fde68a; }
-  @page { size: A4; margin: 10mm 12mm; }
+  p, li { orphans: 2; widows: 2; }
+  .overview { margin: 0 0 4px; padding: 4px 8px; }
+  figure { margin: 0; }
+  .flow, .flow-h { break-inside: auto; }
+  @page { size: A4; margin: 8mm 10mm; }
 }

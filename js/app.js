@@ -92,7 +92,7 @@
     const secId = document.body.dataset.section || "講義";
     document.title = withAnswers
       ? `國中理化_${secId}_含答案`
-      : `國中理化_${secId}_挖空講義`;
+      : `國中理化_${secId}_講義`;
     toast("請將印表機選成「另存為 PDF」或 Microsoft Print to PDF");
     setTimeout(() => {
       window.print();
@@ -100,6 +100,10 @@
       if (withAnswers && !wasOn) reveal(false);
     }, 350);
   }
+
+  $$("svg.diagram").forEach((svg) => {
+    svg.setAttribute("preserveAspectRatio", "xMidYMid meet");
+  });
 
   $$(".blank").forEach((el) => {
     el.title = "點一下顯示答案，再點一下可填寫";

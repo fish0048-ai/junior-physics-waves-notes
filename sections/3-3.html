@@ -14,9 +14,9 @@
 
   <div class="wrap workbook" id="top">
     <section class="hero">
-      <span class="kicker">國中八年級　理化講義　挖空練習版　｜　點空格可看該格答案</span>
+      <span class="kicker">國中八年級　理化講義</span>
       <h1>3-3　聲波的反射與超聲波</h1>
-      <p>重點探究＋附圖＋辨正思考＋牛刀小試＋計算演練</p>
+      <p>點空格可顯示該格答案　｜　可下載 PDF</p>
       <svg class="wave-deco" viewBox="0 0 280 90" aria-hidden="true">
         <path d="M0 50 Q 35 10 70 50 T 140 50 T 210 50 T 280 50" fill="none" stroke="#fff" stroke-width="8"/>
         <path d="M0 62 Q 35 30 70 62 T 140 62 T 210 62 T 280 62" fill="none" stroke="#fff" stroke-width="4"/>
@@ -28,6 +28,7 @@
       <a href="#p2"><small>重點 2</small>超聲波</a>
       <a href="#calc"><small>計算</small>回聲與聲納</a>
       <a href="#memo"><small>整理</small>考前速記</a>
+      <a href="#drill"><small>練習</small>基本＋進階</a>
     </nav>
 
     <div class="overview">
@@ -116,24 +117,31 @@
       <div class="two-col">
         <figure>
           <svg class="diagram" viewBox="0 0 320 150" aria-label="拋物面傳聲盤把聲波聚焦">
-            <path d="M40 20 Q 10 75 40 130" fill="none" stroke="#0f766e" stroke-width="8"/>
-            <path d="M280 20 Q 310 75 280 130" fill="none" stroke="#0f766e" stroke-width="8"/>
-            <circle cx="70" cy="75" r="8" fill="#fbbf24"/>
-            <circle cx="250" cy="75" r="8" fill="#fbbf24"/>
-            <path d="M48 75 Q 160 40 272 75" fill="none" stroke="#2563eb" stroke-width="2" stroke-dasharray="4 3"/>
-            <text x="160" y="20" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">拋物面傳聲盤</text>
-            <text x="70" y="145" text-anchor="middle" font-size="12">說話</text>
-            <text x="250" y="145" text-anchor="middle" font-size="12">聽見</text>
+            <rect width="320" height="150" rx="8" fill="#ecfeff"/>
+            <path d="M48 18 Q 8 75 48 132" fill="#99f6e4" stroke="#0f766e" stroke-width="5"/>
+            <path d="M272 18 Q 312 75 272 132" fill="#99f6e4" stroke="#0f766e" stroke-width="5"/>
+            <circle cx="78" cy="75" r="9" fill="#fbbf24" stroke="#b45309"/>
+            <circle cx="242" cy="75" r="9" fill="#fbbf24" stroke="#b45309"/>
+            <path d="M56 75 Q 160 36 264 75" fill="none" stroke="#2563eb" stroke-width="2.2"/>
+            <path d="M62 58 Q 160 28 258 58" fill="none" stroke="#60a5fa" stroke-width="1.4" opacity=".7"/>
+            <path d="M62 92 Q 160 122 258 92" fill="none" stroke="#60a5fa" stroke-width="1.4" opacity=".7"/>
+            <text x="160" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#1d4ed8">拋物面傳聲盤</text>
+            <text x="78" y="142" text-anchor="middle" font-size="12">說話</text>
+            <text x="242" y="142" text-anchor="middle" font-size="12">聽見</text>
           </svg>
           <p class="caption">彎曲面可把聲波聚焦</p>
         </figure>
         <figure>
           <svg class="diagram" viewBox="0 0 320 150" aria-label="傳聲筒與聽診器多次反射">
-            <path d="M30 70 h70 l50 -28 h90 v16 h-86 l-50 28 h-74 z" fill="#38bdf8" stroke="#0369a1" stroke-width="2"/>
-            <text x="135" y="128" text-anchor="middle" font-size="13" font-weight="700">傳聲筒：把聲波導向特定方向</text>
-            <path d="M250 40 v70" stroke="#78716c" stroke-width="10" stroke-linecap="round"/>
-            <path d="M246 42 q 20 18 4 36 q -18 16 4 32" fill="none" stroke="#ea580c" stroke-width="2"/>
-            <text x="268" y="78" font-size="11" fill="#c2410c">聽診器</text>
+            <rect width="320" height="150" rx="8" fill="#f8fafc"/>
+            <path d="M18 78 h62 l46 -22 h78 v18 h-74 l-46 22 h-66 z" fill="#38bdf8" stroke="#0369a1" stroke-width="2"/>
+            <circle cx="20" cy="87" r="8" fill="#fde68a" stroke="#a16207"/>
+            <text x="108" y="128" text-anchor="middle" font-size="12" font-weight="700">傳聲筒：導向特定方向</text>
+            <path d="M236 28 v86" stroke="#a8a29e" stroke-width="14" stroke-linecap="round"/>
+            <path d="M236 28 v86" stroke="#e7e5e4" stroke-width="8" stroke-linecap="round"/>
+            <path d="M232 36 q 22 20 4 40 q -20 18 4 36" fill="none" stroke="#ea580c" stroke-width="2.2"/>
+            <text x="258" y="78" font-size="12" fill="#c2410c" font-weight="700">聽診器</text>
+            <text x="258" y="96" font-size="11" fill="#78716c">管內多次反射</text>
           </svg>
           <p class="caption">傳聲筒導向；聽診器管內多次反射減少能量散失</p>
         </figure>
@@ -147,17 +155,19 @@
 
       <h3 class="subh">聲納</h3>
       <div class="split">
-        <svg class="diagram" viewBox="0 0 360 170" aria-label="船用聲納測水深">
-          <rect x="0" y="0" width="360" height="70" fill="#e0f2fe"/>
-          <rect x="0" y="70" width="360" height="100" fill="#bae6fd"/>
-          <rect x="0" y="150" width="360" height="20" fill="#92400e"/>
-          <path d="M70 58 h90 l18 12 h-126 z" fill="#1e3a8a"/>
-          <rect x="108" y="38" width="18" height="20" fill="#64748b"/>
-          <path d="M148 70 L180 148" stroke="#dc2626" stroke-width="2.5"/>
-          <path d="M180 148 L212 70" stroke="#2563eb" stroke-width="2.5"/>
-          <text x="158" y="108" font-size="12" fill="#b91c1c" font-weight="700">發射</text>
-          <text x="198" y="108" font-size="12" fill="#1d4ed8" font-weight="700">回聲</text>
-          <text x="180" y="22" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">聲納測水深、魚群、潛艇</text>
+        <svg class="diagram" viewBox="0 0 360 160" aria-label="船用聲納測水深">
+          <rect width="360" height="160" rx="8" fill="#e0f2fe"/>
+          <rect x="0" y="62" width="360" height="78" fill="#38bdf8" opacity=".55"/>
+          <rect x="0" y="140" width="360" height="20" fill="#92400e"/>
+          <path d="M70 62 h96 l20 14 H58 z" fill="#1e3a8a"/>
+          <rect x="112" y="40" width="16" height="22" fill="#64748b"/>
+          <polygon points="128,40 138,48 128,48" fill="#94a3b8"/>
+          <path d="M148 76 L188 138" stroke="#dc2626" stroke-width="2.4"/>
+          <path d="M188 138 L228 76" stroke="#1d4ed8" stroke-width="2.4" stroke-dasharray="5 3"/>
+          <circle cx="188" cy="138" r="4" fill="#fff"/>
+          <text x="154" y="108" font-size="11" fill="#b91c1c" font-weight="700">發射</text>
+          <text x="210" y="108" font-size="11" fill="#1d4ed8" font-weight="700">回聲</text>
+          <text x="180" y="18" text-anchor="middle" font-size="13" font-weight="700" fill="#1e3a8a">聲納測水深、魚群、潛艇</text>
         </svg>
         <div>
           <p>船艦利用聲波反射探測水深、魚群或潛艇。</p>
@@ -248,6 +258,14 @@
       <section class="teacher">
         <strong>老師說：</strong>超聲波仍是聲波。在同一介質中，超聲波與可聽聲的傳播速率
         <input class="blank" data-answer="相同" style="width:3.6em">。
+      </section>
+      <section class="gifted">
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 為什麼要除以 2？混響與指向性</div>
+        <ul class="q">
+          <li>聲納測的是<strong>來回</strong>時間，單程距離才是深度，所以公式一定是 h＝½vt。</li>
+          <li>時間差小於 0.1 秒時，人耳分不出回聲，原音與反射音疊在一起，聽起來像「比較響、比較空」的<strong>混響</strong>（浴室唱歌）。</li>
+          <li>超聲波頻率高、波長短，比較不容易繞射，所以<strong>指向性好</strong>，適合定位。蝙蝠就是發射超聲波，用回聲時間判斷距離。</li>
+        </ul>
       </section>
       <p>蝙蝠等動物利用超聲波回聲定位，用來飛行與獵食。</p>
 
@@ -347,13 +365,14 @@
       <div class="two-col">
         <div>
           <p><strong>範例 1</strong>　人在海拔 3500 m 的山頂，用聲納測山谷深度，回聲 3 秒後回來，聲速 340 m/s。谷底海拔多少公尺？</p>
-          <svg class="diagram" viewBox="0 0 280 120" aria-label="山頂到谷底來回測距">
-            <path d="M0 40 L80 18 L160 50 L280 28 L280 120 L0 120 Z" fill="#bbf7d0"/>
-            <path d="M80 18 L140 100 L200 40" fill="#86efac" stroke="#166534"/>
-            <circle cx="80" cy="14" r="6" fill="#fbbf24"/>
-            <path d="M80 18 L140 96" stroke="#dc2626" stroke-width="2"/>
-            <path d="M140 96 L80 18" stroke="#2563eb" stroke-width="2" stroke-dasharray="4 3"/>
-            <text x="150" y="18" font-size="12">海拔 3500 m</text>
+          <svg class="diagram diagram-sm" viewBox="0 0 280 120" aria-label="山頂到谷底來回測距">
+            <rect width="280" height="120" rx="8" fill="#ecfccb"/>
+            <path d="M0 46 L78 16 L150 52 L280 30 L280 120 L0 120 Z" fill="#86efac"/>
+            <path d="M78 16 L142 96 L206 42" fill="#4ade80" stroke="#166534"/>
+            <circle cx="78" cy="14" r="6" fill="#fbbf24" stroke="#b45309"/>
+            <path d="M78 18 L142 94" stroke="#dc2626" stroke-width="2.2"/>
+            <path d="M142 94 L78 18" stroke="#1d4ed8" stroke-width="2" stroke-dasharray="4 3"/>
+            <text x="156" y="18" font-size="12" font-weight="700">海拔 3500 m</text>
           </svg>
           <p>單程＝340×3÷2＝
             <input class="blank" data-answer="510" style="width:4em">
@@ -366,13 +385,16 @@
         </div>
         <div>
           <p><strong>類題 1</strong>　人站在兩平行牆之間。甲牆 680 m，乙牆 170 m，聲速 340 m/s。第 2、第 3 次回聲何時聽到？</p>
-          <svg class="diagram" viewBox="0 0 280 110" aria-label="兩平行牆之間的人">
-            <line x1="20" y1="10" x2="20" y2="100" stroke="#0f172a" stroke-width="6"/>
-            <line x1="260" y1="10" x2="260" y2="100" stroke="#0f172a" stroke-width="6"/>
-            <circle cx="80" cy="55" r="8" fill="#fbbf24"/>
-            <text x="40" y="24" font-size="12">乙 170 m</text>
-            <text x="150" y="24" font-size="12">甲 680 m</text>
-            <text x="20" y="108" font-size="11">乙牆</text>
+          <svg class="diagram diagram-sm" viewBox="0 0 280 110" aria-label="兩平行牆之間的人">
+            <rect width="280" height="110" rx="8" fill="#f8fafc"/>
+            <rect x="8" y="8" width="14" height="94" fill="#78716c"/>
+            <rect x="258" y="8" width="14" height="94" fill="#78716c"/>
+            <circle cx="86" cy="54" r="9" fill="#fbbf24" stroke="#b45309"/>
+            <line x1="22" y1="54" x2="77" y2="54" stroke="#2563eb" stroke-width="2"/>
+            <line x1="95" y1="54" x2="258" y2="54" stroke="#16a34a" stroke-width="2"/>
+            <text x="40" y="24" font-size="12" font-weight="700" fill="#1d4ed8">乙 170 m</text>
+            <text x="150" y="24" font-size="12" font-weight="700" fill="#166534">甲 680 m</text>
+            <text x="15" y="108" font-size="11">乙牆</text>
             <text x="248" y="108" font-size="11">甲牆</text>
           </svg>
           <p>乙牆第一次：2×170／340＝1 s；第二次：2 s；第三次：3 s。甲牆第一次：4 s。</p>
@@ -410,8 +432,59 @@
       </table>
     </article>
 
+    <article class="card" id="drill">
+      <div class="section-head">
+        <div class="badge">練</div>
+        <div>
+          <h2>綜合練習</h2>
+          <p>基本題 5 題　＋　進階題 5 題</p>
+        </div>
+      </div>
+      <div class="drill-grid">
+        <div class="drill-col">
+          <h3>基本題</h3>
+          <p>1. 回聲是聲波的
+            <input class="blank" data-answer="反射" style="width:3.6em">。
+          </p>
+          <p>2. 人耳分辨回聲，時間差須 ≧
+            <input class="blank" data-answer="0.1秒|0.1 秒|0.1" style="width:4em">。
+          </p>
+          <p>3. 聲速 340 m/s 時，能聽到回聲的最小距離約
+            <input class="blank" data-answer="17" style="width:3em">
+            m。
+          </p>
+          <p>4. 頻率高於 20000 Hz 稱為
+            <input class="blank" data-answer="超聲波|超音波" style="width:4.5em">。
+          </p>
+          <p>5. 聲納測距公式 h＝
+            <input class="blank" data-answer="1/2 vt|½vt|0.5vt|vt/2|1/2*vt|½×v×t|1/2×v×t" style="width:5.5em">。
+          </p>
+        </div>
+        <div class="drill-col">
+          <h3>進階題</h3>
+          <p>1. 海水聲速 1500 m/s，回聲 4 秒，海深＝
+            <input class="blank" data-answer="3000" style="width:4em">
+            m。
+          </p>
+          <p>2. 原音與回聲在同一介質中，波速、頻率、波長都相同，不同的是
+            <input class="blank" data-answer="振幅" style="width:3.6em">。
+          </p>
+          <p>3. 80000 Hz 屬於超聲波，正常人
+            <input class="blank" data-answer="聽不到" style="width:4.2em">。
+          </p>
+          <p>4. 同一介質中，超聲波與可聽聲的波速
+            <input class="blank" data-answer="相同" style="width:3.6em">。
+          </p>
+          <p>5. 傳聲盤遠距交談是利用聲波
+            <input class="blank" data-answer="反射|聚焦" style="width:3.6em">
+            ，不是超聲波的應用。
+          </p>
+        </div>
+      </div>
+    </article>
+
     <p class="footer">
-      本講義依國中八年級理化「3-3 聲波的反射與超聲波」重點改編為挖空練習版。<br>
+      本講義依國中八年級理化「3-3 聲波的反射與超聲波」重點改編。<br>
       原始碼：<a data-github target="_blank" rel="noopener">GitHub 專案</a>
       　｜　可下載 PDF，點綠色空格會顯示該格答案。
     </p>
