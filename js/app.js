@@ -29,20 +29,26 @@
     return alts.includes(val);
   }
 
+  function answerOf(el) {
+    return (el.dataset.answer || "").split("|")[0];
+  }
+
+  function revealOne(el, on) {
+    el.classList.remove("correct", "wrong");
+    if (on) {
+      if (!el.classList.contains("revealed")) el.dataset.user = el.value;
+      el.value = answerOf(el);
+      el.classList.add("revealed");
+      el.readOnly = true;
+    } else {
+      el.value = el.dataset.user || "";
+      el.classList.remove("revealed");
+      el.readOnly = false;
+    }
+  }
+
   function reveal(on) {
-    $$(".blank").forEach((el) => {
-      el.classList.remove("correct", "wrong");
-      if (on) {
-        el.dataset.user = el.value;
-        el.value = (el.dataset.answer || "").split("|")[0];
-        el.classList.add("revealed");
-        el.readOnly = true;
-      } else {
-        el.value = el.dataset.user || "";
-        el.classList.remove("revealed");
-        el.readOnly = false;
-      }
-    });
+    $$(".blank").forEach((el) => revealOne(el, on));
     $$("[data-reveal]").forEach((el) => {
       el.hidden = !on;
     });
@@ -57,6 +63,7 @@
     $$(".blank").forEach((el) => {
       total += 1;
       el.classList.remove("correct", "wrong", "revealed");
+      el.readOnly = false;
       if (isCorrect(el)) {
         el.classList.add("correct");
         ok += 1;
@@ -75,15 +82,43 @@
     clearTimeout(toast._id);
     toast._id = setTimeout(() => {
       t.style.display = "none";
-    }, 2200);
+    }, 2600);
   }
+
+  function printPdf(withAnswers) {
+    const wasOn = $("#btn-answers")?.getAttribute("data-on") === "1";
+    const oldTitle = document.title;
+    if (withAnswers) reveal(true);
+    const secId = document.body.dataset.section || "講義";
+    document.title = withAnswers
+      ? `國中理化_${secId}_含答案`
+      : `國中理化_${secId}_挖空講義`;
+    toast("請將印表機選成「另存為 PDF」或 Microsoft Print to PDF");
+    setTimeout(() => {
+      window.print();
+      document.title = oldTitle;
+      if (withAnswers && !wasOn) reveal(false);
+    }, 350);
+  }
+
+  $$(".blank").forEach((el) => {
+    el.title = "點一下顯示答案，再點一下可填寫";
+    el.addEventListener("click", () => {
+      revealOne(el, !el.classList.contains("revealed"));
+    });
+    el.addEventListener("input", () => {
+      el.classList.remove("revealed", "correct", "wrong");
+      el.readOnly = false;
+    });
+  });
 
   $("#btn-answers")?.addEventListener("click", () => {
     const on = $("#btn-answers").getAttribute("data-on") === "1";
     reveal(!on);
   });
   $("#btn-check")?.addEventListener("click", check);
-  $("#btn-print")?.addEventListener("click", () => window.print());
+  $("#btn-pdf")?.addEventListener("click", () => printPdf(false));
+  $("#btn-pdf-key")?.addEventListener("click", () => printPdf(true));
 
-  window.NotesApp = { reveal, check, normalize, toast };
+  window.NotesApp = { reveal, check, normalize, toast, printPdf };
 })();

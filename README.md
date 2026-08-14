@@ -1,55 +1,36 @@
-# 國中八年級理化｜3-1 波的傳播　挖空講義
+# 國中八年級理化｜第 3 章 波動與聲音　挖空講義
 
-依國中八年級理化講義「第 3 章 波動與聲音／3-1 波的傳播」（約第 73–79 頁）重點改編的**挖空練習網頁**，可直接在瀏覽器作答、顯示答案，並下載 **A4 Word 圖文講義**。
+依小節拆開維護，避免全部塞在同一個網頁。
 
 ## GitHub
 
-- 原始碼倉庫：<https://github.com/fish0048-ai/junior-physics-waves-notes>
-- GitHub Pages（上傳後）：<https://fish0048-ai.github.io/junior-physics-waves-notes/>
-
-### 上傳本專案
-
-```bash
-cd junior-physics-waves-notes
-git init
-git add .
-git commit -m "feat: 新增 3-1 波的傳播挖空講義網頁與 Word 下載"
-git branch -M main
-git remote add origin https://github.com/chunhsinkuo/junior-physics-waves-notes.git
-git push -u origin main
-```
-
-接著到 GitHub 倉庫 **Settings → Pages → Deploy from a branch → main / (root)**，即可用 GitHub Pages 開啟網頁。
-
-## 使用方式
-
-1. 用瀏覽器開啟 `index.html`（或 GitHub Pages 網址）。
-2. 在綠色底線空格填答；可按 **檢查作答** 或 **顯示答案**。
-3. **下載 A4 Word**：學生挖空版；**下載教師版**：含參考答案。請用 Microsoft Word 開啟後可另存 `.docx`。
-4. **列印**：瀏覽器列印可輸出 A4 PDF。
-
-## 講義內容（對應原講義）
-
-| 區塊 | 內容 |
-| --- | --- |
-| 重點 1 波動 | 定義、振源、介質；只傳能量不傳介質；水波／繩波／彈簧波 |
-| 重點 2 分類 | 力學波／非力學波；橫波／縱波 |
-| 延伸 電磁波 | 無線電波→γ 射線特性與應用 |
-| 重點 3 性質 | 波峰、波谷、振幅、波長；密部／疏部 |
-| 重點 4 | 週期 T、頻率 f、波速 v＝fλ |
-| 計算演練 | 繩波 20 cm／4 s；水波圓形波前；2.5λ＝25 cm |
-| 延伸 水波 | 點波源／棒狀波源；深水波長較長、波速較大 |
-
-挖空重點包含：能量、振源、介質、力學波、橫波、縱波、波峰、波谷、振幅、波長、密部、疏部、週期、頻率、波速公式、反比、深淺水等。
+- 倉庫：<https://github.com/fish0048-ai/junior-physics-waves-notes>
+- 網頁：<https://fish0048-ai.github.io/junior-physics-waves-notes/>
 
 ## 資料夾
 
 ```
-index.html          講義網頁
-css/style.css       版面樣式
-js/config.js        GitHub 網址
-js/app.js           填空與答案
-js/export-word.js   A4 Word 下載（含 SVG 轉圖）
+index.html              第 3 章目錄（章首）
+css/style.css           全站樣式
+js/config.js            小節清單（新增小節改這裡）
+js/layout.js            共用頂欄、章節導覽
+js/app.js               挖空、點空格看答案、下載 PDF
+sections/3-1.html       3-1 波的傳播（已完成）
+sections/3-2.html       3-2 聲波（待補）
+sections/3-3.html       3-3 樂音（待補）
+sections/3-4.html       3-4 噪音與聲音的應用（待補）
 ```
 
-本專案為純靜態網頁，不需安裝 Node／Python。圖示皆以 SVG 重繪，未使用原書掃描檔。
+## 之後要加／改小節
+
+1. 複製 `sections/3-2.html` 成新檔，或直接編輯 3-2～3-4。
+2. 講義本文寫在該檔的 `<div class="wrap workbook">` 裡（挖空用 `<input class="blank" data-answer="答案">`）。
+3. 若標題要改，同步改 `js/config.js` 的 `sections` 陣列。
+4. 完成後把該小節的 `ready` 改成 `true`。
+
+頂欄按鈕（顯示答案、PDF）由 `js/layout.js` 統一產生，不必在每個小節重複貼一次。
+
+## 使用方式
+
+1. 開啟 `index.html`（或 GitHub Pages），點小節進入。
+2. 點綠色空格可顯示該格答案；可下載 PDF（列印視窗選「另存為 PDF」）。
