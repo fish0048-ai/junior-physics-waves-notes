@@ -817,10 +817,39 @@ ol.q li, ul.q li { margin: 5px 0; }
   gap: 8px;
   margin: 0 0 14px;
 }
-.exam-score {
-  font-weight: 800;
-  color: var(--green-800);
-  margin-left: auto;
+.exam-set-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  margin: -6px 0 14px;
+  padding: 8px 10px;
+  background: #fff7ed;
+  border: 1px solid #fed7aa;
+  border-radius: 10px;
+}
+.exam-set-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--muted);
+}
+.exam-set-field select {
+  min-height: 36px;
+  min-width: 7em;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: 4px 8px;
+  font: inherit;
+  font-size: 14px;
+  background: #fff;
+}
+.exam-set-status {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--orange-700);
 }
 .exam-q {
   border: 1px solid var(--line);
@@ -890,19 +919,31 @@ ol.q li, ul.q li { margin: 5px 0; }
   font-weight: 800;
   color: var(--orange-700);
 }
+.exam-figs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  align-items: center;
+  margin: 8px 0;
+}
 .exam-fig {
   display: block;
   max-width: 100%;
   height: auto;
-  max-height: 220px;
-  margin: 8px auto;
+  max-height: 200px;
+  margin: 0 auto;
+  object-fit: contain;
+  background: #fff;
 }
+.exam-figs .exam-fig { margin: 0; }
 .exam-choice-fig {
   display: block;
-  max-width: 100%;
+  max-width: min(100%, 220px);
   height: auto;
-  max-height: 88px;
-  margin: 6px auto 0;
+  max-height: 96px;
+  margin: 6px 0 0;
+  object-fit: contain;
 }
 .exam-fig-note {
   margin: 0 0 8px;

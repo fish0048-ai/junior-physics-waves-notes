@@ -30,11 +30,59 @@
     return out;
   }
 
+  function cleanText(s) {
+    return String(s || "")
+      .replace(/<[^>]+>/g, " ")
+      .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
+      .replace(/&nbsp;/gi, " ")
+      .replace(/[ \t\u00a0]+/g, " ")
+      .replace(/\s+([，。、；：！？])/g, "$1")
+      .replace(/([（(])\s+/g, "$1")
+      .replace(/\s+([）)])/g, "$1")
+      .replace(/\s+([°度])/g, "$1")
+      .trim();
+  }
+
+  function stripLeakedNext(s) {
+    return String(s)
+      .replace(/[。．]?\s*\d{1,3}\.\s*\(\s*\)[\s\S]*$/, "")
+      .replace(/\s*【[^】]{0,16}】\s*$/, "")
+      .replace(/[。．]\s*$/, "")
+      .trim();
+  }
+
+  function isJunkStem(q) {
+    if (!q || q.length < 12) return true;
+    if (/^(基測|會考|補考)/.test(q) && q.length < 28) return true;
+    if (/^〔\s*(基測|會考)/.test(q) && q.length < 20) return true;
+    return false;
+  }
+
+  function sanitizeItem(item) {
+    const next = Object.assign({}, item);
+    next.q = cleanText(next.q);
+    next.lead = cleanText(next.lead);
+    next.explain = cleanText(next.explain).replace(/\/$/, "");
+    next.group = cleanText(next.group);
+    next.choices = (next.choices || []).slice(0, 4).map((c) => stripLeakedNext(cleanText(c)));
+    const filled = next.choices.filter(Boolean);
+    next.imgs = flattenSrcs(next.imgs);
+    next.choiceImgs = flattenSrcs(next.choiceImgs);
+    if (next.imgs.length > 6) {
+      next.imgs = next.imgs.slice(0, filled.length >= 2 ? 2 : 1);
+    } else if (next.imgs.length > 4 && filled.length >= 2) {
+      next.imgs = next.imgs.slice(0, 2);
+    }
+    if (next.choiceImgs.length > 4) next.choiceImgs = next.choiceImgs.slice(0, 4);
+    return next;
+  }
+
   function usable(item) {
     const q = String(item.q || "").trim();
     const choices = (item.choices || []).map((c) => String(c || "").trim());
     const filled = choices.filter(Boolean);
     const figChoices = flattenSrcs(item.choiceImgs);
+    if (isJunkStem(q)) return false;
     if (q.includes("複選") && q.includes("0.0025")) return false;
     if (filled.length < 2 && figChoices.length < 2) return false;
     return true;
@@ -153,7 +201,7 @@
     (window.EXAM_BANK && window.EXAM_BANK[secId]) ||
     [];
   const pickN = Number(document.body.dataset.pick) || 0;
-  const pool = normalizeFigs(applyFigs(raw)).filter(usable);
+  const pool = normalizeFigs(applyFigs(raw).map(sanitizeItem)).filter(usable);
   const source = pickN ? pool.filter(hasKey) : pool;
   let items = pickN ? pickSpread(source.length >= pickN ? source : pool, pickN) : pool;
 
@@ -171,13 +219,16 @@
         if (lead) lastLead = lead;
         const stem = String(item.q || "").trim() || "（請依附圖作答）";
         const needFig = /如圖|附圖/.test(stem + lead);
-        const figHtml = (srcs, alt) =>
-          flattenSrcs(srcs)
+        const figHtml = (srcs, alt) => {
+          const list = flattenSrcs(srcs);
+          if (!list.length) return "";
+          return `<div class="exam-figs">${list
             .map(
               (src) =>
                 `<img class="exam-fig" src="${assetUrl(src)}" alt="${alt}" onerror="this.style.display='none'">`
             )
-            .join("");
+            .join("")}</div>`;
+        };
         const group = item.group
           ? `<p class="exam-group">${item.group.replace(/為題組$/, "")}</p>`
           : "";
@@ -306,9 +357,110 @@
     toast("已重設段考練習");
   }
 
-  function startSet() {
+  const LS_CLASSES = "jpwn.classes";
+  const LS_CURRENT = "jpwn.classId";
+  const LS_SETS = "jpwn.examSets";
+
+  function loadExamClasses() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(LS_CLASSES) || "[]");
+      if (Array.isArray(raw) && raw.length) return raw.filter((c) => c && c.id && c.name);
+    } catch (err) {
+      /* ignore */
+    }
+    return [{ id: "default", name: "預設班級" }];
+  }
+
+  function currentExamClass() {
+    const classes = loadExamClasses();
+    const id = localStorage.getItem(LS_CURRENT);
+    return classes.find((c) => c.id === id) || classes[0];
+  }
+
+  function itemKey(item) {
+    return [item.q || "", (item.choices || []).join("¦"), item.lead || ""].join("::");
+  }
+
+  function readSets() {
+    try {
+      const raw = JSON.parse(localStorage.getItem(LS_SETS) || "{}");
+      return raw && typeof raw === "object" ? raw : {};
+    } catch (err) {
+      return {};
+    }
+  }
+
+  function setStoreKey() {
+    return `${currentExamClass().id}::${secId}`;
+  }
+
+  function savedRecord() {
+    return readSets()[setStoreKey()] || null;
+  }
+
+  function formatWhen(ts) {
+    const d = new Date(ts);
+    if (Number.isNaN(d.getTime())) return "";
+    const p = (n) => String(n).padStart(2, "0");
+    return `${d.getFullYear()}/${d.getMonth() + 1}/${d.getDate()} ${p(d.getHours())}:${p(d.getMinutes())}`;
+  }
+
+  function updateSetStatus() {
+    const el = document.getElementById("exam-set-status");
+    if (!el) return;
+    const cls = currentExamClass();
+    const rec = savedRecord();
+    if (rec && rec.keys && rec.keys.length) {
+      el.textContent = `「${cls.name}」已存 ${rec.keys.length} 題（${formatWhen(rec.savedAt)}）`;
+    } else {
+      el.textContent = `「${cls.name}」尚未存題本`;
+    }
+  }
+
+  function fillExamClassSelect() {
+    const sel = document.getElementById("exam-class");
+    if (!sel) return;
+    const classes = loadExamClasses();
+    const cur = currentExamClass();
+    sel.innerHTML = classes
+      .map((c) => `<option value="${c.id}" ${c.id === cur.id ? "selected" : ""}>${c.name}</option>`)
+      .join("");
+  }
+
+  function restoreItems(keys) {
+    const map = new Map(source.map((item) => [itemKey(item), item]));
+    const restored = keys.map((k) => map.get(k)).filter(Boolean);
+    return restored.length ? restored : null;
+  }
+
+  function saveCurrentSet() {
+    const cls = currentExamClass();
+    const all = readSets();
+    all[setStoreKey()] = {
+      classId: cls.id,
+      className: cls.name,
+      section: secId,
+      savedAt: Date.now(),
+      keys: items.map(itemKey)
+    };
+    localStorage.setItem(LS_SETS, JSON.stringify(all));
+    updateSetStatus();
+    toast(`已把目前 ${items.length} 題存給「${cls.name}」`);
+  }
+
+  function loadSavedSet() {
+    const rec = savedRecord();
+    if (!rec || !rec.keys || !rec.keys.length) {
+      toast(`「${currentExamClass().name}」還沒有存過題本`);
+      return false;
+    }
+    const restored = restoreItems(rec.keys);
+    if (!restored) {
+      toast("題庫已更新，無法載入舊題本，請重新抽題後再存");
+      return false;
+    }
+    items = restored;
     revealed = false;
-    if (pickN) items = pickSpread(source.length >= pickN ? source : pool, pickN);
     render();
     const n = document.getElementById("exam-count");
     if (n) n.textContent = String(items.length);
@@ -316,13 +468,86 @@
     if (score) score.textContent = "";
     const keyBtn = document.getElementById("exam-key");
     if (keyBtn) keyBtn.textContent = "顯示詳解";
+    updateSetStatus();
+    toast(`已載入「${currentExamClass().name}」的 ${items.length} 題`);
+    return true;
   }
 
+  function ensureSetBar() {
+    if (!pickN || document.getElementById("exam-set-bar")) return;
+    const toolbar = document.querySelector(".exam-toolbar");
+    if (!toolbar) return;
+    const bar = document.createElement("div");
+    bar.id = "exam-set-bar";
+    bar.className = "exam-set-bar no-print";
+    bar.innerHTML = `
+      <label class="exam-set-field">
+        <span>班級</span>
+        <select id="exam-class"></select>
+      </label>
+      <button type="button" class="btn btn-green" id="exam-save-set">存成此班題本</button>
+      <button type="button" class="btn btn-ghost" id="exam-load-set">載入此班題本</button>
+      <span class="exam-set-status" id="exam-set-status"></span>
+    `;
+    toolbar.after(bar);
+    fillExamClassSelect();
+    document.getElementById("exam-class").addEventListener("change", (e) => {
+      localStorage.setItem(LS_CURRENT, e.target.value);
+      const inkSel = document.getElementById("ink-class");
+      if (inkSel && inkSel.value !== e.target.value) {
+        inkSel.value = e.target.value;
+        inkSel.dispatchEvent(new Event("change"));
+      }
+      if (!loadSavedSet()) updateSetStatus();
+    });
+    document.getElementById("exam-save-set").addEventListener("click", () => {
+      const rec = savedRecord();
+      if (rec && rec.keys && rec.keys.length) {
+        if (!window.confirm(`「${currentExamClass().name}」已有題本，要覆蓋成目前這一套嗎？`)) return;
+      }
+      saveCurrentSet();
+    });
+    document.getElementById("exam-load-set").addEventListener("click", () => {
+      loadSavedSet();
+    });
+  }
+
+  function startSet(opts) {
+    revealed = false;
+    const forceNew = opts && opts.forceNew;
+    if (pickN) {
+      if (!forceNew) {
+        const rec = savedRecord();
+        const restored = rec && rec.keys ? restoreItems(rec.keys) : null;
+        items = restored || pickSpread(source.length >= pickN ? source : pool, pickN);
+      } else {
+        items = pickSpread(source.length >= pickN ? source : pool, pickN);
+      }
+    }
+    render();
+    const n = document.getElementById("exam-count");
+    if (n) n.textContent = String(items.length);
+    const score = document.getElementById("exam-score");
+    if (score) score.textContent = "";
+    const keyBtn = document.getElementById("exam-key");
+    if (keyBtn) keyBtn.textContent = "顯示詳解";
+    updateSetStatus();
+  }
+
+  ensureSetBar();
   startSet();
+  window.addEventListener("jpwn-class-change", () => {
+    fillExamClassSelect();
+    if (pickN) {
+      const rec = savedRecord();
+      if (rec && rec.keys) loadSavedSet();
+      else updateSetStatus();
+    }
+  });
 
   document.getElementById("exam-reshuffle")?.addEventListener("click", () => {
-    startSet();
-    toast(pickN ? `已另抽 ${pickN} 題` : "已重抽題目");
+    startSet({ forceNew: true });
+    toast(pickN ? `已另抽 ${pickN} 題，按「存成此班題本」才會覆蓋舊的` : "已重抽題目");
   });
 
   document.getElementById("exam-check")?.addEventListener("click", () => {

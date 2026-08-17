@@ -589,12 +589,19 @@
     updateChrome();
   });
 
+  function notifyClassChange() {
+    window.dispatchEvent(new CustomEvent("jpwn-class-change", {
+      detail: { classId: state.classId, name: currentClass()?.name || "" }
+    }));
+  }
+
   document.getElementById("ink-class").addEventListener("change", async (e) => {
     await flushSave();
     state.classId = e.target.value;
     saveClasses();
     await loadStrokes();
     updateChrome();
+    notifyClassChange();
     toast(`已切換到「${currentClass()?.name || ""}」`);
   });
 
@@ -618,6 +625,7 @@
     input.value = "";
     await loadStrokes();
     updateChrome();
+    notifyClassChange();
     toast(`已新增「${name}」`);
   });
 
@@ -630,6 +638,7 @@
     saveClasses();
     fillClassSelect();
     updateChrome();
+    notifyClassChange();
   });
 
   document.getElementById("ink-del-class").addEventListener("click", async () => {
@@ -661,6 +670,7 @@
     fillClassSelect();
     await loadStrokes();
     updateChrome();
+    notifyClassChange();
     toast("已刪除班級");
   });
 
@@ -777,6 +787,7 @@
       }
       await loadStrokes();
       updateChrome();
+      notifyClassChange();
       toast(`已匯入「${cls.name}」`);
     } catch (err) {
       toast("匯入失敗，請確認是筆記 JSON 檔");
