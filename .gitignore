@@ -2,3 +2,5 @@
 Thumbs.db
 *.log
 .vscode/
+_bank_extract/
+_parse_ch3_review.ps1

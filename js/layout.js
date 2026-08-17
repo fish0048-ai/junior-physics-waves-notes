@@ -32,19 +32,25 @@
          <button class="btn btn-orange" id="btn-pdf" type="button">下載 PDF</button>
          <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>`
       : "";
+    const inkBtn = `<button class="btn btn-ghost" id="btn-ink" type="button" aria-pressed="false">筆記</button>`;
+    const chapterLinks = (cfg.chapters || []).map((c) => `
+          <a href="${url(c.file)}" class="${String(cfg.chapter?.id) === String(c.id) ? "is-on" : ""}">第 ${c.id} 章</a>
+        `).join("");
 
     host.innerHTML = `
       <header class="toolbar no-print">
         <a class="brand" href="${url(cfg.home || "index.html")}">
-          <span class="brand-mark">波</span>
+          <span class="brand-mark">${cfg.chapter?.mark || "波"}</span>
           <span>${brandText}</span>
         </a>
         <div class="toolbar-actions">
+          ${inkBtn}
           ${tools}
           <a class="btn btn-github" href="${cfg.githubRepo || "#"}" target="_blank" rel="noopener">GitHub</a>
         </div>
       </header>
       <nav class="section-nav no-print" aria-label="章節導覽">
+        ${chapterLinks}
         <a href="${url(cfg.home || "index.html")}" class="${page === "home" ? "is-on" : ""}">章首</a>
         ${(cfg.sections || []).map((s) => `
           <a href="${url(s.file)}" class="${s.id === currentId && page === "section" ? "is-on" : ""} ${s.ready ? "" : "is-draft"}">
@@ -69,18 +75,18 @@
         <h2>${s.title}</h2>
         <p>${s.summary || ""}</p>
       </a>
-    `).join("") + `
-      <p class="home-label">段考前練習　獨立頁，與講義分開列印</p>
-    ` + (cfg.sections || []).map((s) => s.exam ? `
+    `).join("") + ((cfg.sections || []).some((s) => s.exam) ? `
+      <p class="home-label">段考前練習</p>
+    ` : "") + (cfg.sections || []).filter((s) => s.exam).map((s) => `
       <a class="section-card is-practice" href="${url(s.exam)}">
         <div class="section-card-top">
           <strong>${s.id}</strong>
           <small>段考練習</small>
         </div>
         <h2>${s.title}</h2>
-        <p>四選一　較難段考程度　與講義分開</p>
+        <p>四選一　較難段考程度</p>
       </a>
-    ` : "").join("") + (cfg.review ? `
+    `).join("") + (cfg.review ? `
       <a class="section-card is-exam" href="${url(cfg.review.file)}">
         <div class="section-card-top">
           <strong>章末</strong>
@@ -94,4 +100,11 @@
 
   renderHeader();
   renderHomeCards();
+
+  if (!document.querySelector("script[data-class-ink]")) {
+    const s = document.createElement("script");
+    s.src = url("js/class-notes.js");
+    s.dataset.classInk = "1";
+    document.body.appendChild(s);
+  }
 })();

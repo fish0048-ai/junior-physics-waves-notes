@@ -4,16 +4,21 @@ window.APP_CONFIG = {
   githubPages: "https://fish0048-ai.github.io/junior-physics-waves-notes/",
   chapter: {
     id: "3",
+    mark: "波",
     title: "波動與聲音",
     grade: "國中八年級理化"
   },
   home: "index.html",
+  chapters: [
+    { id: "3", title: "波動與聲音", file: "index.html" },
+    { id: "4", title: "光", file: "ch4.html" }
+  ],
   review: {
     id: "ch-3",
     file: "review.html",
     nav: "章末評量",
-    title: "第 3 章大型複習評量",
-    summary: "全章 3-1～3-4　四選一　較難段考程度"
+    title: "第 3 章複習評量",
+    summary: "題庫 120 題，抽出 40 題　四選一"
   },
   sections: [
     {
