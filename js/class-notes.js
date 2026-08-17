@@ -395,6 +395,10 @@
     return state.allowFinger;
   }
 
+  function fromUi(e) {
+    return !!e.target.closest(".ink-dock, .toolbar, .section-nav, .embed-banner, button, a, input, select, textarea, label");
+  }
+
   let paintRaf = 0;
   function ingestPoints(e) {
     const coalesced = typeof e.getCoalescedEvents === "function" ? e.getCoalescedEvents() : null;
@@ -429,9 +433,14 @@
 
   function startStroke(e) {
     if (!state.drawing || !state.visible) return;
+    if (fromUi(e)) return;
     if (!acceptPointer(e)) return;
     e.preventDefault();
-    host.setPointerCapture(e.pointerId);
+    try {
+      wrap.setPointerCapture(e.pointerId);
+    } catch (err) {
+      /* ignore */
+    }
     const tool = state.tool;
     if (paintRaf) {
       cancelAnimationFrame(paintRaf);
@@ -480,16 +489,16 @@
     scheduleSave();
   }
 
-  host.addEventListener("pointerdown", startStroke, { passive: false });
-  host.addEventListener("pointermove", moveStroke, { passive: false });
+  wrap.addEventListener("pointerdown", startStroke, { capture: true, passive: false });
+  wrap.addEventListener("pointermove", moveStroke, { capture: true, passive: false });
   if ("onpointerrawupdate" in window) {
-    host.addEventListener("pointerrawupdate", moveStroke);
+    wrap.addEventListener("pointerrawupdate", moveStroke, { capture: true });
   }
-  host.addEventListener("pointerup", endStroke);
-  host.addEventListener("pointercancel", endStroke);
-  host.addEventListener("lostpointercapture", endStroke);
-  host.addEventListener("contextmenu", (e) => {
-    if (state.drawing) e.preventDefault();
+  wrap.addEventListener("pointerup", endStroke, { capture: true });
+  wrap.addEventListener("pointercancel", endStroke, { capture: true });
+  wrap.addEventListener("lostpointercapture", endStroke);
+  wrap.addEventListener("contextmenu", (e) => {
+    if (state.drawing && acceptPointer(e)) e.preventDefault();
   });
 
   const dock = document.createElement("aside");
@@ -534,7 +543,7 @@
       </div>
       <div class="ink-row ink-checks">
         <label class="ink-check"><input id="ink-visible" type="checkbox" checked> 顯示筆記</label>
-        <label class="ink-check" title="關閉可防手掌誤觸"><input id="ink-finger" type="checkbox"> 手指可寫</label>
+        <label class="ink-check" title="開啟後手指會變成畫筆，頁面較不好滑動"><input id="ink-finger" type="checkbox"> 手指可寫</label>
       </div>
       <div class="ink-row">
         <button type="button" class="btn btn-ghost" id="ink-export">匯出</button>

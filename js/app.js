@@ -7,6 +7,21 @@
     a.href = github;
   });
 
+  function freezeBlanks() {
+    $$("input.blank").forEach((input) => {
+      const span = document.createElement("span");
+      span.className = input.className;
+      if (input.id) span.id = input.id;
+      span.dataset.answer = input.dataset.answer || "";
+      if (input.style.width) span.style.width = input.style.width;
+      if (input.style.minWidth) span.style.minWidth = input.style.minWidth;
+      span.setAttribute("aria-label", "挖空");
+      input.replaceWith(span);
+    });
+  }
+
+  freezeBlanks();
+
   function normalize(s) {
     return String(s || "")
       .trim()
@@ -22,10 +37,10 @@
       .replace(/／/g, "/");
   }
 
-  function isCorrect(input) {
-    const raw = input.dataset.answer || "";
+  function isCorrect(el) {
+    const raw = el.dataset.answer || "";
     const alts = raw.split("|").map(normalize).filter(Boolean);
-    const val = normalize(input.value);
+    const val = normalize(el.tagName === "INPUT" ? el.value : el.textContent);
     return alts.includes(val);
   }
 
@@ -36,14 +51,11 @@
   function revealOne(el, on) {
     el.classList.remove("correct", "wrong");
     if (on) {
-      if (!el.classList.contains("revealed")) el.dataset.user = el.value;
-      el.value = answerOf(el);
+      el.textContent = answerOf(el);
       el.classList.add("revealed");
-      el.readOnly = true;
     } else {
-      el.value = el.dataset.user || "";
+      el.textContent = "";
       el.classList.remove("revealed");
-      el.readOnly = false;
     }
   }
 
@@ -58,20 +70,24 @@
   }
 
   function check() {
-    let ok = 0;
-    let total = 0;
-    $$(".blank").forEach((el) => {
-      total += 1;
-      el.classList.remove("correct", "wrong", "revealed");
-      el.readOnly = false;
-      if (isCorrect(el)) {
-        el.classList.add("correct");
-        ok += 1;
-      } else {
-        el.classList.add("wrong");
-      }
-    });
-    toast(`已檢查：${ok} / ${total} 題空格正確`);
+    if ($$("input.blank").length) {
+      let ok = 0;
+      let total = 0;
+      $$("input.blank").forEach((el) => {
+        total += 1;
+        el.classList.remove("correct", "wrong", "revealed");
+        el.readOnly = false;
+        if (isCorrect(el)) {
+          el.classList.add("correct");
+          ok += 1;
+        } else {
+          el.classList.add("wrong");
+        }
+      });
+      toast(`已檢查：${ok} / ${total} 題空格正確`);
+      return;
+    }
+    toast("挖空無需輸入，請按「顯示答案」");
   }
 
   function toast(msg) {
@@ -109,13 +125,11 @@
   });
 
   $$(".blank").forEach((el) => {
-    el.title = "點一下顯示答案，再點一下可填寫";
-    el.addEventListener("click", () => {
+    el.title = "點一下顯示答案，再點一下隱藏";
+    el.addEventListener("click", (e) => {
+      if (document.body.classList.contains("ink-draw")) return;
+      e.preventDefault();
       revealOne(el, !el.classList.contains("revealed"));
-    });
-    el.addEventListener("input", () => {
-      el.classList.remove("revealed", "correct", "wrong");
-      el.readOnly = false;
     });
   });
 

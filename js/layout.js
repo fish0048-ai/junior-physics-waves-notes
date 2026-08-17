@@ -51,9 +51,12 @@
       : sec
       ? `${cfg.chapter?.grade || "八年級理化"}　${sec.id} ${sec.title}`
       : `${cfg.chapter?.grade || "八年級理化"}　第 ${cfg.chapter?.id || ""} 章`;
+    const checkBtn = (page === "review" || page === "exam")
+      ? `<button class="btn btn-ghost" id="btn-check" type="button">檢查作答</button>`
+      : "";
     const tools = (page === "section" || page === "review" || page === "exam")
       ? `<button class="btn btn-green" id="btn-answers" type="button">顯示答案</button>
-         <button class="btn btn-ghost" id="btn-check" type="button">檢查作答</button>
+         ${checkBtn}
          <button class="btn btn-orange" id="btn-pdf" type="button">下載 PDF</button>
          <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>`
       : "";

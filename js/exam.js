@@ -345,7 +345,7 @@
       setReveal(on);
     };
     window.NotesApp.check = function () {
-      if (document.querySelector(".blank")) origCheck();
+      if (document.querySelector("input.blank")) origCheck();
       if (items.length) {
         revealed = true;
         grade(true);

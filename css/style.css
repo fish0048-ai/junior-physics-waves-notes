@@ -362,11 +362,13 @@ figure {
   cursor: pointer;
   vertical-align: baseline;
   border-radius: 4px 4px 0 0;
+  user-select: none;
+  -webkit-user-select: none;
+  min-height: 1.2em;
+  line-height: 1.35;
 }
-
 .blank:focus {
-  outline: 2px solid #86efac;
-  background: #fff;
+  outline: none;
 }
 
 .blank.correct { background: #bbf7d0; border-bottom-color: #15803d; }
@@ -952,16 +954,18 @@ code {
 body.ink-draw {
   user-select: none;
   -webkit-user-select: none;
+  touch-action: pan-y;
 }
 body.ink-draw #ink-host.is-draw {
-  pointer-events: auto;
-  touch-action: none;
+  pointer-events: none;
+  touch-action: pan-y;
   cursor: crosshair;
 }
 body.ink-draw .wrap {
   outline: 3px solid #ea580c;
   outline-offset: 2px;
   padding-bottom: 168px;
+  touch-action: pan-y;
 }
 body.ink-draw .toolbar {
   padding: 4px 10px;
