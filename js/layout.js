@@ -44,7 +44,9 @@
     if (!host) return;
     const sec = currentSection();
     const review = cfg.review;
-    const brandText = page === "review"
+    const brandText = page === "cover"
+      ? `${cfg.chapter?.grade || "八年級理化"}　講義封面`
+      : page === "review"
       ? `${cfg.chapter?.grade || "八年級理化"}　${review?.title || "章末評量"}`
       : page === "exam" && sec
       ? `${cfg.chapter?.grade || "八年級理化"}　${sec.id} 段考前練習`
@@ -54,7 +56,11 @@
     const checkBtn = (page === "review" || page === "exam")
       ? `<button class="btn btn-ghost" id="btn-check" type="button">檢查作答</button>`
       : "";
-    const tools = (page === "section" || page === "review" || page === "exam")
+    const tools = (page === "cover")
+      ? `<button class="btn btn-orange" id="btn-pdf" type="button">下載封面 PDF</button>`
+      : (page === "home")
+      ? `<button class="btn btn-orange" id="btn-pdf" type="button">下載目錄 PDF</button>`
+      : (page === "section" || page === "review" || page === "exam")
       ? `<button class="btn btn-green" id="btn-answers" type="button">顯示答案</button>
          ${checkBtn}
          <button class="btn btn-orange" id="btn-pdf" type="button">下載 PDF</button>
@@ -63,13 +69,29 @@
     const inkBtn = `<button class="btn btn-ghost" id="btn-ink" type="button" aria-pressed="false">筆記</button>`;
     const immersiveBtn = `<button class="btn btn-ghost" id="btn-immersive" type="button" aria-pressed="false">全螢幕</button>`;
     const chapterLinks = (cfg.chapters || []).map((c) => `
-          <a href="${url(c.file)}" class="${String(cfg.chapter?.id) === String(c.id) ? "is-on" : ""}">第 ${c.id} 章</a>
+          <a href="${url(c.file)}" class="${page !== "cover" && String(cfg.chapter?.id) === String(c.id) ? "is-on" : ""}">第 ${c.id} 章</a>
         `).join("");
+    const sectionLinks = page === "cover" ? "" : (cfg.sections || []).map((s) => `
+          <a href="${url(s.file)}" class="${s.id === currentId && page === "section" ? "is-on" : ""} ${s.ready ? "" : "is-draft"}">
+            ${s.id} ${s.title}${s.ready ? "" : "（未完成）"}
+          </a>
+        `).join("");
+    const examLink = page === "cover" ? "" : (page === "exam" && sec?.exam ? `<a href="${url(sec.exam)}" class="is-on">${sec.id} 段考</a>` : "");
+    const reviewLink = page === "cover" ? "" : (review ? `<a href="${url(review.file)}" class="${page === "review" ? "is-on" : ""}">${review.nav || "章末評量"}</a>` : "");
+    const chapterNav = page === "cover" ? "" : `
+      <nav class="section-nav no-print" aria-label="第 ${cfg.chapter?.id || ""} 章目錄">
+        <span class="nav-label">第 ${cfg.chapter?.id || ""} 章</span>
+        <a href="${url(cfg.home || "index.html")}" class="${page === "home" ? "is-on" : ""}">目錄</a>
+        ${sectionLinks}
+        ${examLink}
+        ${reviewLink}
+      </nav>
+    `;
 
     host.innerHTML = `
       <header class="toolbar no-print">
-        <a class="brand" href="${url(cfg.home || "index.html")}">
-          <span class="brand-mark">${cfg.chapter?.mark || "波"}</span>
+        <a class="brand" href="${url(page === "cover" ? (cfg.cover?.file || "cover.html") : (cfg.home || "index.html"))}">
+          <span class="brand-mark">${page === "cover" ? "理" : (cfg.chapter?.mark || "波")}</span>
           <span>${brandText}</span>
         </a>
         <div class="toolbar-actions">
@@ -79,17 +101,12 @@
           <a class="btn btn-github" href="${cfg.githubRepo || "#"}" target="_blank" rel="noopener">GitHub</a>
         </div>
       </header>
-      <nav class="section-nav no-print" aria-label="章節導覽">
+      <nav class="site-nav no-print" aria-label="全書導覽">
+        <span class="nav-label">全書</span>
+        ${cfg.cover ? `<a href="${url(cfg.cover.file)}" class="${page === "cover" ? "is-on" : ""}">${cfg.cover.nav || "封面"}</a>` : ""}
         ${chapterLinks}
-        <a href="${url(cfg.home || "index.html")}" class="${page === "home" ? "is-on" : ""}">章首</a>
-        ${(cfg.sections || []).map((s) => `
-          <a href="${url(s.file)}" class="${s.id === currentId && page === "section" ? "is-on" : ""} ${s.ready ? "" : "is-draft"}">
-            ${s.id} ${s.title}${s.ready ? "" : "（未完成）"}
-          </a>
-        `).join("")}
-        ${page === "exam" && sec?.exam ? `<a href="${url(sec.exam)}" class="is-on">${sec.id} 段考</a>` : ""}
-        ${review ? `<a href="${url(review.file)}" class="${page === "review" ? "is-on" : ""}">${review.nav || "章末評量"}</a>` : ""}
       </nav>
+      ${chapterNav}
     `;
   }
 

@@ -48,7 +48,7 @@
 </html>
 ```
 
-章首 `data-root="."`，CSS／JS 路徑不加 `../`。第 3 章設定檔是 `js/config.js`，章首是 `index.html`。
+章首 `data-root="."`，CSS／JS 路徑不加 `../`。第 3 章設定檔是 `js/config.js`，章首／目錄是 `index.html`。班級、姓名、座號只放 `cover.html`，不要放在章首。
 
 ## 重點卡內部順序（有就全留）
 
@@ -111,4 +111,4 @@
 
 ## 章首卡片
 
-`#section-cards` 留空，`layout.js` 用 config 填。每張顯示 `id`、`title`、`ask`、`summary`，以及對應段考卡、章末評量卡。`ready: false` 會顯示建置中，新章做完再改 `true`。
+`#section-cards` 留空，`layout.js` 用 config 填。每張顯示 `id`、`title`、`ask`、`summary`，以及對應段考卡、章末評量卡。`ready: false` 會顯示建置中，新章做完再改 `true`。章首就是該章目錄；學生資料只在 `cover.html`。

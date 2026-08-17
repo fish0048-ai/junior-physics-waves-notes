@@ -9,6 +9,7 @@ window.APP_CONFIG = {
     grade: "國中八年級理化"
   },
   home: "index.html",
+  cover: { file: "cover.html", nav: "封面" },
   chapters: [
     { id: "3", title: "波動與聲音", file: "index.html" },
     { id: "4", title: "光", file: "ch4.html" }

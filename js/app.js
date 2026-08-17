@@ -216,8 +216,18 @@
     const wasOn = $("#btn-answers")?.getAttribute("data-on") === "1";
     const oldTitle = document.title;
     if (withAnswers) reveal(true);
-    const secId = document.body.dataset.section || "講義";
-    const kind = document.body.dataset.page === "exam" || document.body.dataset.page === "review"
+    const pageType = document.body.dataset.page || "";
+    const chId = window.APP_CONFIG?.chapter?.id || "";
+    const secId = pageType === "cover"
+      ? "封面"
+      : pageType === "home"
+      ? `第${chId}章`
+      : (document.body.dataset.section || "講義");
+    const kind = pageType === "cover"
+      ? "講義封面"
+      : pageType === "home"
+      ? "目錄"
+      : pageType === "exam" || pageType === "review"
       ? "段考練習"
       : "講義";
     document.title = withAnswers

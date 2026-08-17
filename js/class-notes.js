@@ -396,7 +396,7 @@
   }
 
   function fromUi(e) {
-    return !!e.target.closest(".ink-dock, .toolbar, .section-nav, .embed-banner, button, a, input, select, textarea, label");
+    return !!e.target.closest(".ink-dock, .toolbar, .site-nav, .section-nav, .embed-banner, button, a, input, select, textarea, label");
   }
 
   let paintRaf = 0;

@@ -36,7 +36,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 - [ ] 列出小節、每節探究問題、主張方向（填 inquiry.md 那種表）
 - [ ] 抽出定義／挖空／圖／實驗／練習／題庫（不刪）
 - [ ] 新增 js/config-chN.js，並改所有現有 config 的 chapters
-- [ ] 章首 chN.html：hero 鏈 + 探究故事段（不要 inquiry-map 清單）
+- [ ] 章首 chN.html：該章目錄（hero 鏈 + 探究故事段，不要 inquiry-map 清單）
 - [ ] 各節 sections/N-x.html（順序見 inquiry.md）
 - [ ] 各節 exams/N-x.html + exam-chN-sections.js + exam-chN-keys.js
 - [ ] review-chN.html + exam-chN.js（約 120 抽 40）
