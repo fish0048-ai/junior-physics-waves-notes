@@ -1,0 +1,18 @@
+---
+description: 講義每個重點卡必備兩層補充：國中程度 .extra 與國中資優 .gifted。
+globs: sections/**/*.html
+alwaysApply: false
+---
+
+# 兩層觀念補充
+
+講義課文後一定要外加兩層，對齊 `sections/4-1.html`。細節見 `.cursor/skills/junior-physics-notes/extras.md`。
+
+| 層次 | 區塊 | 標籤 |
+|---|---|---|
+| 國中程度 | `<section class="extra">` | `tag-purple` 觀念補充　標題「國中必記：……」 |
+| 國中資優 | `<section class="gifted">` | `tag-gifted` 資優補充 |
+
+每個重點卡（實驗卡有新觀念也一樣）在辨正／小試前都要有。順序：課文 → tips（可選）→ **extra** → wrong-note（可選）→ **gifted** → 辨正／小試。
+
+國中程度：口訣、生活、段考陷阱，用課文詞彙。資優：同一觀念再問為什麼／極端／定量，仍用八年級句子；不要微積分或沒解釋的高中公式。兩層不要複製同一句。

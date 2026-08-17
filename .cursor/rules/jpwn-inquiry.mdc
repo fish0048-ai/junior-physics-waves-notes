@@ -17,7 +17,7 @@ alwaysApply: false
 
 ## 每一節固定順序
 
-hero 探究問題 → toc → `#inquiry` → 各重點（ask→原文→bridge）→ 延伸／實驗／計算 → `#memo` 證據卡 → `#claim` → `#drill` 檢驗主張。
+hero 探究問題 → toc → `#inquiry` → 各重點（ask→原文→國中程度 extra→國中資優 gifted→bridge）→ 延伸／實驗／計算 → `#memo` 證據卡 → `#claim` → `#drill` 檢驗主張。
 
 ## 章首
 
@@ -32,3 +32,4 @@ hero 用箭頭串整章。inquiry 卡寫**一段故事**，不要再列一排小
 - 不要單獨放 `.overview` 重點概覽（併進探究卡副標）。
 - 加 `inquiry-bridge` 時，下一個 `<article id="…">` 的開頭標籤必須還在。
 - 不要刪原定義去改寫成問句；問句加在前面。
+- 重點卡課文後必備 `.extra`（國中程度）與 `.gifted`（國中資優），見 `extras.md`。

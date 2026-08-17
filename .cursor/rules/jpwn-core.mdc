@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 國中理化講義站
 
-先讀技能 `.cursor/skills/junior-physics-notes/SKILL.md`，細節看同資料夾的 `inquiry.md`、`html-templates.md`、`exams.md`、`reference.md`。
+先讀技能 `.cursor/skills/junior-physics-notes/SKILL.md`，細節看同資料夾的 `inquiry.md`、`html-templates.md`、`extras.md`、`exams.md`、`reference.md`。
 
 ## 角色
 
@@ -13,6 +13,7 @@ alwaysApply: true
 
 ## 不可破
 
+- **兩層補充一定要有**：每個重點卡課文後加 `.extra`（國中程度）和 `.gifted`（國中資優）。不能只抄課本。寫法見 `extras.md`。
 - **不刪內容**：定義、挖空、SVG、實驗、練習、資優、易錯都留。只加探究脈絡與填答空位。
 - **對齊第 4 章**：`ch4.html`、`js/config-ch4.js`、`sections/4-1.html`、`exams/4-1.html`、`review-ch4.html`。不要發明第二套 class 或資料夾。
 - **講義挖空不可輸入**：`<input class="blank" data-answer="…">`。`app.js` 會凍成 span。不要改回可打字，不要在講義頁放「檢查作答」。

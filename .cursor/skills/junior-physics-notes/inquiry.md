@@ -66,7 +66,7 @@ Hero 一段話用 `→` 串站名。Inquiry 卡**一段故事**，每站問題�
 
 線索要能用本段圖或挖空回答，避免空泛「請認真看」。
 
-原文（def、table、SVG、extra、tips、gifted、quiz）全部保留。最後、`</article>` 前：
+課文（def、table、SVG）全部保留。課文後**必備兩層補充**：`.extra` 國中程度、`.gifted` 國中資優（見 [extras.md](extras.md)）。`tips`、易錯可選。最後、`</article>` 前：
 
 ```html
 <p class="inquiry-bridge"><strong>這一站的證據：</strong>（本段結論）。下一站要問：（下一張卡的問題）。</p>

@@ -56,21 +56,27 @@
 2. `inquiry-ask` 探究線索
 3. 課文：`.def`、`.subh`、表格、`.split`＋SVG
 4. `.note` 補充句
-5. `.tips` → `.extra` → `.wrong-note` → `.gifted`（有才放，不要為了版型硬造）
+5. `.tips`（可選）→ `.extra`（**必備，國中程度**）→ `.wrong-note`（可選）→ `.gifted`（**必備，國中資優**）
 6. `.ex-box.think` 辨正（○／×）→ `.ex-box.quiz` 牛刀小試 3 題左右
 7. `inquiry-bridge`
 8. `</article>`
+
+兩層補充的寫法、差別與禁止事項見 [extras.md](extras.md)。課文後一定要外加，不能只抄課本。
 
 補充區塊：
 
 ```html
 <section class="extra">
-  <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 標題</div>
-  <ul class="q"><li>…</li></ul>
+  <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：標題</div>
+  <ul class="q"><li>段考要分得清的那句；一個生活例子。</li></ul>
+</section>
+<section class="gifted">
+  <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 標題</div>
+  <ul class="q"><li>同一觀念再往下挖一層，仍用八年級句子。</li></ul>
 </section>
 ```
 
-`tips` 用 `tag-cyan`；`wrong-note` 用 `tag-rose` 易錯提醒；`gifted` 用 `tag-gifted`。
+`tips` 用 `tag-cyan`；`wrong-note` 用 `tag-rose` 易錯提醒。不要為了版型做空的資優框。
 
 辨正：
 
@@ -111,4 +117,4 @@
 
 ## 章首卡片
 
-`#section-cards` 留空，`layout.js` 用 config 填。每張顯示 `id`、`title`、`ask`、`summary`，以及對應段考卡、章末評量卡。`ready: false` 會顯示建置中，新章做完再改 `true`。章首就是該章目錄；學生資料只在 `cover.html`。
+`#section-cards` 留空，`layout.js` 用 config 填。每張顯示 `id`、`title`、`ask`、`summary`，卡片上要有「段考前練習」連結，下方再放橘色段考卡與章末評量卡。頂欄本章目錄下面要有一列「段考前練習」（各節只標 `N-x`，前面已有「段考前練習」就不必再寫段考）。`ready: false` 會顯示建置中，新章做完再改 `true`。章首就是該章目錄；學生資料只在 `cover.html`。

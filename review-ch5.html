@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#fffefb">
+  <title>國中八年級理化｜第 5 章複習評量</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-root="." data-page="review" data-section="ch-5" data-pick="40">
+  <div id="site-header"></div>
+  <div class="wrap workbook exam-sheet" id="top">
+    <section class="hero">
+      <span class="kicker">國中八年級　理化講義</span>
+      <h1>第 5 章　複習評量</h1>
+      <svg class="wave-deco" viewBox="0 0 280 90" aria-hidden="true">
+        <path d="M70 78 C 52 48 62 22 70 10 C 78 22 88 48 70 78" fill="none" stroke="#fff" stroke-width="5"/>
+        <path d="M140 78 C 122 48 132 22 140 10 C 148 22 158 48 140 78" fill="none" stroke="#fff" stroke-width="5"/>
+        <path d="M210 78 C 192 48 202 22 210 10 C 218 22 228 48 210 78" fill="none" stroke="#fff" stroke-width="5"/>
+      </svg>
+    </section>
+    <article class="card" id="exam">
+      <div class="section-head">
+        <div class="badge calc">評</div>
+        <div>
+          <h2>章末複習評量</h2>
+          <p>涵蓋 5-1～5-4　｜　題庫 120 題抽 40 題　｜　本次 <span id="exam-count">0</span> 題</p>
+        </div>
+      </div>
+      <p class="exam-lead">題庫共 120 題，每次從中抽出 40 題（涵蓋溫度與溫度計、熱量與比熱、熱對物質的影響、熱的傳播方式）。可先選班級，按「存成此班題本」記住這一組；之後同一班會載入同一套題。也可按「換一套題」再抽。</p>
+      <div class="exam-toolbar no-print">
+        <button class="btn btn-green" type="button" id="exam-check">檢查作答</button>
+        <button class="btn btn-ghost" type="button" id="exam-key">顯示詳解</button>
+        <button class="btn btn-ghost" type="button" id="exam-reset">重設</button>
+        <button class="btn btn-ghost" type="button" id="exam-reshuffle">換一套題</button>
+        <span class="exam-score" id="exam-score"></span>
+      </div>
+      <div id="exam-list"></div>
+    </article>
+    <p class="footer">
+      第 5 章　溫度與熱　章末評量<br>
+      原始碼：<a href="https://github.com/fish0048-ai/junior-physics-waves-notes" target="_blank" rel="noopener">GitHub 專案</a>
+    </p>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="js/config-ch5.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/exam-ch5.js"></script>
+  <script src="js/exam.js"></script>
+</body>
+</html>

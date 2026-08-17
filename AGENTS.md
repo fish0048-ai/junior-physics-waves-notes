@@ -9,7 +9,8 @@
 1. `.cursor/skills/junior-physics-notes/SKILL.md` — 流程與禁則
 2. `.cursor/skills/junior-physics-notes/inquiry.md` — 探究怎麼寫
 3. `.cursor/skills/junior-physics-notes/html-templates.md` — HTML 樣板
-4. `.cursor/skills/junior-physics-notes/exams.md` — 題庫
-5. `.cursor/skills/junior-physics-notes/reference.md` — 檔名與 config
+4. `.cursor/skills/junior-physics-notes/extras.md` — 國中程度＋國中資優兩層補充
+5. `.cursor/skills/junior-physics-notes/exams.md` — 題庫
+6. `.cursor/skills/junior-physics-notes/reference.md` — 檔名與 config
 
 規則（Cursor 會依檔案自動套用）：`.cursor/rules/jpwn-*.mdc`

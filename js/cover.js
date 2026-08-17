@@ -52,8 +52,6 @@
       name: $("cover-name")?.value.trim() || "",
       seat: $("cover-seat")?.value.trim() || ""
     });
-    const hint = $("cover-hint");
-    if (hint) hint.textContent = "已記住。換頁或列印封面都會帶著這筆資料。";
   }
 
   fill();

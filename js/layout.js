@@ -76,16 +76,24 @@
             ${s.id} ${s.title}${s.ready ? "" : "（未完成）"}
           </a>
         `).join("");
-    const examLink = page === "cover" ? "" : (page === "exam" && sec?.exam ? `<a href="${url(sec.exam)}" class="is-on">${sec.id} 段考</a>` : "");
+    const examLinks = page === "cover" ? "" : (cfg.sections || []).filter((s) => s.exam).map((s) => `
+          <a href="${url(s.exam)}" class="is-practice ${s.id === currentId && page === "exam" ? "is-on" : ""}">${s.id}</a>
+        `).join("");
     const reviewLink = page === "cover" ? "" : (review ? `<a href="${url(review.file)}" class="${page === "review" ? "is-on" : ""}">${review.nav || "章末評量"}</a>` : "");
+    const examNav = examLinks ? `
+      <nav class="section-nav is-exam-nav no-print" aria-label="段考前練習">
+        <span class="nav-label">段考前練習</span>
+        ${examLinks}
+      </nav>
+    ` : "";
     const chapterNav = page === "cover" ? "" : `
       <nav class="section-nav no-print" aria-label="第 ${cfg.chapter?.id || ""} 章目錄">
         <span class="nav-label">第 ${cfg.chapter?.id || ""} 章</span>
         <a href="${url(cfg.home || "index.html")}" class="${page === "home" ? "is-on" : ""}">目錄</a>
         ${sectionLinks}
-        ${examLink}
         ${reviewLink}
       </nav>
+      ${examNav}
     `;
 
     host.innerHTML = `
@@ -114,15 +122,18 @@
     const host = document.getElementById("section-cards");
     if (!host) return;
     host.innerHTML = (cfg.sections || []).map((s) => `
-      <a class="section-card ${s.ready ? "" : "is-draft"}" href="${url(s.file)}">
-        <div class="section-card-top">
-          <strong>${s.id}</strong>
-          <small>${s.ready ? "講義" : "講義建置中"}</small>
-        </div>
-        <h2>${s.title}</h2>
-        ${s.ask ? `<p class="section-card-ask">${s.ask}</p>` : ""}
-        <p>${s.summary || ""}</p>
-      </a>
+      <div class="section-card ${s.ready ? "" : "is-draft"}">
+        <a class="section-card-main" href="${url(s.file)}">
+          <div class="section-card-top">
+            <strong>${s.id}</strong>
+            <small>${s.ready ? "講義" : "講義建置中"}</small>
+          </div>
+          <h2>${s.title}</h2>
+          ${s.ask ? `<p class="section-card-ask">${s.ask}</p>` : ""}
+          <p>${s.summary || ""}</p>
+        </a>
+        ${s.exam ? `<a class="section-card-exam" href="${url(s.exam)}">段考前練習</a>` : ""}
+      </div>
     `).join("") + ((cfg.sections || []).some((s) => s.exam) ? `
       <p class="home-label">段考前練習</p>
     ` : "") + (cfg.sections || []).filter((s) => s.exam).map((s) => `

@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#fffefb">
+  <title>國中八年級理化｜第5章 溫度與熱｜5-1 溫度與溫度計</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-root=".." data-page="section" data-section="5-1">
+  <div id="site-header"></div>
+  <div class="wrap workbook" id="top">
+    <section class="hero">
+      <span class="kicker">國中八年級　理化講義</span>
+      <h1>5-1　溫度與溫度計</h1>
+      <p>探究問題：用手摸得出準確的冷熱嗎？溫度計到底在量什麼？</p>
+      <svg class="wave-deco" viewBox="0 0 280 90" aria-hidden="true">
+        <path d="M70 78 C 52 48 62 22 70 10 C 78 22 88 48 70 78" fill="none" stroke="#fff" stroke-width="5"/>
+        <path d="M140 78 C 122 48 132 22 140 10 C 148 22 158 48 140 78" fill="none" stroke="#fff" stroke-width="5"/>
+        <path d="M210 78 C 192 48 202 22 210 10 C 218 22 228 48 210 78" fill="none" stroke="#fff" stroke-width="5"/>
+      </svg>
+    </section>
+
+    <nav class="toc no-word">
+      <a href="#inquiry"><small>探究</small>本節問題</a>
+      <a href="#p1"><small>重點 1</small>溫度與溫度計</a>
+      <a href="#exp"><small>實驗</small>溫度計的原理</a>
+      <a href="#p2"><small>重點 2</small>溫標與換算</a>
+      <a href="#calc"><small>計算</small>攝氏、華氏、自製溫標</a>
+      <a href="#kelvin"><small>延伸</small>克氏溫標</a>
+      <a href="#memo"><small>整理</small>考前速記</a>
+      <a href="#claim"><small>主張</small>本節結論</a>
+      <a href="#drill"><small>練習</small>基本＋進階</a>
+      <a href="../exams/5-1.html"><small>段考</small>練習</a>
+    </nav>
+
+    <article class="card inquiry" id="inquiry">
+      <div class="section-head">
+        <div class="badge calc">探</div>
+        <div>
+          <h2>本節探究　用手摸得出準確的冷熱嗎？</h2>
+          <p>重點概覽：溫度與溫度計　｜　實驗　｜　溫標</p>
+        </div>
+      </div>
+      <p class="inquiry-lead">冬天同時摸鐵椅和木椅，鐵的比較冰；可是兩張椅子放在同一間教室。先預測：手能量出「幾度」嗎？溫度計是靠什麼性質在變？下面各站找證據。</p>
+      <div class="inquiry-path">
+        <a href="#p1"><strong>重點 1　溫度與溫度計</strong><span>冷熱感覺可靠嗎？水銀計、液晶貼片、耳溫計是不是同一套原理？</span></a>
+        <a href="#exp"><strong>實驗 5-1　溫度計的原理</strong><span>自製溫度計放進冰水和熱水，液柱會往哪邊走？管愈細會怎樣？</span></a>
+        <a href="#p2"><strong>重點 2　溫標與換算</strong><span>0°C 和 32°F 是同一點嗎？1°C 的間隔等於 1°F 嗎？</span></a>
+      </div>
+      <p class="inquiry-follow">對照<a href="#memo">考前速記</a>後，在<a href="#claim">本節主張</a>用自己的話回答，再用<a href="#drill">練習</a>檢驗。</p>
+    </article>
+
+    <article class="card" id="p1">
+      <div class="section-head">
+        <div class="badge">1</div>
+        <div>
+          <h2>重點 1　溫度與溫度計</h2>
+          <p>感覺主觀，所以要用客觀的測量工具</p>
+        </div>
+      </div>
+      <p class="inquiry-ask"><strong>探究線索：</strong>如果只用手判斷冷熱，兩個人會不會量出不一樣的結果？耳溫計還有沒有「液柱升降」？</p>
+      <p class="def">
+        物體的冷熱程度稱為
+        <input class="blank" data-answer="溫度" style="width:3.5em">。
+        人體的感覺會受主觀與環境影響，範圍也有限，因此需要溫度計做
+        <input class="blank" data-answer="客觀" style="width:3.5em">
+        測量。
+      </p>
+      <p>
+        溫度計的原理：選一種會隨溫度
+        <input class="blank" data-answer="規則變化|有規則變化" style="width:6.5em">
+        的物理性質，把它的變化對應到刻度上。
+      </p>
+      <table>
+        <thead>
+          <tr><th>種類</th><th>利用的性質</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>水銀溫度計、酒精溫度計</td><td>液體的熱脹冷縮（體積隨溫度改變）</td></tr>
+          <tr><td>固體溫度計</td><td>固體的熱脹冷縮</td></tr>
+          <tr><td>液晶溫度計</td><td>顏色隨溫度改變</td></tr>
+          <tr><td>耳溫計、額溫計</td><td>測量物體放出的紅外線能量</td></tr>
+        </tbody>
+      </table>
+      <section class="extra">
+        <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：溫度計到底在量什麼？</div>
+        <ul class="q">
+          <li>溫度計不是「用手感覺」的升級版，而是選一種會隨溫度<strong>規則變化</strong>的性質，再把變化對到刻度。水銀看體積、液晶看顏色、耳溫計看紅外線，原理可以不同，目的都是量<strong>冷熱程度</strong>。</li>
+          <li>讀數要等溫度計和待測物達到<strong>熱平衡</strong>（兩者溫度相同）才準。剛放進去就讀，常常還在變。</li>
+          <li>會考陷阱：看得見、摸得到冷熱，不代表能量得出「幾度」。同一室溫下鐵椅比木椅冰，是因為鐵把熱傳走得快，不是鐵比較冷。</li>
+        </ul>
+      </section>
+      <section class="tips">
+        <div class="ex-title"><span class="tag tag-cyan">生活連結</span> 為什麼鐵椅摸起來比較冰？</div>
+        <p>同一間教室裡，鐵椅和木椅的<strong>溫度其實差不多</strong>。鐵比較容易把皮膚的熱帶走（導熱快），所以手覺得更冷。這說明：<strong>感覺到的冷熱，不一定等於溫度高低</strong>。下一節會用「熱量、比熱」把這件事講清楚。</p>
+      </section>
+      <section class="wrong-note">
+        <div class="ex-title"><span class="tag tag-rose">易錯提醒</span></div>
+        <ul class="q">
+          <li>不是所有溫度計都靠「體積脹縮」。液晶看顏色，耳溫計看紅外線。</li>
+          <li>溫度計要先和待測物達到<strong>熱平衡</strong>（下一節），讀數才代表待測物的溫度。</li>
+        </ul>
+      </section>
+      <section class="gifted">
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 同一溫度，為什麼感覺不一樣？</div>
+        <ul class="q">
+          <li>手其實在量「皮膚熱量被帶走的快慢」，不是直接讀溫度。導熱快的物體（金屬）會讓皮膚溫度掉得快，大腦就判成「比較冰」；這和下一節的熱量、再下一節的傳導是同一條線。</li>
+          <li>耳溫計讀的是物體放出的紅外線。溫度愈高，通常放出的輻射能量愈多，所以不必碰到就能估溫度。這已經是「輻射」，第 5-4 節會正式登場。</li>
+          <li>水銀在低溫會凝固、又有毒性，所以家庭常用酒精（染成紅色才看得清楚）。題目若問「哪一種能測更低溫」，常選酒精計。</li>
+        </ul>
+      </section>
+      <section class="ex-box think">
+        <div class="ex-title"><span class="tag tag-orange">辨正思考</span>○ 正確　× 錯誤，錯的要訂正</div>
+        <p>1. (
+          <input class="blank ox" data-answer="×|X|x" style="width:2.2em">
+          ) 用手就可以精確測量物體的溫度。<br>訂正：
+          <input class="blank" data-answer="感覺主觀且有限|感覺不可靠|要用溫度計" style="width:10em">
+        </p>
+        <p>2. (
+          <input class="blank ox" data-answer="×|X|x" style="width:2.2em">
+          ) 所有溫度計都是利用物質體積的熱脹冷縮來測量溫度。<br>訂正：
+          <input class="blank" data-answer="液晶看顏色、耳溫計測紅外線|還有顏色或紅外線" style="width:14em">
+        </p>
+      </section>
+      <section class="ex-box quiz">
+        <div class="ex-title"><span class="tag tag-green">牛刀小試</span></div>
+        <p>1. 物體的冷熱程度稱為
+          <input class="blank" data-answer="溫度" style="width:3.5em">。
+        </p>
+        <p>2. 水銀溫度計主要利用哪一種性質？
+          （A）體積　（B）顏色　（C）質量　（D）導電性　→
+          <input class="blank" data-answer="A|(A)|體積" style="width:3.5em">
+        </p>
+      </section>
+      <p class="inquiry-bridge"><strong>這一站的證據：</strong>冷熱感覺不可靠，溫度計要靠「隨溫度規則變化」的性質。下一站動手：自製溫度計的液柱怎麼走？</p>
+    </article>
+
+    <article class="card" id="exp">
+      <div class="section-head">
+        <div class="badge calc">實</div>
+        <div>
+          <h2>實驗 5-1　溫度計的原理</h2>
+          <p>溫度改變時，細管裡的液柱高度怎麼變？</p>
+        </div>
+      </div>
+      <p class="inquiry-ask"><strong>探究線索：</strong>把燒瓶從室溫放進冰水，液柱會立刻往下，還是先往上再往下？管徑愈細，同樣脹一點，高度差會更大還更小？</p>
+      <p>目的：探討溫度和自製溫度計液柱高度的關係。方法：錐形瓶裝紅墨水，插一支細玻璃管，分別放入冰水、溫水，再用水浴加熱。</p>
+      <div class="split">
+        <div>
+          <h3 class="subh">一組參考數據</h3>
+          <table>
+            <thead>
+              <tr><th>狀況</th><th>液柱高度</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>裝置完成（室溫）</td><td>4.00 cm</td></tr>
+              <tr><td>放入冰水</td><td>2.60 cm</td></tr>
+              <tr><td>放入溫水</td><td>5.40 cm</td></tr>
+              <tr><td>加熱 5 分鐘</td><td>7.50 cm</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <figure>
+          <svg class="diagram" viewBox="0 0 280 200" aria-label="自製溫度計：燒瓶插細管，液柱隨溫度升降">
+            <rect width="280" height="200" rx="8" fill="#fff7ed"/>
+            <ellipse cx="140" cy="168" rx="70" ry="16" fill="#fdba74"/>
+            <rect x="70" y="110" width="140" height="58" fill="#fed7aa"/>
+            <path d="M88 110 C 88 78 192 78 192 110" fill="#fecaca"/>
+            <rect x="132" y="28" width="16" height="86" fill="#e7e5e4" stroke="#78716c"/>
+            <rect x="136" y="70" width="8" height="44" fill="#dc2626"/>
+            <text x="158" y="48" font-size="12" fill="#9a3412" font-weight="700">細管</text>
+            <text x="140" y="192" text-anchor="middle" font-size="12" fill="#57534e">燒瓶＋紅墨水</text>
+          </svg>
+          <p class="caption">細管愈細，同樣體積變化造成的高度差愈大，溫度計愈靈敏</p>
+        </figure>
+      </div>
+      <section class="tips">
+        <div class="ex-title"><span class="tag tag-cyan">老師說</span> 靈敏度與「先反方向」</div>
+        <ul class="q">
+          <li>管徑愈細，同樣脹一點，液柱高度差愈大 → 愈
+            <input class="blank" data-answer="靈敏" style="width:3.5em">。</li>
+          <li>剛放進冰水或熱水時，玻璃容器會先脹縮，液柱可能先往<strong>相反方向</strong>動一下，再跟著液體走。</li>
+        </ul>
+      </section>
+      <section class="extra">
+        <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：液柱為什麼會先反方向？</div>
+        <ul class="q">
+          <li>剛放進<strong>冰水</strong>：玻璃瓶先遇冷收縮，內部空間變小，液柱被擠得<strong>先上升</strong>；接著裡面的水才變冷、體積變小，液柱才下降。</li>
+          <li>剛放進<strong>熱水</strong>：玻璃瓶先受熱膨脹，內部空間變大，液柱<strong>先下降</strong>；接著水才變熱膨脹，液柱再上升。</li>
+          <li>管徑愈細，同樣脹一點，高度差愈大 → 愈<strong>靈敏</strong>（容易看出溫度差）。靈敏不等於「一定比較準」，題目若問哪一支最靈敏，選最細的管子。</li>
+        </ul>
+      </section>
+      <section class="gifted">
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 靈敏度和管子粗細的關係</div>
+        <ul class="q">
+          <li>液體多出來的體積 ΔV，要擠進細管。細管截面積愈小，高度差 Δh＝ΔV／截面積就愈大，所以同樣升 1°C，液柱爬得比較高 → 愈靈敏。</li>
+          <li>「先反方向」其實是<strong>容器和液體誰先脹縮</strong>：熱（或冷）先傳到玻璃壁，過一會兒才傳到裡面的液體。這也說明：溫度計讀數需要一點時間，不是瞬間完成。</li>
+          <li>若玻璃和液體脹得一樣多，液柱高度幾乎不變，就做不成溫度計。水銀計能用，是因為水銀體積變化比玻璃明顯。</li>
+        </ul>
+      </section>
+      <p>
+        結果：溫度愈高，液體熱脹，液柱
+        <input class="blank" data-answer="上升|變高" style="width:3.5em">；
+        溫度愈低，液柱
+        <input class="blank" data-answer="下降|變低" style="width:3.5em">。
+        上表溫水 5.40 cm 高於初始 4.00 cm，表示溫水比室溫
+        <input class="blank" data-answer="高|熱" style="width:2.4em">。
+      </p>
+      <section class="ex-box quiz">
+        <div class="ex-title"><span class="tag tag-green">實驗題</span> 藍墨水錐形瓶，10°C 時液柱 4 cm（A），40°C 時 10 cm（C），B 點在 6 cm</div>
+        <p>1. 從 20°C 放入 10°C 水中，液柱最可能
+          （A）先降後升　（B）先升後降　（C）一直升　（D）一直降　→
+          <input class="blank" data-answer="B|(B)|先升後降" style="width:5.5em">
+        </p>
+        <p>2. 液柱在 7.2 cm 時，溫度約
+          （A）22°C　（B）24°C　（C）26°C　（D）28°C　→
+          <input class="blank" data-answer="C|(C)|26" style="width:3.2em">
+        </p>
+        <p>3. 其他條件相同，哪一種細管最靈敏？
+          （A）最粗　（B）次粗　（C）次細　（D）最細　→
+          <input class="blank" data-answer="D|(D)|最細" style="width:3.2em">
+        </p>
+      </section>
+      <p class="inquiry-bridge"><strong>這一站的證據：</strong>液柱高度隨溫度規則升降，細管更靈敏。下一站把「升降」畫成刻度：攝氏、華氏怎麼對？</p>
+    </article>
+
+    <article class="card" id="p2">
+      <div class="section-head">
+        <div class="badge">2</div>
+        <div>
+          <h2>重點 2　溫標</h2>
+          <p>冰點、沸點，以及刻度怎麼切</p>
+        </div>
+      </div>
+      <p class="inquiry-ask"><strong>探究線索：</strong>0°C 和 32°F 是不是同一物理狀態？從冰點到沸點，攝氏切成幾等分、華氏切成幾等分？</p>
+      <table>
+        <thead>
+          <tr><th>溫標</th><th>由來</th><th>1 大氣壓下的規定</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>攝氏（°C）</td>
+            <td>紀念攝爾修斯</td>
+            <td>冰點 0°C、沸點 100°C，分成
+              <input class="blank" data-answer="100" style="width:3em">
+              等分</td>
+          </tr>
+          <tr>
+            <td>華氏（°F）</td>
+            <td>紀念華倫海，美國常用</td>
+            <td>冰點 32°F、沸點 212°F，分成
+              <input class="blank" data-answer="180" style="width:3em">
+              等分</td>
+          </tr>
+        </tbody>
+      </table>
+      <h3 class="subh">攝氏與華氏換算</h3>
+      <p>同一支溫度計上，冰點到沸點這段長度相同，所以比例相等：</p>
+      <p class="formula">（°C − 0）／100 ＝（°F − 32）／180　→　°F ＝ (9／5)°C ＋ 32</p>
+      <p>
+        因此 1°C 的間隔相當於
+        <input class="blank" data-answer="9/5|1.8|9／5" style="width:3.5em">
+        °F，不是 1°F。
+      </p>
+      <h3 class="subh">任意溫標 N 的通用比例</h3>
+      <p class="formula">（°N − 冰點）／（沸點 − 冰點）＝ °C／100 ＝（°F − 32）／180</p>
+      <section class="extra">
+        <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：同一點、不同刻度</div>
+        <ul class="q">
+          <li>0°C 和 32°F 是<strong>同一個物理狀態</strong>（1 大氣壓下水的冰點），只是刻度起點不同。100°C 和 212°F 則都是沸點。</li>
+          <li>「間隔」和「讀數」要分開：攝氏切 100 份、華氏切 180 份，所以 1°C 的間隔＝ 9／5 °F。甲從 20°C 升到 40°C，改變量是 20°C；乙從 60°F 升到 80°F，改變量只有 20°F，甲的改變量比較大。</li>
+          <li>自製溫標只要知道冰點、沸點兩個錨點，就能用「這一段佔全部的幾分之幾」去換算，不必背很多公式。</li>
+        </ul>
+      </section>
+      <section class="wrong-note">
+        <div class="ex-title"><span class="tag tag-rose">易錯提醒</span></div>
+        <ul class="q">
+          <li>冰點：0°C ＝ 32°F；沸點：100°C ＝ 212°F。不要寫成「冰點 0°C、沸點 212°F」卻當成同一套溫標。</li>
+          <li>溫度「改變量」和「讀數」要分開想：20°C→40°C 變了 20°C；60°F→80°F 只變了 20°F（約 11°C）。</li>
+        </ul>
+      </section>
+      <section class="gifted">
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 為什麼是 9／5，不是隨便一個分數？</div>
+        <ul class="q">
+          <li>冰點到沸點這段「真實溫度差」是同一段。攝氏把它切成 100 格，華氏切成 180 格，所以 1 格攝氏＝180／100＝9／5 格華氏。公式裡的 32，只是華氏不從 0 開始數。</li>
+          <li>任意溫標 N 都是<strong>線性刻度</strong>：液柱高度（或電阻等）假設跟溫度成正比。先算「這點距離冰點佔冰點～沸點的幾分之幾」，再乘上另一套溫標的總格數。</li>
+          <li>兩套溫標讀數相同的溫度：令 °C＝°F＝x，則 x＝(9／5)x＋32 → x＝−40。也就是 −40°C＝−40°F。國中偶爾出現，用來檢查有沒有把公式背反。</li>
+        </ul>
+      </section>
+      <section class="ex-box think">
+        <div class="ex-title"><span class="tag tag-orange">辨正思考</span></div>
+        <p>1. (
+          <input class="blank ox" data-answer="×|X|x" style="width:2.2em">
+          ) 溫度改變 1°C，相當於改變 5／9 °F。<br>訂正：
+          <input class="blank" data-answer="9/5 °F|1.8°F|9／5°F" style="width:6em">
+        </p>
+        <p>2. (
+          <input class="blank ox" data-answer="×|X|x" style="width:2.2em">
+          ) 1 大氣壓下，水的冰點是 0°C、沸點是 212°F（同一套溫標）。<br>訂正：
+          <input class="blank" data-answer="沸點是100°C或212°F|冰點0°C＝32°F、沸點100°C＝212°F" style="width:16em">
+        </p>
+      </section>
+      <section class="ex-box quiz">
+        <div class="ex-title"><span class="tag tag-green">牛刀小試</span></div>
+        <p>1. 1 大氣壓下，攝氏把冰點到沸點分成
+          <input class="blank" data-answer="100" style="width:3em">
+          等分，華氏分成
+          <input class="blank" data-answer="180" style="width:3em">
+          等分。
+        </p>
+        <p>2. 甲杯 20°C→40°C，乙杯 60°F→80°F，溫度改變量
+          （A）甲較大　（B）乙較大　（C）一樣　（D）不能比　→
+          <input class="blank" data-answer="A|(A)|甲較大" style="width:4em">
+        </p>
+        <p>3. 承上，最後誰的水溫較高？
+          （A）甲　（B）乙　（C）一樣　（D）不能比　→
+          <input class="blank" data-answer="A|(A)|甲" style="width:3em">
+        </p>
+      </section>
+      <p class="inquiry-bridge"><strong>這一站的證據：</strong>不同溫標用同一對冰點、沸點當錨點，再用等分和比例換算。下一站用公式算出實際數字。</p>
+    </article>
+
+    <article class="card" id="calc">
+      <div class="section-head">
+        <div class="badge calc">算</div>
+        <div>
+          <h2>計算演練　溫標換算</h2>
+          <p>先對齊冰點沸點，再交叉相乘</p>
+        </div>
+      </div>
+      <p class="formula">（°N − B）／（A − B）＝ °C／100 ＝（°F − 32）／180</p>
+      <div class="two-col">
+        <section class="ex-box skill">
+          <div class="ex-title"><span class="tag tag-blue">範例 1</span></div>
+          <p>美國雜誌寫「嬰兒洗澡最佳水溫約 104°F」。約等於多少 °C？</p>
+          <p>解：°C ＝ (5／9)(104 − 32) ＝ (5／9)×72 ＝
+            <input class="blank" data-answer="40" style="width:3em">
+            °C。
+          </p>
+        </section>
+        <section class="ex-box skill">
+          <div class="ex-title"><span class="tag tag-blue">類題 1</span></div>
+          <p>自製溫度計：1 大氣壓下水的冰點 50°X、沸點 140°X。則 100°X 相當於多少 °F？</p>
+          <p>解：（100−50）／（140−50）＝（°F−32）／180　→　50／90 ＝（°F−32）／180　→　°F ＝
+            <input class="blank" data-answer="132" style="width:3.5em">。
+          </p>
+        </section>
+      </div>
+    </article>
+
+    <article class="card" id="kelvin">
+      <div class="section-head">
+        <div class="badge extend">延</div>
+        <div>
+          <h2>延伸學習　克氏溫標</h2>
+          <p>熱力學常用，符號 K</p>
+        </div>
+      </div>
+      <ul class="q">
+        <li>為紀念物理學家克耳文（Kelvin），符號
+          <input class="blank" data-answer="K" style="width:2.4em">，
+          是國際單位制基本物理量之一。</li>
+        <li>1 大氣壓下，水的冰點
+          <input class="blank" data-answer="273" style="width:3.5em">
+          K、沸點
+          <input class="blank" data-answer="373" style="width:3.5em">
+          K。</li>
+        <li>換算：K ＝ °C ＋
+          <input class="blank" data-answer="273" style="width:3.5em">。</li>
+        <li>絕對零度 0 K，約
+          <input class="blank" data-answer="-273|-273°C" style="width:4.5em">
+          °C，是熱力學最低溫度。</li>
+      </ul>
+      <p class="formula">K ＝ °C ＋ 273</p>
+      <section class="extra">
+        <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：克氏和攝氏差在哪？</div>
+        <ul class="q">
+          <li>1 K 的間隔和 1°C 的間隔<strong>一樣大</strong>，只是零點不同：0 K 是絕對零度（約 −273°C），0°C 是水的冰點（273 K）。</li>
+          <li>換算只要加減 273，不要乘 9／5。把華氏公式用到克氏，是段考常見錯法。</li>
+          <li>國中只要記：沒有比 0 K 更低的溫度；冰點 273 K、沸點 373 K，中間仍是 100 等分。</li>
+        </ul>
+      </section>
+      <section class="gifted">
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 絕對零度在說什麼？</div>
+        <ul class="q">
+          <li>氣體愈冷，粒子平均運動愈慢。一直冷下去，想像運動會趨近停止，那個極限叫絕對零度。實際無法到達 0 K，國中只要知道「這是下限」。</li>
+          <li>換算用 273 是國中近似；精密值是 273.15。段考寫 K＝°C＋273 即可，不必算到小數。</li>
+          <li>克氏沒有「度」這個字，符號是 K 不是 °K。溫度改變 10°C，也等於改變 10 K，因為格子一樣大。</li>
+        </ul>
+      </section>
+      <section class="ex-box skill">
+        <div class="ex-title"><span class="tag tag-blue">小試身手</span></div>
+        <p>1. 1 大氣壓下，克氏溫標把水的冰點與沸點之間分成
+          <input class="blank" data-answer="100" style="width:3em">
+          等分。
+        </p>
+        <p>2. 絕對零度相當於攝氏多少度？
+          （A）0°C　（B）273°C　（C）−273°C　（D）−373°C　→
+          <input class="blank" data-answer="C|(C)|-273" style="width:4em">
+        </p>
+      </section>
+    </article>
+
+    <article class="card" id="memo">
+      <div class="section-head">
+        <div class="badge calc">記</div>
+        <div>
+          <h2>考前速記</h2>
+          <p>把感覺、原理、刻度收成三句</p>
+        </div>
+      </div>
+      <p class="inquiry-ask"><strong>證據卡：</strong>這些句子用來支撐下面的「本節主張」。先對照實驗液柱和換算公式，再決定你同不同意。</p>
+      <table>
+        <thead>
+          <tr><th>觀念</th><th>記住這句</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>溫度</td><td>冷熱程度；手的感覺不可靠</td></tr>
+          <tr><td>溫度計</td><td>利用隨溫度規則變化的性質</td></tr>
+          <tr><td>攝氏／華氏</td><td>0↔32、100↔212；°F＝(9／5)°C＋32</td></tr>
+          <tr><td>間隔</td><td>1°C＝9／5 °F；冰點到沸點攝氏 100 等分、華氏 180 等分</td></tr>
+          <tr><td>克氏</td><td>K＝°C＋273；絕對零度 0 K＝−273°C</td></tr>
+        </tbody>
+      </table>
+    </article>
+
+    <article class="card inquiry-claim" id="claim">
+      <div class="section-head">
+        <div class="badge">主</div>
+        <div>
+          <h2>本節主張</h2>
+          <p>感覺換成刻度，刻度可以互相換算</p>
+        </div>
+      </div>
+      <p>用手無法精確測量溫度。溫度計利用物質隨溫度<strong>規則變化</strong>的性質（體積、顏色或紅外線）。攝氏與華氏用同一對冰點、沸點當錨點，再用比例換算；克氏則把絕對零度當起點，K＝°C＋273。</p>
+      <p class="inquiry-next">下一站要問：<a href="5-2.html">熱量和溫度是同一件事嗎？為什麼有的東西升溫比較快？</a>　先用下面練習檢驗你的主張。</p>
+    </article>
+
+    <article class="card" id="drill">
+      <div class="section-head">
+        <div class="badge">練</div>
+        <div>
+          <h2>綜合練習</h2>
+          <p>基本題 5 題　＋　進階題 5 題</p>
+        </div>
+      </div>
+      <p class="inquiry-ask"><strong>檢驗主張：</strong>做題時對照本節問題——用手摸得出準確的冷熱嗎？溫度計到底在量什麼？</p>
+      <div class="drill-grid">
+        <div class="drill-col">
+          <h3>基本題</h3>
+          <p>1. 物體的冷熱程度稱為
+            <input class="blank" data-answer="溫度" style="width:3.5em">。
+          </p>
+          <p>2. 水銀溫度計利用液體的
+            <input class="blank" data-answer="熱脹冷縮|體積" style="width:5.5em">。
+          </p>
+          <p>3. 1 大氣壓下，攝氏冰點
+            <input class="blank" data-answer="0" style="width:2.4em">
+            °C、沸點 100°C。
+          </p>
+          <p>4. 華氏冰點
+            <input class="blank" data-answer="32" style="width:2.4em">
+            °F、沸點 212°F。
+          </p>
+          <p>5. °F ＝ (9／5)°C ＋
+            <input class="blank" data-answer="32" style="width:2.4em">。
+          </p>
+        </div>
+        <div class="drill-col">
+          <h3>進階題</h3>
+          <p>1. 耳溫計測量的是
+            <input class="blank" data-answer="紅外線" style="width:4.5em">
+            能量，不是液柱高度。
+          </p>
+          <p>2. 自製溫度計管徑愈細愈
+            <input class="blank" data-answer="靈敏" style="width:3.5em">。
+          </p>
+          <p>3. 104°F 約等於
+            <input class="blank" data-answer="40" style="width:3em">
+            °C。
+          </p>
+          <p>4. 冰點 50°X、沸點 140°X 時，100°X ＝
+            <input class="blank" data-answer="132" style="width:3.5em">
+            °F。
+          </p>
+          <p>5. 絕對零度約
+            <input class="blank" data-answer="-273|-273°C" style="width:4.5em">
+            °C。
+          </p>
+        </div>
+      </div>
+    </article>
+
+    <p class="footer">
+      國中八年級理化　第 5 章　5-1 溫度與溫度計<br>
+      原始碼：<a data-github target="_blank" rel="noopener">GitHub 專案</a>
+    </p>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="../js/config-ch5.js"></script>
+  <script src="../js/layout.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

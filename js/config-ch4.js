@@ -12,7 +12,8 @@ window.APP_CONFIG = {
   cover: { file: "cover.html", nav: "封面" },
   chapters: [
     { id: "3", title: "波動與聲音", file: "index.html" },
-    { id: "4", title: "光", file: "ch4.html" }
+    { id: "4", title: "光", file: "ch4.html" },
+    { id: "5", title: "溫度與熱", file: "ch5.html" }
   ],
   review: {
     id: "ch-4",

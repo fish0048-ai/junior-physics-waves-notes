@@ -30,6 +30,58 @@
     return out;
   }
 
+  function imageNum(p) {
+    const m = String(p).match(/image(\d+)/i);
+    return m ? parseInt(m[1], 10) : -1;
+  }
+
+  function imageExt(p) {
+    return String(p).split(".").pop().toLowerCase();
+  }
+
+  function imageDir(p) {
+    return String(p).replace(/image\d+\.[^.]+$/i, "");
+  }
+
+  function imagePath(dir, n, ext) {
+    return dir + "image" + String(n).padStart(3, "0") + "." + ext;
+  }
+
+  /** Word 同一張圖常同時輸出 png 與下一號 jpg／gif，畫面會出現兩張一樣的。 */
+  function dedupeWordPairs(arr) {
+    const list = flattenSrcs(arr);
+    const out = [];
+    for (let i = 0; i < list.length; i++) {
+      const cur = list[i];
+      const nxt = list[i + 1];
+      if (nxt && imageNum(nxt) === imageNum(cur) + 1) {
+        const e1 = imageExt(cur);
+        const e2 = imageExt(nxt);
+        if (e1 === "png" && /^(jpg|jpeg|gif)$/.test(e2)) {
+          out.push(cur);
+          i += 1;
+          continue;
+        }
+        if (e2 === "png" && /^(jpg|jpeg|gif)$/.test(e1)) {
+          out.push(nxt);
+          i += 1;
+          continue;
+        }
+      }
+      out.push(cur);
+    }
+    return out;
+  }
+
+  function fillChoiceFigPairs(figs) {
+    if (figs.length !== 2) return figs;
+    const n0 = imageNum(figs[0]);
+    const n1 = imageNum(figs[1]);
+    if (n0 < 0 || n1 !== n0 + 2 || imageExt(figs[0]) !== "png") return figs;
+    const dir = imageDir(figs[0]);
+    return [figs[0], figs[1], imagePath(dir, n0 + 4, "png"), imagePath(dir, n0 + 6, "png")];
+  }
+
   function cleanText(s) {
     return String(s || "")
       .replace(/<[^>]+>/g, " ")
@@ -66,8 +118,10 @@
     next.group = cleanText(next.group);
     next.choices = (next.choices || []).slice(0, 4).map((c) => stripLeakedNext(cleanText(c)));
     const filled = next.choices.filter(Boolean);
-    next.imgs = flattenSrcs(next.imgs);
-    next.choiceImgs = flattenSrcs(next.choiceImgs);
+    next.imgs = dedupeWordPairs(next.imgs);
+    next.choiceImgs = dedupeWordPairs(next.choiceImgs);
+    const asFig = next.choices.filter((c) => String(c).includes("如圖")).length >= 2;
+    if (asFig) next.choiceImgs = fillChoiceFigPairs(next.choiceImgs);
     if (next.imgs.length > 6) {
       next.imgs = next.imgs.slice(0, filled.length >= 2 ? 2 : 1);
     } else if (next.imgs.length > 4 && filled.length >= 2) {
@@ -132,6 +186,13 @@
       if (/針孔|影子|光速|直線|日蝕|月蝕|光年|日食|月食/.test(t)) return "prop";
       return "optics";
     }
+    if (secId === "ch-5" || String(secId).indexOf("5-") === 0) {
+      if (/溫度計|溫標|攝氏|華氏|克氏|液柱|絕對零度/.test(t)) return "temp";
+      if (/比熱|熱量|卡路里|熱平衡|混合|大卡/.test(t)) return "heat";
+      if (/熔化|沸騰|熱脹|三態|凝固|昇華|凝結|汽化|密度/.test(t)) return "phase";
+      if (/傳導|對流|輻射|保溫|海風|陸風|良導體/.test(t)) return "transfer";
+      return "thermal";
+    }
     if (/超聲波|次聲波|聲納|蝙蝠|產檢/.test(t)) return "ultra";
     if (/回聲|峭壁|山壁|測距|雷聲/.test(t)) return "echo";
     if (/音調|音色|響度|分貝|噪音|弦|力度|樂音/.test(t)) return "tone";
@@ -147,8 +208,8 @@
   function normalizeFigs(list) {
     return list.map((item) => {
       const next = Object.assign({}, item);
-      next.imgs = flattenSrcs(next.imgs);
-      next.choiceImgs = flattenSrcs(next.choiceImgs);
+      next.imgs = dedupeWordPairs(next.imgs);
+      next.choiceImgs = dedupeWordPairs(next.choiceImgs);
       const imgs = next.imgs;
       const choices = (next.choices || []).map((c) => String(c || "").trim());
       const filled = choices.filter(Boolean);

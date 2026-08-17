@@ -11,6 +11,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 
 - 探究怎麼寫：[inquiry.md](inquiry.md)
 - HTML 骨架與 class：[html-templates.md](html-templates.md)
+- 兩層觀念補充：[extras.md](extras.md)
 - 題庫與評量：[exams.md](exams.md)
 - 檔名與 config：[reference.md](reference.md)
 
@@ -27,6 +28,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 3. 講義 `input.blank` 凍成 span；探究 textarea 由 `app.js` 自動插。
 4. 繁體中文。未要求不 commit／push。
 5. 禁止解壓縮 docx、禁止字元碼混淆的 PowerShell。
+6. 每個重點卡課文後必備兩層補充：`.extra` 國中程度、`.gifted` 國中資優（見 extras.md）。不能只抄課本。
 
 ## 工作流程
 
@@ -37,7 +39,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 - [ ] 抽出定義／挖空／圖／實驗／練習／題庫（不刪）
 - [ ] 新增 js/config-chN.js，並改所有現有 config 的 chapters
 - [ ] 章首 chN.html：該章目錄（hero 鏈 + 探究故事段，不要 inquiry-map 清單）
-- [ ] 各節 sections/N-x.html（順序見 inquiry.md）
+- [ ] 各節 sections/N-x.html（順序見 inquiry.md；每張重點卡要有 extra＋gifted）
 - [ ] 各節 exams/N-x.html + exam-chN-sections.js + exam-chN-keys.js
 - [ ] review-chN.html + exam-chN.js（約 120 抽 40）
 - [ ] 附圖 exams/img/N-x/，路徑 exams/img/...
@@ -51,6 +53,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 - 章首又做 `.inquiry-map` 又做 section-cards，問題重複。
 - 講義頁放「檢查作答」；挖空改回可輸入。
 - 手寫探究 textarea，和 `app.js` 重複。
+- 只抄課本、沒有 `.extra` 國中程度或沒有 `.gifted` 資優；兩層寫成同一句。
 - keys 字串長度和題數不同，答案整節沒覆寫。
 - 新章仍載入 `exam-bank.js`。
 - 只改 `config-chN.js` 的 chapters，舊的 `config.js` 頂欄沒有新章。
