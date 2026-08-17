@@ -961,12 +961,36 @@ body.ink-draw #ink-host.is-draw {
 body.ink-draw .wrap {
   outline: 3px solid #ea580c;
   outline-offset: 2px;
-  padding-bottom: 96px;
+  padding-bottom: 168px;
 }
-body.ink-draw .btn-github,
-body.ink-draw #btn-pdf,
-body.ink-draw #btn-pdf-key {
-  display: none;
+body.ink-draw .toolbar {
+  padding: 4px 10px;
+  gap: 4px 8px;
+}
+body.ink-draw .brand-mark {
+  width: 24px;
+  height: 24px;
+  font-size: 12px;
+  border-radius: 7px;
+}
+body.ink-draw .brand {
+  gap: 6px;
+  font-size: 13px;
+}
+body.ink-draw .toolbar .btn,
+body.ink-draw .toolbar-actions .btn {
+  min-height: 30px;
+  padding: 3px 8px;
+  font-size: 12px;
+}
+body.ink-draw .section-nav {
+  padding: 4px 10px 6px;
+  gap: 4px;
+}
+body.ink-draw .section-nav a {
+  min-height: 28px;
+  padding: 2px 8px;
+  font-size: 12px;
 }
 
 .ink-dock {
@@ -983,67 +1007,29 @@ body.ink-draw #btn-pdf-key {
   pointer-events: none;
 }
 .ink-dock > * { pointer-events: auto; }
-.ink-banner {
-  width: min(300px, calc(100vw - 24px));
-  background: #c2410c;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  padding: 8px 12px;
-  border-radius: 10px;
-  box-shadow: 0 8px 24px rgba(0,0,0,.18);
-}
-.ink-strip {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  width: min(520px, calc(100vw - 16px));
-  background: #fffefb;
-  border: 1px solid var(--line);
-  border-radius: 16px;
-  padding: 8px;
-  box-shadow: 0 8px 24px rgba(28, 25, 23, 0.18);
-}
-.ink-strip[hidden] { display: none !important; }
-.ink-strip button {
+.ink-strip-stop {
   appearance: none;
-  border: 1px solid var(--line);
-  background: #fff;
-  min-height: 44px;
-  min-width: 44px;
-  padding: 8px 12px;
-  border-radius: 12px;
+  background: #ea580c;
+  color: #fff;
+  border: 0;
+  min-width: 52px;
+  min-height: 28px;
+  padding: 3px 10px;
+  border-radius: 999px;
   font: inherit;
   font-weight: 800;
-  font-size: 14px;
+  font-size: 12px;
   cursor: pointer;
 }
-.ink-strip-stop {
-  background: #ea580c !important;
-  color: #fff !important;
-  border: 0 !important;
-  min-width: 72px;
+.ink-pair {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 6px 8px;
+  align-items: end;
 }
-.ink-strip button.is-on {
-  outline: 3px solid #16a34a;
-  outline-offset: 1px;
-}
-.ink-strip-colors {
-  display: flex;
+.ink-checks {
   flex-wrap: wrap;
-  gap: 6px;
-  margin-left: auto;
-}
-.ink-strip-colors button {
-  width: 32px;
-  min-width: 32px;
-  height: 32px;
-  min-height: 32px;
-  padding: 0;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 0 0 1px #d6d3d1;
+  align-items: center;
 }
 .ink-fab {
   appearance: none;
@@ -1071,6 +1057,66 @@ body.ink-draw #btn-pdf-key {
   border-radius: 16px;
   padding: 12px;
   box-shadow: 0 12px 32px rgba(28, 25, 23, 0.16);
+}
+body.ink-draw .ink-dock {
+  max-width: min(720px, calc(100vw - 16px));
+}
+body.ink-draw .ink-panel {
+  width: min(720px, calc(100vw - 16px));
+  max-height: min(32dvh, 260px);
+  padding: 8px;
+}
+body.ink-draw .ink-panel-head {
+  margin-bottom: 4px;
+  align-items: center;
+}
+body.ink-draw .ink-panel-head strong { font-size: 13px; }
+body.ink-draw .ink-status { font-size: 11px; }
+body.ink-draw .ink-field {
+  margin: 4px 0;
+  font-size: 11px;
+}
+body.ink-draw .ink-field select,
+body.ink-draw .ink-row input[type="text"],
+body.ink-draw .ink-row .btn {
+  min-height: 32px;
+  font-size: 13px;
+  padding: 4px 8px;
+}
+body.ink-draw .ink-row { margin: 4px 0; }
+body.ink-draw .ink-tools {
+  margin: 4px 0;
+  gap: 4px;
+}
+body.ink-draw .ink-tools button {
+  min-height: 32px;
+  font-size: 13px;
+}
+body.ink-draw .ink-colors {
+  margin: 4px 0;
+  gap: 6px;
+}
+body.ink-draw .ink-colors button {
+  width: 26px;
+  height: 26px;
+}
+body.ink-draw .ink-check {
+  margin: 3px 0;
+  font-size: 12px;
+}
+body.ink-draw .ink-check input {
+  width: 16px;
+  height: 16px;
+}
+body.ink-draw .ink-hint {
+  margin: 4px 0 0;
+  font-size: 11px;
+}
+body.ink-draw .ink-fab {
+  min-height: 36px;
+  min-width: 36px;
+  padding: 6px 12px;
+  font-size: 13px;
 }
 .ink-panel-head {
   display: flex;
@@ -1158,6 +1204,68 @@ body.ink-draw #btn-pdf-key {
   line-height: 1.45;
 }
 
+html.is-touch,
+html.is-touch body {
+  background: var(--paper);
+  min-height: 100dvh;
+}
+html.is-touch .wrap {
+  width: 100%;
+  max-width: none;
+  margin: 0;
+}
+html.is-touch .toolbar {
+  padding-top: max(8px, env(safe-area-inset-top, 0px));
+  padding-left: max(10px, env(safe-area-inset-left, 0px));
+  padding-right: max(10px, env(safe-area-inset-right, 0px));
+}
+html.is-touch .section-nav {
+  padding-left: max(10px, env(safe-area-inset-left, 0px));
+  padding-right: max(10px, env(safe-area-inset-right, 0px));
+}
+html.is-touch .hero,
+html.is-touch .card,
+html.is-touch .section-card,
+html.is-touch .exam-q,
+html.is-touch .ex-box,
+html.is-touch .extra,
+html.is-touch .tips,
+html.is-touch .gifted {
+  border-radius: 0;
+  box-shadow: none;
+}
+html.is-touch .hero {
+  margin: 0;
+}
+html.is-touch .card {
+  margin: 0;
+  border-left: 0;
+  border-right: 0;
+}
+html.is-touch .section-cards {
+  margin: 0;
+  gap: 0;
+  grid-template-columns: 1fr;
+}
+html.is-touch .section-card {
+  border-left: 0;
+  border-right: 0;
+}
+html.is-touch .footer {
+  margin: 0;
+  padding: 14px 16px calc(16px + env(safe-area-inset-bottom, 0px));
+}
+html.is-touch .ink-dock {
+  left: 0;
+  right: 0;
+  bottom: 0;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+html.is-touch body.ink-draw .wrap {
+  outline: none;
+  outline-offset: 0;
+}
+
 @media (max-width: 900px) {
   .toc { grid-template-columns: 1fr 1fr; }
   .section-cards { grid-template-columns: 1fr; }
@@ -1182,13 +1290,17 @@ body.ink-draw #btn-pdf-key {
     align-items: stretch;
     max-width: none;
   }
-  .ink-strip,
-  .ink-panel,
-  .ink-banner { width: 100%; max-width: none; }
+  .ink-panel { width: 100%; max-width: none; }
   .ink-fab { align-self: flex-end; }
-  body.ink-draw .wrap { padding-bottom: 148px; }
-  body.ink-draw .ink-dock.is-open .ink-panel {
-    max-height: min(42dvh, calc(100dvh - 18rem));
+  body.ink-draw .wrap { padding-bottom: 200px; }
+  body.ink-draw .toolbar .btn,
+  body.ink-draw .toolbar-actions .btn {
+    min-height: 30px;
+  }
+  body.ink-draw .section-nav a { min-height: 28px; }
+  body.ink-draw .ink-panel {
+    width: 100%;
+    max-height: min(36dvh, 280px);
   }
 }
 

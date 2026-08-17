@@ -170,11 +170,16 @@
   host.appendChild(canvas);
   host.appendChild(live);
   wrap.appendChild(host);
-  const ctx = canvas.getContext("2d");
-  const liveCtx = live.getContext("2d");
+  const ctxOpts = { alpha: true, desynchronized: true };
+  const ctx = canvas.getContext("2d", ctxOpts) || canvas.getContext("2d");
+  const liveCtx = live.getContext("2d", ctxOpts) || live.getContext("2d");
 
   function cssWidth() {
     return Math.max(1, wrap.clientWidth);
+  }
+
+  function cssHeight() {
+    return Math.max(1, parseFloat(canvas.style.height) || host.clientHeight);
   }
 
   function toPoint(e) {
@@ -192,11 +197,7 @@
     return Math.max(1, base * (w / 800));
   }
 
-  function drawStrokeOn(target, stroke) {
-    const pts = stroke.points || [];
-    if (!pts.length) return;
-    const w = cssWidth();
-    target.save();
+  function applyStrokeStyle(target, stroke, w) {
     if (stroke.tool === "eraser") {
       target.globalCompositeOperation = "destination-out";
       target.strokeStyle = "rgba(0,0,0,1)";
@@ -209,6 +210,14 @@
     target.lineCap = "round";
     target.lineJoin = "round";
     target.lineWidth = lineWidth(stroke, w);
+  }
+
+  function drawStrokeOn(target, stroke) {
+    const pts = stroke.points || [];
+    if (!pts.length) return;
+    const w = cssWidth();
+    target.save();
+    applyStrokeStyle(target, stroke, w);
     target.beginPath();
     target.moveTo(pts[0].x * w, pts[0].y * w);
     if (pts.length === 1) {
@@ -226,12 +235,46 @@
     target.restore();
   }
 
+  function drawNewSegments(target, stroke, fromIdx) {
+    const pts = stroke.points || [];
+    if (!pts.length || fromIdx >= pts.length) return;
+    const w = cssWidth();
+    target.save();
+    applyStrokeStyle(target, stroke, w);
+    target.beginPath();
+    if (fromIdx <= 0) {
+      target.moveTo(pts[0].x * w, pts[0].y * w);
+      target.lineTo(pts[0].x * w + 0.01, pts[0].y * w);
+      fromIdx = 1;
+    } else {
+      const prev = pts[fromIdx - 1];
+      target.moveTo(prev.x * w, prev.y * w);
+    }
+    for (let i = fromIdx; i < pts.length; i += 1) {
+      target.lineTo(pts[i].x * w, pts[i].y * w);
+    }
+    target.stroke();
+    target.restore();
+  }
+
+  function canvasScale(w, h) {
+    let scale = Math.min(window.devicePixelRatio || 1, 1.5);
+    const maxSide = 4096;
+    const maxPixels = 5 * 1024 * 1024;
+    if (w * scale > maxSide) scale = maxSide / w;
+    if (h * scale > maxSide) scale = Math.min(scale, maxSide / h);
+    if (w * h * scale * scale > maxPixels) {
+      scale = Math.sqrt(maxPixels / Math.max(1, w * h));
+    }
+    return Math.max(0.5, scale);
+  }
+
   function sizeCanvases() {
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
     const w = wrap.clientWidth;
     const h = Math.max(wrap.scrollHeight, wrap.clientHeight, 1);
-    const pw = Math.floor(w * dpr);
-    const ph = Math.floor(h * dpr);
+    const scale = canvasScale(w, h);
+    const pw = Math.max(1, Math.floor(w * scale));
+    const ph = Math.max(1, Math.floor(h * scale));
     [canvas, live].forEach((el) => {
       el.style.width = w + "px";
       el.style.height = h + "px";
@@ -239,7 +282,8 @@
         el.width = pw;
         el.height = ph;
       }
-      el.getContext("2d").setTransform(dpr, 0, 0, dpr, 0, 0);
+      const g = el === canvas ? ctx : liveCtx;
+      g.setTransform(scale, 0, 0, scale, 0, 0);
     });
     return { w, h };
   }
@@ -256,8 +300,11 @@
     }
   }
 
+  let fitTimer = 0;
   function fitCanvas() {
-    redraw();
+    if (state.current) return;
+    clearTimeout(fitTimer);
+    fitTimer = setTimeout(redraw, 50);
   }
 
   function setStatus(text) {
@@ -320,14 +367,15 @@
       btn.classList.toggle("btn-ghost", !state.drawing);
       btn.textContent = state.drawing ? "結束筆記" : "筆記";
     }
-    const banner = document.getElementById("ink-banner");
-    if (banner) {
-      banner.hidden = true;
-    }
-    const strip = document.getElementById("ink-strip");
-    if (strip) strip.hidden = !state.drawing;
+    const stop = document.getElementById("ink-stop");
+    if (stop) stop.hidden = !state.drawing;
     const fab = document.getElementById("ink-fab");
-    if (fab) fab.textContent = state.drawing ? "設定" : "筆記面板";
+    const panel = document.getElementById("ink-panel");
+    if (fab) {
+      fab.textContent = state.drawing
+        ? (panel && !panel.hidden ? "收合" : "工具")
+        : "筆記面板";
+    }
     document.querySelectorAll("[data-ink-tool]").forEach((b) => {
       b.classList.toggle("is-on", b.dataset.inkTool === state.tool);
     });
@@ -347,52 +395,85 @@
     return state.allowFinger;
   }
 
+  let paintRaf = 0;
+  function ingestPoints(e) {
+    const coalesced = typeof e.getCoalescedEvents === "function" ? e.getCoalescedEvents() : null;
+    const events = coalesced && coalesced.length ? coalesced : [e];
+    events.forEach((ev) => {
+      const p = toPoint(ev);
+      const last = state.current.points[state.current.points.length - 1];
+      const dx = p.x - last.x;
+      const dy = p.y - last.y;
+      if (dx * dx + dy * dy < 0.0000008) return;
+      state.current.points.push(p);
+    });
+  }
+
+  function paintCurrent() {
+    const stroke = state.current;
+    if (!stroke) return;
+    const from = stroke.drawnUntil || 0;
+    if (from >= stroke.points.length && from > 0) return;
+    const target = stroke.tool === "eraser" ? ctx : liveCtx;
+    drawNewSegments(target, stroke, from);
+    stroke.drawnUntil = stroke.points.length;
+  }
+
+  function requestPaint() {
+    if (paintRaf) return;
+    paintRaf = requestAnimationFrame(() => {
+      paintRaf = 0;
+      paintCurrent();
+    });
+  }
+
   function startStroke(e) {
     if (!state.drawing || !state.visible) return;
     if (!acceptPointer(e)) return;
     e.preventDefault();
     host.setPointerCapture(e.pointerId);
     const tool = state.tool;
+    if (paintRaf) {
+      cancelAnimationFrame(paintRaf);
+      paintRaf = 0;
+    }
     state.current = {
       tool,
       color: tool === "hi" ? (state.color === "#0f172a" ? "#eab308" : state.color) : state.color,
       size: tool === "hi" ? state.size * 5 + 10 : tool === "eraser" ? Math.max(16, state.size * 8) : state.size,
-      points: [toPoint(e)]
+      points: [toPoint(e)],
+      drawnUntil: 0,
+      pointerId: e.pointerId
     };
-    liveCtx.clearRect(0, 0, cssWidth(), host.clientHeight);
-    drawStrokeOn(liveCtx, state.current);
+    liveCtx.clearRect(0, 0, cssWidth(), cssHeight());
+    paintCurrent();
   }
 
   function moveStroke(e) {
-    if (!state.current) return;
-    e.preventDefault();
-    const events = typeof e.getCoalescedEvents === "function" ? e.getCoalescedEvents() : [e];
-    events.forEach((ev) => {
-      const p = toPoint(ev);
-      const last = state.current.points[state.current.points.length - 1];
-      const dx = p.x - last.x;
-      const dy = p.y - last.y;
-      if (dx * dx + dy * dy < 0.000002) return;
-      state.current.points.push(p);
-    });
-    if (state.current.tool === "eraser") {
-      redraw();
-    } else {
-      liveCtx.clearRect(0, 0, cssWidth(), host.clientHeight);
-      drawStrokeOn(liveCtx, state.current);
-    }
+    if (!state.current || e.pointerId !== state.current.pointerId) return;
+    if (e.cancelable) e.preventDefault();
+    ingestPoints(e);
+    requestPaint();
   }
 
-  function endStroke() {
+  function endStroke(e) {
+    if (state.current && e && e.pointerId != null && e.pointerId !== state.current.pointerId) return;
+    if (paintRaf) {
+      cancelAnimationFrame(paintRaf);
+      paintRaf = 0;
+    }
     if (!state.current) return;
+    paintCurrent();
     if (state.current.points.length) {
+      delete state.current.pointerId;
+      delete state.current.drawnUntil;
       if (state.current.tool === "eraser") {
         state.strokes.push(state.current);
         redraw();
       } else {
+        liveCtx.clearRect(0, 0, cssWidth(), cssHeight());
         drawStrokeOn(ctx, state.current);
         state.strokes.push(state.current);
-        liveCtx.clearRect(0, 0, cssWidth(), host.clientHeight);
       }
     }
     state.current = null;
@@ -401,6 +482,9 @@
 
   host.addEventListener("pointerdown", startStroke, { passive: false });
   host.addEventListener("pointermove", moveStroke, { passive: false });
+  if ("onpointerrawupdate" in window) {
+    host.addEventListener("pointerrawupdate", moveStroke);
+  }
   host.addEventListener("pointerup", endStroke);
   host.addEventListener("pointercancel", endStroke);
   host.addEventListener("lostpointercapture", endStroke);
@@ -411,33 +495,12 @@
   const dock = document.createElement("aside");
   dock.className = "ink-dock no-print";
   dock.innerHTML = `
-    <div class="ink-strip" id="ink-strip" hidden>
-      <button type="button" class="ink-strip-stop" id="ink-stop">結束</button>
-      <button type="button" data-ink-tool="pen">筆</button>
-      <button type="button" data-ink-tool="hi">螢光</button>
-      <button type="button" data-ink-tool="eraser">擦布</button>
-      <div class="ink-strip-colors">
-        ${COLORS.map((c) => `<button type="button" data-ink-color="${c}" style="background:${c}" aria-label="顏色"></button>`).join("")}
-      </div>
-    </div>
-    <div class="ink-banner" id="ink-banner" hidden></div>
     <button class="ink-fab" id="ink-fab" type="button" aria-expanded="false">筆記面板</button>
     <div class="ink-panel" id="ink-panel" hidden>
       <div class="ink-panel-head">
         <strong>課堂筆記</strong>
         <span class="ink-status" id="ink-status">—</span>
-      </div>
-      <label class="ink-field">
-        <span>班級</span>
-        <select id="ink-class"></select>
-      </label>
-      <div class="ink-row">
-        <input id="ink-new-name" type="text" maxlength="20" placeholder="新班級，例如 801" autocomplete="off">
-        <button type="button" class="btn btn-green" id="ink-add-class">加入</button>
-      </div>
-      <div class="ink-row">
-        <button type="button" class="btn btn-ghost" id="ink-rename">改名</button>
-        <button type="button" class="btn btn-ghost" id="ink-del-class">刪除班級</button>
+        <button type="button" class="ink-strip-stop" id="ink-stop" hidden>結束</button>
       </div>
       <div class="ink-tools">
         <button type="button" data-ink-tool="pen" class="is-on">筆</button>
@@ -447,18 +510,34 @@
       <div class="ink-colors">
         ${COLORS.map((c) => `<button type="button" data-ink-color="${c}" style="background:${c}" aria-label="顏色"></button>`).join("")}
       </div>
-      <label class="ink-field">
-        <span>粗細</span>
-        <input id="ink-size" type="range" min="1" max="8" value="3">
-      </label>
+      <div class="ink-pair">
+        <label class="ink-field">
+          <span>班級</span>
+          <select id="ink-class"></select>
+        </label>
+        <label class="ink-field">
+          <span>粗細</span>
+          <input id="ink-size" type="range" min="1" max="8" value="3">
+        </label>
+      </div>
+      <div class="ink-row">
+        <input id="ink-new-name" type="text" maxlength="20" placeholder="新班級，例如 801" autocomplete="off">
+        <button type="button" class="btn btn-green" id="ink-add-class">加入</button>
+      </div>
+      <div class="ink-row">
+        <button type="button" class="btn btn-ghost" id="ink-rename">改名</button>
+        <button type="button" class="btn btn-ghost" id="ink-del-class">刪班</button>
+      </div>
       <div class="ink-row">
         <button type="button" class="btn btn-ghost" id="ink-undo">復原</button>
-        <button type="button" class="btn btn-ghost" id="ink-clear">清除本頁</button>
+        <button type="button" class="btn btn-ghost" id="ink-clear">清除</button>
       </div>
-      <label class="ink-check"><input id="ink-visible" type="checkbox" checked> 顯示這班的筆記</label>
-      <label class="ink-check"><input id="ink-finger" type="checkbox"> 手指也可寫（關閉可防手掌誤觸）</label>
+      <div class="ink-row ink-checks">
+        <label class="ink-check"><input id="ink-visible" type="checkbox" checked> 顯示筆記</label>
+        <label class="ink-check" title="關閉可防手掌誤觸"><input id="ink-finger" type="checkbox"> 手指可寫</label>
+      </div>
       <div class="ink-row">
-        <button type="button" class="btn btn-ghost" id="ink-export">匯出此班</button>
+        <button type="button" class="btn btn-ghost" id="ink-export">匯出</button>
         <button type="button" class="btn btn-ghost" id="ink-import">匯入</button>
       </div>
       <input id="ink-file" type="file" accept="application/json,.json" hidden>
@@ -473,6 +552,11 @@
     panel.hidden = !open;
     fab.setAttribute("aria-expanded", open ? "true" : "false");
     dock.classList.toggle("is-open", open);
+    if (fab) {
+      fab.textContent = state.drawing
+        ? (open ? "收合" : "工具")
+        : "筆記面板";
+    }
   }
 
   document.getElementById("ink-fab").addEventListener("click", () => {
@@ -483,7 +567,7 @@
     state.drawing = !state.drawing;
     if (state.drawing) {
       state.visible = true;
-      setPanel(false);
+      setPanel(true);
     } else {
       setPanel(false);
     }

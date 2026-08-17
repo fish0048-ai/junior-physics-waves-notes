@@ -1,4 +1,12 @@
 (function () {
+  if (navigator.maxTouchPoints > 1 || window.matchMedia("(pointer: coarse)").matches) {
+    document.documentElement.classList.add("is-touch");
+  }
+  const viewport = document.querySelector('meta[name="viewport"]');
+  if (viewport) {
+    viewport.setAttribute("content", "width=device-width, initial-scale=1, viewport-fit=cover");
+  }
+
   const cfg = window.APP_CONFIG || {};
   const root = (document.body.dataset.root || ".").replace(/\/$/, "") || ".";
   const page = document.body.dataset.page || "home";
