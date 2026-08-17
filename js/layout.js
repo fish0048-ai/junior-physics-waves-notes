@@ -1,7 +1,24 @@
 (function () {
-  if (navigator.maxTouchPoints > 1 || window.matchMedia("(pointer: coarse)").matches) {
-    document.documentElement.classList.add("is-touch");
+  function inFrame() {
+    try {
+      return window.self !== window.top;
+    } catch (err) {
+      return true;
+    }
   }
+
+  function useEdgeLayout() {
+    if (navigator.maxTouchPoints > 0) return true;
+    if (window.matchMedia("(pointer: coarse)").matches) return true;
+    if (window.matchMedia("(hover: none)").matches) return true;
+    if (window.innerWidth <= 1400) return true;
+    if (inFrame()) return true;
+    return false;
+  }
+
+  if (useEdgeLayout()) document.documentElement.classList.add("is-touch");
+  if (inFrame()) document.documentElement.classList.add("is-embedded");
+
   const viewport = document.querySelector('meta[name="viewport"]');
   if (viewport) {
     viewport.setAttribute("content", "width=device-width, initial-scale=1, viewport-fit=cover");
@@ -41,6 +58,7 @@
          <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>`
       : "";
     const inkBtn = `<button class="btn btn-ghost" id="btn-ink" type="button" aria-pressed="false">筆記</button>`;
+    const immersiveBtn = `<button class="btn btn-ghost" id="btn-immersive" type="button" aria-pressed="false">全螢幕</button>`;
     const chapterLinks = (cfg.chapters || []).map((c) => `
           <a href="${url(c.file)}" class="${String(cfg.chapter?.id) === String(c.id) ? "is-on" : ""}">第 ${c.id} 章</a>
         `).join("");
@@ -52,6 +70,7 @@
           <span>${brandText}</span>
         </a>
         <div class="toolbar-actions">
+          ${immersiveBtn}
           ${inkBtn}
           ${tools}
           <a class="btn btn-github" href="${cfg.githubRepo || "#"}" target="_blank" rel="noopener">GitHub</a>
@@ -108,11 +127,81 @@
 
   renderHeader();
   renderHomeCards();
+  setupImmersive();
 
   if (!document.querySelector("script[data-class-ink]")) {
     const s = document.createElement("script");
     s.src = url("js/class-notes.js");
     s.dataset.classInk = "1";
     document.body.appendChild(s);
+  }
+
+  function pagesUrl() {
+    return location.href.split("#")[0];
+  }
+
+  function openInBrowser() {
+    const href = pagesUrl();
+    const opened = window.open(href, "_blank", "noopener,noreferrer");
+    if (!opened) {
+      window.prompt("請複製這個網址，改用 Safari 或 Chrome 開啟：", href);
+    }
+  }
+
+  function setImmersive(on) {
+    document.documentElement.classList.toggle("is-immersive", on);
+    sessionStorage.setItem("jpwn.immersive", on ? "1" : "0");
+    const btn = document.getElementById("btn-immersive");
+    if (btn) {
+      btn.textContent = on ? "離開全螢幕" : "全螢幕";
+      btn.setAttribute("aria-pressed", on ? "true" : "false");
+      btn.classList.toggle("btn-orange", on);
+      btn.classList.toggle("btn-ghost", !on);
+    }
+    if (on) {
+      const el = document.documentElement;
+      const req = el.requestFullscreen || el.webkitRequestFullscreen;
+      if (req) {
+        Promise.resolve(req.call(el)).catch(() => {});
+      }
+    } else {
+      const exit = document.exitFullscreen || document.webkitExitFullscreen;
+      if (exit && (document.fullscreenElement || document.webkitFullscreenElement)) {
+        Promise.resolve(exit.call(document)).catch(() => {});
+      }
+    }
+    window.setTimeout(() => window.ClassInk?.redraw?.(), 80);
+  }
+
+  function setupImmersive() {
+    if (inFrame() && !document.getElementById("embed-banner")) {
+      const bar = document.createElement("div");
+      bar.id = "embed-banner";
+      bar.className = "embed-banner no-print";
+      bar.innerHTML = `
+        <span>目前開在協作平台的小視窗裡，無法真正無邊框。</span>
+        <button type="button" class="btn btn-green" id="btn-open-browser">用瀏覽器開啟</button>
+      `;
+      document.body.insertBefore(bar, document.body.firstChild);
+      document.getElementById("btn-open-browser")?.addEventListener("click", openInBrowser);
+    }
+
+    document.getElementById("btn-immersive")?.addEventListener("click", () => {
+      const next = !document.documentElement.classList.contains("is-immersive");
+      if (next && inFrame()) {
+        openInBrowser();
+      }
+      setImmersive(next);
+    });
+
+    document.addEventListener("fullscreenchange", () => {
+      if (!document.fullscreenElement && !document.webkitFullscreenElement) {
+        if (document.documentElement.classList.contains("is-immersive") && !sessionStorage.getItem("jpwn.immersive")) {
+          setImmersive(false);
+        }
+      }
+    });
+
+    if (sessionStorage.getItem("jpwn.immersive") === "1") setImmersive(true);
   }
 })();

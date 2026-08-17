@@ -1205,11 +1205,19 @@ body.ink-draw .ink-fab {
 }
 
 html.is-touch,
-html.is-touch body {
+html.is-immersive,
+html.is-embedded {
+  background: var(--paper);
+}
+html.is-touch body,
+html.is-immersive body,
+html.is-embedded body {
   background: var(--paper);
   min-height: 100dvh;
 }
-html.is-touch .wrap {
+html.is-touch .wrap,
+html.is-immersive .wrap,
+html.is-embedded .wrap {
   width: 100%;
   max-width: none;
   margin: 0;
@@ -1261,9 +1269,67 @@ html.is-touch .ink-dock {
   bottom: 0;
   padding-bottom: env(safe-area-inset-bottom, 0px);
 }
-html.is-touch body.ink-draw .wrap {
+html.is-touch body.ink-draw .wrap,
+html.is-immersive body.ink-draw .wrap {
   outline: none;
   outline-offset: 0;
+}
+
+.embed-banner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  padding-left: max(12px, env(safe-area-inset-left, 0px));
+  padding-right: max(12px, env(safe-area-inset-right, 0px));
+  background: #9a3412;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 70;
+}
+.embed-banner .btn {
+  min-height: 36px;
+  background: #fff;
+  color: #9a3412;
+}
+html.is-immersive .section-nav,
+html.is-immersive .footer,
+html.is-immersive .btn-github,
+html.is-immersive #btn-pdf,
+html.is-immersive #btn-pdf-key,
+html.is-immersive .embed-banner {
+  display: none !important;
+}
+html.is-immersive .toolbar {
+  padding: 4px 8px;
+  padding-top: max(4px, env(safe-area-inset-top, 0px));
+}
+html.is-immersive .brand > span:last-child {
+  font-size: 13px;
+}
+
+@media (max-width: 1400px) {
+  html, body { background: var(--paper); }
+  .wrap {
+    width: 100%;
+    max-width: none;
+    margin: 0;
+  }
+  .hero, .card, .section-card {
+    border-radius: 0;
+    box-shadow: none;
+  }
+  .hero { margin: 0; }
+  .card {
+    margin: 0;
+    border-left: 0;
+    border-right: 0;
+  }
 }
 
 @media (max-width: 900px) {
