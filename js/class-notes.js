@@ -311,7 +311,6 @@
 
   function updateChrome() {
     const btn = document.getElementById("btn-ink");
-    const cls = currentClass();
     document.body.classList.toggle("ink-draw", state.drawing);
     host.classList.toggle("is-draw", state.drawing);
     host.classList.toggle("is-hide", !state.visible);
@@ -323,9 +322,12 @@
     }
     const banner = document.getElementById("ink-banner");
     if (banner) {
-      banner.hidden = !state.drawing;
-      banner.textContent = `正在筆記 · ${cls?.name || ""}　觸控筆可寫在講義上，手掌會忽略　再點「結束筆記」就能點空格`;
+      banner.hidden = true;
     }
+    const strip = document.getElementById("ink-strip");
+    if (strip) strip.hidden = !state.drawing;
+    const fab = document.getElementById("ink-fab");
+    if (fab) fab.textContent = state.drawing ? "設定" : "筆記面板";
     document.querySelectorAll("[data-ink-tool]").forEach((b) => {
       b.classList.toggle("is-on", b.dataset.inkTool === state.tool);
     });
@@ -409,6 +411,15 @@
   const dock = document.createElement("aside");
   dock.className = "ink-dock no-print";
   dock.innerHTML = `
+    <div class="ink-strip" id="ink-strip" hidden>
+      <button type="button" class="ink-strip-stop" id="ink-stop">結束</button>
+      <button type="button" data-ink-tool="pen">筆</button>
+      <button type="button" data-ink-tool="hi">螢光</button>
+      <button type="button" data-ink-tool="eraser">擦布</button>
+      <div class="ink-strip-colors">
+        ${COLORS.map((c) => `<button type="button" data-ink-color="${c}" style="background:${c}" aria-label="顏色"></button>`).join("")}
+      </div>
+    </div>
     <div class="ink-banner" id="ink-banner" hidden></div>
     <button class="ink-fab" id="ink-fab" type="button" aria-expanded="false">筆記面板</button>
     <div class="ink-panel" id="ink-panel" hidden>
@@ -472,8 +483,16 @@
     state.drawing = !state.drawing;
     if (state.drawing) {
       state.visible = true;
-      setPanel(true);
+      setPanel(false);
+    } else {
+      setPanel(false);
     }
+    updateChrome();
+  });
+
+  document.getElementById("ink-stop")?.addEventListener("click", () => {
+    state.drawing = false;
+    setPanel(false);
     updateChrome();
   });
 

@@ -13,11 +13,19 @@ window.APP_CONFIG = {
     { id: "3", title: "波動與聲音", file: "index.html" },
     { id: "4", title: "光", file: "ch4.html" }
   ],
+  review: {
+    id: "ch-4",
+    file: "review-ch4.html",
+    nav: "章末評量",
+    title: "第 4 章複習評量",
+    summary: "題庫 120 題，抽出 40 題　四選一"
+  },
   sections: [
     {
       id: "4-1",
       title: "光的傳播與光速",
       file: "sections/4-1.html",
+      exam: "exams/4-1.html",
       ready: true,
       summary: "直線前進、針孔成像、影子與光速"
     },
@@ -25,6 +33,7 @@ window.APP_CONFIG = {
       id: "4-2",
       title: "光的反射與面鏡",
       file: "sections/4-2.html",
+      exam: "exams/4-2.html",
       ready: true,
       summary: "反射定律、平面鏡、凸面鏡與凹面鏡"
     },
@@ -32,6 +41,7 @@ window.APP_CONFIG = {
       id: "4-3",
       title: "光的折射與透鏡",
       file: "sections/4-3.html",
+      exam: "exams/4-3.html",
       ready: true,
       summary: "折射、三稜鏡、凸透鏡與凹透鏡成像"
     },
@@ -39,6 +49,7 @@ window.APP_CONFIG = {
       id: "4-4",
       title: "光學儀器",
       file: "sections/4-4.html",
+      exam: "exams/4-4.html",
       ready: true,
       summary: "顯微鏡、照相機、眼睛與眼鏡"
     },
@@ -46,6 +57,7 @@ window.APP_CONFIG = {
       id: "4-5",
       title: "光與顏色",
       file: "sections/4-5.html",
+      exam: "exams/4-5.html",
       ready: true,
       summary: "色散、物體顏色、色光與色料三原色"
     }

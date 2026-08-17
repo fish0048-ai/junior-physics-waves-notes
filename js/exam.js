@@ -17,11 +17,24 @@
     return root + "/" + p.replace(/^\.\//, "");
   }
 
+  function flattenSrcs(arr) {
+    const out = [];
+    (function walk(v) {
+      if (v == null || v === "") return;
+      if (Array.isArray(v)) {
+        v.forEach(walk);
+        return;
+      }
+      out.push(String(v));
+    })(arr);
+    return out;
+  }
+
   function usable(item) {
     const q = String(item.q || "").trim();
     const choices = (item.choices || []).map((c) => String(c || "").trim());
     const filled = choices.filter(Boolean);
-    const figChoices = (item.choiceImgs || []).filter(Boolean);
+    const figChoices = flattenSrcs(item.choiceImgs);
     if (q.includes("複選") && q.includes("0.0025")) return false;
     if (filled.length < 2 && figChoices.length < 2) return false;
     return true;
@@ -63,6 +76,14 @@
 
   function topicOf(item) {
     const t = `${item.q || ""}${item.lead || ""}`;
+    if (secId === "ch-4" || String(secId).indexOf("4-") === 0) {
+      if (/近視|遠視|老花|顯微|照相|眼睛|眼鏡|視網膜|水晶體/.test(t)) return "eye";
+      if (/色散|顏色|色光|色料|紅光|綠光|藍光|濾光|三原色/.test(t)) return "color";
+      if (/折射|透鏡|凸透|凹透|三稜鏡|焦距|焦點/.test(t)) return "refract";
+      if (/反射|平面鏡|凸面鏡|凹面鏡|面鏡|入射角|反射角/.test(t)) return "reflect";
+      if (/針孔|影子|光速|直線|日蝕|月蝕|光年|日食|月食/.test(t)) return "prop";
+      return "optics";
+    }
     if (/超聲波|次聲波|聲納|蝙蝠|產檢/.test(t)) return "ultra";
     if (/回聲|峭壁|山壁|測距|雷聲/.test(t)) return "echo";
     if (/音調|音色|響度|分貝|噪音|弦|力度|樂音/.test(t)) return "tone";
@@ -78,10 +99,12 @@
   function normalizeFigs(list) {
     return list.map((item) => {
       const next = Object.assign({}, item);
-      const imgs = (next.imgs || []).filter(Boolean);
+      next.imgs = flattenSrcs(next.imgs);
+      next.choiceImgs = flattenSrcs(next.choiceImgs);
+      const imgs = next.imgs;
       const choices = (next.choices || []).map((c) => String(c || "").trim());
       const filled = choices.filter(Boolean);
-      const cImgs = (next.choiceImgs || []).filter(Boolean);
+      const cImgs = next.choiceImgs;
       if (cImgs.length < 2 && filled.length < 2 && imgs.length >= 4) {
         if (imgs.length === 5) {
           next.imgs = [imgs[0]];
@@ -149,8 +172,7 @@
         const stem = String(item.q || "").trim() || "（請依附圖作答）";
         const needFig = /如圖|附圖/.test(stem + lead);
         const figHtml = (srcs, alt) =>
-          (srcs || [])
-            .filter(Boolean)
+          flattenSrcs(srcs)
             .map(
               (src) =>
                 `<img class="exam-fig" src="${assetUrl(src)}" alt="${alt}" onerror="this.style.display='none'">`
@@ -175,7 +197,7 @@
             <div class="exam-choices" role="radiogroup" aria-label="第 ${i + 1} 題">
               ${choices
                 .map((c, k) => {
-                  const src = (item.choiceImgs || [])[k];
+                  const src = flattenSrcs(item.choiceImgs)[k];
                   const fig = src
                     ? `<img class="exam-choice-fig" src="${assetUrl(src)}" alt="選項 ${letters[k]}" onerror="this.style.display='none'">`
                     : "";
