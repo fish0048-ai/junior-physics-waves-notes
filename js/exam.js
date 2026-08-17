@@ -277,8 +277,10 @@
         btn.classList.add("is-on");
         btn.setAttribute("aria-checked", "true");
         box.classList.remove("is-right", "is-wrong");
+        saveExamUi();
       });
     });
+    applyExamUi();
   }
 
   function clearMarks() {
@@ -326,6 +328,7 @@
     const score = document.getElementById("exam-score");
     if (score) score.textContent = `得分 ${ok} / ${total}`;
     toast(`段考練習：${ok} / ${total} 題正確`);
+    saveExamUi();
     return ok;
   }
 
@@ -341,6 +344,7 @@
       });
       if (btn) btn.textContent = "顯示詳解";
     }
+    saveExamUi();
   }
 
   function reset() {
@@ -355,11 +359,14 @@
     const btn = document.getElementById("exam-key");
     if (btn) btn.textContent = "顯示詳解";
     toast("已重設段考練習");
+    saveExamUi();
   }
 
   const LS_CLASSES = "jpwn.classes";
   const LS_CURRENT = "jpwn.classId";
   const LS_SETS = "jpwn.examSets";
+  const LS_EXAM_UI = "jpwn.examUi";
+  let restoringUi = false;
 
   function loadExamClasses() {
     try {
@@ -392,6 +399,64 @@
 
   function setStoreKey() {
     return `${currentExamClass().id}::${secId}`;
+  }
+
+  function examUiKey() {
+    return setStoreKey();
+  }
+
+  function currentItemKeys() {
+    return items.map(itemKey);
+  }
+
+  function saveExamUi() {
+    if (restoringUi || window.NotesApp?.persistPaused) return;
+    if (!host || !items.length) return;
+    let all = {};
+    try {
+      all = JSON.parse(localStorage.getItem(LS_EXAM_UI) || "{}");
+    } catch (err) {
+      all = {};
+    }
+    const picks = [...host.querySelectorAll(".exam-q")].map((box) => {
+      const picked = box.querySelector(".exam-choice.is-on");
+      return picked ? Number(picked.dataset.k) : -1;
+    });
+    all[examUiKey()] = {
+      keys: currentItemKeys(),
+      picks,
+      revealed
+    };
+    localStorage.setItem(LS_EXAM_UI, JSON.stringify(all));
+  }
+
+  function applyExamUi() {
+    let rec = null;
+    try {
+      rec = JSON.parse(localStorage.getItem(LS_EXAM_UI) || "{}")[examUiKey()] || null;
+    } catch (err) {
+      rec = null;
+    }
+    if (!rec || !Array.isArray(rec.keys)) return;
+    if (rec.keys.join("\n") !== currentItemKeys().join("\n")) return;
+    restoringUi = true;
+    const boxes = [...host.querySelectorAll(".exam-q")];
+    if (Array.isArray(rec.picks)) {
+      boxes.forEach((box, i) => {
+        const k = rec.picks[i];
+        if (!Number.isInteger(k) || k < 0) return;
+        const btn = box.querySelector(`.exam-choice[data-k="${k}"]`);
+        if (!btn) return;
+        box.querySelectorAll(".exam-choice").forEach((el) => {
+          el.classList.remove("is-on");
+          el.setAttribute("aria-checked", "false");
+        });
+        btn.classList.add("is-on");
+        btn.setAttribute("aria-checked", "true");
+      });
+    }
+    if (rec.revealed) setReveal(true);
+    restoringUi = false;
   }
 
   function savedRecord() {
@@ -536,12 +601,19 @@
 
   ensureSetBar();
   startSet();
+  window.addEventListener("jpwn-class-will-change", saveExamUi);
+  window.addEventListener("pagehide", saveExamUi);
   window.addEventListener("jpwn-class-change", () => {
     fillExamClassSelect();
     if (pickN) {
       const rec = savedRecord();
       if (rec && rec.keys) loadSavedSet();
-      else updateSetStatus();
+      else {
+        updateSetStatus();
+        applyExamUi();
+      }
+    } else {
+      applyExamUi();
     }
   });
 
@@ -579,7 +651,14 @@
       }
     };
     window.NotesApp.printPdf = function (withAnswers) {
+      window.NotesApp.persistPaused = true;
+      const was = revealed;
       setReveal(!!withAnswers);
+      const onAfter = () => {
+        window.removeEventListener("jpwn-after-print", onAfter);
+        setReveal(was);
+      };
+      window.addEventListener("jpwn-after-print", onAfter);
       origPrint(withAnswers);
     };
   }

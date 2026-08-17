@@ -23,11 +23,16 @@
   freezeBlanks();
 
   const LS_INQUIRY = "jpwn.inquiryWrites";
+  const LS_REVEAL = "jpwn.revealed";
 
-  function inquiryStoreKey() {
+  function pageStoreKey() {
     const classId = localStorage.getItem("jpwn.classId") || "default";
     const sec = document.body.dataset.section || document.body.dataset.page || "page";
     return `${classId}::${sec}`;
+  }
+
+  function inquiryStoreKey() {
+    return pageStoreKey();
   }
 
   function makeWriteBox({ key, label, placeholder, rows }) {
@@ -170,14 +175,75 @@
     }
   }
 
+  function collectRevealState() {
+    return {
+      blanks: $$(".blank").map((el) => el.classList.contains("revealed")),
+      extras: $$("[data-reveal]").map((el) => !el.hidden)
+    };
+  }
+
+  function answersAllOn() {
+    const blanks = $$(".blank");
+    const extras = $$("[data-reveal]");
+    if (!blanks.length && !extras.length) return false;
+    return blanks.every((el) => el.classList.contains("revealed"))
+      && extras.every((el) => !el.hidden);
+  }
+
+  function syncAnswerButton() {
+    const on = answersAllOn();
+    const btn = $("#btn-answers");
+    if (!btn) return;
+    btn.textContent = on ? "隱藏答案" : "顯示答案";
+    btn.setAttribute("data-on", on ? "1" : "0");
+  }
+
+  function applyRevealState(bag) {
+    if (!bag) return;
+    const blanks = $$(".blank");
+    if (Array.isArray(bag.blanks)) {
+      blanks.forEach((el, i) => revealOne(el, !!bag.blanks[i]));
+    }
+    const extras = $$("[data-reveal]");
+    if (Array.isArray(bag.extras)) {
+      extras.forEach((el, i) => {
+        el.hidden = !bag.extras[i];
+      });
+    }
+    syncAnswerButton();
+  }
+
+  function saveRevealState() {
+    if (window.NotesApp?.persistPaused) return;
+    if (!$$(".blank").length && !$$("[data-reveal]").length) return;
+    let all = {};
+    try {
+      all = JSON.parse(localStorage.getItem(LS_REVEAL) || "{}");
+    } catch (err) {
+      all = {};
+    }
+    all[pageStoreKey()] = collectRevealState();
+    localStorage.setItem(LS_REVEAL, JSON.stringify(all));
+  }
+
+  function loadRevealState() {
+    let bag = null;
+    try {
+      const all = JSON.parse(localStorage.getItem(LS_REVEAL) || "{}");
+      bag = all[pageStoreKey()] || null;
+    } catch (err) {
+      bag = null;
+    }
+    applyRevealState(bag);
+  }
+
   function reveal(on) {
     $$(".blank").forEach((el) => revealOne(el, on));
     $$("[data-reveal]").forEach((el) => {
       el.hidden = !on;
     });
-    const btn = $("#btn-answers");
-    if (btn) btn.textContent = on ? "隱藏答案" : "顯示答案";
-    btn?.setAttribute("data-on", on ? "1" : "0");
+    syncAnswerButton();
+    saveRevealState();
   }
 
   function check() {
@@ -213,9 +279,14 @@
   }
 
   function printPdf(withAnswers) {
-    const wasOn = $("#btn-answers")?.getAttribute("data-on") === "1";
+    const snap = collectRevealState();
     const oldTitle = document.title;
-    if (withAnswers) reveal(true);
+    window.NotesApp.persistPaused = true;
+    if (withAnswers) {
+      $$(".blank").forEach((el) => revealOne(el, true));
+      $$("[data-reveal]").forEach((el) => { el.hidden = false; });
+      syncAnswerButton();
+    }
     const pageType = document.body.dataset.page || "";
     const chId = window.APP_CONFIG?.chapter?.id || "";
     const secId = pageType === "cover"
@@ -237,7 +308,9 @@
     setTimeout(() => {
       window.print();
       document.title = oldTitle;
-      if (withAnswers && !wasOn) reveal(false);
+      applyRevealState(snap);
+      window.dispatchEvent(new Event("jpwn-after-print"));
+      window.NotesApp.persistPaused = false;
     }, 350);
   }
 
@@ -251,6 +324,8 @@
       if (document.body.classList.contains("ink-draw")) return;
       e.preventDefault();
       revealOne(el, !el.classList.contains("revealed"));
+      syncAnswerButton();
+      saveRevealState();
     });
   });
 
@@ -268,5 +343,10 @@
     (window.NotesApp?.printPdf || printPdf)(true);
   });
 
-  window.NotesApp = { reveal, check, normalize, toast, printPdf };
+  loadRevealState();
+  window.addEventListener("pagehide", saveRevealState);
+  window.addEventListener("jpwn-class-will-change", saveRevealState);
+  window.addEventListener("jpwn-class-change", loadRevealState);
+
+  window.NotesApp = { reveal, check, normalize, toast, printPdf, persistPaused: false };
 })();
