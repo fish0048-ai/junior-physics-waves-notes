@@ -90,9 +90,12 @@
     const oldTitle = document.title;
     if (withAnswers) reveal(true);
     const secId = document.body.dataset.section || "講義";
+    const kind = document.body.dataset.page === "exam" || document.body.dataset.page === "review"
+      ? "段考練習"
+      : "講義";
     document.title = withAnswers
-      ? `國中理化_${secId}_含答案`
-      : `國中理化_${secId}_講義`;
+      ? `國中理化_${secId}_${kind}_含答案`
+      : `國中理化_${secId}_${kind}`;
     toast("請將印表機選成「另存為 PDF」或 Microsoft Print to PDF");
     setTimeout(() => {
       window.print();
@@ -118,11 +121,17 @@
 
   $("#btn-answers")?.addEventListener("click", () => {
     const on = $("#btn-answers").getAttribute("data-on") === "1";
-    reveal(!on);
+    (window.NotesApp?.reveal || reveal)(!on);
   });
-  $("#btn-check")?.addEventListener("click", check);
-  $("#btn-pdf")?.addEventListener("click", () => printPdf(false));
-  $("#btn-pdf-key")?.addEventListener("click", () => printPdf(true));
+  $("#btn-check")?.addEventListener("click", () => {
+    (window.NotesApp?.check || check)();
+  });
+  $("#btn-pdf")?.addEventListener("click", () => {
+    (window.NotesApp?.printPdf || printPdf)(false);
+  });
+  $("#btn-pdf-key")?.addEventListener("click", () => {
+    (window.NotesApp?.printPdf || printPdf)(true);
+  });
 
   window.NotesApp = { reveal, check, normalize, toast, printPdf };
 })();

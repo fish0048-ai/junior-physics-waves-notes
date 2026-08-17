@@ -16,7 +16,6 @@
     <section class="hero">
       <span class="kicker">國中八年級　理化講義</span>
       <h1>3-1　波的傳播</h1>
-      <p>點空格可顯示該格答案　｜　可下載 PDF</p>
       <svg class="wave-deco" viewBox="0 0 280 90" aria-hidden="true">
         <path d="M0 50 Q 35 10 70 50 T 140 50 T 210 50 T 280 50" fill="none" stroke="#fff" stroke-width="8"/>
         <path d="M0 62 Q 35 30 70 62 T 140 62 T 210 62 T 280 62" fill="none" stroke="#fff" stroke-width="4"/>
@@ -26,10 +25,14 @@
     <nav class="toc no-word">
       <a href="#p1"><small>重點 1</small>波動</a>
       <a href="#p2"><small>重點 2</small>波的分類</a>
+      <a href="#em"><small>延伸</small>電磁波</a>
       <a href="#p3"><small>重點 3</small>波的性質</a>
       <a href="#p4"><small>重點 4</small>週期、頻率與波速</a>
+      <a href="#calc"><small>計算</small>讀圖求波速</a>
+      <a href="#water"><small>延伸</small>水波</a>
       <a href="#memo"><small>整理</small>考前速記</a>
       <a href="#drill"><small>練習</small>基本＋進階</a>
+      <a href="../exams/3-1.html"><small>段考</small>獨立練習頁</a>
     </nav>
 
     <!-- 重點 1 -->
@@ -247,12 +250,59 @@
         <div class="ex-title"><span class="tag tag-cyan">生活連結</span> 地震波（會考常見）</div>
         <p>地震時同時有兩種力學波：<strong>P 波（縱波）</strong>傳得較快，先到；<strong>S 波（橫波）</strong>傳得較慢，後到。S 波不能在液體中傳播，所以外地核被推論是液態——這是國中「橫波／縱波」的延伸應用。</p>
       </section>
+      <section class="gifted">
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 用 P、S 波時間差估震央</div>
+        <ul class="q">
+          <li>設 P 波速 v<sub>P</sub>、S 波速 v<sub>S</sub>，震央距離 d。到達時間差 Δt＝d／v<sub>S</sub>－d／v<sub>P</sub>，所以 d＝Δt／(1／v<sub>S</sub>－1／v<sub>P</sub>)。</li>
+          <li>三個測站各畫一個圓（半徑＝各自算出的 d），三圓交點就是震央。這就是地震定位的基本想法。</li>
+          <li>外地核沒有 S 波通過 → 推論是液態；更裡面又出現某種波 → 內地核是固態。橫波不能在液體中走，是關鍵證據。</li>
+        </ul>
+      </section>
       <section class="wrong-note">
         <div class="ex-title"><span class="tag tag-rose">易錯提醒</span></div>
         <ul class="q">
           <li>非力學波<strong>不是</strong>「不能在空氣中走」。陽光、無線電波在空氣和真空都能傳，只是「不需要」介質。</li>
           <li>「真空不能傳聲」指的是<strong>聲波（力學波）</strong>，不是所有波都不行。</li>
         </ul>
+      </section>
+      <section class="gifted">
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 偏振：只有橫波做得到</div>
+        <ul class="q">
+          <li><strong>偏振：</strong>把振動方向限制成只剩一個方向。橫波的振動可以是「上下」或「左右」，所以能被縫擋掉其中一種。</li>
+          <li>縱波的振動方向＝傳播方向，沒有「上下／左右」可擋，<strong>聲波不能偏振</strong>。資優口訣：能偏振 → 一定是橫波。</li>
+          <li>偏光太陽眼鏡、3D 電影利用的是<strong>光（電磁波，橫波）</strong>的偏振；這也是「光是橫波」的證據之一。</li>
+        </ul>
+        <div class="two-col">
+          <figure>
+            <svg class="diagram" viewBox="0 0 320 140" aria-label="上下振動可通過直縫">
+              <rect width="320" height="140" rx="8" fill="#faf5ff"/>
+              <text x="160" y="18" text-anchor="middle" font-size="13" fill="#6d28d9" font-weight="700">上下振動 → 可通過直縫</text>
+              <path d="M12 78 q 14 -28 28 0 t 28 0 t 28 0" fill="none" stroke="#7c3aed" stroke-width="2.6"/>
+              <rect x="128" y="36" width="16" height="76" rx="2" fill="#ede9fe" stroke="#6d28d9" stroke-width="2"/>
+              <rect x="133" y="48" width="6" height="52" fill="#fff"/>
+              <path d="M156 78 q 14 -28 28 0 t 28 0 t 28 0 t 28 0" fill="none" stroke="#7c3aed" stroke-width="2.6"/>
+              <text x="160" y="128" text-anchor="middle" font-size="12" fill="#166534" font-weight="700">縫與振動方向平行</text>
+            </svg>
+            <p class="caption">橫波：縫平行振動方向，波可以過去</p>
+          </figure>
+          <figure>
+            <svg class="diagram" viewBox="0 0 320 140" aria-label="左右振動被直縫擋住">
+              <rect width="320" height="140" rx="8" fill="#fff1f2"/>
+              <text x="160" y="18" text-anchor="middle" font-size="13" fill="#b91c1c" font-weight="700">左右振動 → 被直縫擋住</text>
+              <path d="M16 78 H124" stroke="#7c3aed" stroke-width="2.6"/>
+              <circle cx="28" cy="78" r="3.4" fill="#7c3aed"/>
+              <circle cx="52" cy="78" r="3.4" fill="#7c3aed"/>
+              <circle cx="76" cy="78" r="3.4" fill="#7c3aed"/>
+              <circle cx="100" cy="78" r="3.4" fill="#7c3aed"/>
+              <rect x="128" y="36" width="16" height="76" rx="2" fill="#ede9fe" stroke="#6d28d9" stroke-width="2"/>
+              <rect x="133" y="48" width="6" height="52" fill="#fff"/>
+              <text x="210" y="74" font-size="18" fill="#b91c1c" font-weight="800">擋掉</text>
+              <text x="210" y="96" font-size="12" fill="#9f1239">過不去</text>
+              <text x="160" y="128" text-anchor="middle" font-size="12" fill="#b91c1c" font-weight="700">縫與振動方向垂直</text>
+            </svg>
+            <p class="caption">縱波（聲波）沒有這種「方向」可擋，不能偏振</p>
+          </figure>
+        </div>
       </section>
 
       <section class="ex-box think">
@@ -617,6 +667,14 @@
           <li><strong>波的疊加：</strong>兩列波相遇時，該點位移＝兩波位移相加；相遇後<strong>各走各的</strong>，不會停住或互相消滅後消失。同向相加變大（建設），反向相加可變小甚至為 0（破壞）。</li>
         </ul>
       </section>
+      <section class="gifted">
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 強度 ∝ 1／r²　與　駐波</div>
+        <ul class="q">
+          <li><strong>球面波強度：</strong>點波源向四面八方傳，能量攤在球面上，面積 ∝ r²，所以強度 I ∝ 1／r²。距離變 2 倍，單位面積能量約剩 1／4，聽起來明顯變小（不是變 1／2）。</li>
+          <li><strong>駐波：</strong>兩列頻率相同、振幅相近、方向相反的波疊加，有些點永遠不動（<strong>波節</strong>），有些點振幅最大（<strong>波腹</strong>）。相鄰兩波節距離＝½λ。</li>
+          <li>吉他弦兩端固定都是波節，弦長 L＝n×½λ（n＝1, 2, 3…）。n＝1 是基音，n＝2 頻率剛好高一個八度。</li>
+        </ul>
+      </section>
 
       <section class="ex-box think">
         <div class="ex-title"><span class="tag tag-orange">辨正思考</span></div>
@@ -802,6 +860,46 @@
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 為什麼淺水區波紋比較密？</div>
         <p>手指點水的快慢決定<strong>頻率</strong>（波源決定，進到淺水也不變）。水變淺後波速變慢，由 v＝fλ 可知波長必須變短，所以波前會擠在一起、看起來比較密。海邊常見：外海波浪較寬，快上岸時變密、變陡，就是這個道理。</p>
       </section>
+      <section class="gifted">
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 水波槽：繞射與折射</div>
+        <ul class="q">
+          <li><strong>繞射：</strong>波遇到縫或障礙物會彎過去。波長愈長（或縫愈窄），繞射愈明顯。低音容易繞過牆角聽到，高音比較「直走」。</li>
+          <li><strong>折射：</strong>水波斜向從深水進入淺水，波速變慢，波前會轉彎（類似光的折射）。頻率仍由波源決定，不變。</li>
+          <li>障礙物尺寸遠大於波長時，後方會出現「陰影區」；波長接近或大於障礙物時，陰影不明顯——超聲波指向性好，就是波長短、不易繞射。</li>
+        </ul>
+        <div class="two-col">
+          <figure>
+            <svg class="diagram" viewBox="0 0 320 140" aria-label="短波長不易繞射">
+              <rect width="320" height="140" rx="8" fill="#faf5ff"/>
+              <text x="160" y="18" text-anchor="middle" font-size="13" fill="#6d28d9" font-weight="700">短波長：陰影明顯</text>
+              <g stroke="#7c3aed" stroke-width="2" fill="none">
+                <line x1="12" y1="36" x2="148" y2="36"/>
+                <line x1="12" y1="52" x2="148" y2="52"/>
+                <line x1="12" y1="68" x2="148" y2="68"/>
+                <line x1="12" y1="84" x2="148" y2="84"/>
+                <line x1="12" y1="100" x2="148" y2="100"/>
+                <line x1="178" y1="36" x2="308" y2="36"/>
+                <line x1="178" y1="52" x2="308" y2="52"/>
+              </g>
+              <rect x="150" y="68" width="26" height="48" rx="2" fill="#a78bfa"/>
+              <text x="160" y="128" text-anchor="middle" font-size="12" fill="#6d28d9" font-weight="700">高音／超聲波較直走</text>
+            </svg>
+            <p class="caption">波長短，比較不容易彎過去</p>
+          </figure>
+          <figure>
+            <svg class="diagram" viewBox="0 0 320 140" aria-label="長波長容易繞射">
+              <rect width="320" height="140" rx="8" fill="#faf5ff"/>
+              <text x="160" y="18" text-anchor="middle" font-size="13" fill="#6d28d9" font-weight="700">長波長：容易繞過去</text>
+              <path d="M12 48 q 28 -20 56 0 t 56 0 t 56 0 t 56 0 t 56 0" fill="none" stroke="#7c3aed" stroke-width="2.2"/>
+              <path d="M12 72 q 28 -20 56 0 t 56 0 t 56 0 t 56 0 t 56 0" fill="none" stroke="#7c3aed" stroke-width="2.2"/>
+              <path d="M12 96 q 28 -20 56 0 t 56 0 t 56 0 t 56 0 t 56 0" fill="none" stroke="#7c3aed" stroke-width="2.2"/>
+              <rect x="148" y="86" width="26" height="36" rx="2" fill="#a78bfa"/>
+              <text x="160" y="128" text-anchor="middle" font-size="12" fill="#6d28d9" font-weight="700">低音較容易繞過牆角</text>
+            </svg>
+            <p class="caption">波長長，比較容易彎過去</p>
+          </figure>
+        </div>
+      </section>
       <section class="ex-box skill">
         <div class="ex-title"><span class="tag tag-blue">小試身手</span></div>
         <p>1. 手指在水面「快速」點擊，波紋會較
@@ -912,6 +1010,10 @@
         </div>
       </div>
     </article>
+
+    <p class="exam-jump no-print">
+      <a class="btn btn-orange" href="../exams/3-1.html">前往 3-1 段考前練習（獨立頁）</a>
+    </p>
 
     <p class="footer">
       本講義依國中八年級理化「3-1 波的傳播」重點改編。<br>
