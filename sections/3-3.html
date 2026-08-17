@@ -20,6 +20,7 @@
     <section class="hero">
       <span class="kicker">國中八年級　理化講義</span>
       <h1>3-3　聲波的反射與超聲波</h1>
+      <p>探究問題：聲音碰到牆壁會消失嗎？還是會帶著距離資訊回來？</p>
       <svg class="wave-deco" viewBox="0 0 280 90" aria-hidden="true">
         <path d="M0 50 Q 35 10 70 50 T 140 50 T 210 50 T 280 50" fill="none" stroke="#fff" stroke-width="8"/>
         <path d="M0 62 Q 35 30 70 62 T 140 62 T 210 62 T 280 62" fill="none" stroke="#fff" stroke-width="4"/>
@@ -27,21 +28,31 @@
     </section>
 
     <nav class="toc no-word">
+      <a href="#inquiry"><small>探究</small>本節問題</a>
       <a href="#p1"><small>重點 1</small>聲波的反射</a>
       <a href="#p2"><small>重點 2</small>超聲波</a>
       <a href="#calc"><small>計算</small>回聲與聲納</a>
       <a href="#memo"><small>整理</small>考前速記</a>
+      <a href="#claim"><small>主張</small>本節結論</a>
       <a href="#drill"><small>練習</small>基本＋進階</a>
       <a href="../exams/3-3.html"><small>段考</small>練習</a>
     </nav>
 
-    <div class="overview">
-      <strong>重點概覽</strong>
-      <ol>
-        <li>聲波的反射</li>
-        <li>超聲波</li>
-      </ol>
-    </div>
+    <article class="card inquiry" id="inquiry">
+      <div class="section-head">
+        <div class="badge calc">探</div>
+        <div>
+          <h2>本節探究　聲音碰到牆壁會消失嗎？</h2>
+          <p>重點概覽：聲波的反射　｜　超聲波</p>
+        </div>
+      </div>
+      <p class="inquiry-lead">山谷喊話會聽到第二聲；蝙蝠能在黑暗中飛行、不撞牆。先預測：測距公式要不要除以 2？為什麼？下面兩站就是本節要找的證據。</p>
+      <div class="inquiry-path">
+        <a href="#p1"><strong>重點 1　聲波的反射</strong><span>為什麼教室裡比較難聽到清楚的「第二聲」？回聲成立要什麼條件？</span></a>
+        <a href="#p2"><strong>重點 2　超聲波</strong><span>蝙蝠的聲音人耳聽不到，是「沒有聲波」，還是頻率超出範圍？</span></a>
+      </div>
+      <p class="inquiry-follow">對照<a href="#memo">考前速記</a>後，在<a href="#claim">本節主張</a>用自己的話回答，再用<a href="#drill">練習</a>檢驗。</p>
+    </article>
 
     <article class="card" id="p1">
       <div class="section-head">
@@ -51,6 +62,7 @@
           <p>回聲　｜　原音與回聲比較　｜　反射的應用</p>
         </div>
       </div>
+      <p class="inquiry-ask"><strong>探究線索：</strong>為什麼教室裡比較難聽到清楚的「第二聲」？障礙物要遠、聲音要夠響，和回聲成立條件有什麼關係？</p>
 
       <p class="def">
         <strong>反射：</strong>波碰到障礙物後，返回原來介質的現象。
@@ -229,6 +241,7 @@
           → <input class="blank" data-answer="D|(D)" style="width:2.8em">
         </p>
       </section>
+      <p class="inquiry-bridge"><strong>這一站的證據：</strong>聲波碰到障礙物會反射；要分辨回聲，時間差要夠大。下一站問：人耳聽不到的聲音，還算不算聲波？</p>
     </article>
 
     <article class="card" id="p2">
@@ -239,6 +252,7 @@
           <p>聽覺範圍　｜　超聲波與次聲波　｜　動物聽覺</p>
         </div>
       </div>
+      <p class="inquiry-ask"><strong>探究線索：</strong>蝙蝠、海豚常用的聲音，人耳為什麼聽不到？「聽不到」代表沒有聲波，還是頻率超出範圍？</p>
 
       <p class="def">
         人耳聽覺範圍大約
@@ -359,6 +373,7 @@
           → <input class="blank" data-answer="D|(D)" style="width:2.8em">
         </p>
       </section>
+      <p class="inquiry-bridge"><strong>這一站的證據：</strong>聽不到不代表沒有聲波；超聲波頻率高於 20000 Hz，指向性好，可用在測距。收成速記後，就能回答本節問題。</p>
     </article>
 
     <article class="card" id="calc">
@@ -436,6 +451,7 @@
           <p>依本節課本重點整理</p>
         </div>
       </div>
+      <p class="inquiry-ask"><strong>證據卡：</strong>這些句子用來支撐下面的「本節主張」。先對照回聲條件與聲納公式，再決定你同不同意。</p>
       <table>
         <thead>
           <tr><th>觀念</th><th>記住這句</th></tr>
@@ -452,6 +468,18 @@
       </table>
     </article>
 
+    <article class="card inquiry-claim" id="claim">
+      <div class="section-head">
+        <div class="badge">主</div>
+        <div>
+          <h2>本節主張</h2>
+          <p>反射不是消失，而是帶著距離資訊回來</p>
+        </div>
+      </div>
+      <p>聲波碰到障礙物會<strong>反射</strong>，夠遠、夠清楚時成為回聲。聲納測距要記得聲波走的是<strong>來回</strong>，距離＝速率×時間÷2。超聲波頻率高於 20000 Hz，人耳聽不到但指向性好，可用在測距、產檢與清潔。</p>
+      <p class="inquiry-next">下一站要問：<a href="3-4.html">同一首歌，樂器不同為什麼聽起來不一樣？</a>　先用下面練習檢驗你的主張。</p>
+    </article>
+
     <article class="card" id="drill">
       <div class="section-head">
         <div class="badge">練</div>
@@ -460,6 +488,7 @@
           <p>基本題 5 題　＋　進階題 5 題</p>
         </div>
       </div>
+      <p class="inquiry-ask"><strong>檢驗主張：</strong>做題時對照本節問題——聲音碰到牆壁是消失，還是會回來？測距為什麼要除以 2？</p>
       <div class="drill-grid">
         <div class="drill-col">
           <h3>基本題</h3>

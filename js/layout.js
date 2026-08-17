@@ -103,6 +103,7 @@
           <small>${s.ready ? "講義" : "講義建置中"}</small>
         </div>
         <h2>${s.title}</h2>
+        ${s.ask ? `<p class="section-card-ask">${s.ask}</p>` : ""}
         <p>${s.summary || ""}</p>
       </a>
     `).join("") + ((cfg.sections || []).some((s) => s.exam) ? `

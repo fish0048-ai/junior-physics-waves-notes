@@ -1,0 +1,41 @@
+---
+description: 講義 HTML 版型、挖空、卡片 class、data 屬性。編輯 sections／章首／評量頁時套用。
+globs: "**/*.html"
+alwaysApply: false
+---
+
+# 講義 HTML
+
+從 `sections/4-1.html` 複製整頁再改，不要空白檔從頭寫。
+
+## data
+
+- 章首：`data-root="." data-page="home"`
+- 講義：`data-root=".." data-page="section" data-section="N-1"`
+- 段考：`data-root=".." data-page="exam" data-section="N-1"`
+- 章末：`data-root="." data-page="review" data-section="ch-N" data-pick="40"`
+
+講義腳本只要 `config-chN.js`、`layout.js`、`app.js`。頂欄不要手寫。
+
+## 挖空
+
+```html
+<input class="blank" data-answer="能量" style="width:4.5em">
+<input class="blank" data-answer="不傳遞介質|不傳遞物質" style="width:7em">
+<input class="blank ox" data-answer="×|X|x" style="width:2.2em">
+```
+
+寬度用 `em`。多答案用 `|`。是非題用 `blank ox`，錯題下一行「訂正：」再挖空。
+
+## 卡片
+
+- 重點 `id="p1"`，badge `1`；延伸 `badge extend`；探究／實驗／計算／速記 `badge calc`；主張 badge `主`；練習 `練`
+- 定義 `.def`；小標 `.subh`；左文右圖 `.split`；SVG `.diagram`＋`.caption`
+- 補充 `.extra`／`.tips`／`.wrong-note`／`.gifted`；小試 `.ex-box.quiz`／`.think`
+- 練習 `.drill-grid` 兩欄，基本 5＋進階 5
+
+標籤：`tag-purple` 補充、`tag-cyan` 口訣、`tag-green` 小試、`tag-orange` 辨正、`tag-gifted` 資優、`tag-rose` 易錯。
+
+## toc
+
+`<nav class="toc no-word">`，每項 `<small>探究</small>本節問題`。順序：inquiry → 重點 → 實驗／計算／延伸 → memo → claim → drill → 段考連結。

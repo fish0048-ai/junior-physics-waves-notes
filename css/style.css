@@ -424,6 +424,168 @@ tr:nth-child(even) td { background: var(--green-50); }
 .quiz { background: #fff7ed; border: 1px solid #fed7aa; }
 .skill { background: var(--blue-50); border: 1px solid #93c5fd; }
 
+.inquiry {
+  background: linear-gradient(180deg, #ecfeff, #fff);
+  border: 1px solid #a5f3fc;
+}
+.inquiry-steps {
+  margin: 0;
+  padding-left: 1.3em;
+}
+.inquiry-steps li {
+  margin: 6px 0;
+  line-height: 1.5;
+}
+.inquiry-ask {
+  margin: 0 0 12px;
+  padding: 8px 12px;
+  background: #fff7ed;
+  border-left: 5px solid #ea580c;
+  border-radius: 0 10px 10px 0;
+  font-size: 14px;
+  font-weight: 600;
+}
+.inquiry-ask strong { color: #c2410c; }
+.inquiry-claim {
+  background: #ecfdf5;
+  border: 1px solid #86efac;
+  border-left: 5px solid #15803d;
+}
+.inquiry-map {
+  display: grid;
+  gap: 8px;
+  margin: 10px 0 0;
+}
+.inquiry-map a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.inquiry-map a strong {
+  color: var(--green-800);
+}
+.inquiry-map a span {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.inquiry-lead { margin: 0 0 10px; }
+.inquiry-path {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 10px;
+}
+.inquiry-path a {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: 10px 12px;
+}
+.inquiry-path a strong {
+  color: var(--green-800);
+}
+.inquiry-path a span {
+  display: block;
+  font-size: 13px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+.inquiry-follow {
+  margin: 0;
+  font-size: 14px;
+}
+.inquiry-follow a {
+  font-weight: 800;
+  color: var(--green-800);
+  text-decoration: none;
+}
+.inquiry-bridge {
+  margin: 14px 0 0;
+  padding: 8px 12px;
+  background: #ecfeff;
+  border-left: 5px solid #0891b2;
+  border-radius: 0 10px 10px 0;
+  font-size: 14px;
+}
+.inquiry-bridge strong { color: #0e7490; }
+.inquiry-next {
+  margin: 10px 0 0;
+  font-size: 14px;
+}
+.inquiry-next a {
+  font-weight: 800;
+  color: var(--green-800);
+  text-decoration: none;
+}
+.card > .section-head + .inquiry-ask {
+  margin-top: -4px;
+}
+.section-card-ask {
+  font-weight: 700 !important;
+  color: var(--green-800) !important;
+  margin: 0 0 6px !important;
+  font-size: 15px !important;
+}
+
+.inquiry-writebox {
+  margin: 10px 0 12px;
+  padding: 10px 12px;
+  background: #fff;
+  border: 1px dashed #fb923c;
+  border-radius: 10px;
+}
+.inquiry-writebox label {
+  display: block;
+  font-size: 13px;
+  font-weight: 800;
+  color: #c2410c;
+  margin: 0 0 6px;
+}
+.inquiry-write {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0;
+  padding: 8px 10px;
+  border: 1px solid #fdba74;
+  border-radius: 8px;
+  background: #fffbeb;
+  color: var(--ink);
+  font: inherit;
+  line-height: 1.5;
+  resize: vertical;
+  min-height: 4.2em;
+}
+.inquiry-write:focus {
+  outline: 2px solid #ea580c;
+  outline-offset: 1px;
+  background: #fff;
+}
+.inquiry-writebox.is-line .inquiry-write {
+  min-height: 2.6em;
+  resize: none;
+}
+.inquiry-ref-hint {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+.inquiry-ref {
+  margin-top: 10px;
+  padding: 8px 12px;
+  background: #ecfdf5;
+  border-radius: 8px;
+}
+
 .extra,
 .tips,
 .wrong-note,
@@ -997,6 +1159,12 @@ body.ink-draw {
   -webkit-user-select: none;
   touch-action: pan-y;
 }
+body.ink-draw .inquiry-write {
+  user-select: text;
+  -webkit-user-select: text;
+  pointer-events: auto;
+  touch-action: manipulation;
+}
 body.ink-draw #ink-host.is-draw {
   pointer-events: none;
   touch-action: pan-y;
@@ -1481,6 +1649,18 @@ html.is-immersive .brand > span:last-child {
   .db-scale { grid-template-columns: repeat(5, 1fr) !important; }
   .blank { background: #fde68a; }
   .blank.revealed { background: #fde68a; }
+  .inquiry-writebox {
+    break-inside: avoid;
+    border: 0.5pt dashed #666;
+    padding: 2mm;
+    margin: 2mm 0;
+  }
+  .inquiry-write {
+    border: 0.5pt solid #666 !important;
+    background: #fff !important;
+    min-height: 14mm;
+    font-size: 10pt;
+  }
   p, li { orphans: 2; widows: 2; }
   .overview { margin: 0 0 4px; padding: 4px 8px; box-shadow: none; }
   figure { margin: 0; }

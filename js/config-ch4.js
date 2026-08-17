@@ -27,6 +27,7 @@ window.APP_CONFIG = {
       file: "sections/4-1.html",
       exam: "exams/4-1.html",
       ready: true,
+      ask: "光是彎著走，還是直直走？",
       summary: "直線前進、針孔成像、影子與光速"
     },
     {
@@ -35,6 +36,7 @@ window.APP_CONFIG = {
       file: "sections/4-2.html",
       exam: "exams/4-2.html",
       ready: true,
+      ask: "鏡子裡的人是真的在鏡子後面嗎？",
       summary: "反射定律、平面鏡、凸面鏡與凹面鏡"
     },
     {
@@ -43,6 +45,7 @@ window.APP_CONFIG = {
       file: "sections/4-3.html",
       exam: "exams/4-3.html",
       ready: true,
+      ask: "泳池為什麼看起來比較淺？",
       summary: "折射、三稜鏡、凸透鏡與凹透鏡成像"
     },
     {
@@ -51,6 +54,7 @@ window.APP_CONFIG = {
       file: "sections/4-4.html",
       exam: "exams/4-4.html",
       ready: true,
+      ask: "顯微鏡、相機、眼睛，是不是同一套成像邏輯？",
       summary: "顯微鏡、照相機、眼睛與眼鏡"
     },
     {
@@ -59,6 +63,7 @@ window.APP_CONFIG = {
       file: "sections/4-5.html",
       exam: "exams/4-5.html",
       ready: true,
+      ask: "白光裡真的藏著彩虹嗎？",
       summary: "色散、物體顏色、色光與色料三原色"
     }
   ]

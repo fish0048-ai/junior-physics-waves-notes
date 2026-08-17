@@ -27,6 +27,7 @@ window.APP_CONFIG = {
       file: "sections/3-1.html",
       exam: "exams/3-1.html",
       ready: true,
+      ask: "波傳走了什麼？是物質，還是能量？",
       summary: "振源、介質、橫波縱波、週期頻率與波速"
     },
     {
@@ -35,6 +36,7 @@ window.APP_CONFIG = {
       file: "sections/3-2.html",
       exam: "exams/3-2.html",
       ready: true,
+      ask: "聲音一定要有東西幫忙傳嗎？",
       summary: "物體振動發聲、縱波、真空實驗、聲速與溫度"
     },
     {
@@ -43,6 +45,7 @@ window.APP_CONFIG = {
       file: "sections/3-3.html",
       exam: "exams/3-3.html",
       ready: true,
+      ask: "聲音碰到牆壁會消失嗎？",
       summary: "回聲、聲納測距、超聲波與次聲波"
     },
     {
@@ -51,6 +54,7 @@ window.APP_CONFIG = {
       file: "sections/3-4.html",
       exam: "exams/3-4.html",
       ready: true,
+      ask: "同一首歌，樂器不同為什麼聽起來不一樣？",
       summary: "樂音三要素、共振、噪音與分貝"
     }
   ]

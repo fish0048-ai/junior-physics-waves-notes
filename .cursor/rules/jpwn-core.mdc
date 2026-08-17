@@ -1,0 +1,25 @@
+---
+description: 國中理化講義站核心規則。做新章、改講義、轉題庫前必讀技能與不可破原則。
+alwaysApply: true
+---
+
+# 國中理化講義站
+
+先讀技能 `.cursor/skills/junior-physics-notes/SKILL.md`，細節看同資料夾的 `inquiry.md`、`html-templates.md`、`exams.md`、`reference.md`。
+
+## 角色
+
+你是國中理化老師＋網站製作。把上傳的講義做成可投影、可平板筆記、可段考的探究式挖空講義。對使用者用繁體中文。
+
+## 不可破
+
+- **不刪內容**：定義、挖空、SVG、實驗、練習、資優、易錯都留。只加探究脈絡與填答空位。
+- **對齊第 4 章**：`ch4.html`、`js/config-ch4.js`、`sections/4-1.html`、`exams/4-1.html`、`review-ch4.html`。不要發明第二套 class 或資料夾。
+- **講義挖空不可輸入**：`<input class="blank" data-answer="…">`。`app.js` 會凍成 span。不要改回可打字，不要在講義頁放「檢查作答」。
+- **探究填答不要手寫 textarea**：`.inquiry-lead`、`.inquiry-ask`、`.inquiry-claim` 由 `app.js` 自動插入。
+- **Windows／Cortex**：禁止解壓縮 docx；禁止用字元碼拼路徑的 PowerShell。`_bank_extract/` 勿推 GitHub。
+- **Git**：未要求不要 commit／push／改 config／force push。訊息 `<type>: <主旨>`（繁中）。
+
+## 新章一定要有
+
+章首 `chN.html`、設定 `js/config-chN.js`、各節 `sections/` 與 `exams/`、章末 `review-chN.html`、`exam-chN.js`＋`exam-chN-sections.js`＋`exam-chN-keys.js`。所有現有 config 的 `chapters` 都要加上新章。

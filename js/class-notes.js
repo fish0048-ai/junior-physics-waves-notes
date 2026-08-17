@@ -597,6 +597,7 @@
 
   document.getElementById("ink-class").addEventListener("change", async (e) => {
     await flushSave();
+    window.dispatchEvent(new Event("jpwn-class-will-change"));
     state.classId = e.target.value;
     saveClasses();
     await loadStrokes();
@@ -617,6 +618,7 @@
       return;
     }
     await flushSave();
+    window.dispatchEvent(new Event("jpwn-class-will-change"));
     const id = "c" + Date.now().toString(36);
     state.classes.push({ id, name });
     state.classId = id;
@@ -650,6 +652,7 @@
     }
     if (!window.confirm(`刪除「${cls.name}」以及這個班在本機的全部筆記？`)) return;
     await flushSave();
+    window.dispatchEvent(new Event("jpwn-class-will-change"));
     const prefix = cls.id + "::";
     try {
       if (state.db) {

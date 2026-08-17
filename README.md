@@ -1,6 +1,15 @@
-# 國中八年級理化｜第 3 章 波動與聲音　挖空講義
+# 國中八年級理化講義
 
-依小節拆開維護，避免全部塞在同一個網頁。
+第 3 章（波動與聲音）與第 4 章（光）的探究式挖空講義網站。之後新章請依同一套方法製作。
+
+Cursor 製作規範（之後新章請整套遵守）：
+
+- `.cursor/skills/junior-physics-notes/SKILL.md`（流程）
+- `.cursor/skills/junior-physics-notes/inquiry.md`（探究）
+- `.cursor/skills/junior-physics-notes/html-templates.md`（樣板）
+- `.cursor/skills/junior-physics-notes/exams.md`（題庫）
+- `.cursor/skills/junior-physics-notes/reference.md`（檔名）
+- `.cursor/rules/jpwn-*.mdc`
 
 ## GitHub
 
@@ -10,23 +19,21 @@
 ## 資料夾
 
 ```
-index.html              第 3 章目錄（章首）
+index.html / ch4.html   章首
 css/style.css           全站樣式
-js/config.js            小節清單（新增小節改這裡）
-js/layout.js            共用頂欄、章節導覽
-js/app.js               挖空、點空格看答案、下載 PDF
-sections/3-1.html       3-1 波的傳播（已完成）
-sections/3-2.html       3-2 聲波（待補）
-sections/3-3.html       3-3 樂音（待補）
-sections/3-4.html       3-4 噪音與聲音的應用（待補）
+js/config.js            第 3 章小節清單
+js/config-ch4.js        第 4 章小節清單
+js/layout.js            頂欄、章節導覽、章首卡片
+js/app.js               挖空、探究填答、PDF
+sections/               各節講義
+exams/                  各節段考頁與附圖
+review.html             第 3 章章末評量
+review-ch4.html         第 4 章章末評量
 ```
 
-## 之後要加／改小節
+## 之後要加新章／小節
 
-1. 複製 `sections/3-2.html` 成新檔，或直接編輯 3-2～3-4。
-2. 講義本文寫在該檔的 `<div class="wrap workbook">` 裡（挖空用 `<input class="blank" data-answer="答案">`）。
-3. 若標題要改，同步改 `js/config.js` 的 `sections` 陣列。
-4. 完成後把該小節的 `ready` 改成 `true`。
+請依 `.cursor/skills/junior-physics-notes/SKILL.md`：複製第 4 章檔案結構，不刪原文，補上探究鏈。頂欄由 `js/layout.js` 產生，不必每頁重貼。
 
 頂欄按鈕（顯示答案、PDF）由 `js/layout.js` 統一產生，不必在每個小節重複貼一次。
 
