@@ -170,6 +170,16 @@ html.is-proj .wrap {
   margin: 10px 0 0;
   accent-color: var(--green-700);
 }
+.book-loader {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1px;
+  height: 1px;
+  opacity: 0;
+  pointer-events: none;
+  border: 0;
+}
 .book-kicker {
   margin: 0 0 8px;
   font-size: 12px;
@@ -2043,6 +2053,29 @@ html.is-immersive body.ink-draw .wrap {
   background: #fff;
   color: #9a3412;
 }
+.book-prefetch {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  padding: 8px 12px;
+  padding-left: max(12px, env(safe-area-inset-left, 0px));
+  padding-right: max(12px, env(safe-area-inset-right, 0px));
+  background: #14532d;
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+  position: sticky;
+  top: 0;
+  z-index: 69;
+}
+.book-prefetch[hidden] { display: none !important; }
+.book-prefetch .btn {
+  min-height: 36px;
+  background: #fff;
+  color: #14532d;
+}
 html.is-immersive .site-nav,
 html.is-immersive .section-nav,
 html.is-immersive .section-nav.is-exam-nav,
@@ -2050,7 +2083,8 @@ html.is-immersive .footer,
 html.is-immersive .btn-github,
 html.is-immersive #btn-pdf,
 html.is-immersive #btn-pdf-key,
-html.is-immersive .embed-banner {
+html.is-immersive .embed-banner,
+html.is-immersive .book-prefetch {
   display: none !important;
 }
 html.is-immersive .toolbar {

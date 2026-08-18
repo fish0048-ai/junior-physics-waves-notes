@@ -1,22 +1,83 @@
 (function () {
   if (document.body.dataset.page !== "book") return;
 
-  const cfg = window.APP_CONFIG?.book || {};
+  const cfg = window.APP_CONFIG?.book || window.JPWN_BOOK_MANIFEST || {};
   const statusEl = document.getElementById("book-status");
   const pagesEl = document.getElementById("book-pages");
   const labsEl = document.getElementById("book-labs");
   const barEl = document.getElementById("book-bar");
   const KEEP_IDS = new Set(["cover-class", "cover-name", "cover-seat", "cover-form"]);
-  const POOL = 4;
 
   let building = false;
   let queued = false;
   let haveCore = false;
   let haveLabs = false;
   let pendingPrint = null;
+  let assembled = false;
+  let lastError = "";
+  let paused = false;
+  let pauseWait = null;
+  const pauseBtn = document.getElementById("btn-book-pause");
+  const isFile = location.protocol === "file:";
 
   function readyNow() {
+    if (paused && coreCount() > 0) return true;
     return haveCore && (!labsEl?.checked || haveLabs);
+  }
+
+  function paintPauseBtn() {
+    if (!pauseBtn) return;
+    if (paused) {
+      pauseBtn.hidden = false;
+      pauseBtn.textContent = "繼續合成";
+      return;
+    }
+    if (building) {
+      pauseBtn.hidden = false;
+      pauseBtn.textContent = "暫停合成";
+      return;
+    }
+    if (!haveCore) {
+      pauseBtn.hidden = false;
+      pauseBtn.textContent = "重新合成";
+      return;
+    }
+    pauseBtn.hidden = true;
+  }
+
+  function pauseBuild() {
+    if (!building || paused) return;
+    paused = true;
+    paintPauseBtn();
+    const done = pagesEl.querySelectorAll(".book-section").length;
+    setStatus("已暫停合成（已載入 " + done + " 頁）。可以去看其他講義，回來按「繼續合成」。");
+    window.JPWNBookCache?.writeProgress({
+      status: "paused",
+      done,
+      total: Math.max(done, 1),
+      labs: !!labsEl?.checked
+    });
+    if (done) finishMath();
+  }
+
+  function resumeBuild() {
+    if (!paused) return;
+    paused = false;
+    paintPauseBtn();
+    if (pauseWait) {
+      const fn = pauseWait;
+      pauseWait = null;
+      fn();
+    } else if (!building) {
+      build();
+    }
+  }
+
+  function waitIfPaused() {
+    if (!paused) return Promise.resolve();
+    return new Promise((resolve) => {
+      pauseWait = resolve;
+    });
   }
 
   function setStatus(msg) {
@@ -25,21 +86,40 @@
 
   function setBar(done, total) {
     if (!barEl) return;
-    const pct = total ? Math.round((done / total) * 100) : 0;
     barEl.hidden = !total;
     barEl.max = total || 1;
     barEl.value = done;
     barEl.setAttribute("aria-valuenow", String(done));
     barEl.setAttribute("aria-valuemax", String(total || 1));
-    barEl.title = pct + "%";
   }
 
   function toast(msg) {
     (window.NotesApp?.toast || ((m) => window.alert(m)))(msg);
   }
 
+  if (isFile) {
+    setStatus("現在是用檔案開啟（file://），瀏覽器不允許一次抓齊各節。請用本機網站或 GitHub Pages 打開，例如 http://127.0.0.1:4173/book.html");
+    toast("整本下載不能直接雙擊 HTML，需要網站網址。");
+    if (pauseBtn) {
+      pauseBtn.disabled = true;
+      pauseBtn.hidden = true;
+    }
+    document.getElementById("btn-book-pdf")?.setAttribute("disabled", "disabled");
+    document.getElementById("btn-book-key")?.setAttribute("disabled", "disabled");
+    if (labsEl) labsEl.disabled = true;
+    return;
+  }
+
   function navId(item) {
     return item.nav || String(item.id || "").replace(/^lab-/, "");
+  }
+
+  function failLabel(item) {
+    return item.id || navId(item);
+  }
+
+  function errText(err) {
+    return String(err && err.message ? err.message : err || "載入失敗");
   }
 
   function coreList() {
@@ -176,17 +256,22 @@
     return doc.querySelector(".wrap.workbook") || doc.querySelector(".wrap");
   }
 
-  async function fetchPage(item) {
-    const url = new URL(item.file, document.baseURI).href;
-    const res = await fetch(url, { cache: "no-cache" });
-    if (!res.ok) throw new Error(item.file + "（" + res.status + "）");
-    const html = await res.text();
+  function yieldTick() {
+    return new Promise((resolve) => window.setTimeout(resolve, 0));
+  }
+
+  async function parsePage(item) {
+    const api = window.JPWNBookCache;
+    const pageUrl = api ? api.siteUrl(item.file) : new URL(item.file, document.baseURI).href;
+    const html = api
+      ? await api.getHtml(item.file)
+      : await (await fetch(pageUrl, { credentials: "same-origin" })).text();
     const doc = new DOMParser().parseFromString(html, "text/html");
     const source = extractBody(doc);
     if (!source) throw new Error(item.file + " 找不到內容");
     const node = source.cloneNode(true);
     stripChrome(node);
-    rewriteAssets(node, url);
+    rewriteAssets(node, pageUrl);
     prefixIds(node, "bk-" + String(item.id).replace(/[^a-zA-Z0-9_-]/g, "") + "-");
     freezeBlanks(node);
     node.querySelectorAll("svg.diagram").forEach((svg) => {
@@ -211,34 +296,38 @@
     return section;
   }
 
-  async function fetchAll(list, label) {
+  async function appendList(list, label, progress) {
     const failed = [];
-    const nodes = new Array(list.length);
-    let done = 0;
-    let cursor = 0;
-
-    async function worker() {
-      while (cursor < list.length) {
-        const idx = cursor;
-        cursor += 1;
-        const item = list[idx];
-        setStatus("正在載入" + label + navId(item) + "（" + (done + 1) + "／" + list.length + "）……");
-        try {
-          nodes[idx] = await fetchPage(item);
-        } catch (err) {
-          failed.push(navId(item));
-          console.warn("[整本講義]", item.file, err);
-        }
-        done += 1;
-        setBar(done, list.length);
+    const api = window.JPWNBookCache;
+    for (let i = 0; i < list.length; i += 1) {
+      await waitIfPaused();
+      if (label.indexOf("實驗") !== -1 && !labsEl?.checked) break;
+      const item = list[i];
+      if (pagesEl.querySelector('[data-src="' + item.file + '"]')) {
+        if (progress) progress.done += 1;
+        continue;
       }
+      const n = (progress ? progress.done : 0) + 1;
+      const total = progress ? progress.total : list.length;
+      setStatus("正在載入" + label + failLabel(item) + "（" + n + "／" + total + "）。可按「暫停合成」。");
+      setBar(n, total);
+      api?.writeProgress({
+        status: paused ? "paused" : "running",
+        done: n,
+        total,
+        labs: !!labsEl?.checked
+      });
+      try {
+        pagesEl.append(await parsePage(item));
+        haveCore = coreCount() > 0;
+      } catch (err) {
+        failed.push(failLabel(item));
+        lastError = errText(err);
+        console.warn("[整本講義]", item.file, err);
+      }
+      if (progress) progress.done += 1;
+      await yieldTick();
     }
-
-    const n = Math.min(POOL, list.length);
-    await Promise.all(Array.from({ length: n }, worker));
-    nodes.forEach((node) => {
-      if (node) pagesEl.append(node);
-    });
     return failed;
   }
 
@@ -249,13 +338,36 @@
     else window.setTimeout(() => window.JPWNMath?.render?.(), 400);
   }
 
+  function coreCount() {
+    return pagesEl.querySelectorAll('.book-section:not([data-kind="lab"])').length;
+  }
+
   function statusReady(failed) {
-    setBar(0, 0);
+    assembled = true;
+    paintPauseBtn();
     const extra = failed.length ? "無法載入：" + failed.join("、") + "。" : "";
+    const hint = lastError ? "原因：" + lastError + "。" : "";
+    if (!haveCore) {
+      window.JPWNBookCache?.writeProgress({ status: "error", done: 0, total: 0, labs: !!labsEl?.checked });
+      setBar(0, 0);
+      setStatus("沒有載入任何頁面。" + extra + hint + "請按「重新合成」再試一次。");
+      return;
+    }
+    window.JPWNBookCache?.writeProgress({
+      status: failed.length ? "error" : "done",
+      done: failed.length ? 0 : 1,
+      total: 1,
+      labs: !!labsEl?.checked
+    });
+    setBar(0, 0);
+    if (failed.length) {
+      setStatus(extra + hint + "已載入的頁面仍可下載。請按「下載整本 PDF」；印表機選「另存為 PDF」。");
+      return;
+    }
     if (pendingPrint !== null) {
-      setStatus(extra + "合成完成，接著會打開「另存為 PDF」。若沒跳出視窗，請再按一次下載。");
+      setStatus("合成完成，接著會打開「另存為 PDF」。若沒跳出視窗，請再按一次下載。");
     } else {
-      setStatus(extra + "合成完成。請按「下載整本 PDF」；印表機選「另存為 PDF」。不會自己開始下載。");
+      setStatus("合成完成。請按「下載整本 PDF」；印表機選「另存為 PDF」。");
     }
   }
 
@@ -275,21 +387,50 @@
       return;
     }
     building = true;
+    assembled = false;
+    paused = false;
+    pauseWait = null;
+    lastError = "";
+    paintPauseBtn();
     const wantLabs = !!labsEl?.checked;
     const failed = [];
+    const api = window.JPWNBookCache;
+
+    if (api) {
+      try {
+        if (await api.clearBroken()) {
+          setStatus("正在清除舊的背景抓檔元件，頁面會重新整理一次……");
+          return;
+        }
+      } catch (err) {
+        /* ignore */
+      }
+    }
+
+    const core = coreList();
+    const labs = wantLabs ? labList() : [];
+    const progress = { done: 0, total: (haveCore ? 0 : core.length) + (wantLabs && !haveLabs ? labs.length : 0) };
+    api?.writeProgress({ status: "running", done: 0, total: progress.total, labs: wantLabs });
+
+    if (!haveCore && !core.length) {
+      lastError = "找不到講義清單，請重新整理後再試。";
+      building = false;
+      statusReady([]);
+      return;
+    }
 
     if (!haveCore) {
-      setStatus("正在合成封面與各節講義……");
-      failed.push(...await fetchAll(coreList(), " "));
-      haveCore = true;
-      finishMath();
+      setStatus("正在載入封面與各節講義……");
+      failed.push(...await appendList(core, " ", progress));
+      haveCore = coreCount() > 0;
+      if (haveCore) finishMath();
     }
 
     if (wantLabs && !haveLabs) {
       setStatus("正在附加實驗專區……");
-      failed.push(...await fetchAll(labList(), "實驗 "));
+      failed.push(...await appendList(labs, "實驗 ", progress));
       haveLabs = true;
-      finishMath();
+      if (haveCore) finishMath();
     }
 
     if (!wantLabs && haveLabs) {
@@ -298,6 +439,7 @@
     }
 
     building = false;
+    paintPauseBtn();
     statusReady(failed);
     tryAutoPrint();
     if (queued) {
@@ -308,19 +450,19 @@
 
   function requestPrint(withAnswers) {
     pendingPrint = withAnswers;
-    if (readyNow() && !building) {
+    if (readyNow() && (!building || paused)) {
       tryAutoPrint();
       return;
     }
-    setStatus("合成完成後會自動打開「另存為 PDF」。請保留這個分頁；其他講義請另開分頁看。");
-    toast("合成完會自動打開列印視窗。請留在這個分頁。");
+    setStatus("載入並排版後，會打開「另存為 PDF」。可按「暫停合成」去看其他講義。");
+    toast("可暫停合成去看其他講義；請保持這一頁開著。");
     if (!building) build();
   }
 
   const origPrint = window.NotesApp?.printPdf;
   if (typeof origPrint === "function") {
     window.NotesApp.printPdf = function (withAnswers) {
-      if (!readyNow() || building) {
+      if (!readyNow() || (building && !paused)) {
         requestPrint(!!withAnswers);
         return;
       }
@@ -330,21 +472,33 @@
 
   document.getElementById("btn-book-pdf")?.addEventListener("click", () => requestPrint(false));
   document.getElementById("btn-book-key")?.addEventListener("click", () => requestPrint(true));
+  pauseBtn?.addEventListener("click", () => {
+    if (paused) resumeBuild();
+    else if (building) pauseBuild();
+    else build();
+  });
   labsEl?.addEventListener("change", () => {
-    if (labsEl.checked) {
-      setStatus("會在講義後面加上實驗專區，不必重抓前面各章。");
-    } else {
-      setStatus("會拿掉實驗專區，前面各章講義留著。");
+    if (!labsEl.checked) {
+      pagesEl.querySelectorAll('.book-section[data-kind="lab"]').forEach((el) => el.remove());
+      haveLabs = false;
+      setStatus("會拿掉實驗專區，前面各章留著。");
+      if (!building) paintPauseBtn();
+      return;
     }
-    build();
+    setStatus("會在最後加上實驗專區。");
+    if (!building) build();
+    else queued = true;
   });
 
-  if (location.protocol === "file:") {
-    setStatus("請用 GitHub Pages 或本機網站開啟這一頁，直接雙擊 HTML 無法一次抓齊各節。");
-    toast("整本下載需要網站網址，不能直接開檔案。");
-    return;
-  }
+  window.JPWNBookCache?.subscribe((info) => {
+    if (assembled || building) return;
+    if (info.status === "running" && info.total) {
+      setBar(info.done, info.total);
+      setStatus("正在載入 " + info.done + "／" + info.total + "。可以去看其他講義，載完請回到這一頁。");
+    }
+  });
 
-  setStatus("正在合成封面與各節。完成後不會自動下載，請再按「下載整本 PDF」。其他講義請另開分頁，這個分頁請留著。");
+  setStatus("正在載入整本講義。可按「暫停合成」去看其他講義。");
+  paintPauseBtn();
   build();
 })();

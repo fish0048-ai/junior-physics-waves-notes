@@ -110,7 +110,7 @@
       : "";
     const bookLink = page === "book"
       ? ""
-      : `<a class="btn btn-ghost" href="${url("book.html")}" target="_blank" rel="noopener">整本講義</a>`;
+      : `<a class="btn btn-ghost" id="btn-book" href="${url("book.html")}" target="_blank" rel="noopener">整本講義</a>`;
     const tools = (page === "cover")
       ? `<button class="btn btn-orange" id="btn-pdf" type="button">下載封面 PDF</button>
          ${bookLink}`
@@ -228,6 +228,7 @@
   renderHeader();
   renderHomeCards();
   setupImmersive();
+  setupBookPrefetch();
 
   if (!document.querySelector("script[data-class-ink]")) {
     const s = document.createElement("script");
@@ -338,6 +339,80 @@
       const i = Math.min(FONT_STEPS.length - 1, FONT_STEPS.indexOf(currentFontScale()) + 1);
       applyFontScale(FONT_STEPS[i]);
     });
+  }
+
+  function loadBookScript(src) {
+    return new Promise((resolve, reject) => {
+      const abs = url(src);
+      const found = [...document.scripts].some((s) => s.src && s.src.replace(/\/+$/, "") === new URL(abs, document.baseURI).href.replace(/\/+$/, ""));
+      if (src === "js/book-manifest.js" && window.JPWN_BOOK_MANIFEST) {
+        resolve();
+        return;
+      }
+      if (src === "js/book-cache.js" && window.JPWNBookCache) {
+        resolve();
+        return;
+      }
+      if (found && (window.JPWN_BOOK_MANIFEST || src !== "js/book-manifest.js") && (window.JPWNBookCache || src !== "js/book-cache.js")) {
+        resolve();
+        return;
+      }
+      const s = document.createElement("script");
+      s.src = abs;
+      s.onload = resolve;
+      s.onerror = reject;
+      document.body.appendChild(s);
+    });
+  }
+
+  function setupBookPrefetch() {
+    if (page === "book") return;
+    const run = async () => {
+      try {
+        await loadBookScript("js/book-manifest.js");
+        await loadBookScript("js/book-cache.js");
+      } catch (err) {
+        return;
+      }
+      const api = window.JPWNBookCache;
+      if (!api) return;
+      if (await api.clearBroken()) return;
+      const banner = document.createElement("div");
+      banner.id = "book-prefetch-banner";
+      banner.className = "book-prefetch no-print";
+      banner.hidden = true;
+      banner.innerHTML = `
+        <span id="book-prefetch-text">整本講義準備中</span>
+        <a class="btn btn-orange" href="${url("book.html")}" target="_blank" rel="noopener">前往下載</a>
+      `;
+      const header = document.getElementById("site-header");
+      if (header && header.nextSibling) header.after(banner);
+      else document.body.insertBefore(banner, document.body.firstChild);
+
+      function paint(info) {
+        const data = info || api.readProgress();
+        const text = document.getElementById("book-prefetch-text");
+        if (!text) return;
+        if (data.status === "running" && data.total) {
+          banner.hidden = false;
+          text.textContent = "整本講義正在合成 " + data.done + "／" + data.total + "，可繼續看其他頁";
+        } else if (data.status === "paused" && data.total) {
+          banner.hidden = false;
+          text.textContent = "整本講義合成已暫停 " + data.done + "／" + data.total + "，回下載頁可繼續";
+        } else if (data.status === "done" && data.total) {
+          banner.hidden = false;
+          text.textContent = "整本講義已備妥，可前往下載（印表機選「另存為 PDF」）";
+        } else if (data.status === "error") {
+          banner.hidden = false;
+          text.textContent = "整本講義有頁面沒載到，請到下載頁查看";
+        } else {
+          banner.hidden = true;
+        }
+      }
+      paint(api.readProgress());
+      api.subscribe(paint);
+    };
+    run();
   }
 
   setupFontScale();
