@@ -46,7 +46,10 @@
         <button class="btn btn-orange" id="btn-book-pdf" type="button">下載整本 PDF</button>
         <button class="btn btn-ghost" id="btn-book-key" type="button">下載含答案 PDF</button>
       </p>
-      <p class="book-actions" id="book-chapter-actions"></p>
+      <details class="book-chapter-details" open>
+        <summary>分章下載</summary>
+        <p class="book-actions" id="book-chapter-actions"></p>
+      </details>
     </article>
     <iframe id="book-loader" class="book-loader no-print" title="講義載入" sandbox="allow-same-origin"></iframe>
     <div id="book-pages" class="book-pages" hidden></div>

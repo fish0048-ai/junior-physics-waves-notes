@@ -162,7 +162,20 @@ html.is-proj .wrap {
   cursor: pointer;
 }
 .book-opt input { width: 18px; height: 18px; accent-color: var(--green-700); }
-.book-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+.book-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 8px 0 0; }
+.book-chapter-details { margin: 12px 0 0; }
+.book-chapter-details > summary {
+  display: inline-flex; align-items: center; gap: 6px;
+  cursor: pointer; user-select: none;
+  font-size: .85rem; font-weight: 700; color: var(--green-700);
+  list-style: none; padding: 4px 0;
+}
+.book-chapter-details > summary::before {
+  content: "▶"; font-size: .65rem; transition: transform .2s;
+}
+.book-chapter-details[open] > summary::before { transform: rotate(90deg); }
+.book-chapter-details > summary::-webkit-details-marker { display: none; }
+.book-chapter-details > .book-actions { margin-top: 6px; }
 .book-bar {
   display: block;
   width: 100%;

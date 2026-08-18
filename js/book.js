@@ -600,7 +600,7 @@
   (function renderChapterPrintButtons() {
     const host = document.getElementById("book-chapter-actions");
     if (!host) return;
-    const btns = ['<span class="nav-label">分章下載</span>'];
+    const btns = [];
     btns.push('<button type="button" class="btn btn-ghost" data-print-ch="cover">封面</button>');
     (cfg.packs || []).forEach((pack) => {
       const first = pack.files && pack.files[0] ? pack.files[0].id : "";
