@@ -148,10 +148,10 @@
         `).join("");
     const reviewLink = page === "cover" ? "" : (review ? `<a href="${url(review.file)}" class="${page === "review" ? "is-on" : ""}">${review.nav || "章末評量"}</a>` : "");
     const examNav = examLinks ? `
-      <nav class="section-nav is-exam-nav no-print" aria-label="段考前練習">
-        <span class="nav-label">段考前練習</span>
+      <details class="section-nav is-exam-nav no-print" aria-label="段考前練習">
+        <summary class="exam-nav-summary">段考前練習</summary>
         ${examLinks}
-      </nav>
+      </details>
     ` : "";
     const chapterNav = (page === "cover" || page === "book") ? "" : `
       <nav class="section-nav no-print" aria-label="${thisChapterNav()}目錄">

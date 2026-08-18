@@ -1095,8 +1095,36 @@ ol.q li, ul.q li { margin: 5px 0; }
 .section-nav.is-exam-nav {
   background: #fff7ed;
   border-bottom-color: #fed7aa;
+  display: block;
+  padding: 0;
 }
-.section-nav.is-exam-nav .nav-label { color: #c2410c; }
+.exam-nav-summary {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 18px 7px;
+  cursor: pointer;
+  user-select: none;
+  list-style: none;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  color: #c2410c;
+}
+.exam-nav-summary::-webkit-details-marker { display: none; }
+.exam-nav-summary::before {
+  content: "▶";
+  font-size: .6rem;
+  transition: transform .2s;
+  color: #c2410c;
+}
+details.is-exam-nav[open] > .exam-nav-summary::before { transform: rotate(90deg); }
+details.is-exam-nav[open] {
+  padding-bottom: 8px;
+}
+details.is-exam-nav > a.is-practice {
+  margin: 0 0 0 18px;
+}
 .section-nav a.is-practice {
   color: #9a3412;
   border-color: #fdba74;
