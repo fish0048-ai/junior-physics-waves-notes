@@ -309,37 +309,72 @@
   async function appendList(list, label, progress) {
     const failed = [];
     const api = window.JPWNBookCache;
+    const CONCURRENCY = 6;
+
+    // 過濾已載入的，收集待載清單（保留原序）
+    const pending = [];
     for (let i = 0; i < list.length; i += 1) {
-      await waitIfPaused();
       if (label.indexOf("實驗") !== -1 && !labsEl?.checked) break;
       const item = list[i];
       if (pagesEl.querySelector('[data-src="' + item.file + '"]')) {
         if (progress) progress.done += 1;
         continue;
       }
-      const n = (progress ? progress.done : 0) + 1;
-      const total = progress ? progress.total : list.length;
-      setStatus("正在載入" + label + failLabel(item) + "（" + n + "／" + total + "）。可按「暫停合成」。");
-      setBar(n, total);
-      api?.writeProgress({
-        status: paused ? "paused" : "running",
-        done: n,
-        total,
-        labs: !!labsEl?.checked
-      });
-      try {
-        const section = await parsePage(item);
+      pending.push({ item, origIndex: i });
+    }
+
+    // 結果暫存（保留原序後再一次 append）
+    const results = new Array(pending.length);
+
+    let dispatchIdx = 0;
+    let resolvedCount = 0;
+
+    async function worker() {
+      while (dispatchIdx < pending.length) {
+        await waitIfPaused();
+        if (label.indexOf("實驗") !== -1 && !labsEl?.checked) break;
+        const slot = dispatchIdx++;
+        const { item } = pending[slot];
+        const total = progress ? progress.total : list.length;
+        try {
+          const section = await parsePage(item);
+          results[slot] = section;
+        } catch (err) {
+          results[slot] = null;
+          failed.push(failLabel(item));
+          lastError = errText(err);
+          console.warn("[整本講義]", item.file, err);
+        }
+        resolvedCount += 1;
+        if (progress) progress.done += 1;
+        const n = progress ? progress.done : resolvedCount;
+        setStatus("正在載入" + label + "（" + n + "／" + total + "）。可按「暫停合成」。");
+        setBar(n, total);
+        api?.writeProgress({
+          status: paused ? "paused" : "running",
+          done: n,
+          total,
+          labs: !!labsEl?.checked
+        });
+        await yieldTick();
+      }
+    }
+
+    // 啟動 CONCURRENCY 個 worker 並行
+    const workers = [];
+    for (let w = 0; w < Math.min(CONCURRENCY, pending.length); w += 1) {
+      workers.push(worker());
+    }
+    await Promise.all(workers);
+
+    // 依原序 append
+    for (const section of results) {
+      if (section) {
         pagesEl.append(section);
         pagesEl.hidden = false;
         haveCore = coreCount() > 0;
         finishMath(section);
-      } catch (err) {
-        failed.push(failLabel(item));
-        lastError = errText(err);
-        console.warn("[整本講義]", item.file, err);
       }
-      if (progress) progress.done += 1;
-      await yieldTick();
     }
     return failed;
   }
