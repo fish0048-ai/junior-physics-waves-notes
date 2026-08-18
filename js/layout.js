@@ -385,7 +385,7 @@
         <span id="book-prefetch-text">整本講義準備中</span>
         <span class="book-prefetch-actions">
           <a class="btn btn-orange" href="${url("book.html")}" target="_blank" rel="noopener">前往下載</a>
-          <button type="button" class="book-prefetch-close" aria-label="關閉通知" title="關閉通知">✕</button>
+          <button type="button" class="book-prefetch-close" aria-label="關閉通知" title="關閉此通知">×</button>
         </span>
       `;
       banner.querySelector(".book-prefetch-close").addEventListener("click", () => {

@@ -2125,21 +2125,24 @@ html.is-immersive body.ink-draw .wrap {
   flex-shrink: 0;
 }
 .book-prefetch-close {
-  background: transparent;
-  border: 1px solid rgba(255,255,255,.45);
+  background: rgba(255,255,255,.15);
+  border: 1.5px solid rgba(255,255,255,.7);
   color: #fff;
   border-radius: 999px;
-  width: 28px;
-  height: 28px;
-  font-size: 13px;
+  width: 30px;
+  height: 30px;
+  font-size: 15px;
+  font-weight: 700;
   line-height: 1;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-shrink: 0;
   transition: background .15s;
+  padding: 0;
 }
-.book-prefetch-close:hover { background: rgba(255,255,255,.18); }
+.book-prefetch-close:hover { background: rgba(255,255,255,.32); }
 .book-prefetch .btn {
   min-height: 36px;
   background: #fff;
