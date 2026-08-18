@@ -154,12 +154,12 @@
       </details>
     ` : "";
     const chapterNav = (page === "cover" || page === "book") ? "" : `
-      <nav class="section-nav no-print" aria-label="${thisChapterNav()}目錄">
-        <span class="nav-label">${thisChapterNav()}</span>
+      <details class="section-nav no-print" open aria-label="${thisChapterNav()}目錄">
+        <summary class="section-nav-summary">${thisChapterNav()}</summary>
         <a href="${url(cfg.home || "index.html")}" class="${page === "home" ? "is-on" : ""}">目錄</a>
         ${sectionLinks}
         ${reviewLink}
-      </nav>
+      </details>
       ${examNav}
     `;
 

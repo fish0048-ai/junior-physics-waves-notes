@@ -1092,12 +1092,12 @@ ol.q li, ul.q li { margin: 5px 0; }
 .site-nav a.is-on,
 .section-nav a.is-on { background: var(--green-700); color: #fff; border-color: var(--green-700); }
 .section-nav a.is-draft { color: #78716c; font-weight: 600; }
-.section-nav.is-exam-nav {
-  background: #fff7ed;
-  border-bottom-color: #fed7aa;
+/* ── 可收闔 section-nav（chapter nav ＆ exam nav 共用） ── */
+details.section-nav {
   display: block;
   padding: 0;
 }
+.section-nav-summary,
 .exam-nav-summary {
   display: flex;
   align-items: center;
@@ -1109,21 +1109,27 @@ ol.q li, ul.q li { margin: 5px 0; }
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.08em;
-  color: #c2410c;
 }
+.section-nav-summary { color: var(--muted); }
+.exam-nav-summary    { color: #c2410c; }
+.section-nav-summary::-webkit-details-marker,
 .exam-nav-summary::-webkit-details-marker { display: none; }
+.section-nav-summary::before,
 .exam-nav-summary::before {
   content: "▶";
   font-size: .6rem;
-  transition: transform .2s;
-  color: #c2410c;
+  transition: transform .18s;
 }
+details.section-nav[open] > .section-nav-summary::before,
 details.is-exam-nav[open] > .exam-nav-summary::before { transform: rotate(90deg); }
-details.is-exam-nav[open] {
-  padding-bottom: 8px;
-}
-details.is-exam-nav > a.is-practice {
-  margin: 0 0 0 18px;
+details.section-nav[open],
+details.is-exam-nav[open] { padding-bottom: 8px; }
+details.section-nav > a,
+details.is-exam-nav > a { margin-left: 18px; }
+
+.section-nav.is-exam-nav {
+  background: #fff7ed;
+  border-bottom-color: #fed7aa;
 }
 .section-nav a.is-practice {
   color: #9a3412;
