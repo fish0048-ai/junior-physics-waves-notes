@@ -39,6 +39,15 @@
     return (cfg.sections || []).find((s) => s.id === currentId);
   }
 
+  function chapterNavText(c) {
+    if (!c) return "";
+    return c.nav || `第 ${c.id} 章`;
+  }
+
+  function thisChapterNav() {
+    return cfg.chapter?.nav || `第 ${cfg.chapter?.id || ""} 章`;
+  }
+
   function renderHeader() {
     const host = document.getElementById("site-header");
     if (!host) return;
@@ -52,7 +61,7 @@
       ? `${cfg.chapter?.grade || "八年級理化"}　${sec.id} 段考前練習`
       : sec
       ? `${cfg.chapter?.grade || "八年級理化"}　${sec.id} ${sec.title}`
-      : `${cfg.chapter?.grade || "八年級理化"}　第 ${cfg.chapter?.id || ""} 章`;
+      : `${cfg.chapter?.grade || "八年級理化"}　${thisChapterNav()}`;
     const checkBtn = (page === "review" || page === "exam")
       ? `<button class="btn btn-ghost" id="btn-check" type="button">檢查作答</button>`
       : "";
@@ -68,8 +77,13 @@
       : "";
     const inkBtn = `<button class="btn btn-ghost" id="btn-ink" type="button" aria-pressed="false">筆記</button>`;
     const immersiveBtn = `<button class="btn btn-ghost" id="btn-immersive" type="button" aria-pressed="false">全螢幕</button>`;
+    const fontScale = `<span class="font-scale no-print" role="group" aria-label="投影字級">
+          <button class="btn btn-ghost btn-font" id="btn-font-minus" type="button" title="縮小投影字級">A−</button>
+          <span class="font-scale-label" id="font-scale-label">100%</span>
+          <button class="btn btn-ghost btn-font" id="btn-font-plus" type="button" title="放大投影字級">A＋</button>
+        </span>`;
     const chapterLinks = (cfg.chapters || []).map((c) => `
-          <a href="${url(c.file)}" class="${page !== "cover" && String(cfg.chapter?.id) === String(c.id) ? "is-on" : ""}">第 ${c.id} 章</a>
+          <a href="${url(c.file)}" class="${page !== "cover" && String(cfg.chapter?.id) === String(c.id) ? "is-on" : ""}">${chapterNavText(c)}</a>
         `).join("");
     const sectionLinks = page === "cover" ? "" : (cfg.sections || []).map((s) => `
           <a href="${url(s.file)}" class="${s.id === currentId && page === "section" ? "is-on" : ""} ${s.ready ? "" : "is-draft"}">
@@ -87,8 +101,8 @@
       </nav>
     ` : "";
     const chapterNav = page === "cover" ? "" : `
-      <nav class="section-nav no-print" aria-label="第 ${cfg.chapter?.id || ""} 章目錄">
-        <span class="nav-label">第 ${cfg.chapter?.id || ""} 章</span>
+      <nav class="section-nav no-print" aria-label="${thisChapterNav()}目錄">
+        <span class="nav-label">${thisChapterNav()}</span>
         <a href="${url(cfg.home || "index.html")}" class="${page === "home" ? "is-on" : ""}">目錄</a>
         ${sectionLinks}
         ${reviewLink}
@@ -104,6 +118,7 @@
         </a>
         <div class="toolbar-actions">
           ${immersiveBtn}
+          ${fontScale}
           ${inkBtn}
           ${tools}
           <a class="btn btn-github" href="${cfg.githubRepo || "#"}" target="_blank" rel="noopener">GitHub</a>
@@ -236,4 +251,55 @@
 
     if (sessionStorage.getItem("jpwn.immersive") === "1") setImmersive(true);
   }
+
+  const FONT_STEPS = [100, 125, 150, 175, 200];
+  const FONT_KEY = "jpwn.fontScale";
+
+  function currentFontScale() {
+    const n = Number(sessionStorage.getItem(FONT_KEY) || 100);
+    return FONT_STEPS.includes(n) ? n : 100;
+  }
+
+  function applyFontScale(pct) {
+    const step = FONT_STEPS.includes(pct) ? pct : 100;
+    const html = document.documentElement;
+    html.style.setProperty("--proj-scale", String(step / 100));
+    html.classList.toggle("is-proj", step !== 100);
+    sessionStorage.setItem(FONT_KEY, String(step));
+    const label = document.getElementById("font-scale-label");
+    if (label) label.textContent = step + "%";
+    const minus = document.getElementById("btn-font-minus");
+    const plus = document.getElementById("btn-font-plus");
+    if (minus) minus.disabled = step === FONT_STEPS[0];
+    if (plus) plus.disabled = step === FONT_STEPS[FONT_STEPS.length - 1];
+    window.setTimeout(() => window.ClassInk?.redraw?.(), 80);
+  }
+
+  function setupFontScale() {
+    applyFontScale(currentFontScale());
+    document.getElementById("btn-font-minus")?.addEventListener("click", () => {
+      const i = Math.max(0, FONT_STEPS.indexOf(currentFontScale()) - 1);
+      applyFontScale(FONT_STEPS[i]);
+    });
+    document.getElementById("btn-font-plus")?.addEventListener("click", () => {
+      const i = Math.min(FONT_STEPS.length - 1, FONT_STEPS.indexOf(currentFontScale()) + 1);
+      applyFontScale(FONT_STEPS[i]);
+    });
+  }
+
+  setupFontScale();
+
+  window.NotesLayout = {
+    resetFontScaleForPrint() {
+      const html = document.documentElement;
+      const prev = currentFontScale();
+      const had = html.classList.contains("is-proj");
+      html.style.setProperty("--proj-scale", "1");
+      html.classList.remove("is-proj");
+      return () => {
+        html.style.setProperty("--proj-scale", String(prev / 100));
+        html.classList.toggle("is-proj", had);
+      };
+    }
+  };
 })();

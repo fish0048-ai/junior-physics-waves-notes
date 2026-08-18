@@ -19,6 +19,8 @@ alwaysApply: false
 
 hero 探究問題 → toc → `#inquiry` → 各重點（ask→原文→國中程度 extra→國中資優 gifted→bridge）→ 延伸／實驗／計算 → `#memo` 證據卡 → `#claim` → `#drill` 檢驗主張。
 
+實驗專區以步驟為上課主軸：探究 → 目的／器材 → **逐步操作（`.lab-step` 一格一步，禁止收成 `ol.q`）** → 紀錄表 → memo／claim。假設／器材才可用 `ol.q`。**不要** `#drill`、不要段考前練習、不要章末評量。見 `labs.md`。
+
 ## 章首
 
 hero 用箭頭串整章。inquiry 卡寫**一段故事**，不要再列一排小節連結（卡片由 `layout.js` 用 `ask` 產生）。

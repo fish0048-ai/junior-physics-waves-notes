@@ -193,6 +193,13 @@
       if (/傳導|對流|輻射|保溫|海風|陸風|良導體/.test(t)) return "transfer";
       return "thermal";
     }
+    if (secId === "ch-6" || String(secId).indexOf("6-") === 0) {
+      if (/週期表|週期|第 \d+ 族|鹼金屬|鹼土|鈍氣|門得列夫|礦物油|酚酞/.test(t)) return "periodic";
+      if (/質子|中子|電子|同位素|原子序|質量數|道耳頓|湯姆森|拉塞福|查兌克|氧化汞|德謨克利特|原子核/.test(t)) return "atom";
+      if (/分子|化學式|混合物|亞佛加厥|粒子圖|實驗式|示性式/.test(t)) return "molecule";
+      if (/元素|金屬|非金屬|符號|同素異形|拉瓦節|波以耳|石墨|不鏽鋼/.test(t)) return "element";
+      return "matter";
+    }
     if (/超聲波|次聲波|聲納|蝙蝠|產檢/.test(t)) return "ultra";
     if (/回聲|峭壁|山壁|測距|雷聲/.test(t)) return "echo";
     if (/音調|音色|響度|分貝|噪音|弦|力度|樂音/.test(t)) return "tone";

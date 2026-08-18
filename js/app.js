@@ -305,10 +305,12 @@
       ? `國中理化_${secId}_${kind}_含答案`
       : `國中理化_${secId}_${kind}`;
     toast("請將印表機選成「另存為 PDF」或 Microsoft Print to PDF");
+    const restoreScale = window.NotesLayout?.resetFontScaleForPrint?.();
     setTimeout(() => {
       window.print();
       document.title = oldTitle;
       applyRevealState(snap);
+      if (typeof restoreScale === "function") restoreScale();
       window.dispatchEvent(new Event("jpwn-after-print"));
       window.NotesApp.persistPaused = false;
     }, 350);

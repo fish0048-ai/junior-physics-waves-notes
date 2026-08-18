@@ -8,6 +8,8 @@ alwaysApply: false
 
 新章跟第 4 章：不要再用 `exam-bank.js`、`exam-sections.js`、`exam-figs.js`。
 
+實驗專區不要套用本規則：不要 `exams/lab-*.html`、不要 `review-lab.html`、不要 `js/exam-lab*.js`。見 `labs.md`。
+
 ## 檔案
 
 - 小節頁 `exams/N-x.html` 載入：config-chN、layout、app、exam-chN-sections、exam-chN-keys、exam.js

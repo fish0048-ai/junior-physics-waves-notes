@@ -20,6 +20,7 @@
   --red: #b91c1c;
   --shadow: 0 8px 24px rgba(20, 83, 45, 0.07);
   --radius: 14px;
+  --proj-scale: 1;
 }
 
 * { box-sizing: border-box; }
@@ -92,6 +93,35 @@ p:last-child { margin-bottom: 0; }
   gap: 6px;
   justify-content: flex-end;
   min-width: 0;
+}
+
+.font-scale {
+  display: inline-flex;
+  align-items: center;
+  gap: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: #fff;
+  padding: 0 4px;
+}
+.font-scale-label {
+  min-width: 3.4em;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--green-800);
+}
+.btn-font {
+  min-height: 32px;
+  padding: 4px 9px;
+}
+.btn-font:disabled {
+  opacity: 0.35;
+  cursor: default;
+}
+
+html.is-proj .wrap {
+  zoom: var(--proj-scale);
 }
 
 .btn {
@@ -287,6 +317,87 @@ p:last-child { margin-bottom: 0; }
   border-radius: 0 10px 10px 0;
   margin: 0 0 12px;
 }
+
+/* 實驗專區：步驟是主軸，一格一步；清單上方自動標「逐步操作」 */
+.lab-steps {
+  display: grid;
+  gap: 14px;
+  margin: 12px 0 16px;
+  padding: 0;
+  list-style: none;
+  counter-reset: labstep;
+}
+.lab-steps::before {
+  content: "逐步操作　一步做完再進行下一步";
+  display: block;
+  font-weight: 900;
+  font-size: 15px;
+  letter-spacing: 0.04em;
+  color: var(--green-800);
+  background: var(--green-50);
+  border: 1px solid #86efac;
+  border-radius: 12px;
+  padding: 8px 14px;
+}
+.lab-step {
+  position: relative;
+  margin: 0;
+  background: #fff;
+  border: 2px solid #bbf7d0;
+  border-radius: 16px;
+  padding: 14px 16px 14px 62px;
+  box-shadow: 0 1px 0 rgba(21, 128, 61, 0.08);
+}
+.lab-step::before {
+  counter-increment: labstep;
+  content: counter(labstep);
+  position: absolute;
+  left: 14px;
+  top: 14px;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background: var(--green-700);
+  color: #fff;
+  font-weight: 900;
+  font-size: 17px;
+  line-height: 36px;
+  text-align: center;
+}
+.lab-step > .subh {
+  margin-top: 2px;
+  font-size: 17px;
+}
+.lab-step > p {
+  margin: 6px 0;
+}
+.lab-caution,
+.lab-record,
+.lab-check {
+  padding: 8px 12px;
+  border-radius: 0 10px 10px 0;
+  margin: 8px 0;
+  font-size: 14.5px;
+  font-weight: 700;
+}
+.lab-caution {
+  background: #fff7ed;
+  border-left: 5px solid #ea580c;
+  color: #9a3412;
+}
+.lab-record {
+  background: #eff6ff;
+  border-left: 5px solid #2563eb;
+  color: #1e3a8a;
+}
+.lab-check {
+  background: #f5f3ff;
+  border-left: 5px solid #7c3aed;
+  color: #5b21b6;
+}
+.lab-caution::before { content: "注意　"; }
+.lab-record::before { content: "紀錄　"; }
+.lab-check::before { content: "核對　"; }
 
 .subh {
   margin: 16px 0 8px;
@@ -1791,6 +1902,8 @@ html.is-immersive .brand > span:last-child {
 
 @media (max-width: 800px) {
   .split, .two-col, .drill-grid { grid-template-columns: 1fr; }
+  .lab-step { padding-left: 16px; padding-top: 56px; }
+  .lab-step::before { left: 16px; top: 12px; }
   .cover-id { grid-template-columns: 1fr; }
   .cover-sheet { padding: 22px 16px 18px; min-height: 0; }
   .cover-sheet h1 { font-size: 26px; }
@@ -1838,7 +1951,11 @@ html.is-immersive .brand > span:last-child {
     margin: 0;
     line-height: 1.28;
     font-size: 10pt;
+    zoom: 1 !important;
+    --proj-scale: 1 !important;
   }
+  .wrap { zoom: 1 !important; }
+  .font-scale { display: none !important; }
   .toolbar, .toc, .footer, .toast, .wave-deco, .site-nav, .section-nav, .no-print, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip { display: none !important; }
   .wrap { width: auto; max-width: none; margin: 0; padding: 0; }
   .hero {
@@ -1973,7 +2090,7 @@ html.is-immersive .brand > span:last-child {
     color: #14532d;
     border: 0.4pt solid #166534;
   }
-  .card, .ex-box, .extra, .tips, .wrong-note, .gifted, .teacher, .drill-col, .drill-grid, .split, .two-col {
+  .card, .ex-box, .extra, .tips, .wrong-note, .gifted, .teacher, .drill-col, .drill-grid, .split, .two-col, .lab-step {
     break-inside: auto !important;
     page-break-inside: auto !important;
     box-shadow: none !important;

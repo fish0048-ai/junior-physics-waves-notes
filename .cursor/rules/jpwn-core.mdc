@@ -5,7 +5,7 @@ alwaysApply: true
 
 # 國中理化講義站
 
-先讀技能 `.cursor/skills/junior-physics-notes/SKILL.md`，細節看同資料夾的 `inquiry.md`、`html-templates.md`、`extras.md`、`exams.md`、`reference.md`。
+先讀技能 `.cursor/skills/junior-physics-notes/SKILL.md`，細節看同資料夾的 `inquiry.md`、`html-templates.md`、`extras.md`、`exams.md`、`reference.md`、`labs.md`。
 
 ## 角色
 
@@ -15,7 +15,8 @@ alwaysApply: true
 
 - **兩層補充一定要有**：每個重點卡課文後加 `.extra`（國中程度）和 `.gifted`（國中資優）。不能只抄課本。寫法見 `extras.md`。
 - **不刪內容**：定義、挖空、SVG、實驗、練習、資優、易錯都留。只加探究脈絡與填答空位。
-- **對齊第 4 章**：`ch4.html`、`js/config-ch4.js`、`sections/4-1.html`、`exams/4-1.html`、`review-ch4.html`。不要發明第二套 class 或資料夾。
+- **對齊第 4 章**：`ch4.html`、`js/config-ch4.js`、`sections/4-1.html`、`exams/4-1.html`、`review-ch4.html`。不要發明第二套 class 或資料夾。實驗步驟 class（`.lab-step` 等）寫進同一份 `css/style.css`。
+- **實驗步驟是上課主軸、不縮水**：活動紀錄本每一步用 `.lab-step` 單獨呈現（注意、紀錄、步驟 Q、該步的圖留在該格）。禁止收成短 `ol.q`。每個實驗在動手之前必有材料確認。獨立章 `lab.html`，頂欄 `nav: "實驗專區"`，不要「第 lab 章」。實驗專區**不要**練習、段考前練習、章末評量。見 `labs.md`。
 - **講義挖空不可輸入**：`<input class="blank" data-answer="…">`。`app.js` 會凍成 span。不要改回可打字，不要在講義頁放「檢查作答」。
 - **封面可填、章首是目錄**：`cover.html` 用一般 `<input>`（不要 `class="blank"`）填班級、姓名、座號。`index.html`／`chN.html` 是該章目錄，不要放學生資料欄。各章 `config` 要有 `cover`。
 - **探究填答不要手寫 textarea**：`.inquiry-lead`、`.inquiry-ask`、`.inquiry-claim` 由 `app.js` 自動插入。
@@ -24,4 +25,4 @@ alwaysApply: true
 
 ## 新章一定要有
 
-章首 `chN.html`、設定 `js/config-chN.js`、各節 `sections/` 與 `exams/`、章末 `review-chN.html`、`exam-chN.js`＋`exam-chN-sections.js`＋`exam-chN-keys.js`。所有現有 config 的 `chapters` 都要加上新章。
+章首 `chN.html`、設定 `js/config-chN.js`、各節 `sections/` 與 `exams/`、章末 `review-chN.html`、`exam-chN.js`＋`exam-chN-sections.js`＋`exam-chN-keys.js`。所有現有 config 的 `chapters` 都要加上新章。實驗專區另加 `lab.html`、`js/config-lab.js`，並在**每一份** config 的 `chapters` 寫上 `nav: "實驗專區"`。實驗專區不要 `exams/lab-*.html`、不要 `#drill`、不要 `review-lab.html`、config 不要 `exam`／`review`。

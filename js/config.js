@@ -13,7 +13,9 @@ window.APP_CONFIG = {
   chapters: [
     { id: "3", title: "波動與聲音", file: "index.html" },
     { id: "4", title: "光", file: "ch4.html" },
-    { id: "5", title: "溫度與熱", file: "ch5.html" }
+    { id: "5", title: "溫度與熱", file: "ch5.html" },
+    { id: "6", title: "探索物質組成", file: "ch6.html" },
+    { id: "lab", title: "實驗專區", file: "lab.html", nav: "實驗專區" }
   ],
   review: {
     id: "ch-3",

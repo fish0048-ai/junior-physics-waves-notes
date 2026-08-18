@@ -117,4 +117,25 @@
 
 ## 章首卡片
 
-`#section-cards` 留空，`layout.js` 用 config 填。每張顯示 `id`、`title`、`ask`、`summary`，卡片上要有「段考前練習」連結，下方再放橘色段考卡與章末評量卡。頂欄本章目錄下面要有一列「段考前練習」（各節只標 `N-x`，前面已有「段考前練習」就不必再寫段考）。`ready: false` 會顯示建置中，新章做完再改 `true`。章首就是該章目錄；學生資料只在 `cover.html`。
+`#section-cards` 留空，`layout.js` 用 config 填。每張顯示 `id`、`title`、`ask`、`summary`，卡片上要有「段考前練習」連結，下方再放橘色段考卡與章末評量卡。頂欄本章目錄下面要有一列「段考前練習」（各節只標 `N-x`，前面已有「段考前練習」就不必再寫段考）。**實驗專區例外**：config 不要 `exam`、不要 `review`，目錄就不會出現段考前練習與章末評量。`ready: false` 會顯示建置中，新章做完再改 `true`。章首就是該章目錄；學生資料只在 `cover.html`。
+
+獨立章若不是「第 N 章」，config 要加 `nav`（實驗專區寫 `"實驗專區"`），`layout.js` 用 `c.nav || "第 "+c.id+" 章"`。
+
+## 實驗步驟（實驗專區必用）
+
+這是實驗頁的上課主軸，不是附錄。一格一步，class 在 `css/style.css`。完整規範見 [labs.md](labs.md)，範本 `sections/lab-1-2.html`。
+
+假設、器材、觀念補充才可用 `ol.q`。動手步驟禁止收成短清單，也不要把兩步併成一句。
+
+實驗專區 **不要** `#drill`、不要 toc「練習／段考」、config 不要 `exam`、不要 `review`。頁面到 `#claim` 結束。
+
+```html
+<ol class="lab-steps">
+  <li class="lab-step">
+    <h3 class="subh">步驟名（紀錄本原句）</h3>
+    <p>做什麼、用什麼、讀哪裡。</p>
+    <p class="lab-caution">原卷注意句（不要再寫「注意：」）。</p>
+    <p class="lab-record">原卷要記錄／觀察的項目（不要再寫「紀錄：」）。</p>
+  </li>
+</ol>
+```

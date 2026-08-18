@@ -32,10 +32,11 @@ alwaysApply: false
 - 重點 `id="p1"`，badge `1`；延伸 `badge extend`；探究／實驗／計算／速記 `badge calc`；主張 badge `主`；練習 `練`
 - 定義 `.def`；小標 `.subh`；左文右圖 `.split`；SVG `.diagram`＋`.caption`
 - 補充 `.extra`（國中程度，必備）／`.gifted`（國中資優，必備）／`.tips`／`.wrong-note`；小試 `.ex-box.quiz`／`.think`
+- 實驗步驟是實驗頁主軸：`.lab-steps`＞`.lab-step`（一格一步，禁止 `ol.q`）＋`.lab-caution`＋`.lab-record`；寫法見技能 `labs.md`，範本 `sections/lab-1-2.html`
 - 練習 `.drill-grid` 兩欄，基本 5＋進階 5
 
 標籤：`tag-purple` 國中程度補充、`tag-cyan` 口訣、`tag-green` 小試、`tag-orange` 辨正、`tag-gifted` 資優、`tag-rose` 易錯。每個重點卡課文後都要有 `.extra` 和 `.gifted`，寫法見技能 `extras.md`。
 
 ## toc
 
-`<nav class="toc no-word">`，每項 `<small>探究</small>本節問題`。順序：inquiry → 重點 → 實驗／計算／延伸 → memo → claim → drill → 段考連結。
+`<nav class="toc no-word">`，每項 `<small>探究</small>本節問題`。順序：inquiry → 重點 → 實驗／計算／延伸 → memo → claim → drill → 段考連結。實驗專區 toc 要能跳到各組步驟，**停在主張**，不要練習、不要段考連結。

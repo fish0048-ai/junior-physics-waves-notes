@@ -1,0 +1,44 @@
+---
+description: 實驗專區以活動紀錄本步驟為上課主軸，不要練習、段考前練習、章末評量。
+globs: "lab.html, sections/lab-*.html, js/config-lab.js"
+alwaysApply: false
+---
+
+# 實驗專區
+
+獨立章 `lab.html`，頂欄用 `nav: "實驗專區"`，不要「第 lab 章」。細節見技能 `labs.md`，範本 `sections/lab-1-2.html`。
+
+## 步驟是上課主軸
+
+活動紀錄本每一個操作單獨一格 `.lab-step`。這是頁面最長、最顯眼的區塊。假設／器材才可用 `ol.q`。
+
+```html
+<!-- 禁止 -->
+<ol class="q"><li>秤水。</li><li>加熱並記錄。</li></ol>
+
+<!-- 正確：一格一步 -->
+<ol class="lab-steps">
+  <li class="lab-step">
+    <h3 class="subh">秤量實驗材料</h3>
+    <p>分別秤 100 g 水、200 g 水、100 g 甘油。</p>
+    <p class="lab-caution">注意句（不要再寫「注意：」）</p>
+    <p class="lab-record">紀錄句（不要再寫「紀錄：」）</p>
+  </li>
+</ol>
+```
+
+一格內：`.subh` → 做什麼 → `.lab-caution` → `.lab-record` → 步驟 Q → 該步的圖。兩步不要併成一句。
+
+頁面：探究 → 目的／器材 → **材料確認（一格）** → **逐步操作** → 紀錄表 → 速記／主張。toc 寫「步驟」，不要「重點 1」，**不要「練習」「段考」**。
+
+每個實驗在器材表之後、動手之前，必有 `.lab-step` 確認材料到齊（缺件、破損、藥品是否足夠）。可用 `.lab-check`。
+
+## 禁止
+
+- `#drill`、`.drill-grid`、`exams/lab-*.html`、`review-lab.html`、`js/exam-lab*.js`
+- config 加 `review` 或 `exam`（會讓頂欄出現章末評量、段考前練習）
+- 只講原理、略過先做 A 再做 B
+- 注意只放 extra、步驟格沒有
+- 刪器材、安全句、步驟 Q
+- 原卷沒有的實驗不要發明
+- 另開第二套 CSS；步驟 class 寫在 `css/style.css`
