@@ -19,7 +19,7 @@
     <section class="hero no-print">
       <span class="kicker">國中八年級　理化講義</span>
       <h1>下載整本講義</h1>
-      <p>這一頁會逐節載入。可按「暫停合成」去看其他講義，回來再按「繼續合成」。請<strong>不要關掉這一頁</strong>。載完後再按「下載整本 PDF」，印表機選「另存為 PDF」。</p>
+      <p>這一頁會逐節載入。可按「暫停合成」去看其他講義，回來再按「繼續合成」。載完後按下載，檔案會直接存到電腦，<strong>不必再從列印另存 PDF</strong>。</p>
       <p class="note">不能直接雙擊 HTML（file://）；要用本機網站或 GitHub Pages 打開。</p>
     </section>
     <article class="card no-print" id="book-controls">
@@ -40,7 +40,7 @@
       </p>
       <p class="note" id="book-status">正在合成整本講義……</p>
       <progress id="book-bar" class="book-bar no-print" max="1" value="0" hidden></progress>
-      <p class="note">整本一次列印預覽很久，瀏覽器常常還沒畫完就存成空白。建議用下面「分章下載」，預覽較快。</p>
+      <p class="note">整本較久，可先用下面「分章下載」。按下去就會存檔，不用開列印視窗。</p>
       <p class="book-actions">
         <button class="btn btn-ghost" id="btn-book-pause" type="button">暫停合成</button>
         <button class="btn btn-orange" id="btn-book-pdf" type="button">下載整本 PDF</button>
@@ -61,6 +61,7 @@
   <script src="js/book-cache.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/app.js"></script>
+  <script src="js/book-pdf.js"></script>
   <script src="js/book.js"></script>
 </body>
 </html>

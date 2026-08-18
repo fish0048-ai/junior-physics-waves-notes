@@ -14,7 +14,6 @@
   let haveLabs = false;
   let pendingPrint = null;
   let pendingScope = "all";
-  let nativePrint = window.NotesApp?.printPdf;
   let assembled = false;
   let lastError = "";
   let paused = false;
@@ -367,6 +366,7 @@
       setStatus("沒有載入任何頁面。" + extra + hint + "請按「重新合成」再試一次。");
       return;
     }
+    window.JPWNBookPdf?.ensureLibs?.();
     window.JPWNBookCache?.writeProgress({
       status: failed.length ? "error" : "done",
       done: failed.length ? 0 : 1,
@@ -375,13 +375,13 @@
     });
     setBar(0, 0);
     if (failed.length) {
-      setStatus(extra + hint + "已載入的頁面仍可下載。請按「下載整本 PDF」；印表機選「另存為 PDF」。");
+      setStatus(extra + hint + "已載入的頁面仍可下載。請按「下載整本 PDF」或分章下載。");
       return;
     }
     if (pendingPrint !== null) {
-      setStatus("合成完成，接著會打開「另存為 PDF」。若沒跳出視窗，請再按一次下載。");
+      setStatus("合成完成，接著會直接下載 PDF。");
     } else {
-      setStatus("合成完成。整本預覽較久，建議先按下面「第 1 章」分章下載。");
+      setStatus("合成完成。可下載整本，或先按「第 1 章」分章下載（較快）。");
     }
   }
 
@@ -400,7 +400,54 @@
     return "第" + scope + "章";
   }
 
-  function tryAutoPrint() {
+  let exporting = false;
+
+  async function downloadBook(withAnswers, filename) {
+    if (exporting) return;
+    const api = window.JPWNBookPdf;
+    if (!api || typeof api.download !== "function") {
+      setStatus("找不到輸出元件，請重新整理這一頁。");
+      return;
+    }
+    const sections = [...pagesEl.querySelectorAll(".book-section:not(.is-print-skip)")];
+    if (!sections.length) {
+      setStatus("沒有可下載的頁面。");
+      return;
+    }
+    exporting = true;
+    pagesEl.hidden = false;
+    document.body.classList.add("is-pdf-export");
+    if (withAnswers) {
+      document.body.classList.add("is-print-answers");
+      window.NotesApp?.reveal?.(true);
+    }
+    try {
+      setStatus("正在準備 PDF 元件……");
+      await api.download({
+        sections,
+        filename,
+        onProgress(done, total) {
+          setBar(done, total);
+          setStatus("正在輸出 PDF " + done + "／" + total + " 節，完成後會自動下載，請不要關掉這一頁。");
+        }
+      });
+      setBar(0, 0);
+      setStatus("已開始下載「" + filename + "」。");
+      toast("PDF 已下載。");
+    } catch (err) {
+      setBar(0, 0);
+      setStatus("輸出失敗：" + errText(err) + "請再試一次，或改分章下載。");
+      toast("PDF 輸出失敗，請再試一次。");
+      console.warn("[整本講義 PDF]", err);
+    } finally {
+      exporting = false;
+      document.body.classList.remove("is-pdf-export", "is-print-answers");
+      if (withAnswers) window.NotesApp?.reveal?.(false);
+      setPrintScope("all");
+    }
+  }
+
+  function tryAutoDownload() {
     if (pendingPrint === null || !readyNow()) return;
     const withAnswers = pendingPrint;
     const scope = pendingScope || "all";
@@ -408,28 +455,26 @@
     pendingScope = "all";
     setPrintScope(scope);
     const label = scopeTitle(scope);
-    document.title = withAnswers
-      ? "國中理化_" + label + "_講義_含答案"
-      : "國中理化_" + label + "_講義";
-    setStatus("正在準備「" + label + "」列印預覽。請等到預覽出現文字再存檔。");
-    window.setTimeout(() => {
-      if (typeof nativePrint === "function") nativePrint(withAnswers);
-    }, 200);
+    const filename = withAnswers
+      ? "國中理化_" + label + "_講義_含答案.pdf"
+      : "國中理化_" + label + "_講義.pdf";
+    setStatus("正在輸出「" + label + "」PDF，完成後會自動下載。");
+    downloadBook(withAnswers, filename);
   }
 
-  function requestPrint(withAnswers, scope) {
+  function requestDownload(withAnswers, scope) {
     pendingPrint = withAnswers;
     pendingScope = scope || "all";
     if (scope === "lab" && labsEl && !labsEl.checked) {
       labsEl.checked = true;
-      setStatus("會先附上實驗專區，再打開列印。");
+      setStatus("會先附上實驗專區，再下載。");
     }
     if (readyNow() && (!building || paused)) {
-      tryAutoPrint();
+      tryAutoDownload();
       return;
     }
-    setStatus("載入並排版後會打開列印。整本預覽較久，建議改用分章下載。");
-    toast("可暫停合成；列印請等到預覽出現文字再存檔。");
+    setStatus("載入完成後會直接下載 PDF。整本較久，建議分章下載。");
+    toast("合成完成後會自動下載，請保持這一頁開著。");
     if (!building) build();
   }
 
@@ -491,28 +536,21 @@
     building = false;
     paintPauseBtn();
     statusReady(failed);
-    tryAutoPrint();
+    tryAutoDownload();
     if (queued) {
       queued = false;
       build();
     }
   }
 
-  const origPrint = window.NotesApp?.printPdf;
-  if (typeof origPrint === "function") {
-    nativePrint = origPrint;
+  if (typeof window.NotesApp?.printPdf === "function") {
     window.NotesApp.printPdf = function (withAnswers) {
-      if (!readyNow() || (building && !paused)) {
-        requestPrint(!!withAnswers, "all");
-        return;
-      }
-      setPrintScope("all");
-      origPrint(withAnswers);
+      requestDownload(!!withAnswers, "all");
     };
   }
 
-  document.getElementById("btn-book-pdf")?.addEventListener("click", () => requestPrint(false, "all"));
-  document.getElementById("btn-book-key")?.addEventListener("click", () => requestPrint(true, "all"));
+  document.getElementById("btn-book-pdf")?.addEventListener("click", () => requestDownload(false, "all"));
+  document.getElementById("btn-book-key")?.addEventListener("click", () => requestDownload(true, "all"));
   pauseBtn?.addEventListener("click", () => {
     if (paused) resumeBuild();
     else if (building) pauseBuild();
@@ -548,7 +586,7 @@
     host.addEventListener("click", (e) => {
       const btn = e.target.closest("[data-print-ch]");
       if (!btn) return;
-      requestPrint(false, btn.getAttribute("data-print-ch"));
+      requestDownload(false, btn.getAttribute("data-print-ch"));
     });
   })();
 

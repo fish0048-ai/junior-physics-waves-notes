@@ -334,32 +334,6 @@
     return new Promise((resolve) => window.setTimeout(resolve, ms));
   }
 
-  async function waitForPrintLayout(root) {
-    if (!root) return;
-    root.hidden = false;
-    void root.offsetHeight;
-    if (document.fonts && document.fonts.ready) {
-      try {
-        await document.fonts.ready;
-      } catch (err) {
-        /* ignore */
-      }
-    }
-    const imgs = [...root.querySelectorAll("img")];
-    await Promise.all(imgs.map((img) => {
-      if (img.complete) return Promise.resolve();
-      return new Promise((resolve) => {
-        const t = window.setTimeout(resolve, 3000);
-        img.addEventListener("load", () => { window.clearTimeout(t); resolve(); }, { once: true });
-        img.addEventListener("error", () => { window.clearTimeout(t); resolve(); }, { once: true });
-      });
-    }));
-    await new Promise((resolve) => requestAnimationFrame(() => requestAnimationFrame(resolve)));
-    const n = root.querySelectorAll(".book-section:not(.is-print-skip)").length || 1;
-    await delay(Math.min(12000, 700 + n * 280));
-    void root.offsetHeight;
-  }
-
   async function printPdf(withAnswers) {
     const snap = collectRevealState();
     const oldTitle = document.title;
@@ -390,12 +364,10 @@
     document.title = withAnswers
       ? `國中理化_${secId}_${kind}_含答案`
       : `國中理化_${secId}_${kind}`;
+    toast("請將印表機選成「另存為 PDF」或 Microsoft Print to PDF");
     const restoreScale = window.NotesLayout?.resetFontScaleForPrint?.();
     document.body.classList.add("is-printing");
     document.body.classList.toggle("is-print-answers", !!withAnswers);
-    const pages = document.getElementById("book-pages");
-    if (pages) pages.hidden = false;
-
     let restored = false;
     function restore() {
       if (restored) return;
@@ -408,18 +380,9 @@
       window.NotesApp.persistPaused = false;
     }
     window.addEventListener("afterprint", restore, { once: true });
-
-    const isBook = pageType === "book" && pages;
-    if (isBook) {
-      const n = pages.querySelectorAll(".book-section:not(.is-print-skip)").length;
-      toast("正在準備列印預覽（" + n + " 節）。請等到預覽出現文字再存檔，不要提早關掉。");
-      await waitForPrintLayout(pages);
-    } else {
-      toast("請將印表機選成「另存為 PDF」或 Microsoft Print to PDF");
-      await delay(350);
-    }
+    await delay(350);
     window.print();
-    window.setTimeout(restore, isBook ? 180000 : 60000);
+    window.setTimeout(restore, 60000);
   }
 
   $$("svg.diagram").forEach((svg) => {
