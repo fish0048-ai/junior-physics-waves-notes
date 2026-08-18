@@ -212,6 +212,7 @@
       if (input.style.width) span.style.width = input.style.width;
       if (input.style.minWidth) span.style.minWidth = input.style.minWidth;
       span.setAttribute("aria-label", "挖空");
+      if (!span.textContent) span.textContent = "\u00a0";
       input.replaceWith(span);
     });
   }

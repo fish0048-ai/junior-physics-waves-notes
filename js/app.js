@@ -16,6 +16,7 @@
       if (input.style.width) span.style.width = input.style.width;
       if (input.style.minWidth) span.style.minWidth = input.style.minWidth;
       span.setAttribute("aria-label", "挖空");
+      if (!span.textContent) span.textContent = "\u00a0";
       input.replaceWith(span);
     });
   }
@@ -361,11 +362,16 @@
       : `國中理化_${secId}_${kind}`;
     toast("請將印表機選成「另存為 PDF」或 Microsoft Print to PDF");
     const restoreScale = window.NotesLayout?.resetFontScaleForPrint?.();
+    document.body.classList.add("is-printing");
+    document.body.classList.toggle("is-print-answers", !!withAnswers);
+    const pages = document.getElementById("book-pages");
+    if (pages) pages.hidden = false;
     setTimeout(() => {
       window.print();
       document.title = oldTitle;
       applyRevealState(snap);
       if (typeof restoreScale === "function") restoreScale();
+      document.body.classList.remove("is-printing", "is-print-answers");
       window.dispatchEvent(new Event("jpwn-after-print"));
       window.NotesApp.persistPaused = false;
     }, 350);

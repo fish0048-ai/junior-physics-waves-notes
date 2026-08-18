@@ -2162,7 +2162,14 @@ html.is-immersive .brand > span:last-child {
 }
 
 @media print {
-  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+  * {
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+    backdrop-filter: none !important;
+  }
+  html {
+    color-scheme: only light;
+  }
   html, body {
     background: #fff !important;
     height: auto !important;
@@ -2175,7 +2182,7 @@ html.is-immersive .brand > span:last-child {
   }
   .wrap { zoom: 1 !important; }
   .font-scale { display: none !important; }
-  .toolbar, .toc, .footer, .toast, .wave-deco, .site-nav, .section-nav, .no-print, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip { display: none !important; }
+  .toolbar, .toc, .footer, .toast, .wave-deco, .site-nav, .section-nav, .no-print, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip, .book-loader { display: none !important; }
   .wrap { width: auto; max-width: none; margin: 0; padding: 0; }
   .hero {
     box-shadow: none;
@@ -2185,6 +2192,16 @@ html.is-immersive .brand > span:last-child {
     overflow: visible;
     break-inside: auto;
     min-height: 0;
+    color: #14532d !important;
+    background: #fff !important;
+    border: 0.5pt solid #166534;
+  }
+  .hero h1,
+  .hero .kicker,
+  .hero p {
+    color: #14532d !important;
+    -webkit-text-fill-color: #14532d !important;
+    opacity: 1 !important;
   }
   .hero h1 { font-size: 15pt; margin: 2px 0; }
   .hero p { font-size: 9pt; }
@@ -2268,8 +2285,21 @@ html.is-immersive .brand > span:last-child {
     box-shadow: none;
     page-break-after: avoid;
     break-after: avoid;
+    overflow: visible;
+    color: #14532d !important;
+    background: #fff !important;
+    border: 0.8pt solid #166534;
   }
-  body[data-page="cover"] .cover-sheet h1 { font-size: 22pt; color: #fff; }
+  body[data-page="cover"] .cover-sheet h1,
+  body[data-page="cover"] .cover-kicker,
+  body[data-page="cover"] .cover-series,
+  body[data-page="cover"] .cover-lead,
+  body[data-page="cover"] .cover-copy {
+    color: #14532d !important;
+    -webkit-text-fill-color: #14532d !important;
+    opacity: 1 !important;
+  }
+  body[data-page="cover"] .cover-sheet h1 { font-size: 22pt; color: #14532d !important; }
   body[data-page="cover"] .cover-top {
     grid-template-columns: 1fr 58mm;
     gap: 6mm;
@@ -2309,12 +2339,23 @@ html.is-immersive .brand > span:last-child {
     color: #14532d;
     border: 0.4pt solid #166534;
   }
+  body[data-page="book"] #book-pages {
+    display: block !important;
+    visibility: visible !important;
+    color: #1c1917 !important;
+    background: #fff !important;
+  }
   body[data-page="book"] .book-section {
     margin: 0;
     padding: 0;
     border: none;
     break-before: page;
     page-break-before: always;
+    color: #1c1917 !important;
+    background: #fff !important;
+    filter: none !important;
+    opacity: 1 !important;
+    visibility: visible !important;
   }
   body[data-page="book"] .book-section.is-cover {
     break-before: auto;
@@ -2323,7 +2364,7 @@ html.is-immersive .brand > span:last-child {
   body[data-page="book"] .book-kicker {
     margin: 0 0 2mm;
     font-size: 8pt;
-    color: #166534;
+    color: #166534 !important;
   }
   body[data-page="book"] .cover-sheet {
     box-sizing: border-box;
@@ -2331,8 +2372,21 @@ html.is-immersive .brand > span:last-child {
     padding: 12mm 14mm 10mm;
     border-radius: 0;
     box-shadow: none;
+    overflow: visible;
+    color: #14532d !important;
+    background: #fff !important;
+    border: 0.8pt solid #166534;
   }
-  body[data-page="book"] .cover-sheet h1 { font-size: 22pt; color: #fff; }
+  body[data-page="book"] .cover-sheet h1,
+  body[data-page="book"] .cover-kicker,
+  body[data-page="book"] .cover-series,
+  body[data-page="book"] .cover-lead,
+  body[data-page="book"] .cover-copy {
+    color: #14532d !important;
+    -webkit-text-fill-color: #14532d !important;
+    opacity: 1 !important;
+  }
+  body[data-page="book"] .cover-sheet h1 { font-size: 22pt; }
   body[data-page="book"] .cover-top {
     grid-template-columns: 1fr 58mm;
     gap: 6mm;
@@ -2430,8 +2484,20 @@ html.is-immersive .brand > span:last-child {
     gap: 4px;
   }
   .db-scale { grid-template-columns: repeat(5, 1fr) !important; }
-  .blank { background: #fde68a; }
-  .blank.revealed { background: #fde68a; }
+  .blank {
+    background: #fff !important;
+    color: transparent !important;
+    -webkit-text-fill-color: transparent !important;
+    border-bottom: 0.9pt solid #166534 !important;
+    min-width: 2.8em !important;
+    min-height: 1.1em !important;
+  }
+  .blank.revealed,
+  body.is-print-answers .blank {
+    background: #fde68a !important;
+    color: #1c1917 !important;
+    -webkit-text-fill-color: #1c1917 !important;
+  }
   .inquiry-writebox {
     break-inside: avoid;
     border: 0.5pt dashed #666;
