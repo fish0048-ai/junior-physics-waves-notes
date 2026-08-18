@@ -2118,6 +2118,28 @@ html.is-immersive body.ink-draw .wrap {
   z-index: 69;
 }
 .book-prefetch[hidden] { display: none !important; }
+.book-prefetch-actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-shrink: 0;
+}
+.book-prefetch-close {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,.45);
+  color: #fff;
+  border-radius: 999px;
+  width: 28px;
+  height: 28px;
+  font-size: 13px;
+  line-height: 1;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background .15s;
+}
+.book-prefetch-close:hover { background: rgba(255,255,255,.18); }
 .book-prefetch .btn {
   min-height: 36px;
   background: #fff;

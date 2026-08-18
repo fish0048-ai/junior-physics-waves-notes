@@ -383,13 +383,21 @@
       banner.hidden = true;
       banner.innerHTML = `
         <span id="book-prefetch-text">整本講義準備中</span>
-        <a class="btn btn-orange" href="${url("book.html")}" target="_blank" rel="noopener">前往下載</a>
+        <span class="book-prefetch-actions">
+          <a class="btn btn-orange" href="${url("book.html")}" target="_blank" rel="noopener">前往下載</a>
+          <button type="button" class="book-prefetch-close" aria-label="關閉通知" title="關閉通知">✕</button>
+        </span>
       `;
+      banner.querySelector(".book-prefetch-close").addEventListener("click", () => {
+        banner.hidden = true;
+        try { sessionStorage.setItem("jpwn.bannerDismissed", "1"); } catch (e) { /* ignore */ }
+      });
       const header = document.getElementById("site-header");
       if (header && header.nextSibling) header.after(banner);
       else document.body.insertBefore(banner, document.body.firstChild);
 
       function paint(info) {
+        try { if (sessionStorage.getItem("jpwn.bannerDismissed")) { banner.hidden = true; return; } } catch (e) { /* ignore */ }
         const data = info || api.readProgress();
         const text = document.getElementById("book-prefetch-text");
         if (!text) return;
