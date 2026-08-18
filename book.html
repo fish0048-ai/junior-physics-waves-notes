@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#fffefb">
+  <title>國中八年級理化｜整本講義</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-root="." data-page="book">
+  <div id="site-header"></div>
+  <div class="wrap workbook">
+    <section class="hero no-print">
+      <span class="kicker">國中八年級　理化講義</span>
+      <h1>下載整本講義</h1>
+      <p>把封面和第 1～6 章各節合成一份。合成完<strong>不會自動下載</strong>，要再按「下載整本 PDF」，印表機選「另存為 PDF」。</p>
+    </section>
+    <article class="card no-print" id="book-controls">
+      <div class="section-head">
+        <div class="badge calc">冊</div>
+        <div>
+          <h2>一次帶走全冊挖空講義</h2>
+          <p>不含段考前練習與章末評量</p>
+        </div>
+      </div>
+      <p>預設是封面＋各節講義。實驗專區步驟較長，勾選後只會<strong>附加在最後</strong>，不會重抓前面各章。</p>
+      <p class="note">合成時請<strong>留在這個分頁</strong>。若要同時看講義，請另開分頁，不要關掉這一頁。</p>
+      <p>
+        <label class="book-opt">
+          <input type="checkbox" id="book-labs">
+          一併附上實驗專區
+        </label>
+      </p>
+      <p class="note" id="book-status">正在合成整本講義……</p>
+      <progress id="book-bar" class="book-bar no-print" max="1" value="0" hidden></progress>
+      <p class="book-actions">
+        <button class="btn btn-orange" id="btn-book-pdf" type="button">下載整本 PDF</button>
+        <button class="btn btn-ghost" id="btn-book-key" type="button">下載含答案 PDF</button>
+      </p>
+    </article>
+    <div id="book-pages" class="book-pages" hidden></div>
+    <p class="footer no-print">
+      國中八年級理化　整本講義<br>
+      原始碼：<a data-github target="_blank" rel="noopener">GitHub 專案</a>
+    </p>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="js/config-book.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/app.js"></script>
+  <script src="js/book.js"></script>
+</body>
+</html>

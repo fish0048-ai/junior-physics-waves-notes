@@ -4,6 +4,7 @@
 
 - 探究文案 → [inquiry.md](inquiry.md)
 - 頁面骨架 → [html-templates.md](html-templates.md)
+- 公式與圖表 → [math.md](math.md)
 - 兩層補充 → [extras.md](extras.md)
 - 題庫 → [exams.md](exams.md)
 - 實驗專區 → [labs.md](labs.md)
@@ -27,7 +28,7 @@
 | 章末評量 | `review-chN.html` |
 | 附圖 | `exams/img/N-x/image001.png` |
 
-還要把新章寫進**每一份**現有 config 的 `chapters`（目前至少 `js/config.js`、`js/config-ch4.js`、`js/config-ch5.js`、`js/config-lab.js`）。
+還要把新章寫進**每一份**現有 config 的 `chapters`（目前至少 `js/config.js`、`js/config-ch1.js`、`js/config-ch4.js`、`js/config-ch5.js`、`js/config-ch6.js`、`js/config-lab.js`）。
 
 實驗專區：`lab.html`、`js/config-lab.js`、`sections/lab-N-x.html`。`chapter.id` 為 `"lab"`，必填 `nav: "實驗專區"`。**步驟是上課主軸**（一格一步 `.lab-step`）。**不要** `exams/lab-*.html`、不要 `#drill`、不要 `review-lab.html`、config 不要 `exam`／`review`。寫法見 [labs.md](labs.md)。
 

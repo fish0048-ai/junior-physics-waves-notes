@@ -11,6 +11,8 @@ window.APP_CONFIG = {
   home: "index.html",
   cover: { file: "cover.html", nav: "封面" },
   chapters: [
+    { id: "1", title: "基本測量", file: "ch1.html" },
+    { id: "2", title: "物質的世界", file: "ch2.html" },
     { id: "3", title: "波動與聲音", file: "index.html" },
     { id: "4", title: "光", file: "ch4.html" },
     { id: "5", title: "溫度與熱", file: "ch5.html" },

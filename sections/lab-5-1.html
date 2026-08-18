@@ -75,8 +75,113 @@
       <ol class="lab-steps">
         <li class="lab-step">
           <h3 class="subh">動手前核對器材是否到齊</h3>
-          <p>對照上面的器材表，逐項檢查：錐形瓶、細玻璃管、單孔橡皮塞、紅墨水、冰塊、燒杯、酒精燈是否到齊；玻璃管與瓶子有沒有裂。</p>
-          <p class="lab-check">全組依表點名；玻璃有裂或細管缺失時先舉手，不要自行挪用別組。</p>
+          <p>對照上面的器材表，逐項勾選。到齊且完好／足量才打勾；玻璃管與瓶子有沒有裂寫在備註。</p>
+          <div class="lab-kit-wrap">
+            <table class="lab-kit">
+              <caption>實驗材料核對表（每組）</caption>
+              <thead>
+                <tr>
+                  <th scope="col">項次</th>
+                  <th scope="col">材料</th>
+                  <th scope="col">應備</th>
+                  <th scope="col">到齊</th>
+                  <th scope="col">完好／足量</th>
+                  <th scope="col">備註</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td class="lab-kit-name">酒精燈</td>
+                  <td>1 盞</td>
+                  <td><input type="checkbox" data-kit="h1" aria-label="酒精燈 到齊"></td>
+                  <td><input type="checkbox" data-kit="g1" aria-label="酒精燈 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n1" aria-label="酒精燈 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td class="lab-kit-name">燒杯 500 mL</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h2" aria-label="燒杯 到齊"></td>
+                  <td><input type="checkbox" data-kit="g2" aria-label="燒杯 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n2" aria-label="燒杯 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td class="lab-kit-name">滴管</td>
+                  <td>1 支</td>
+                  <td><input type="checkbox" data-kit="h3" aria-label="滴管 到齊"></td>
+                  <td><input type="checkbox" data-kit="g3" aria-label="滴管 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n3" aria-label="滴管 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td class="lab-kit-name">紅墨水</td>
+                  <td>適量</td>
+                  <td><input type="checkbox" data-kit="h4" aria-label="紅墨水 到齊"></td>
+                  <td><input type="checkbox" data-kit="g4" aria-label="紅墨水 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n4" aria-label="紅墨水 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td class="lab-kit-name">三腳架及陶瓷纖維網</td>
+                  <td>1 組</td>
+                  <td><input type="checkbox" data-kit="h5" aria-label="三腳架及陶瓷纖維網 到齊"></td>
+                  <td><input type="checkbox" data-kit="g5" aria-label="三腳架及陶瓷纖維網 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n5" aria-label="三腳架及陶瓷纖維網 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td class="lab-kit-name">細玻璃管</td>
+                  <td>1 支</td>
+                  <td><input type="checkbox" data-kit="h6" aria-label="細玻璃管 到齊"></td>
+                  <td><input type="checkbox" data-kit="g6" aria-label="細玻璃管 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n6" aria-label="細玻璃管 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td class="lab-kit-name">透明膠帶</td>
+                  <td>適量</td>
+                  <td><input type="checkbox" data-kit="h7" aria-label="透明膠帶 到齊"></td>
+                  <td><input type="checkbox" data-kit="g7" aria-label="透明膠帶 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n7" aria-label="透明膠帶 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>8</td>
+                  <td class="lab-kit-name">冰塊</td>
+                  <td>適量</td>
+                  <td><input type="checkbox" data-kit="h8" aria-label="冰塊 到齊"></td>
+                  <td><input type="checkbox" data-kit="g8" aria-label="冰塊 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n8" aria-label="冰塊 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>9</td>
+                  <td class="lab-kit-name">錐形瓶 125 mL</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h9" aria-label="錐形瓶 到齊"></td>
+                  <td><input type="checkbox" data-kit="g9" aria-label="錐形瓶 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n9" aria-label="錐形瓶 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td class="lab-kit-name">單孔橡皮塞</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h10" aria-label="單孔橡皮塞 到齊"></td>
+                  <td><input type="checkbox" data-kit="g10" aria-label="單孔橡皮塞 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n10" aria-label="單孔橡皮塞 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>11</td>
+                  <td class="lab-kit-name">淺色卡片</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h11" aria-label="淺色卡片 到齊"></td>
+                  <td><input type="checkbox" data-kit="g11" aria-label="淺色卡片 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n11" aria-label="淺色卡片 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="lab-check">全組依表勾完；玻璃有裂或細管缺失時先舉手，不要自行挪用別組。</p>
           <p class="lab-record">缺件寫在空格，沒有就寫「無」。確認到齊後才裝紅色液體。缺件：<input class="blank" data-answer="無" style="width:3.2em"></p>
           <p class="inquiry-ask"><strong>步驟 Q：</strong>為什麼材料沒確認完就不能做？</p>
           <p>少了細管就看不出水位變化；瓶子有裂，加水或加熱時可能破。</p>
@@ -132,20 +237,32 @@
           <p class="lab-record">記錄冰水、溫水、加熱 5 分鐘後的水位高度。</p>
           <p class="lab-caution">不要看放進去的第一秒；玻璃和裡面的水脹縮有先後，要等穩定。</p>
           <figure>
-            <svg class="diagram" viewBox="0 0 300 150" aria-label="冰水、溫水、熱水三種環境下液柱由低到高">
-              <rect width="300" height="150" rx="8" fill="#fff7ed"/>
-              <rect x="28" y="70" width="50" height="50" fill="#bfdbfe"/>
-              <rect x="44" y="20" width="10" height="70" fill="#e7e5e4" stroke="#78716c"/>
-              <rect x="47" y="60" width="4" height="28" fill="#dc2626"/>
-              <text x="53" y="140" text-anchor="middle" font-size="11" fill="#1e3a8a">冰水</text>
-              <rect x="125" y="70" width="50" height="50" fill="#fed7aa"/>
-              <rect x="141" y="20" width="10" height="70" fill="#e7e5e4" stroke="#78716c"/>
-              <rect x="144" y="48" width="4" height="40" fill="#dc2626"/>
-              <text x="150" y="140" text-anchor="middle" font-size="11" fill="#9a3412">溫水</text>
-              <rect x="222" y="70" width="50" height="50" fill="#fecaca"/>
-              <rect x="238" y="20" width="10" height="70" fill="#e7e5e4" stroke="#78716c"/>
-              <rect x="241" y="30" width="4" height="58" fill="#dc2626"/>
-              <text x="247" y="140" text-anchor="middle" font-size="11" fill="#9f1239">熱水</text>
+            <svg class="diagram" viewBox="0 0 320 170" aria-label="冰水、溫水、熱水三種環境下液柱由低到高">
+              <defs>
+                <linearGradient id="l5-gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity=".45"/><stop offset="100%" stop-color="#fff" stop-opacity=".1"/></linearGradient>
+              </defs>
+              <rect width="320" height="170" rx="8" fill="#fff7ed"/>
+              <ellipse cx="56" cy="148" rx="36" ry="10" fill="#93c5fd" stroke="#1d4ed8"/>
+              <path d="M28 148 C 28 118 84 118 84 148" fill="#bfdbfe" stroke="#1d4ed8"/>
+              <path d="M40 92 C 40 78 72 78 72 92 L 66 128 Q 56 136 46 128 Z" fill="#e0f2fe" stroke="#0369a1"/>
+              <rect x="51" y="18" width="10" height="76" rx="4" fill="#e2e8f0" stroke="#64748b"/>
+              <rect x="54" y="64" width="4" height="32" fill="#dc2626"/>
+              <path d="M40 92 C 40 78 72 78 72 92 L 66 128 Q 56 136 46 128 Z" fill="url(#l5-gl)"/>
+              <text x="56" y="166" text-anchor="middle" font-size="11" fill="#1e3a8a">冰水</text>
+              <ellipse cx="160" cy="148" rx="36" ry="10" fill="#fdba74" stroke="#c2410c"/>
+              <path d="M132 148 C 132 118 188 118 188 148" fill="#fed7aa" stroke="#c2410c"/>
+              <path d="M144 92 C 144 78 176 78 176 92 L 170 128 Q 160 136 150 128 Z" fill="#fecaca" stroke="#e11d48"/>
+              <rect x="155" y="18" width="10" height="76" rx="4" fill="#e2e8f0" stroke="#64748b"/>
+              <rect x="158" y="50" width="4" height="46" fill="#dc2626"/>
+              <path d="M144 92 C 144 78 176 78 176 92 L 170 128 Q 160 136 150 128 Z" fill="url(#l5-gl)"/>
+              <text x="160" y="166" text-anchor="middle" font-size="11" fill="#9a3412">溫水</text>
+              <ellipse cx="264" cy="148" rx="36" ry="10" fill="#fca5a5" stroke="#be123c"/>
+              <path d="M236 148 C 236 118 292 118 292 148" fill="#fecaca" stroke="#be123c"/>
+              <path d="M248 92 C 248 78 280 78 280 92 L 274 128 Q 264 136 254 128 Z" fill="#fecaca" stroke="#e11d48"/>
+              <rect x="259" y="18" width="10" height="76" rx="4" fill="#e2e8f0" stroke="#64748b"/>
+              <rect x="262" y="32" width="4" height="64" fill="#dc2626"/>
+              <path d="M248 92 C 248 78 280 78 280 92 L 274 128 Q 264 136 254 128 Z" fill="url(#l5-gl)"/>
+              <text x="264" y="166" text-anchor="middle" font-size="11" fill="#9f1239">熱水</text>
             </svg>
             <p class="caption">溫度愈高，液柱愈高（等穩定以後）</p>
           </figure>

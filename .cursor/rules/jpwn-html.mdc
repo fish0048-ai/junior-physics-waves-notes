@@ -30,7 +30,8 @@ alwaysApply: false
 ## 卡片
 
 - 重點 `id="p1"`，badge `1`；延伸 `badge extend`；探究／實驗／計算／速記 `badge calc`；主張 badge `主`；練習 `練`
-- 定義 `.def`；小標 `.subh`；左文右圖 `.split`；SVG `.diagram`＋`.caption`
+- 定義 `.def`；小標 `.subh`；左文右圖 `.split`；示意 SVG `.diagram`＋`.caption`；**座標圖** `.diagram.math-graph`（原點、刻度、單位，見技能 `math.md`）
+- 獨立公式 `.formula` 用 KaTeX `\[...\]`；行內 `\(...\)`。不要 `＝`、`／` 當公式框
 - 補充 `.extra`（國中程度，必備）／`.gifted`（國中資優，必備）／`.tips`／`.wrong-note`；小試 `.ex-box.quiz`／`.think`
 - 實驗步驟是實驗頁主軸：`.lab-steps`＞`.lab-step`（一格一步，禁止 `ol.q`）＋`.lab-caution`＋`.lab-record`；寫法見技能 `labs.md`，範本 `sections/lab-1-2.html`
 - 練習 `.drill-grid` 兩欄，基本 5＋進階 5

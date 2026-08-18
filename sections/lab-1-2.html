@@ -77,8 +77,73 @@
       <ol class="lab-steps">
         <li class="lab-step">
           <h3 class="subh">動手前核對器材是否到齊</h3>
-          <p>對照上面的器材表，逐項檢查：天平、兩種量筒、酒精、水、未知金屬塊是否到齊；玻璃量筒有沒有裂。</p>
-          <p class="lab-check">全組依表點名；缺件、破損或藥品不足時先舉手，不要自行挪用別組。</p>
+          <p>對照上面的器材表，逐項勾選。到齊且完好／足量才打勾；玻璃量筒有沒有裂寫在備註。</p>
+          <div class="lab-kit-wrap">
+            <table class="lab-kit">
+              <caption>實驗材料核對表（每組）</caption>
+              <thead>
+                <tr>
+                  <th scope="col">項次</th>
+                  <th scope="col">材料</th>
+                  <th scope="col">應備</th>
+                  <th scope="col">到齊</th>
+                  <th scope="col">完好／足量</th>
+                  <th scope="col">備註</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td class="lab-kit-name">上皿天平（或電子天平）</td>
+                  <td>1 組</td>
+                  <td><input type="checkbox" data-kit="h1" aria-label="上皿天平 到齊"></td>
+                  <td><input type="checkbox" data-kit="g1" aria-label="上皿天平 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n1" aria-label="上皿天平 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td class="lab-kit-name">量筒 50 mL</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h2" aria-label="量筒 50 mL 到齊"></td>
+                  <td><input type="checkbox" data-kit="g2" aria-label="量筒 50 mL 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n2" aria-label="量筒 50 mL 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td class="lab-kit-name">量筒 100 mL</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h3" aria-label="量筒 100 mL 到齊"></td>
+                  <td><input type="checkbox" data-kit="g3" aria-label="量筒 100 mL 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n3" aria-label="量筒 100 mL 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td class="lab-kit-name">酒精（99%）</td>
+                  <td>50 mL</td>
+                  <td><input type="checkbox" data-kit="h4" aria-label="酒精 到齊"></td>
+                  <td><input type="checkbox" data-kit="g4" aria-label="酒精 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n4" aria-label="酒精 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td class="lab-kit-name">水</td>
+                  <td>50 mL</td>
+                  <td><input type="checkbox" data-kit="h5" aria-label="水 到齊"></td>
+                  <td><input type="checkbox" data-kit="g5" aria-label="水 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n5" aria-label="水 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td class="lab-kit-name">未知金屬塊（鋁、鐵或銅其中之一）</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h6" aria-label="未知金屬塊 到齊"></td>
+                  <td><input type="checkbox" data-kit="g6" aria-label="未知金屬塊 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n6" aria-label="未知金屬塊 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="lab-check">全組依表勾完；缺件、破損或藥品不足時先舉手，不要自行挪用別組。</p>
           <p class="lab-record">缺件寫在空格，沒有就寫「無」。確認到齊後才開始下一步。缺件：<input class="blank" data-answer="無" style="width:3.2em"></p>
           <p class="inquiry-ask"><strong>步驟 Q：</strong>為什麼材料沒確認完就不能做？</p>
           <p>少了天平或量筒就量不成；酒精不夠，質量－體積圖會少點，無法和水分開比較。</p>
@@ -124,17 +189,26 @@
           <p class="lab-caution">讀取量筒刻度時，視線須和液面中央處等高。</p>
           <p class="lab-record">記錄水與量筒的總質量 <em>M</em><sub>水1</sub>～<em>M</em><sub>水5</sub>。</p>
           <figure>
-            <svg class="diagram" viewBox="0 0 280 170" aria-label="量筒讀數：視線與凹液面最低處等高">
-              <rect width="280" height="170" rx="8" fill="#ecfdf5"/>
-              <rect x="108" y="18" width="64" height="130" rx="4" fill="#fff" stroke="#166534"/>
-              <rect x="112" y="70" width="56" height="74" fill="#7dd3fc"/>
-              <path d="M112 70 Q 140 82 168 70" fill="none" stroke="#0369a1" stroke-width="3"/>
-              <path d="M40 78 L 108 78" stroke="#b91c1c" stroke-width="2" stroke-dasharray="4 3"/>
-              <circle cx="36" cy="78" r="10" fill="none" stroke="#b91c1c" stroke-width="2"/>
-              <circle cx="32" cy="76" r="2" fill="#b91c1c"/>
-              <circle cx="40" cy="76" r="2" fill="#b91c1c"/>
-              <text x="20" y="108" font-size="12" fill="#9a3412" font-weight="700">平視凹面</text>
-              <text x="140" y="160" text-anchor="middle" font-size="12" fill="#14532d">凹液面最低處才是正確刻度</text>
+            <svg class="diagram" viewBox="0 0 280 180" aria-label="量筒讀數：視線與凹液面最低處等高">
+              <defs>
+                <linearGradient id="l12-gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity=".5"/><stop offset="100%" stop-color="#fff" stop-opacity=".12"/></linearGradient>
+                <linearGradient id="l12-w" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0369a1"/></linearGradient>
+              </defs>
+              <rect width="280" height="180" rx="8" fill="#ecfdf5"/>
+              <path d="M118 16 L 112 138 Q 140 150 168 138 L 162 16" fill="none" stroke="#166534" stroke-width="1.8"/>
+              <path d="M116 72 L 112 136 Q 140 146 168 136 L 164 72" fill="url(#l12-w)"/>
+              <path d="M116 72 Q 140 86 164 72" fill="none" stroke="#0369a1" stroke-width="2.2"/>
+              <path d="M118 16 L 112 138 Q 140 150 168 138 L 162 16" fill="url(#l12-gl)"/>
+              <g stroke="#14532d" stroke-width=".7">
+                <line x1="120" y1="36" x2="134" y2="36"/><line x1="120" y1="48" x2="134" y2="48"/>
+                <line x1="120" y1="60" x2="134" y2="60"/><line x1="120" y1="78" x2="140" y2="78"/>
+              </g>
+              <path d="M40 82 L 112 82" stroke="#b91c1c" stroke-width="2" stroke-dasharray="4 3"/>
+              <circle cx="32" cy="82" r="11" fill="none" stroke="#b91c1c" stroke-width="2"/>
+              <circle cx="28" cy="80" r="2" fill="#b91c1c"/>
+              <circle cx="36" cy="80" r="2" fill="#b91c1c"/>
+              <text x="18" y="114" font-size="12" fill="#9a3412" font-weight="700">平視凹面</text>
+              <text x="140" y="170" text-anchor="middle" font-size="12" fill="#14532d">凹液面最低處才是正確刻度</text>
             </svg>
             <p class="caption">視線高過液面會讀得偏小；低於液面會讀得偏大</p>
           </figure>
@@ -285,18 +359,46 @@
         應變變因（縱軸）：<input class="blank" data-answer="質量" style="width:3.2em">。
       </p>
       <figure>
-        <svg class="diagram" viewBox="0 0 320 220" aria-label="水和酒精的質量與體積關係圖：兩條過原點的直線，水較陡">
-          <rect width="320" height="220" rx="8" fill="#ecfeff"/>
-          <line x1="40" y1="200" x2="300" y2="200" stroke="#334155" stroke-width="2"/>
-          <line x1="40" y1="200" x2="40" y2="16" stroke="#334155" stroke-width="2"/>
-          <text x="292" y="216" font-size="11" fill="#334155">V</text>
-          <text x="8" y="20" font-size="11" fill="#334155">m</text>
-          <line x1="40" y1="200" x2="280" y2="40" stroke="#0369a1" stroke-width="3"/>
-          <line x1="40" y1="200" x2="280" y2="72" stroke="#c2410c" stroke-width="3"/>
-          <text x="250" y="48" font-size="12" fill="#0369a1" font-weight="700">水</text>
-          <text x="250" y="92" font-size="12" fill="#c2410c" font-weight="700">酒精</text>
+        <svg class="diagram math-graph" viewBox="0 0 340 248" aria-label="水和酒精的質量與體積關係圖：原點 O，刻度每 10，水較陡且皆過原點">
+          <defs>
+            <marker id="arr-labmv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1.2 L10 5 L0 8.8 Z" fill="#111827"/></marker>
+          </defs>
+          <rect width="340" height="248" fill="#fff"/>
+          <g stroke="#e5e7eb" stroke-width="1">
+            <line x1="52" y1="171" x2="292" y2="171"/><line x1="52" y1="142" x2="292" y2="142"/>
+            <line x1="52" y1="113" x2="292" y2="113"/><line x1="52" y1="84" x2="292" y2="84"/>
+            <line x1="52" y1="55" x2="292" y2="55"/><line x1="52" y1="26" x2="292" y2="26"/>
+            <line x1="92" y1="200" x2="92" y2="26"/><line x1="132" y1="200" x2="132" y2="26"/>
+            <line x1="172" y1="200" x2="172" y2="26"/><line x1="212" y1="200" x2="212" y2="26"/>
+            <line x1="252" y1="200" x2="252" y2="26"/><line x1="292" y1="200" x2="292" y2="26"/>
+          </g>
+          <line x1="52" y1="200" x2="318" y2="200" stroke="#111827" stroke-width="1.6" marker-end="url(#arr-labmv)"/>
+          <line x1="52" y1="200" x2="52" y2="16" stroke="#111827" stroke-width="1.6" marker-end="url(#arr-labmv)"/>
+          <g fill="#111827" font-size="11" text-anchor="middle">
+            <text x="92" y="216">10</text><text x="132" y="216">20</text><text x="172" y="216">30</text>
+            <text x="212" y="216">40</text><text x="252" y="216">50</text><text x="292" y="216">60</text>
+          </g>
+          <g fill="#111827" font-size="11" text-anchor="end">
+            <text x="46" y="175">10</text><text x="46" y="146">20</text><text x="46" y="117">30</text>
+            <text x="46" y="88">40</text><text x="46" y="59">50</text><text x="46" y="30">60</text>
+          </g>
+          <text x="44" y="216" font-size="12">O</text>
+          <text x="300" y="228" font-size="13"><tspan font-style="italic">V</tspan> (cm<tspan baseline-shift="super" font-size="9">3</tspan>)</text>
+          <text x="8" y="14" font-size="13"><tspan font-style="italic">M</tspan> (g)</text>
+          <line x1="52" y1="200" x2="292" y2="26" stroke="#0369a1" stroke-width="2.4"/>
+          <line x1="52" y1="200" x2="292" y2="60.8" stroke="#c2410c" stroke-width="2.4"/>
+          <g fill="#0369a1">
+            <circle cx="92" cy="171" r="3.2"/><circle cx="132" cy="142" r="3.2"/><circle cx="172" cy="113" r="3.2"/>
+            <circle cx="212" cy="84" r="3.2"/><circle cx="252" cy="55" r="3.2"/>
+          </g>
+          <g fill="#c2410c">
+            <circle cx="92" cy="176.8" r="3.2"/><circle cx="132" cy="153.6" r="3.2"/><circle cx="172" cy="130.4" r="3.2"/>
+            <circle cx="212" cy="107.2" r="3.2"/><circle cx="252" cy="84" r="3.2"/>
+          </g>
+          <text x="278" y="44" font-size="13" fill="#0369a1" font-weight="700">水</text>
+          <text x="278" y="88" font-size="13" fill="#c2410c" font-weight="700">酒精</text>
         </svg>
-        <p class="caption">兩條都過原點；水的斜率較大，表示同樣體積時水比較重</p>
+        <p class="caption">兩條都過原點；水的斜率較大。斜率 \(=D\)</p>
       </figure>
       <p>未知金屬塊質量＝
         <input class="blank" data-answer="17.0|17" style="width:3.2em"> g，

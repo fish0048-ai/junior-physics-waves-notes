@@ -25,7 +25,7 @@ alwaysApply: false
   imgs: ["exams/img/N-1/image001.png"], choiceImgs: [], lead: "", group: "" }
 ```
 
-`ans` 是 0–3。附圖路徑從站根起算 `exams/img/…`。一題圖 ≤2，選項圖 ≤4。
+`ans` 是 0–3。附圖路徑從站根起算 `exams/img/…`。一題圖 ≤2，選項圖 ≤4。題幹裡的公式用 `\(...\)`，`exam.js` 注入後會再跑 KaTeX。
 
 ## 轉檔後必清
 

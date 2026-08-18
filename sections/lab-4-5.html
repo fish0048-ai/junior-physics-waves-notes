@@ -79,8 +79,105 @@
       <ol class="lab-steps">
         <li class="lab-step">
           <h3 class="subh">動手前核對器材是否到齊</h3>
-          <p>對照上面的器材表，逐項檢查：紙箱、檯燈、五色色紙、紅綠藍玻璃紙是否到齊；紙箱能不能遮光。</p>
-          <p class="lab-check">全組依表點名；缺色紙或玻璃紙時先舉手，不要自行挪用別組。</p>
+          <p>對照上面的器材表，逐項勾選。到齊且完好／足量才打勾；紙箱能不能遮光寫在備註。</p>
+          <div class="lab-kit-wrap">
+            <table class="lab-kit">
+              <caption>實驗材料核對表（每組）</caption>
+              <thead>
+                <tr>
+                  <th scope="col">項次</th>
+                  <th scope="col">材料</th>
+                  <th scope="col">應備</th>
+                  <th scope="col">到齊</th>
+                  <th scope="col">完好／足量</th>
+                  <th scope="col">備註</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td class="lab-kit-name">紙箱</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h1" aria-label="紙箱 到齊"></td>
+                  <td><input type="checkbox" data-kit="g1" aria-label="紙箱 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n1" aria-label="紙箱 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td class="lab-kit-name">檯燈</td>
+                  <td>1 盞</td>
+                  <td><input type="checkbox" data-kit="h2" aria-label="檯燈 到齊"></td>
+                  <td><input type="checkbox" data-kit="g2" aria-label="檯燈 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n2" aria-label="檯燈 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td class="lab-kit-name">紅色紙</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h3" aria-label="紅色紙 到齊"></td>
+                  <td><input type="checkbox" data-kit="g3" aria-label="紅色紙 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n3" aria-label="紅色紙 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td class="lab-kit-name">綠色紙</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h4" aria-label="綠色紙 到齊"></td>
+                  <td><input type="checkbox" data-kit="g4" aria-label="綠色紙 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n4" aria-label="綠色紙 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td class="lab-kit-name">藍色紙</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h5" aria-label="藍色紙 到齊"></td>
+                  <td><input type="checkbox" data-kit="g5" aria-label="藍色紙 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n5" aria-label="藍色紙 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td class="lab-kit-name">白色紙</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h6" aria-label="白色紙 到齊"></td>
+                  <td><input type="checkbox" data-kit="g6" aria-label="白色紙 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n6" aria-label="白色紙 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td class="lab-kit-name">黑色紙</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h7" aria-label="黑色紙 到齊"></td>
+                  <td><input type="checkbox" data-kit="g7" aria-label="黑色紙 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n7" aria-label="黑色紙 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>8</td>
+                  <td class="lab-kit-name">紅玻璃紙</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h8" aria-label="紅玻璃紙 到齊"></td>
+                  <td><input type="checkbox" data-kit="g8" aria-label="紅玻璃紙 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n8" aria-label="紅玻璃紙 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>9</td>
+                  <td class="lab-kit-name">綠玻璃紙</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h9" aria-label="綠玻璃紙 到齊"></td>
+                  <td><input type="checkbox" data-kit="g9" aria-label="綠玻璃紙 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n9" aria-label="綠玻璃紙 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td class="lab-kit-name">藍玻璃紙</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h10" aria-label="藍玻璃紙 到齊"></td>
+                  <td><input type="checkbox" data-kit="g10" aria-label="藍玻璃紙 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n10" aria-label="藍玻璃紙 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="lab-check">全組依表勾完；缺色紙或玻璃紙時先舉手，不要自行挪用別組。</p>
           <p class="lab-record">缺件寫在空格，沒有就寫「無」。確認到齊後才開洞做觀察箱。缺件：<input class="blank" data-answer="無" style="width:3.2em"></p>
           <p class="inquiry-ask"><strong>步驟 Q：</strong>為什麼材料沒確認完就不能做？</p>
           <p>少一種色紙或玻璃紙，顏色對照表會缺格，無法比較誰反射、誰變黑。</p>

@@ -94,17 +94,22 @@
       <div class="split">
         <figure>
           <svg class="diagram" viewBox="0 0 280 150" aria-label="由兩個原子組成的分子：氫氣、氧氣、一氧化碳">
+            <defs>
+              <radialGradient id="m2-h" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#e0f2fe"/><stop offset="100%" stop-color="#0284c7"/></radialGradient>
+              <radialGradient id="m2-o" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#fecaca"/><stop offset="100%" stop-color="#b91c1c"/></radialGradient>
+              <radialGradient id="m2-c" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#a8a29e"/><stop offset="100%" stop-color="#292524"/></radialGradient>
+            </defs>
             <rect width="280" height="150" rx="8" fill="#ecfeff"/>
-            <circle cx="48" cy="58" r="14" fill="#7dd3fc"/>
-            <circle cx="72" cy="58" r="14" fill="#7dd3fc"/>
+            <circle cx="48" cy="58" r="14" fill="url(#m2-h)"/>
+            <circle cx="72" cy="58" r="14" fill="url(#m2-h)"/>
             <text x="60" y="96" text-anchor="middle" font-size="12" fill="#0e7490">H₂</text>
             <text x="60" y="112" text-anchor="middle" font-size="11" fill="#155e75">氫氣</text>
-            <circle cx="140" cy="58" r="16" fill="#f87171"/>
-            <circle cx="168" cy="58" r="16" fill="#f87171"/>
+            <circle cx="140" cy="58" r="16" fill="url(#m2-o)"/>
+            <circle cx="168" cy="58" r="16" fill="url(#m2-o)"/>
             <text x="154" y="96" text-anchor="middle" font-size="12" fill="#b91c1c">O₂</text>
             <text x="154" y="112" text-anchor="middle" font-size="11" fill="#7f1d1d">氧氣</text>
-            <circle cx="228" cy="58" r="14" fill="#44403c"/>
-            <circle cx="252" cy="58" r="14" fill="#f87171"/>
+            <circle cx="228" cy="58" r="14" fill="url(#m2-c)"/>
+            <circle cx="252" cy="58" r="14" fill="url(#m2-o)"/>
             <text x="240" y="96" text-anchor="middle" font-size="12" fill="#44403c">CO</text>
             <text x="240" y="112" text-anchor="middle" font-size="11" fill="#57534e">一氧化碳</text>
             <text x="140" y="140" text-anchor="middle" font-size="12" fill="#0f766e">由 2 個原子組成的分子</text>
@@ -113,18 +118,23 @@
         </figure>
         <figure>
           <svg class="diagram" viewBox="0 0 280 150" aria-label="超過兩個原子的分子：水、二氧化碳、臭氧">
+            <defs>
+              <radialGradient id="m3-o" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#fecaca"/><stop offset="100%" stop-color="#b91c1c"/></radialGradient>
+              <radialGradient id="m3-h" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#f4f4f5"/><stop offset="100%" stop-color="#71717a"/></radialGradient>
+              <radialGradient id="m3-c" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#a8a29e"/><stop offset="100%" stop-color="#292524"/></radialGradient>
+            </defs>
             <rect width="280" height="150" rx="8" fill="#fefce8"/>
-            <circle cx="52" cy="58" r="16" fill="#f87171"/>
-            <circle cx="34" cy="78" r="10" fill="#e7e5e4" stroke="#a8a29e"/>
-            <circle cx="70" cy="78" r="10" fill="#e7e5e4" stroke="#a8a29e"/>
+            <circle cx="52" cy="58" r="16" fill="url(#m3-o)"/>
+            <circle cx="34" cy="78" r="10" fill="url(#m3-h)"/>
+            <circle cx="70" cy="78" r="10" fill="url(#m3-h)"/>
             <text x="52" y="108" text-anchor="middle" font-size="12" fill="#b91c1c">H₂O</text>
-            <circle cx="140" cy="58" r="12" fill="#44403c"/>
-            <circle cx="116" cy="58" r="14" fill="#f87171"/>
-            <circle cx="164" cy="58" r="14" fill="#f87171"/>
+            <circle cx="140" cy="58" r="12" fill="url(#m3-c)"/>
+            <circle cx="116" cy="58" r="14" fill="url(#m3-o)"/>
+            <circle cx="164" cy="58" r="14" fill="url(#m3-o)"/>
             <text x="140" y="108" text-anchor="middle" font-size="12" fill="#44403c">CO₂</text>
-            <circle cx="216" cy="70" r="14" fill="#f87171"/>
-            <circle cx="240" cy="50" r="14" fill="#f87171"/>
-            <circle cx="256" cy="74" r="14" fill="#f87171"/>
+            <circle cx="216" cy="70" r="14" fill="url(#m3-o)"/>
+            <circle cx="240" cy="50" r="14" fill="url(#m3-o)"/>
+            <circle cx="256" cy="74" r="14" fill="url(#m3-o)"/>
             <text x="236" y="108" text-anchor="middle" font-size="12" fill="#b91c1c">O₃</text>
             <text x="140" y="140" text-anchor="middle" font-size="12" fill="#a16207">由超過 2 個原子組成的分子</text>
           </svg>

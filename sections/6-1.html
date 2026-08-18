@@ -437,19 +437,26 @@
       </table>
       <div class="split">
         <figure>
-          <svg class="diagram" viewBox="0 0 280 130" aria-label="石墨層狀與鑽石立體網狀示意">
-            <rect width="280" height="130" rx="8" fill="#f5f3ff"/>
-            <path d="M20 40 L 50 28 L 80 40 L 50 52 Z" fill="none" stroke="#6d28d9" stroke-width="2"/>
-            <path d="M20 58 L 50 46 L 80 58 L 50 70 Z" fill="none" stroke="#6d28d9" stroke-width="2"/>
-            <path d="M20 76 L 50 64 L 80 76 L 50 88 Z" fill="none" stroke="#6d28d9" stroke-width="2"/>
-            <text x="50" y="112" text-anchor="middle" font-size="12" fill="#5b21b6">石墨（層狀）</text>
-            <circle cx="170" cy="48" r="8" fill="#a78bfa"/>
-            <circle cx="200" cy="32" r="8" fill="#a78bfa"/>
-            <circle cx="230" cy="48" r="8" fill="#a78bfa"/>
-            <circle cx="200" cy="70" r="8" fill="#a78bfa"/>
-            <circle cx="185" cy="88" r="8" fill="#7c3aed"/>
-            <path d="M170 48 L 200 32 L 230 48 L 200 70 Z M200 70 L 185 88" fill="none" stroke="#5b21b6" stroke-width="2"/>
-            <text x="200" y="118" text-anchor="middle" font-size="12" fill="#5b21b6">鑽石（立體網）</text>
+          <svg class="diagram" viewBox="0 0 300 150" aria-label="石墨層狀與鑽石立體網狀示意">
+            <defs>
+              <radialGradient id="c-at" cx="35%" cy="30%" r="65%"><stop offset="0%" stop-color="#ddd6fe"/><stop offset="100%" stop-color="#5b21b6"/></radialGradient>
+              <linearGradient id="c-ly" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c4b5fd"/><stop offset="100%" stop-color="#6d28d9"/></linearGradient>
+            </defs>
+            <rect width="300" height="150" rx="8" fill="#f5f3ff"/>
+            <polygon points="22,44 54,30 86,44 54,58" fill="url(#c-ly)" stroke="#5b21b6" opacity=".9"/>
+            <polygon points="22,64 54,50 86,64 54,78" fill="url(#c-ly)" stroke="#5b21b6" opacity=".85"/>
+            <polygon points="22,84 54,70 86,84 54,98" fill="url(#c-ly)" stroke="#5b21b6"/>
+            <circle cx="38" cy="44" r="3.2" fill="url(#c-at)"/><circle cx="70" cy="44" r="3.2" fill="url(#c-at)"/>
+            <circle cx="38" cy="64" r="3.2" fill="url(#c-at)"/><circle cx="70" cy="64" r="3.2" fill="url(#c-at)"/>
+            <circle cx="38" cy="84" r="3.2" fill="url(#c-at)"/><circle cx="70" cy="84" r="3.2" fill="url(#c-at)"/>
+            <text x="54" y="128" text-anchor="middle" font-size="12" fill="#5b21b6">石墨（層狀）</text>
+            <circle cx="176" cy="52" r="9" fill="url(#c-at)"/>
+            <circle cx="214" cy="32" r="9" fill="url(#c-at)"/>
+            <circle cx="252" cy="52" r="9" fill="url(#c-at)"/>
+            <circle cx="214" cy="78" r="9" fill="url(#c-at)"/>
+            <circle cx="196" cy="102" r="9" fill="url(#c-at)"/>
+            <path d="M176 52 L 214 32 L 252 52 L 214 78 Z M214 78 L 196 102 M176 52 L 214 78 M252 52 L 214 78 M214 32 L 196 102" fill="none" stroke="#4c1d95" stroke-width="1.8"/>
+            <text x="214" y="136" text-anchor="middle" font-size="12" fill="#5b21b6">鑽石（立體網）</text>
           </svg>
           <p class="caption">同一種碳，排法不同，軟硬、導電差很多</p>
         </figure>

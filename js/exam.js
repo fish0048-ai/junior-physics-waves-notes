@@ -178,6 +178,14 @@
 
   function topicOf(item) {
     const t = `${item.q || ""}${item.lead || ""}`;
+    if (secId === "ch-1" || String(secId).indexOf("1-") === 0) {
+      if (/安全|通風|沖眼|飲食|剩餘藥品|滅火|護目|實驗衣/.test(t)) return "safety";
+      if (/酒精燈|量筒|陶瓷纖維|玻璃棒|搧聞|通風櫥|本生燈|稀釋|凹面|凸面/.test(t)) return "gear";
+      if (/操縱變因|控制變因|應變變因|對照組|實驗組/.test(t)) return "var";
+      if (/密度|天平|砝碼|質量|酒精|鋁|斜率|截距/.test(t)) return "density";
+      if (/測量|估計|誤差|平均|排水|單位|體積|長度/.test(t)) return "measure";
+      return "ch1";
+    }
     if (secId === "ch-4" || String(secId).indexOf("4-") === 0) {
       if (/近視|遠視|老花|顯微|照相|眼睛|眼鏡|視網膜|水晶體/.test(t)) return "eye";
       if (/色散|顏色|色光|色料|紅光|綠光|藍光|濾光|三原色/.test(t)) return "color";
@@ -349,6 +357,7 @@
       });
     });
     applyExamUi();
+    window.JPWNMath?.render?.();
   }
 
   function clearMarks() {

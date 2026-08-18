@@ -96,19 +96,38 @@
           </p>
         </div>
         <figure>
-          <svg class="diagram" viewBox="0 0 320 170" aria-label="高溫物體 A 與低溫物體 B 接觸後達到熱平衡">
-            <rect width="320" height="170" rx="8" fill="#ecfeff"/>
-            <text x="16" y="22" font-size="12" fill="#0e7490" font-weight="700">溫度</text>
-            <line x1="40" y1="140" x2="300" y2="140" stroke="#78716c"/>
-            <line x1="40" y1="28" x2="40" y2="140" stroke="#78716c"/>
-            <polyline points="50,40 160,88 290,88" fill="none" stroke="#dc2626" stroke-width="3"/>
-            <polyline points="50,128 160,88 290,88" fill="none" stroke="#2563eb" stroke-width="3"/>
-            <text x="58" y="38" font-size="12" fill="#dc2626" font-weight="700">A 高溫</text>
-            <text x="58" y="148" font-size="12" fill="#2563eb" font-weight="700">B 低溫</text>
-            <text x="210" y="80" font-size="12" fill="#0f766e" font-weight="700">熱平衡 T</text>
-            <text x="170" y="162" font-size="12" fill="#57534e">時間</text>
+          <svg class="diagram math-graph" viewBox="0 0 340 230" aria-label="等熱容量時溫度對時間：80度與20度指數趨近50度">
+            <defs>
+              <marker id="arr-tt" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1.2 L10 5 L0 8.8 Z" fill="#111827"/></marker>
+            </defs>
+            <rect width="340" height="230" fill="#fff"/>
+            <g stroke="#e5e7eb" stroke-width="1">
+              <line x1="48" y1="168" x2="300" y2="168"/>
+              <line x1="48" y1="136" x2="300" y2="136"/>
+              <line x1="48" y1="120" x2="300" y2="120"/>
+              <line x1="48" y1="104" x2="300" y2="104"/>
+              <line x1="48" y1="72" x2="300" y2="72"/>
+              <line x1="48" y1="40" x2="300" y2="40"/>
+            </g>
+            <line x1="48" y1="200" x2="322" y2="200" stroke="#111827" stroke-width="1.6" marker-end="url(#arr-tt)"/>
+            <line x1="48" y1="200" x2="48" y2="18" stroke="#111827" stroke-width="1.6" marker-end="url(#arr-tt)"/>
+            <line x1="48" y1="120" x2="300" y2="120" stroke="#0f766e" stroke-width="1.2" stroke-dasharray="5 4"/>
+            <polyline points="56,72 80,90.9 104,102.3 128,109.3 152,113.5 176,116.1 200,117.6 224,118.6 248,119.1 272,119.5 296,119.7" fill="none" stroke="#dc2626" stroke-width="2.4"/>
+            <polyline points="56,168 80,149.1 104,137.7 128,130.7 152,126.5 176,123.9 200,122.4 224,121.4 248,120.9 272,120.5 296,120.3" fill="none" stroke="#2563eb" stroke-width="2.4"/>
+            <g fill="#111827" font-size="10" text-anchor="end">
+              <text x="44" y="172">20</text>
+              <text x="44" y="124">50</text>
+              <text x="44" y="76">80</text>
+              <text x="44" y="44">100</text>
+            </g>
+            <text x="36" y="216" font-size="12">O</text>
+            <text x="302" y="220" font-size="13"><tspan font-style="italic">t</tspan></text>
+            <text x="6" y="16" font-size="13"><tspan font-style="italic">T</tspan> (°C)</text>
+            <text x="62" y="68" font-size="12" fill="#dc2626" font-weight="700">A</text>
+            <text x="62" y="182" font-size="12" fill="#2563eb" font-weight="700">B</text>
+            <text x="210" y="110" font-size="12" fill="#0f766e">50°C</text>
           </svg>
-          <p class="caption">接觸後高溫下降、低溫上升，最後停在同一溫度</p>
+          <p class="caption">熱容量相同時：A 80°C、B 20°C，平衡在 50°C。曲線依 \(T=T_{\mathrm{eq}}+(T_0-T_{\mathrm{eq}})e^{-t/\tau}\) 靠近，不會折成直線。</p>
         </figure>
       </div>
       <section class="extra">
@@ -128,14 +147,14 @@
         </ul>
       </section>
       <h3 class="subh">水的熱量計算</h3>
-      <p class="formula">H ＝ M × ΔT　（水；H 的單位 cal，M 的單位 g，ΔT 的單位 °C）</p>
+      <p class="formula">\[H=M\,\Delta T\quad\text{（水；}H:\,\mathrm{cal},\; M:\,\mathrm{g},\; \Delta T:\,^{\circ}\mathrm{C}\text{）}\]</p>
       <p>其他物質還要乘比熱，見重點 2。</p>
       <h3 class="subh">冷熱水混合</h3>
       <ul class="q">
         <li>不計熱量散失：熱水放熱 ＝ 冷水吸熱。</li>
         <li>有散失：放熱 ＝ 吸熱 ＋ 損失的熱量。</li>
       </ul>
-      <p class="formula">M<sub>熱</sub>(T<sub>熱</sub> − T) ＝ M<sub>冷</sub>(T − T<sub>冷</sub>)　（不計損失、皆為水）</p>
+      <p class="formula">\[M_{\text{熱}}(T_{\text{熱}}-T)=M_{\text{冷}}(T-T_{\text{冷}})\quad\text{（不計損失、皆為水）}\]</p>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：混合後溫度會落在哪裡？</div>
         <ul class="q">
@@ -200,7 +219,7 @@
         <input class="blank" data-answer="比熱" style="width:3.5em">。
         水的比熱是 1 cal／(g·°C)。
       </p>
-      <p class="formula">S ＝ H ／ (M × ΔT)　→　H ＝ M × S × ΔT</p>
+      <p class="formula">\[S=\dfrac{H}{M\,\Delta T}\quad\Rightarrow\quad H=MS\Delta T\]</p>
       <ul class="q">
         <li>同樣 M、ΔT：S 愈大，需要的 H 愈
           <input class="blank" data-answer="多|大" style="width:2.4em">。</li>
@@ -348,7 +367,7 @@
           <p>先寫 H ＝ M S ΔT，再決定誰放熱、誰吸熱</p>
         </div>
       </div>
-      <p class="formula">H ＝ M × S × ΔT　　放熱 ＝ 吸熱 ＋ 損失（若有）</p>
+      <p class="formula">\[H=MS\Delta T\qquad \text{放熱}=\text{吸熱}+\text{損失（若有）}\]</p>
       <div class="two-col">
         <section class="ex-box skill">
           <div class="ex-title"><span class="tag tag-blue">範例 1　混合（水）</span></div>

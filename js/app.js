@@ -138,6 +138,57 @@
   window.addEventListener("jpwn-class-will-change", saveInquiryWrites);
   window.addEventListener("jpwn-class-change", loadInquiryWrites);
 
+  const LS_KIT = "jpwn.labKit";
+
+  function kitFields() {
+    return $$(".lab-kit [data-kit]");
+  }
+
+  function loadLabKit() {
+    let bag = {};
+    try {
+      const all = JSON.parse(localStorage.getItem(LS_KIT) || "{}");
+      bag = all[pageStoreKey()] || {};
+    } catch (err) {
+      bag = {};
+    }
+    kitFields().forEach((el) => {
+      const k = el.dataset.kit;
+      if (!k) return;
+      if (el.type === "checkbox") el.checked = !!bag[k];
+      else el.value = bag[k] != null ? bag[k] : "";
+    });
+  }
+
+  function saveLabKit() {
+    const bag = {};
+    kitFields().forEach((el) => {
+      if (!el.dataset.kit) return;
+      bag[el.dataset.kit] = el.type === "checkbox" ? el.checked : el.value;
+    });
+    let all = {};
+    try {
+      all = JSON.parse(localStorage.getItem(LS_KIT) || "{}");
+    } catch (err) {
+      all = {};
+    }
+    all[pageStoreKey()] = bag;
+    localStorage.setItem(LS_KIT, JSON.stringify(all));
+  }
+
+  function setupLabKit() {
+    if (!kitFields().length) return;
+    loadLabKit();
+    kitFields().forEach((el) => {
+      el.addEventListener(el.type === "checkbox" ? "change" : "input", saveLabKit);
+    });
+    window.addEventListener("pagehide", saveLabKit);
+    window.addEventListener("jpwn-class-will-change", saveLabKit);
+    window.addEventListener("jpwn-class-change", loadLabKit);
+  }
+
+  setupLabKit();
+
   function normalize(s) {
     return String(s || "")
       .trim()
@@ -291,11 +342,15 @@
     const chId = window.APP_CONFIG?.chapter?.id || "";
     const secId = pageType === "cover"
       ? "封面"
+      : pageType === "book"
+      ? "整本"
       : pageType === "home"
       ? `第${chId}章`
       : (document.body.dataset.section || "講義");
     const kind = pageType === "cover"
       ? "講義封面"
+      : pageType === "book"
+      ? "講義"
       : pageType === "home"
       ? "目錄"
       : pageType === "exam" || pageType === "review"

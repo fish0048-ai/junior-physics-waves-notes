@@ -154,6 +154,35 @@ html.is-proj .wrap {
 .btn-github { background: #111827; color: #fff; }
 .btn-github:hover { background: #000; }
 
+.book-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+.book-opt input { width: 18px; height: 18px; accent-color: var(--green-700); }
+.book-actions { display: flex; flex-wrap: wrap; gap: 8px; margin: 12px 0 0; }
+.book-bar {
+  display: block;
+  width: 100%;
+  height: 10px;
+  margin: 10px 0 0;
+  accent-color: var(--green-700);
+}
+.book-kicker {
+  margin: 0 0 8px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--green-800);
+  letter-spacing: 0.04em;
+}
+.book-section + .book-section {
+  margin-top: 36px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--line);
+}
+
 .wrap {
   position: relative;
   width: min(880px, calc(100% - 24px));
@@ -399,6 +428,63 @@ html.is-proj .wrap {
 .lab-record::before { content: "紀錄　"; }
 .lab-check::before { content: "核對　"; }
 
+/* 實驗材料核對表：學生可勾、可填，不要 class="blank" */
+.lab-kit-wrap {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  margin: 8px 0 12px;
+}
+.lab-kit {
+  min-width: 520px;
+  font-size: 14px;
+}
+.lab-kit caption {
+  caption-side: top;
+  text-align: left;
+  font-weight: 700;
+  font-size: 13.5px;
+  color: var(--green-800);
+  margin-bottom: 6px;
+}
+.lab-kit th:nth-child(1),
+.lab-kit td:nth-child(1) {
+  width: 2.6em;
+}
+.lab-kit th:nth-child(2),
+.lab-kit td.lab-kit-name {
+  text-align: left;
+}
+.lab-kit th:nth-child(6),
+.lab-kit td:nth-child(6) {
+  text-align: left;
+  min-width: 7em;
+}
+.lab-kit input[type="checkbox"] {
+  width: 22px;
+  height: 22px;
+  margin: 0;
+  accent-color: var(--green-700);
+  cursor: pointer;
+  vertical-align: middle;
+}
+.lab-kit .lab-kit-note {
+  width: 100%;
+  min-width: 5.5em;
+  box-sizing: border-box;
+  font-size: 16px;
+  line-height: 1.3;
+  border: none;
+  border-bottom: 1.5px dashed #86efac;
+  background: transparent;
+  padding: 4px 2px;
+  color: var(--green-900);
+}
+.lab-kit .lab-kit-note:focus {
+  outline: none;
+  border-bottom-color: var(--green-700);
+  background: #ecfdf5;
+}
+
 .subh {
   margin: 16px 0 8px;
   color: var(--green-800);
@@ -448,6 +534,70 @@ figure {
 }
 .diagram-lg { max-height: 240px; }
 .diagram-sm { max-height: 160px; }
+
+.gear-photos {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+.gear-photos-many {
+  margin: 10px 0 6px;
+}
+.gear-photos-pair img {
+  height: 168px;
+}
+.gear-photo-single {
+  max-width: 320px;
+  margin: 10px auto 6px;
+  text-align: center;
+}
+.gear-photo-single img {
+  display: block;
+  width: 100%;
+  height: 200px;
+  object-fit: contain;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 6px;
+}
+@media (min-width: 720px) {
+  .gear-photos-many {
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .gear-photos-many img {
+    height: 108px;
+  }
+}
+.gear-photos > figure {
+  margin: 0;
+  min-width: 0;
+  text-align: center;
+}
+.gear-photos img {
+  display: block;
+  width: 100%;
+  height: 132px;
+  object-fit: contain;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 6px;
+}
+.gear-photos figcaption,
+.gear-photo-single figcaption {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--green-800);
+}
+.split .gear-photo-single {
+  max-width: none;
+  margin: 0 0 6px;
+}
+.split .gear-photo-single img {
+  height: 140px;
+}
 
 .caption {
   text-align: center;
@@ -523,6 +673,40 @@ tr:nth-child(even) td { background: var(--green-50); }
   margin: 10px 0 14px;
   overflow-wrap: break-word;
   letter-spacing: 0.02em;
+}
+.formula .katex {
+  font-size: 1.08em;
+  font-weight: 400;
+}
+.formula .katex-display {
+  margin: 0.15em 0;
+}
+.katex {
+  font-size: 1.05em;
+}
+
+svg.math-graph {
+  max-height: 280px;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+svg.math-graph text {
+  font-family: Cambria, "Times New Roman", "Noto Serif TC", serif;
+}
+.math-graphs {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 10px;
+  margin: 10px 0 6px;
+}
+@media (min-width: 800px) {
+  .math-graphs-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  .math-graphs-2 {
+    grid-template-columns: 1fr 1fr;
+  }
 }
 
 .ex-box {
@@ -1502,7 +1686,8 @@ body.ink-draw {
   touch-action: pan-y;
 }
 body.ink-draw .inquiry-write,
-body.ink-draw .cover-id input {
+body.ink-draw .cover-id input,
+body.ink-draw .lab-kit input {
   user-select: text;
   -webkit-user-select: text;
   pointer-events: auto;
@@ -2090,6 +2275,62 @@ html.is-immersive .brand > span:last-child {
     color: #14532d;
     border: 0.4pt solid #166534;
   }
+  body[data-page="book"] .book-section {
+    margin: 0;
+    padding: 0;
+    border: none;
+    break-before: page;
+    page-break-before: always;
+  }
+  body[data-page="book"] .book-section.is-cover {
+    break-before: auto;
+    page-break-before: auto;
+  }
+  body[data-page="book"] .book-kicker {
+    margin: 0 0 2mm;
+    font-size: 8pt;
+    color: #166534;
+  }
+  body[data-page="book"] .cover-sheet {
+    box-sizing: border-box;
+    min-height: 277mm;
+    padding: 12mm 14mm 10mm;
+    border-radius: 0;
+    box-shadow: none;
+  }
+  body[data-page="book"] .cover-sheet h1 { font-size: 22pt; color: #fff; }
+  body[data-page="book"] .cover-top {
+    grid-template-columns: 1fr 58mm;
+    gap: 6mm;
+    align-items: center;
+  }
+  body[data-page="book"] .cover-art { max-width: 58mm; filter: none; }
+  body[data-page="book"] .cover-bg { opacity: 0.35; }
+  body[data-page="book"] .cover-ico { width: 9mm; height: 9mm; }
+  body[data-page="book"] .cover-chapters a {
+    grid-template-columns: 9mm 1fr;
+    gap: 3mm;
+    padding: 2.5mm 3.5mm 2.5mm 2.5mm;
+    color: #14532d;
+    border: 0.4pt solid #166534;
+  }
+  body[data-page="book"] .cover-id {
+    margin-top: 14mm;
+    padding: 6mm 7mm 4mm;
+    background: #fff;
+    grid-template-columns: 1.2fr 1.4fr 0.7fr;
+  }
+  body[data-page="book"] .cover-id input {
+    appearance: none;
+    -webkit-appearance: none;
+    font-size: 16pt;
+    min-height: 11mm;
+    color: #14532d !important;
+    background: transparent !important;
+    border: none;
+    border-bottom: 0.8pt solid #166534;
+  }
+  body[data-page="book"] .cover-id input::placeholder { color: transparent; }
   .card, .ex-box, .extra, .tips, .wrong-note, .gifted, .teacher, .drill-col, .drill-grid, .split, .two-col, .lab-step {
     break-inside: auto !important;
     page-break-inside: auto !important;
@@ -2126,6 +2367,30 @@ html.is-immersive .brand > span:last-child {
   }
   .diagram-lg { height: 32mm !important; max-height: 32mm !important; }
   .diagram-sm { height: 22mm !important; max-height: 22mm !important; }
+  svg.math-graph {
+    height: 42mm !important;
+    max-height: 42mm !important;
+  }
+  .gear-photos {
+    break-inside: auto;
+  }
+  .gear-photos > figure,
+  .gear-photo-single {
+    break-inside: avoid;
+  }
+  .gear-photos img,
+  .gear-photo-single img {
+    height: 22mm;
+    max-height: 22mm;
+    padding: 1mm;
+  }
+  .gear-photos-many {
+    grid-template-columns: repeat(4, 1fr) !important;
+  }
+  .gear-photos-pair img {
+    height: 28mm;
+    max-height: 28mm;
+  }
   .split, .two-col, .drill-grid {
     grid-template-columns: 1fr 1fr !important;
     gap: 4px;
@@ -2144,6 +2409,26 @@ html.is-immersive .brand > span:last-child {
     background: #fff !important;
     min-height: 14mm;
     font-size: 10pt;
+  }
+  .lab-kit {
+    min-width: 0;
+    font-size: 10pt;
+  }
+  .lab-kit input[type="checkbox"] {
+    appearance: none;
+    -webkit-appearance: none;
+    width: 4mm;
+    height: 4mm;
+    border: 0.6pt solid #333;
+    vertical-align: middle;
+  }
+  .lab-kit input[type="checkbox"]:checked {
+    background: #166534;
+  }
+  .lab-kit .lab-kit-note {
+    font-size: 10pt;
+    border-bottom: 0.5pt solid #666;
+    min-height: 6mm;
   }
   p, li { orphans: 2; widows: 2; }
   .overview { margin: 0 0 4px; padding: 4px 8px; box-shadow: none; }

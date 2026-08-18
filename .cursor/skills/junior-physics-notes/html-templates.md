@@ -100,9 +100,13 @@
 
 數字與科學記號給多個答案：`3×10^8|3*10^8|3×10⁸`。
 
+## 公式與圖表
+
+獨立公式用 `.formula`＋KaTeX `\[...\]`，行內 `\(...\)`。座標圖用 `svg.diagram.math-graph`：原點 O、軸箭頭、軸名（斜體變數＋單位）、刻度、格線。範本 `sections/1-2.html`、`sections/5-3.html`。完整規則見 [math.md](math.md)。
+
 ## SVG
 
-`class="diagram"`，`aria-label` 寫人話。旁邊加 `.caption`。複雜圖可參考 `sections/4-1.html` 針孔、`sections/3-1.html` 繩波。畫不出來就用 `exams/img/` 的 PNG，但講義內優先 SVG。
+`class="diagram"`，`aria-label` 寫人話。旁邊加 `.caption`。複雜圖可參考 `sections/4-1.html` 針孔、`sections/3-1.html` 繩波。畫不出來就用 `exams/img/` 的 PNG，但講義內優先 SVG。**座標／關係圖**用 `.math-graph`（見 [math.md](math.md)）。光線、波動示意、原子模型維持普通 SVG；學生要認器材才用 `.gear-photos` 加真實照片（Wikimedia Commons，CC BY-SA，圖說要寫來源）。
 
 ## 綜合練習
 
@@ -127,7 +131,7 @@
 
 假設、器材、觀念補充才可用 `ol.q`。動手步驟禁止收成短清單，也不要把兩步併成一句。
 
-實驗專區 **不要** `#drill`、不要 toc「練習／段考」、config 不要 `exam`、不要 `review`。頁面到 `#claim` 結束。
+實驗專區 **不要** `#drill`、不要 toc「練習／段考」、config 不要 `exam`、不要 `review`。頁面到 `#claim` 結束。材料確認格必有 `.lab-kit` 核對表，勾選與備註不要 `class="blank"`。
 
 ```html
 <ol class="lab-steps">

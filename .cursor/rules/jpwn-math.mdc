@@ -1,0 +1,23 @@
+---
+description: 講義公式用 KaTeX；座標圖要有原點、刻度、單位。編輯公式或關係圖時套用。
+globs: "{sections,exams,js}/**/*.{html,js}"
+alwaysApply: false
+---
+
+# 公式與圖表
+
+細節見技能 `math.md`。KaTeX 由 `layout.js` 載入，不要每頁手寫 CDN。
+
+## 公式
+
+- `.formula` 用 `\[...\]`；行內用 `\(...\)`
+- 變數斜體、單位 `\mathrm{}`；分數 `\dfrac`；不要 `＝`、`／`、`*`、`x` 當乘
+- 挖空不要包進數學分隔符
+
+## 座標圖
+
+`svg.diagram.math-graph` 必有：原點 O、軸箭頭、軸名（斜體變數＋單位）、刻度、格線、圖例、`.caption`。
+
+範本：`sections/1-2.html`（\(M\)－\(V\)）、`sections/5-3.html`（加熱曲線）。
+
+光線／器材／原子模型不是圖表，維持普通 SVG 或照片。

@@ -44,3 +44,4 @@ A–D 對 0–3。`list.length !== seq.length` 時**整節不覆寫**，所以�
 - 路徑一律站根：`exams/img/4-1/image001.png`（段考頁在 `exams/` 子目錄，`exam.js` 會用 `data-root` 組 URL）
 - 檔名穩定，不要空白
 - 一題太多圖會被裁成 1–2 張；重要圖放 `imgs[0]`
+- 題幹公式用 `\(...\)`，會由 KaTeX 排版（見 [math.md](math.md)）

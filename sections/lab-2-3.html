@@ -78,8 +78,137 @@
       <ol class="lab-steps">
         <li class="lab-step">
           <h3 class="subh">動手前核對器材是否到齊</h3>
-          <p>對照上面的器材表，逐項檢查：二氧化錳、雙氧水、線香、吸濾瓶、薊頭漏斗、廣口瓶、水槽、手套是否到齊；玻璃瓶有沒有裂。</p>
-          <p class="lab-check">全組依表點名；雙氧水不足或瓶子有裂先舉手，不要自行挪用別組。</p>
+          <p>對照上面的器材表，逐項勾選。到齊且完好／足量才打勾；玻璃瓶有沒有裂寫在備註。</p>
+          <div class="lab-kit-wrap">
+            <table class="lab-kit">
+              <caption>實驗材料核對表（每組）</caption>
+              <thead>
+                <tr>
+                  <th scope="col">項次</th>
+                  <th scope="col">材料</th>
+                  <th scope="col">應備</th>
+                  <th scope="col">到齊</th>
+                  <th scope="col">完好／足量</th>
+                  <th scope="col">備註</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td class="lab-kit-name">二氧化錳</td>
+                  <td>約 0.5 g</td>
+                  <td><input type="checkbox" data-kit="h1" aria-label="二氧化錳 到齊"></td>
+                  <td><input type="checkbox" data-kit="g1" aria-label="二氧化錳 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n1" aria-label="二氧化錳 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td class="lab-kit-name">10% 雙氧水</td>
+                  <td>約 50 mL</td>
+                  <td><input type="checkbox" data-kit="h2" aria-label="雙氧水 到齊"></td>
+                  <td><input type="checkbox" data-kit="g2" aria-label="雙氧水 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n2" aria-label="雙氧水 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td class="lab-kit-name">線香</td>
+                  <td>2 支</td>
+                  <td><input type="checkbox" data-kit="h3" aria-label="線香 到齊"></td>
+                  <td><input type="checkbox" data-kit="g3" aria-label="線香 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n3" aria-label="線香 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td class="lab-kit-name">吸濾瓶 250 mL</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h4" aria-label="吸濾瓶 到齊"></td>
+                  <td><input type="checkbox" data-kit="g4" aria-label="吸濾瓶 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n4" aria-label="吸濾瓶 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td class="lab-kit-name">薊頭漏斗</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h5" aria-label="薊頭漏斗 到齊"></td>
+                  <td><input type="checkbox" data-kit="g5" aria-label="薊頭漏斗 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n5" aria-label="薊頭漏斗 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td class="lab-kit-name">單孔橡皮塞</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h6" aria-label="單孔橡皮塞 到齊"></td>
+                  <td><input type="checkbox" data-kit="g6" aria-label="單孔橡皮塞 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n6" aria-label="單孔橡皮塞 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td class="lab-kit-name">橡皮管</td>
+                  <td>1 條</td>
+                  <td><input type="checkbox" data-kit="h7" aria-label="橡皮管 到齊"></td>
+                  <td><input type="checkbox" data-kit="g7" aria-label="橡皮管 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n7" aria-label="橡皮管 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>8</td>
+                  <td class="lab-kit-name">廣口瓶</td>
+                  <td>2 個</td>
+                  <td><input type="checkbox" data-kit="h8" aria-label="廣口瓶 到齊"></td>
+                  <td><input type="checkbox" data-kit="g8" aria-label="廣口瓶 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n8" aria-label="廣口瓶 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>9</td>
+                  <td class="lab-kit-name">玻璃片</td>
+                  <td>2 片</td>
+                  <td><input type="checkbox" data-kit="h9" aria-label="玻璃片 到齊"></td>
+                  <td><input type="checkbox" data-kit="g9" aria-label="玻璃片 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n9" aria-label="玻璃片 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td class="lab-kit-name">水槽</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h10" aria-label="水槽 到齊"></td>
+                  <td><input type="checkbox" data-kit="g10" aria-label="水槽 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n10" aria-label="水槽 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>11</td>
+                  <td class="lab-kit-name">鐵架附鐵夾</td>
+                  <td>1 組</td>
+                  <td><input type="checkbox" data-kit="h11" aria-label="鐵架附鐵夾 到齊"></td>
+                  <td><input type="checkbox" data-kit="g11" aria-label="鐵架附鐵夾 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n11" aria-label="鐵架附鐵夾 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>12</td>
+                  <td class="lab-kit-name">滴管</td>
+                  <td>2 支</td>
+                  <td><input type="checkbox" data-kit="h12" aria-label="滴管 到齊"></td>
+                  <td><input type="checkbox" data-kit="g12" aria-label="滴管 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n12" aria-label="滴管 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>13</td>
+                  <td class="lab-kit-name">刮勺</td>
+                  <td>1 支</td>
+                  <td><input type="checkbox" data-kit="h13" aria-label="刮勺 到齊"></td>
+                  <td><input type="checkbox" data-kit="g13" aria-label="刮勺 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n13" aria-label="刮勺 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>14</td>
+                  <td class="lab-kit-name">橡膠手套</td>
+                  <td>1 雙</td>
+                  <td><input type="checkbox" data-kit="h14" aria-label="橡膠手套 到齊"></td>
+                  <td><input type="checkbox" data-kit="g14" aria-label="橡膠手套 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n14" aria-label="橡膠手套 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="lab-check">全組依表勾完；雙氧水不足或瓶子有裂先舉手，不要自行挪用別組。</p>
           <p class="lab-record">缺件寫在空格，沒有就寫「無」。確認到齊並戴好手套後才架裝置。缺件：<input class="blank" data-answer="無" style="width:3.2em"></p>
           <p class="inquiry-ask"><strong>步驟 Q：</strong>為什麼材料沒確認完就不能做？</p>
           <p>少了雙氧水或二氧化錳就製不成氧；瓶子有裂，排水集氣時可能破。</p>

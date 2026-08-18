@@ -102,8 +102,105 @@
       <ol class="lab-steps">
         <li class="lab-step">
           <h3 class="subh">動手前核對器材是否到齊</h3>
-          <p>對照上面的器材表，逐項檢查：水、甘油、燒杯、天平、碼錶、溫度計、酒精燈、鐵架是否到齊；溫度計液泡有沒有破裂。</p>
-          <p class="lab-check">全組依表點名；甘油不足或溫度計破損時先舉手，不要自行挪用別組。</p>
+          <p>對照上面的器材表，逐項勾選。到齊且完好／足量才打勾；溫度計液泡有沒有破裂寫在備註。</p>
+          <div class="lab-kit-wrap">
+            <table class="lab-kit">
+              <caption>實驗材料核對表（每組）</caption>
+              <thead>
+                <tr>
+                  <th scope="col">項次</th>
+                  <th scope="col">材料</th>
+                  <th scope="col">應備</th>
+                  <th scope="col">到齊</th>
+                  <th scope="col">完好／足量</th>
+                  <th scope="col">備註</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td class="lab-kit-name">水</td>
+                  <td>約 300 g</td>
+                  <td><input type="checkbox" data-kit="h1" aria-label="水 到齊"></td>
+                  <td><input type="checkbox" data-kit="g1" aria-label="水 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n1" aria-label="水 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td class="lab-kit-name">甘油</td>
+                  <td>100 g</td>
+                  <td><input type="checkbox" data-kit="h2" aria-label="甘油 到齊"></td>
+                  <td><input type="checkbox" data-kit="g2" aria-label="甘油 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n2" aria-label="甘油 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td class="lab-kit-name">燒杯</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h3" aria-label="燒杯 到齊"></td>
+                  <td><input type="checkbox" data-kit="g3" aria-label="燒杯 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n3" aria-label="燒杯 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td class="lab-kit-name">天平</td>
+                  <td>1 組</td>
+                  <td><input type="checkbox" data-kit="h4" aria-label="天平 到齊"></td>
+                  <td><input type="checkbox" data-kit="g4" aria-label="天平 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n4" aria-label="天平 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td class="lab-kit-name">碼錶</td>
+                  <td>1 個</td>
+                  <td><input type="checkbox" data-kit="h5" aria-label="碼錶 到齊"></td>
+                  <td><input type="checkbox" data-kit="g5" aria-label="碼錶 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n5" aria-label="碼錶 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td class="lab-kit-name">溫度計（−10～110°C）</td>
+                  <td>1 支</td>
+                  <td><input type="checkbox" data-kit="h6" aria-label="溫度計 到齊"></td>
+                  <td><input type="checkbox" data-kit="g6" aria-label="溫度計 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n6" aria-label="溫度計 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td class="lab-kit-name">攪拌用鐵絲</td>
+                  <td>1 支</td>
+                  <td><input type="checkbox" data-kit="h7" aria-label="攪拌用鐵絲 到齊"></td>
+                  <td><input type="checkbox" data-kit="g7" aria-label="攪拌用鐵絲 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n7" aria-label="攪拌用鐵絲 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>8</td>
+                  <td class="lab-kit-name">酒精燈</td>
+                  <td>1 盞</td>
+                  <td><input type="checkbox" data-kit="h8" aria-label="酒精燈 到齊"></td>
+                  <td><input type="checkbox" data-kit="g8" aria-label="酒精燈 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n8" aria-label="酒精燈 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>9</td>
+                  <td class="lab-kit-name">陶瓷纖維網</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h9" aria-label="陶瓷纖維網 到齊"></td>
+                  <td><input type="checkbox" data-kit="g9" aria-label="陶瓷纖維網 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n9" aria-label="陶瓷纖維網 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>10</td>
+                  <td class="lab-kit-name">鐵架（附鐵夾、鐵環）</td>
+                  <td>1 組</td>
+                  <td><input type="checkbox" data-kit="h10" aria-label="鐵架 到齊"></td>
+                  <td><input type="checkbox" data-kit="g10" aria-label="鐵架 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n10" aria-label="鐵架 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="lab-check">全組依表勾完；甘油不足或溫度計破損時先舉手，不要自行挪用別組。</p>
           <p class="lab-record">缺件寫在空格，沒有就寫「無」。確認到齊後才秤 100 g、200 g 水和甘油。缺件：<input class="blank" data-answer="無" style="width:3.2em"></p>
           <p class="inquiry-ask"><strong>步驟 Q：</strong>為什麼材料沒確認完就不能做？</p>
           <p>少了甘油就無法做「相同質量、不同物質」的對照；溫度計壞了，ΔT 全部不能信。</p>
@@ -254,6 +351,43 @@
       <p>3. 時間相同、質量相同，水和甘油的 ΔT
         <input class="blank" data-answer="不同" style="width:3.2em">。</p>
       <p>可成立的假設：熱量愈多升溫愈多；質量愈小升溫愈多；不同物質升溫不同。</p>
+      <figure>
+        <svg class="diagram math-graph" viewBox="0 0 360 260" aria-label="上升溫度對加熱時間：100克水最陡於甘油，200克水最平">
+          <defs><marker id="arr-dtlab" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1.2 L10 5 L0 8.8 Z" fill="#111827"/></marker></defs>
+          <rect width="360" height="260" fill="#fff"/>
+          <g stroke="#e5e7eb" stroke-width="1">
+            <line x1="52" y1="188" x2="320" y2="188"/><line x1="52" y1="156" x2="320" y2="156"/>
+            <line x1="52" y1="124" x2="320" y2="124"/><line x1="52" y1="92" x2="320" y2="92"/>
+            <line x1="52" y1="60" x2="320" y2="60"/>
+            <line x1="100" y1="220" x2="100" y2="24"/><line x1="148" y1="220" x2="148" y2="24"/>
+            <line x1="196" y1="220" x2="196" y2="24"/><line x1="244" y1="220" x2="244" y2="24"/>
+            <line x1="292" y1="220" x2="292" y2="24"/>
+          </g>
+          <line x1="52" y1="220" x2="338" y2="220" stroke="#111827" stroke-width="1.6" marker-end="url(#arr-dtlab)"/>
+          <line x1="52" y1="220" x2="52" y2="16" stroke="#111827" stroke-width="1.6" marker-end="url(#arr-dtlab)"/>
+          <g fill="#111827" font-size="11" text-anchor="middle">
+            <text x="100" y="236">1</text><text x="148" y="236">2</text><text x="196" y="236">3</text>
+            <text x="244" y="236">4</text><text x="292" y="236">5</text>
+          </g>
+          <g fill="#111827" font-size="11" text-anchor="end">
+            <text x="46" y="224">0</text><text x="46" y="192">10</text><text x="46" y="160">20</text>
+            <text x="46" y="128">30</text><text x="46" y="96">40</text><text x="46" y="64">50</text>
+          </g>
+          <text x="38" y="236" font-size="12">O</text>
+          <text x="318" y="248" font-size="13"><tspan font-style="italic">t</tspan> (min)</text>
+          <text x="4" y="14" font-size="13"><tspan font-style="italic">ΔT</tspan> (°C)</text>
+          <polyline points="52,220 100,204 148,194.4 196,178.4 244,164 292,146.4" fill="none" stroke="#1d4ed8" stroke-width="2.3"/>
+          <polyline points="52,220 100,212 148,205.6 196,199.2 244,189.6 292,183.2" fill="none" stroke="#0369a1" stroke-width="2.3"/>
+          <polyline points="52,220 100,192.8 148,159.2 196,140 244,104.8 292,82.4" fill="none" stroke="#c2410c" stroke-width="2.3"/>
+          <g fill="#1d4ed8"><circle cx="100" cy="204" r="2.8"/><circle cx="148" cy="194.4" r="2.8"/><circle cx="196" cy="178.4" r="2.8"/><circle cx="244" cy="164" r="2.8"/><circle cx="292" cy="146.4" r="2.8"/></g>
+          <g fill="#0369a1"><circle cx="100" cy="212" r="2.8"/><circle cx="148" cy="205.6" r="2.8"/><circle cx="196" cy="199.2" r="2.8"/><circle cx="244" cy="189.6" r="2.8"/><circle cx="292" cy="183.2" r="2.8"/></g>
+          <g fill="#c2410c"><circle cx="100" cy="192.8" r="2.8"/><circle cx="148" cy="159.2" r="2.8"/><circle cx="196" cy="140" r="2.8"/><circle cx="244" cy="104.8" r="2.8"/><circle cx="292" cy="82.4" r="2.8"/></g>
+          <text x="298" y="150" font-size="12" fill="#1d4ed8">100 g 水</text>
+          <text x="298" y="186" font-size="12" fill="#0369a1">200 g 水</text>
+          <text x="298" y="80" font-size="12" fill="#c2410c">100 g 甘油</text>
+        </svg>
+        <p class="caption">參考圖：同一張 \(\Delta T\)－\(t\) 圖比較三組。課堂請用實測點。</p>
+      </figure>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：斜率愈陡比熱愈小</div>
         <ul class="q">

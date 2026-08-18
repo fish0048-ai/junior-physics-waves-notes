@@ -11,6 +11,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 
 - 探究怎麼寫：[inquiry.md](inquiry.md)
 - HTML 骨架與 class：[html-templates.md](html-templates.md)
+- 公式與圖表：[math.md](math.md)
 - 兩層觀念補充：[extras.md](extras.md)
 - 題庫與評量：[exams.md](exams.md)
 - 檔名與 config：[reference.md](reference.md)
@@ -31,6 +32,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 5. 禁止解壓縮 docx、禁止字元碼混淆的 PowerShell。
 6. 每個重點卡課文後必備兩層補充：`.extra` 國中程度、`.gifted` 國中資優（見 extras.md）。不能只抄課本。
 7. 實驗專區以**步驟**為主軸：活動紀錄本每一步單獨一格 `.lab-step`，見 `labs.md`。頂欄寫「實驗專區」，不要「第 lab 章」。**不要**練習、段考前練習、章末評量（不要 `#drill`、不要 `exam`／`review`、不要 `exams/lab-*.html`、不要 `review-lab.html`）。
+8. 公式與座標圖用正式數學格式，見 [math.md](math.md)。
 
 ## 工作流程
 
@@ -51,7 +53,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 活動紀錄本／實驗專區另走 labs.md（不要當普通講義寫）：
 - [ ] 讀 labs.md 與 sections/lab-1-2.html
 - [ ] 操作步驟全部 .lab-step，禁止收成 ol.q；假設／器材才可用 ol.q
-- [ ] 每個實驗在器材表之後、動手之前有材料確認 `.lab-step`（缺件／破損／藥品）
+- [ ] 每個實驗在器材表之後、動手之前有材料確認 `.lab-step`，內含 `.lab-kit` 核對表（勾到齊／完好，備註寫缺件；不要 class="blank"）
 - [ ] 每步保留原句、注意、紀錄、步驟 Q、該步的圖
 - [ ] toc 寫「步驟」，頁面最長區塊必須是逐步操作
 - [ ] 不要 #drill、不要 exams/lab-*.html、不要 review-lab.html、config 不要 exam 也不要 review
@@ -71,6 +73,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 - 實驗頁把多步收成短 `ol.q`，上課跟不做。
 - 實驗專區 `chapter.id` 用 lab，卻沒設 `nav`，頂欄出現「第 lab 章」。
 - 實驗專區又做出 `#drill`、各節段考前練習或章末評量。
+- 材料確認沒有核對表，或把勾選做成 `class="blank"` 被凍住不能勾。
 
 ## 完成後
 

@@ -89,6 +89,17 @@
           <tr><td>耳溫計、額溫計</td><td>測量物體放出的紅外線能量</td></tr>
         </tbody>
       </table>
+      <div class="gear-photos gear-photos-pair">
+        <figure>
+          <img src="../img/5-1/thermometer.jpg" alt="玻璃酒精溫度計：紅色液柱與刻度">
+          <figcaption>酒精溫度計</figcaption>
+        </figure>
+        <figure>
+          <img src="../img/5-1/infrared.jpg" alt="紅外線溫度計：對準物體，螢幕顯示溫度">
+          <figcaption>紅外線溫度計</figcaption>
+        </figure>
+      </div>
+      <p class="caption">左：液體熱脹冷縮（水銀計同一原理）。右：測紅外線，耳溫計、額溫計也是這一套。照片：Wikimedia Commons（CC BY-SA）</p>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：溫度計到底在量什麼？</div>
         <ul class="q">
@@ -169,15 +180,25 @@
           </table>
         </div>
         <figure>
-          <svg class="diagram" viewBox="0 0 280 200" aria-label="自製溫度計：燒瓶插細管，液柱隨溫度升降">
-            <rect width="280" height="200" rx="8" fill="#fff7ed"/>
-            <ellipse cx="140" cy="168" rx="70" ry="16" fill="#fdba74"/>
-            <rect x="70" y="110" width="140" height="58" fill="#fed7aa"/>
-            <path d="M88 110 C 88 78 192 78 192 110" fill="#fecaca"/>
-            <rect x="132" y="28" width="16" height="86" fill="#e7e5e4" stroke="#78716c"/>
-            <rect x="136" y="70" width="8" height="44" fill="#dc2626"/>
-            <text x="158" y="48" font-size="12" fill="#9a3412" font-weight="700">細管</text>
-            <text x="140" y="192" text-anchor="middle" font-size="12" fill="#57534e">燒瓶＋紅墨水</text>
+          <svg class="diagram" viewBox="0 0 280 220" aria-label="自製溫度計：燒瓶插細管，液柱隨溫度升降">
+            <defs>
+              <linearGradient id="th-gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity=".5"/><stop offset="100%" stop-color="#fff" stop-opacity=".12"/></linearGradient>
+              <linearGradient id="th-red" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f87171"/><stop offset="100%" stop-color="#b91c1c"/></linearGradient>
+            </defs>
+            <rect width="280" height="210" rx="8" fill="#fff7ed"/>
+            <ellipse cx="140" cy="188" rx="64" ry="12" fill="#fdba74" stroke="#c2410c"/>
+            <path d="M86 188 C 86 138 194 138 194 188" fill="#fed7aa" stroke="#c2410c" stroke-width="1.4"/>
+            <ellipse cx="140" cy="156" rx="48" ry="12" fill="#fecaca" stroke="#e11d48"/>
+            <path d="M92 156 C 92 112 188 112 188 156" fill="#fecaca" stroke="#e11d48" stroke-width="1.6"/>
+            <path d="M104 156 C 104 128 176 128 176 156" fill="url(#th-red)"/>
+            <ellipse cx="140" cy="138" rx="36" ry="8" fill="#f87171"/>
+            <path d="M92 156 C 92 112 188 112 188 156" fill="url(#th-gl)"/>
+            <ellipse cx="140" cy="112" rx="16" ry="6" fill="#e2e8f0" stroke="#64748b"/>
+            <rect x="132" y="18" width="16" height="96" rx="6" fill="#e2e8f0" stroke="#64748b"/>
+            <rect x="136" y="62" width="8" height="56" fill="#dc2626"/>
+            <rect x="134" y="20" width="4" height="88" rx="1" fill="#fff" opacity=".35"/>
+            <text x="164" y="40" font-size="12" fill="#9a3412" font-weight="700">細管</text>
+            <text x="140" y="206" text-anchor="middle" font-size="12" fill="#57534e">水浴＋燒瓶＋紅墨水</text>
           </svg>
           <p class="caption">細管愈細，同樣體積變化造成的高度差愈大，溫度計愈靈敏</p>
         </figure>
@@ -264,14 +285,14 @@
       </table>
       <h3 class="subh">攝氏與華氏換算</h3>
       <p>同一支溫度計上，冰點到沸點這段長度相同，所以比例相等：</p>
-      <p class="formula">（°C − 0）／100 ＝（°F − 32）／180　→　°F ＝ (9／5)°C ＋ 32</p>
+      <p class="formula">\[\dfrac{\,^{\circ}\mathrm{C}-0}{100}=\dfrac{\,^{\circ}\mathrm{F}-32}{180}\quad\Rightarrow\quad ^{\circ}\mathrm{F}=\dfrac{9}{5}\,^{\circ}\mathrm{C}+32\]</p>
       <p>
         因此 1°C 的間隔相當於
         <input class="blank" data-answer="9/5|1.8|9／5" style="width:3.5em">
         °F，不是 1°F。
       </p>
       <h3 class="subh">任意溫標 N 的通用比例</h3>
-      <p class="formula">（°N − 冰點）／（沸點 − 冰點）＝ °C／100 ＝（°F − 32）／180</p>
+      <p class="formula">\[\dfrac{\,^{\circ}N-\text{冰點}}{\text{沸點}-\text{冰點}}=\dfrac{\,^{\circ}\mathrm{C}}{100}=\dfrac{\,^{\circ}\mathrm{F}-32}{180}\]</p>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：同一點、不同刻度</div>
         <ul class="q">
@@ -336,7 +357,7 @@
           <p>先對齊冰點沸點，再交叉相乘</p>
         </div>
       </div>
-      <p class="formula">（°N − B）／（A − B）＝ °C／100 ＝（°F − 32）／180</p>
+      <p class="formula">\[\dfrac{\,^{\circ}N-B}{A-B}=\dfrac{\,^{\circ}\mathrm{C}}{100}=\dfrac{\,^{\circ}\mathrm{F}-32}{180}\]</p>
       <div class="two-col">
         <section class="ex-box skill">
           <div class="ex-title"><span class="tag tag-blue">範例 1</span></div>
@@ -379,7 +400,7 @@
           <input class="blank" data-answer="-273|-273°C" style="width:4.5em">
           °C，是熱力學最低溫度。</li>
       </ul>
-      <p class="formula">K ＝ °C ＋ 273</p>
+      <p class="formula">\[K=\,^{\circ}\mathrm{C}+273\]</p>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：克氏和攝氏差在哪？</div>
         <ul class="q">

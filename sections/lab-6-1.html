@@ -71,8 +71,97 @@
       <ol class="lab-steps">
         <li class="lab-step">
           <h3 class="subh">動手前核對器材是否到齊</h3>
-          <p>對照上面的器材表，逐項檢查：鐵片、鋅片、銅片、硫、石墨棒、電池、小燈泡、導線、砂紙是否到齊；燈泡與電池能不能亮。</p>
-          <p class="lab-check">全組依表點名；樣品缺一種或燈泡不亮時先舉手，不要自行挪用別組。</p>
+          <p>對照上面的器材表，逐項勾選。到齊且完好／足量才打勾；燈泡與電池能不能亮寫在備註。</p>
+          <div class="lab-kit-wrap">
+            <table class="lab-kit">
+              <caption>實驗材料核對表（每組）</caption>
+              <thead>
+                <tr>
+                  <th scope="col">項次</th>
+                  <th scope="col">材料</th>
+                  <th scope="col">應備</th>
+                  <th scope="col">到齊</th>
+                  <th scope="col">完好／足量</th>
+                  <th scope="col">備註</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>1</td>
+                  <td class="lab-kit-name">鐵片</td>
+                  <td>1 片</td>
+                  <td><input type="checkbox" data-kit="h1" aria-label="鐵片 到齊"></td>
+                  <td><input type="checkbox" data-kit="g1" aria-label="鐵片 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n1" aria-label="鐵片 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>2</td>
+                  <td class="lab-kit-name">鋅片</td>
+                  <td>1 片</td>
+                  <td><input type="checkbox" data-kit="h2" aria-label="鋅片 到齊"></td>
+                  <td><input type="checkbox" data-kit="g2" aria-label="鋅片 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n2" aria-label="鋅片 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>3</td>
+                  <td class="lab-kit-name">銅片</td>
+                  <td>1 片</td>
+                  <td><input type="checkbox" data-kit="h3" aria-label="銅片 到齊"></td>
+                  <td><input type="checkbox" data-kit="g3" aria-label="銅片 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n3" aria-label="銅片 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>4</td>
+                  <td class="lab-kit-name">硫</td>
+                  <td>適量</td>
+                  <td><input type="checkbox" data-kit="h4" aria-label="硫 到齊"></td>
+                  <td><input type="checkbox" data-kit="g4" aria-label="硫 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n4" aria-label="硫 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>5</td>
+                  <td class="lab-kit-name">石墨棒</td>
+                  <td>1 支</td>
+                  <td><input type="checkbox" data-kit="h5" aria-label="石墨棒 到齊"></td>
+                  <td><input type="checkbox" data-kit="g5" aria-label="石墨棒 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n5" aria-label="石墨棒 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>6</td>
+                  <td class="lab-kit-name">1.5 V 電池</td>
+                  <td>1 顆</td>
+                  <td><input type="checkbox" data-kit="h6" aria-label="電池 到齊"></td>
+                  <td><input type="checkbox" data-kit="g6" aria-label="電池 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n6" aria-label="電池 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>7</td>
+                  <td class="lab-kit-name">小燈泡附燈座</td>
+                  <td>1 組</td>
+                  <td><input type="checkbox" data-kit="h7" aria-label="小燈泡 到齊"></td>
+                  <td><input type="checkbox" data-kit="g7" aria-label="小燈泡 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n7" aria-label="小燈泡 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>8</td>
+                  <td class="lab-kit-name">附夾子的導線</td>
+                  <td>適量</td>
+                  <td><input type="checkbox" data-kit="h8" aria-label="導線 到齊"></td>
+                  <td><input type="checkbox" data-kit="g8" aria-label="導線 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n8" aria-label="導線 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+                <tr>
+                  <td>9</td>
+                  <td class="lab-kit-name">砂紙</td>
+                  <td>1 張</td>
+                  <td><input type="checkbox" data-kit="h9" aria-label="砂紙 到齊"></td>
+                  <td><input type="checkbox" data-kit="g9" aria-label="砂紙 完好足量"></td>
+                  <td><input type="text" class="lab-kit-note" data-kit="n9" aria-label="砂紙 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <p class="lab-check">全組依表勾完；樣品缺一種或燈泡不亮時先舉手，不要自行挪用別組。</p>
           <p class="lab-record">缺件寫在空格，沒有就寫「無」。確認到齊、先讓燈泡自己能亮，才開始摩擦樣品。缺件：<input class="blank" data-answer="無" style="width:3.2em"></p>
           <p class="inquiry-ask"><strong>步驟 Q：</strong>為什麼材料沒確認完就不能做？</p>
           <p>少一種樣品，分類表會缺列；電池沒電會把所有物質都判成「不導電」。</p>

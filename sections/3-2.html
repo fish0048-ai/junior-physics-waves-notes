@@ -312,7 +312,7 @@
         <li>
           <strong>溫度：</strong>空氣中溫度愈高，聲速愈
           <input class="blank" data-answer="快|大" style="width:2.6em">。
-          <div class="formula">v ＝ 331 ＋ 0.6T　（v：m/s，T：℃）</div>
+          <div class="formula">\[v=331+0.6T\quad (v:\,\mathrm{m/s},\; T:\,^{\circ}\mathrm{C})\]</div>
           例：20℃ 時 v ＝ 331＋0.6×20 ＝
           <input class="blank" data-answer="343" style="width:3.6em">
           m/s。
@@ -383,19 +383,28 @@
 
       <h3 class="subh">燒瓶鈴鐺實驗</h3>
       <div class="split">
-        <svg class="diagram" viewBox="0 0 280 190" aria-label="燒瓶內懸掛鈴鐺，橡皮管可夾住">
-          <rect width="280" height="190" rx="8" fill="#fffbeb"/>
-          <line x1="36" y1="168" x2="244" y2="168" stroke="#78716c" stroke-width="7" stroke-linecap="round"/>
-          <polygon points="92,168 188,168 162,136 118,136" fill="#a8a29e"/>
-          <rect x="128" y="148" width="24" height="20" rx="2" fill="#f59e0b"/>
-          <ellipse cx="140" cy="86" rx="46" ry="54" fill="#e0f2fe" stroke="#0f172a" stroke-width="3"/>
-          <rect x="126" y="24" width="28" height="16" rx="2" fill="#e7e5e4" stroke="#0f172a"/>
-          <path d="M154 32 h48" stroke="#b45309" stroke-width="7" stroke-linecap="round"/>
-          <rect x="196" y="26" width="18" height="12" rx="2" fill="#44403c"/>
-          <ellipse cx="140" cy="118" rx="34" ry="12" fill="#38bdf8" opacity=".85"/>
-          <line x1="140" y1="40" x2="140" y2="78" stroke="#44403c" stroke-width="2"/>
+        <svg class="diagram" viewBox="0 0 280 200" aria-label="燒瓶內懸掛鈴鐺，橡皮管可夾住">
+          <defs>
+            <linearGradient id="bl-gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity=".5"/><stop offset="100%" stop-color="#fff" stop-opacity=".12"/></linearGradient>
+            <radialGradient id="bl-fl" cx="50%" cy="70%" r="55%"><stop offset="0%" stop-color="#fef08a"/><stop offset="55%" stop-color="#f97316"/><stop offset="100%" stop-color="#dc2626" stop-opacity=".2"/></radialGradient>
+          </defs>
+          <rect width="280" height="200" rx="8" fill="#fffbeb"/>
+          <line x1="36" y1="176" x2="244" y2="176" stroke="#78716c" stroke-width="7" stroke-linecap="round"/>
+          <polygon points="96,176 184,176 162,144 118,144" fill="#a8a29e"/>
+          <ellipse cx="140" cy="88" rx="46" ry="52" fill="#e0f2fe" stroke="#0f172a" stroke-width="2.2"/>
+          <ellipse cx="140" cy="128" rx="32" ry="10" fill="#38bdf8" opacity=".85"/>
+          <ellipse cx="140" cy="88" rx="46" ry="52" fill="url(#bl-gl)"/>
+          <rect x="126" y="22" width="28" height="16" rx="3" fill="#e7e5e4" stroke="#0f172a"/>
+          <path d="M154 30 h48" stroke="#b45309" stroke-width="7" stroke-linecap="round"/>
+          <rect x="196" y="24" width="18" height="12" rx="2" fill="#44403c"/>
+          <line x1="140" y1="38" x2="140" y2="78" stroke="#44403c" stroke-width="2"/>
           <path d="M128 90 a14 14 0 1 0 24 0" fill="none" stroke="#b45309" stroke-width="4"/>
-          <text x="140" y="184" text-anchor="middle" font-size="12" fill="#57534e">橡皮管　鈴鐺　水　酒精燈</text>
+          <circle cx="140" cy="88" r="3" fill="#a16207"/>
+          <ellipse cx="140" cy="188" rx="18" ry="5" fill="#fed7aa" stroke="#92400e"/>
+          <path d="M122 188 v-8 h36 v8" fill="#fef3c7" stroke="#92400e"/>
+          <rect x="136" y="172" width="8" height="10" fill="#a8a29e"/>
+          <path d="M140 154 C 132 168 130 176 140 182 C 150 176 148 168 140 154 Z" fill="url(#bl-fl)"/>
+          <text x="140" y="198" text-anchor="middle" font-size="12" fill="#57534e">橡皮管　鈴鐺　水　酒精燈</text>
         </svg>
         <div>
           <p>6. 加熱前：搖燒瓶聽得到鈴鐺；夾住橡皮管再搖，聲音明顯變小。此時聲音傳到耳朵的主要介質是

@@ -29,6 +29,47 @@
   const page = document.body.dataset.page || "home";
   const currentId = document.body.dataset.section || "";
 
+  (function loadKatex() {
+    const cdn = "https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/";
+    function render() {
+      if (!window.renderMathInElement) return;
+      window.renderMathInElement(document.body, {
+        delimiters: [
+          { left: "\\[", right: "\\]", display: true },
+          { left: "\\(", right: "\\)", display: false }
+        ],
+        throwOnError: false,
+        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+      });
+    }
+    window.JPWNMath = { render };
+    if (!document.querySelector("link[data-jpwn-katex]")) {
+      const css = document.createElement("link");
+      css.rel = "stylesheet";
+      css.href = cdn + "katex.min.css";
+      css.setAttribute("data-jpwn-katex", "1");
+      document.head.appendChild(css);
+    }
+    function loadAutoRender() {
+      if (window.renderMathInElement) {
+        render();
+        return;
+      }
+      const auto = document.createElement("script");
+      auto.src = cdn + "contrib/auto-render.min.js";
+      auto.onload = render;
+      document.head.appendChild(auto);
+    }
+    if (window.katex) {
+      loadAutoRender();
+      return;
+    }
+    const core = document.createElement("script");
+    core.src = cdn + "katex.min.js";
+    core.onload = loadAutoRender;
+    document.head.appendChild(core);
+  })();
+
   function url(path) {
     if (!path) return "#";
     if (root === ".") return path;
@@ -57,6 +98,8 @@
       ? `${cfg.chapter?.grade || "八年級理化"}　講義封面`
       : page === "review"
       ? `${cfg.chapter?.grade || "八年級理化"}　${review?.title || "章末評量"}`
+      : page === "book"
+      ? `${cfg.chapter?.grade || "八年級理化"}　整本講義`
       : page === "exam" && sec
       ? `${cfg.chapter?.grade || "八年級理化"}　${sec.id} 段考前練習`
       : sec
@@ -65,16 +108,26 @@
     const checkBtn = (page === "review" || page === "exam")
       ? `<button class="btn btn-ghost" id="btn-check" type="button">檢查作答</button>`
       : "";
+    const bookLink = page === "book"
+      ? ""
+      : `<a class="btn btn-ghost" href="${url("book.html")}" target="_blank" rel="noopener">整本講義</a>`;
     const tools = (page === "cover")
-      ? `<button class="btn btn-orange" id="btn-pdf" type="button">下載封面 PDF</button>`
+      ? `<button class="btn btn-orange" id="btn-pdf" type="button">下載封面 PDF</button>
+         ${bookLink}`
       : (page === "home")
-      ? `<button class="btn btn-orange" id="btn-pdf" type="button">下載目錄 PDF</button>`
+      ? `<button class="btn btn-orange" id="btn-pdf" type="button">下載目錄 PDF</button>
+         ${bookLink}`
+      : (page === "book")
+      ? `<button class="btn btn-green" id="btn-answers" type="button">顯示答案</button>
+         <button class="btn btn-orange" id="btn-pdf" type="button">下載整本 PDF</button>
+         <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>`
       : (page === "section" || page === "review" || page === "exam")
       ? `<button class="btn btn-green" id="btn-answers" type="button">顯示答案</button>
          ${checkBtn}
          <button class="btn btn-orange" id="btn-pdf" type="button">下載 PDF</button>
-         <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>`
-      : "";
+         <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>
+         ${bookLink}`
+      : bookLink;
     const inkBtn = `<button class="btn btn-ghost" id="btn-ink" type="button" aria-pressed="false">筆記</button>`;
     const immersiveBtn = `<button class="btn btn-ghost" id="btn-immersive" type="button" aria-pressed="false">全螢幕</button>`;
     const fontScale = `<span class="font-scale no-print" role="group" aria-label="投影字級">
@@ -100,7 +153,7 @@
         ${examLinks}
       </nav>
     ` : "";
-    const chapterNav = page === "cover" ? "" : `
+    const chapterNav = (page === "cover" || page === "book") ? "" : `
       <nav class="section-nav no-print" aria-label="${thisChapterNav()}目錄">
         <span class="nav-label">${thisChapterNav()}</span>
         <a href="${url(cfg.home || "index.html")}" class="${page === "home" ? "is-on" : ""}">目錄</a>

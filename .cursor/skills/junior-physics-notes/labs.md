@@ -20,7 +20,7 @@ toc 要能跳到各組步驟，例如「步驟　甲　量液體」，不要寫�
 
 `ol.q` 只用在假設、器材清單、觀念補充。動手步驟禁止 `ol.q`。
 
-**每個實驗都要材料確認**：器材表之後、動手之前，必須有一格 `.lab-step`（標題用「動手前核對器材是否到齊」）。缺件、破損、藥品／樣品不足時先舉手。可用 `.lab-check`（CSS 自動加「核對」前綴）。不要略過這一步直接做。
+**每個實驗都要材料確認**：器材表之後、動手之前，必須有一格 `.lab-step`（標題用「動手前核對器材是否到齊」）。這一步**一定要有核對表** `.lab-kit`，讓學生逐項勾「到齊」「完好／足量」，缺件寫備註。缺件、破損、藥品／樣品不足時先舉手。可用 `.lab-check`（CSS 自動加「核對」前綴）。勾選與備註用一般 `<input>`（不要 `class="blank"`，否則會被凍成 span）。不要略過這一步直接做。
 
 ## 不要練習、段考前練習、章末評量
 
@@ -50,6 +50,36 @@ toc 要能跳到各組步驟，例如「步驟　甲　量液體」，不要寫�
 </ol>
 ```
 
+材料確認格必備核對表（放在該步 `.lab-step` 裡，不要只寫一句「對照器材表」）：
+
+```html
+<div class="lab-kit-wrap">
+  <table class="lab-kit">
+    <caption>實驗材料核對表（每組）</caption>
+    <thead>
+      <tr>
+        <th scope="col">項次</th>
+        <th scope="col">材料</th>
+        <th scope="col">應備</th>
+        <th scope="col">到齊</th>
+        <th scope="col">完好／足量</th>
+        <th scope="col">備註</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td>
+        <td class="lab-kit-name">上皿天平（或電子天平）</td>
+        <td>1 組</td>
+        <td><input type="checkbox" data-kit="h1" aria-label="上皿天平 到齊"></td>
+        <td><input type="checkbox" data-kit="g1" aria-label="上皿天平 完好足量"></td>
+        <td><input type="text" class="lab-kit-note" data-kit="n1" aria-label="上皿天平 備註" placeholder="缺／破寫這裡" autocomplete="off"></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+```
+
 禁止把多步收成短清單：
 
 ```html
@@ -68,6 +98,7 @@ toc 要能跳到各組步驟，例如「步驟　甲　量液體」，不要寫�
 | `.subh` 動作名 | 一定要，用紀錄本原句 |
 | 正文：做什麼、用什麼、讀哪裡 | 一定要，不刪原步驟、不把兩步併成一句 |
 | `.lab-check` | **每個實驗第一格必有**：動手前核對器材是否到齊 |
+| `.lab-kit` | **材料確認必有**：一列一項，勾到齊／完好，備註寫缺件 |
 | `.lab-caution` | 原卷有「注意／！」就留 |
 | `.lab-record` | 原卷有「記錄／觀察」就留；材料確認也要記缺件 |
 | 步驟 Q 用 `.inquiry-ask` | 原卷有步驟 Q 就留；答案可挖空或放顯示答案 |
@@ -76,6 +107,7 @@ toc 要能跳到各組步驟，例如「步驟　甲　量液體」，不要寫�
 禁止：
 
 - 把 4～6 步縮成一個編號清單就交差
+- 材料確認只寫「對照器材表」、沒有 `.lab-kit` 核對表讓學生勾選
 - 只寫原理、略過「先做 A 再做 B」
 - 注意事項只出現在 extra，步驟格裡沒有
 - 刪掉器材表、安全句、步驟 Q
