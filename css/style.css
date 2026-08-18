@@ -2357,6 +2357,9 @@ html.is-immersive .brand > span:last-child {
     opacity: 1 !important;
     visibility: visible !important;
   }
+  body[data-page="book"] .book-section.is-print-skip {
+    display: none !important;
+  }
   body[data-page="book"] .book-section.is-cover {
     break-before: auto;
     page-break-before: auto;

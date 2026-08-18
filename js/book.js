@@ -13,6 +13,8 @@
   let haveCore = false;
   let haveLabs = false;
   let pendingPrint = null;
+  let pendingScope = "all";
+  let nativePrint = window.NotesApp?.printPdf;
   let assembled = false;
   let lastError = "";
   let paused = false;
@@ -112,6 +114,13 @@
 
   function navId(item) {
     return item.nav || String(item.id || "").replace(/^lab-/, "");
+  }
+
+  function chapterOf(item) {
+    if (item.kind === "cover") return "cover";
+    if (item.kind === "lab") return "lab";
+    const m = String(item.id || "").match(/^(\d+)/);
+    return m ? m[1] : "other";
   }
 
   function failLabel(item) {
@@ -284,6 +293,7 @@
     section.className = "book-section" + (item.kind === "cover" ? " is-cover" : "");
     section.dataset.src = item.file;
     section.dataset.kind = item.kind || "section";
+    section.dataset.chapter = chapterOf(item);
     if (item.kind !== "cover") {
       const kicker = document.createElement("p");
       kicker.className = "book-kicker";
@@ -319,8 +329,11 @@
         labs: !!labsEl?.checked
       });
       try {
-        pagesEl.append(await parsePage(item));
+        const section = await parsePage(item);
+        pagesEl.append(section);
+        pagesEl.hidden = false;
         haveCore = coreCount() > 0;
+        finishMath(section);
       } catch (err) {
         failed.push(failLabel(item));
         lastError = errText(err);
@@ -332,11 +345,11 @@
     return failed;
   }
 
-  function finishMath() {
-    freezeBlanks(pagesEl);
+  function finishMath(root) {
+    const target = root || pagesEl;
+    freezeBlanks(target);
     pagesEl.hidden = false;
-    if (window.JPWNMath?.render) window.JPWNMath.render();
-    else window.setTimeout(() => window.JPWNMath?.render?.(), 400);
+    if (window.JPWNMath?.render) window.JPWNMath.render(target);
   }
 
   function coreCount() {
@@ -368,18 +381,56 @@
     if (pendingPrint !== null) {
       setStatus("合成完成，接著會打開「另存為 PDF」。若沒跳出視窗，請再按一次下載。");
     } else {
-      setStatus("合成完成。請按「下載整本 PDF」；印表機選「另存為 PDF」。");
+      setStatus("合成完成。整本預覽較久，建議先按下面「第 1 章」分章下載。");
     }
+  }
+
+  function setPrintScope(scope) {
+    const want = scope || "all";
+    pagesEl.querySelectorAll(".book-section").forEach((sec) => {
+      const ch = sec.dataset.chapter || "";
+      sec.classList.toggle("is-print-skip", want !== "all" && ch !== want);
+    });
+  }
+
+  function scopeTitle(scope) {
+    if (scope === "all") return "整本";
+    if (scope === "cover") return "封面";
+    if (scope === "lab") return "實驗專區";
+    return "第" + scope + "章";
   }
 
   function tryAutoPrint() {
     if (pendingPrint === null || !readyNow()) return;
     const withAnswers = pendingPrint;
+    const scope = pendingScope || "all";
     pendingPrint = null;
+    pendingScope = "all";
+    setPrintScope(scope);
+    const label = scopeTitle(scope);
+    document.title = withAnswers
+      ? "國中理化_" + label + "_講義_含答案"
+      : "國中理化_" + label + "_講義";
+    setStatus("正在準備「" + label + "」列印預覽。請等到預覽出現文字再存檔。");
     window.setTimeout(() => {
-      const fn = window.NotesApp?.printPdf;
-      if (typeof fn === "function") fn(withAnswers);
+      if (typeof nativePrint === "function") nativePrint(withAnswers);
     }, 200);
+  }
+
+  function requestPrint(withAnswers, scope) {
+    pendingPrint = withAnswers;
+    pendingScope = scope || "all";
+    if (scope === "lab" && labsEl && !labsEl.checked) {
+      labsEl.checked = true;
+      setStatus("會先附上實驗專區，再打開列印。");
+    }
+    if (readyNow() && (!building || paused)) {
+      tryAutoPrint();
+      return;
+    }
+    setStatus("載入並排版後會打開列印。整本預覽較久，建議改用分章下載。");
+    toast("可暫停合成；列印請等到預覽出現文字再存檔。");
+    if (!building) build();
   }
 
   async function build() {
@@ -424,14 +475,12 @@
       setStatus("正在載入封面與各節講義……");
       failed.push(...await appendList(core, " ", progress));
       haveCore = coreCount() > 0;
-      if (haveCore) finishMath();
     }
 
     if (wantLabs && !haveLabs) {
       setStatus("正在附加實驗專區……");
       failed.push(...await appendList(labs, "實驗 ", progress));
       haveLabs = true;
-      if (haveCore) finishMath();
     }
 
     if (!wantLabs && haveLabs) {
@@ -449,30 +498,21 @@
     }
   }
 
-  function requestPrint(withAnswers) {
-    pendingPrint = withAnswers;
-    if (readyNow() && (!building || paused)) {
-      tryAutoPrint();
-      return;
-    }
-    setStatus("載入並排版後，會打開「另存為 PDF」。可按「暫停合成」去看其他講義。");
-    toast("可暫停合成去看其他講義；請保持這一頁開著。");
-    if (!building) build();
-  }
-
   const origPrint = window.NotesApp?.printPdf;
   if (typeof origPrint === "function") {
+    nativePrint = origPrint;
     window.NotesApp.printPdf = function (withAnswers) {
       if (!readyNow() || (building && !paused)) {
-        requestPrint(!!withAnswers);
+        requestPrint(!!withAnswers, "all");
         return;
       }
+      setPrintScope("all");
       origPrint(withAnswers);
     };
   }
 
-  document.getElementById("btn-book-pdf")?.addEventListener("click", () => requestPrint(false));
-  document.getElementById("btn-book-key")?.addEventListener("click", () => requestPrint(true));
+  document.getElementById("btn-book-pdf")?.addEventListener("click", () => requestPrint(false, "all"));
+  document.getElementById("btn-book-key")?.addEventListener("click", () => requestPrint(true, "all"));
   pauseBtn?.addEventListener("click", () => {
     if (paused) resumeBuild();
     else if (building) pauseBuild();
@@ -489,6 +529,31 @@
     setStatus("會在最後加上實驗專區。");
     if (!building) build();
     else queued = true;
+  });
+
+  (function renderChapterPrintButtons() {
+    const host = document.getElementById("book-chapter-actions");
+    if (!host) return;
+    const btns = ['<span class="nav-label">分章下載</span>'];
+    btns.push('<button type="button" class="btn btn-ghost" data-print-ch="cover">封面</button>');
+    (cfg.packs || []).forEach((pack) => {
+      const first = pack.files && pack.files[0] ? pack.files[0].id : "";
+      const m = String(first).match(/^(\d+)/);
+      const ch = m ? m[1] : "";
+      if (!ch) return;
+      btns.push('<button type="button" class="btn btn-ghost" data-print-ch="' + ch + '">第 ' + ch + " 章</button>");
+    });
+    btns.push('<button type="button" class="btn btn-ghost" data-print-ch="lab">實驗專區</button>');
+    host.innerHTML = btns.join("");
+    host.addEventListener("click", (e) => {
+      const btn = e.target.closest("[data-print-ch]");
+      if (!btn) return;
+      requestPrint(false, btn.getAttribute("data-print-ch"));
+    });
+  })();
+
+  window.addEventListener("jpwn-after-print", () => {
+    setPrintScope("all");
   });
 
   window.JPWNBookCache?.subscribe((info) => {

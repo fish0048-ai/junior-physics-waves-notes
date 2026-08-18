@@ -31,9 +31,9 @@
 
   (function loadKatex() {
     const cdn = "https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/";
-    function render() {
+    function render(root) {
       if (!window.renderMathInElement) return;
-      window.renderMathInElement(document.body, {
+      window.renderMathInElement(root || document.body, {
         delimiters: [
           { left: "\\[", right: "\\]", display: true },
           { left: "\\(", right: "\\)", display: false }

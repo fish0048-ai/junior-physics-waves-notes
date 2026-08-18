@@ -40,11 +40,13 @@
       </p>
       <p class="note" id="book-status">正在合成整本講義……</p>
       <progress id="book-bar" class="book-bar no-print" max="1" value="0" hidden></progress>
+      <p class="note">整本一次列印預覽很久，瀏覽器常常還沒畫完就存成空白。建議用下面「分章下載」，預覽較快。</p>
       <p class="book-actions">
         <button class="btn btn-ghost" id="btn-book-pause" type="button">暫停合成</button>
         <button class="btn btn-orange" id="btn-book-pdf" type="button">下載整本 PDF</button>
         <button class="btn btn-ghost" id="btn-book-key" type="button">下載含答案 PDF</button>
       </p>
+      <p class="book-actions" id="book-chapter-actions"></p>
     </article>
     <iframe id="book-loader" class="book-loader no-print" title="講義載入" sandbox="allow-same-origin"></iframe>
     <div id="book-pages" class="book-pages" hidden></div>
