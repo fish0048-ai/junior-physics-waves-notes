@@ -366,7 +366,6 @@
       setStatus("沒有載入任何頁面。" + extra + hint + "請按「重新合成」再試一次。");
       return;
     }
-    window.JPWNBookPdf?.ensureLibs?.();
     window.JPWNBookCache?.writeProgress({
       status: failed.length ? "error" : "done",
       done: failed.length ? 0 : 1,
@@ -402,7 +401,7 @@
 
   let exporting = false;
 
-  async function downloadBook(withAnswers, filename) {
+  function downloadBook(withAnswers, filename) {
     if (exporting) return;
     const api = window.JPWNBookPdf;
     if (!api || typeof api.download !== "function") {
@@ -416,35 +415,29 @@
     }
     exporting = true;
     pagesEl.hidden = false;
-    document.body.classList.add("is-pdf-export");
-    if (withAnswers) {
-      document.body.classList.add("is-print-answers");
-      window.NotesApp?.reveal?.(true);
-    }
-    try {
-      setStatus("正在準備 PDF 元件……");
-      await api.download({
-        sections,
-        filename,
-        onProgress(done, total) {
+    setStatus("正在開啟列印視窗，字型載好後會自動彈出「另存為 PDF」。");
+    api.download({
+      sections,
+      withAnswers,
+      filename,
+      onProgress(done, total, state, msg) {
+        if (state === "error") {
+          setBar(0, 0);
+          setStatus("輸出失敗：" + (msg || "請確認允許彈出視窗，再試一次。"));
+          toast("PDF 輸出失敗。");
+          exporting = false;
+          setPrintScope("all");
+        } else if (state === "done") {
+          setBar(0, 0);
+          setStatus("列印視窗已開啟。請在視窗中選「另存為 PDF」，印表機選「另存為 PDF」或「Save as PDF」。");
+          exporting = false;
+          setPrintScope("all");
+        } else {
           setBar(done, total);
-          setStatus("正在輸出 PDF " + done + "／" + total + " 節，完成後會自動下載，請不要關掉這一頁。");
+          setStatus("正在準備「" + filename + "」，稍後會自動開啟列印視窗。");
         }
-      });
-      setBar(0, 0);
-      setStatus("已開始下載「" + filename + "」。");
-      toast("PDF 已下載。");
-    } catch (err) {
-      setBar(0, 0);
-      setStatus("輸出失敗：" + errText(err) + "請再試一次，或改分章下載。");
-      toast("PDF 輸出失敗，請再試一次。");
-      console.warn("[整本講義 PDF]", err);
-    } finally {
-      exporting = false;
-      document.body.classList.remove("is-pdf-export", "is-print-answers");
-      if (withAnswers) window.NotesApp?.reveal?.(false);
-      setPrintScope("all");
-    }
+      }
+    });
   }
 
   function tryAutoDownload() {
