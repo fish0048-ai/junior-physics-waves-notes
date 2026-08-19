@@ -170,6 +170,7 @@
       document.head.appendChild(core);
     }
     window.addEventListener("load", () => scheduleRender());
+    window.addEventListener("pageshow", () => scheduleRender());
   })();
 
   function url(path) {
