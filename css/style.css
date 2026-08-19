@@ -557,6 +557,15 @@ figure {
 }
 .diagram-lg { max-height: 240px; }
 .diagram-sm { max-height: 160px; }
+img.diagram,
+img.diagram-photo {
+  width: 100%;
+  height: auto;
+  max-height: 280px;
+  object-fit: contain;
+  object-position: center top;
+  background: #fff;
+}
 
 .gear-photos {
   display: grid;
@@ -2683,6 +2692,12 @@ html.is-immersive .brand > span:last-child {
     padding: 0.4mm !important;
     break-inside: auto !important;
     page-break-inside: auto !important;
+  }
+  img.diagram,
+  img.diagram-photo {
+    max-height: 70mm !important;
+    object-fit: contain !important;
+    background: #fff !important;
   }
   .diagram-lg { max-height: 58mm !important; }
   .diagram-sm { max-height: 36mm !important; }
