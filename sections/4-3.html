@@ -146,31 +146,44 @@
       <section class="gifted">
         <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 折射率、史涅爾定律與全反射</div>
         <ul class="q">
-          <li>折射率 n＝真空光速 c／該介質光速 v。水約 1.33，玻璃約 1.5，空氣約 1。n 愈大，光走得愈慢、偏折通常愈明顯。</li>
-          <li>斜射時更精確的關係是史涅爾定律：<strong>n<sub>1</sub> sin θ<sub>1</sub> ＝ n<sub>2</sub> sin θ<sub>2</sub></strong>（角都跟法線夾）。國中段考通常不考這個式子，資優班用來算「入射 40°、折射多少」。</li>
-          <li>光從光密（n 大，如水、玻璃）斜射向光疏（空氣），折射角比入射角大。入射角大到某個<strong>臨界角</strong>時，折射線貼著界面走；再大就沒有折射線，全部反射回來，叫做<strong>全反射</strong>。</li>
+          <li>折射率 \(n=\dfrac{c}{v}\)（\(c\) 為真空光速、\(v\) 為該介質光速）。水約 1.33，玻璃約 1.5，空氣約 1。\(n\) 愈大，光走得愈慢、偏折通常愈明顯。</li>
+          <li>斜射時更精確的關係是史涅爾定律：\(n_1\sin\theta_1=n_2\sin\theta_2\)（角都跟法線夾）。國中段考通常不考這個式子，資優班用來算「入射 40°、折射多少」。</li>
+          <li>光從光密（\(n\) 大，如水、玻璃）斜射向光疏（空氣），折射角比入射角大。入射角大到某個<strong>臨界角</strong>時，折射線貼著界面走；再大就沒有折射線，全部反射回來，叫做<strong>全反射</strong>。</li>
           <li>光纖就是讓光在玻璃芯裡一再全反射，彎彎曲曲也能把訊號送到很遠。水下看水面「像鏡子」、鑽石會閃，都跟全反射有關。</li>
-          <li>從空氣往水底看，視深大約是實深的 1／n（水約 3／4）。所以 4 m 深的泳池，看起來大約只有 3 m。</li>
+          <li>從空氣往水底看，視深大約是實深的 \(\dfrac{1}{n}\)（水約 \(\dfrac{3}{4}\)）。所以 4 m 深的泳池，看起來大約只有 3 m。</li>
         </ul>
         <figure>
-          <svg class="diagram" viewBox="0 0 420 150" aria-label="全反射示意">
-            <rect width="420" height="150" rx="8" fill="#faf5ff"/>
-            <rect x="0" y="78" width="420" height="72" fill="#dbeafe"/>
-            <line x1="0" y1="78" x2="420" y2="78" stroke="#64748b" stroke-width="2"/>
-            <line x1="210" y1="30" x2="210" y2="140" stroke="#a78bfa" stroke-width="1.2" stroke-dasharray="4 3"/>
-            <line x1="70" y1="140" x2="210" y2="78" stroke="#7c3aed" stroke-width="2.4"/>
-            <line x1="210" y1="78" x2="310" y2="36" stroke="#2563eb" stroke-width="2.2"/>
-            <line x1="120" y1="140" x2="210" y2="78" stroke="#6d28d9" stroke-width="2.4"/>
-            <line x1="210" y1="78" x2="330" y2="78" stroke="#1d4ed8" stroke-width="2.2"/>
-            <line x1="170" y1="140" x2="210" y2="78" stroke="#5b21b6" stroke-width="2.6"/>
-            <line x1="210" y1="78" x2="250" y2="140" stroke="#5b21b6" stroke-width="2.6"/>
-            <text x="12" y="20" font-size="12" fill="#6d28d9" font-weight="700">空氣（光疏）</text>
-            <text x="12" y="132" font-size="12" fill="#1e3a8a" font-weight="700">水或玻璃（光密）</text>
-            <text x="318" y="28" font-size="11" fill="#2563eb" font-weight="700">折射</text>
-            <text x="338" y="72" font-size="11" fill="#1d4ed8" font-weight="700">臨界</text>
-            <text x="248" y="132" font-size="11" fill="#5b21b6" font-weight="700">全反射</text>
+          <svg class="diagram" viewBox="0 0 460 280" aria-label="水到空氣：折射、臨界角與全反射">
+            <rect width="460" height="280" rx="8" fill="#fff"/>
+            <rect x="0" y="0" width="460" height="140" fill="#f8fafc"/>
+            <rect x="0" y="140" width="460" height="140" fill="#e0f2fe"/>
+            <line x1="36" y1="140" x2="424" y2="140" stroke="#0f172a" stroke-width="2.4"/>
+            <line x1="230" y1="24" x2="230" y2="256" stroke="#64748b" stroke-width="1.6" stroke-dasharray="6 4"/>
+            <text x="238" y="40" font-size="12" fill="#64748b" font-weight="700">法線</text>
+            <text x="52" y="48" font-size="16" fill="#0f172a" font-weight="800">空氣</text>
+            <text x="52" y="232" font-size="16" fill="#0f172a" font-weight="800">水</text>
+            <defs>
+              <marker id="tir-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+                <path d="M0 1.2 L9 5 L0 8.8 z" fill="#0f172a"/>
+              </marker>
+            </defs>
+            <!-- ① 入射約 25° → 折射進空氣（偏離法線） -->
+            <line x1="188" y1="231" x2="224" y2="147" stroke="#0f172a" stroke-width="2.2" marker-end="url(#tir-arr)"/>
+            <line x1="236" y1="133" x2="286" y2="58" stroke="#0f172a" stroke-width="2.2" marker-end="url(#tir-arr)"/>
+            <text x="296" y="54" font-size="13" fill="#0f172a" font-weight="700">折射光</text>
+            <!-- ② 臨界角 50°（虛線）→ 折射光沿界面 -->
+            <line x1="153" y1="204" x2="222" y2="146" stroke="#0f172a" stroke-width="2.2" stroke-dasharray="7 5" marker-end="url(#tir-arr)"/>
+            <line x1="238" y1="140" x2="400" y2="140" stroke="#0f172a" stroke-width="2.2" marker-end="url(#tir-arr)"/>
+            <text x="300" y="126" font-size="13" fill="#0f172a" font-weight="700">臨界角的折射光</text>
+            <path d="M230 198 A 58 58 0 0 1 186 177" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+            <text x="118" y="252" font-size="13" fill="#0f172a" font-weight="700">臨界角 50°</text>
+            <!-- ③ 入射約 70° → 全反射 -->
+            <line x1="136" y1="174" x2="222" y2="144" stroke="#0f172a" stroke-width="2.4" marker-end="url(#tir-arr)"/>
+            <line x1="238" y1="144" x2="324" y2="174" stroke="#0f172a" stroke-width="2.4" marker-end="url(#tir-arr)"/>
+            <text x="300" y="198" font-size="13" fill="#0f172a" font-weight="700">全反射光</text>
+            <circle cx="230" cy="140" r="3.5" fill="#0f172a"/>
           </svg>
-          <p class="caption">從光密斜射向光疏：角度夠大就全反射，不再穿出水面</p>
+          <p class="caption">光由水（光密）斜射向空氣（光疏）：入射角小於臨界角會折射出去；等於臨界角時折射光貼界面；大於臨界角則全反射回水中。</p>
         </figure>
       </section>
       <section class="ex-box think">
