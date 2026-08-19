@@ -1,10 +1,12 @@
-/** 第 1 章各節段考答案（依題庫順序覆寫） */
+/** 第 1 章各節段考答案（依題庫順序覆寫）
+ * 1-0、1-1 共用出版社「1-0～1-1」合併卷（50 題）；章末評量只抽 1-0＋1-2 避免重複。
+ */
 (function () {
   const letter = { A: 0, B: 1, C: 2, D: 3 };
   const keys = {
-    "1-0": "BCDCBBBBCDBCBBBBBBBBBBBBBBBBBBBBBDBBCBAB",
-    "1-1": "BBBBBDBBCBBCBBBCCBBCABBBBBABBCCDDBBBCCBB",
-    "1-2": "BBBCBBBBBBBBBBBBBCABDCACBBABBBAABBBABCBB"
+    "1-0": "CDDBDBCBABCDCDCABBDDBCDBDCBADCDBACADBBDCCDCCBBBACD",
+    "1-1": "CDDBDBCBABCDCDCABBDDBCDBDCBADCDBACADBBDCCDCCBBBACD",
+    "1-2": "ABDDBAACBCBAACCBDABBADDDBCBBCDCBACADDACCBBBCBBBDBA"
   };
   const bank = window.EXAM_BANK_SECTIONS || {};
   Object.keys(keys).forEach((sec) => {
