@@ -3,9 +3,13 @@
   /* ─── 產生獨立列印視窗 ─── */
 
   function buildPrintHtml(sections, cssHref, withAnswers) {
-    const nodes = sections.map((sec) => {
+    const list = [...(sections || [])].filter(Boolean);
+    const coverNodes = [];
+    const bodyNodes = [];
+
+    list.forEach((sec) => {
       const clone = sec.cloneNode(true);
-      clone.querySelectorAll(".no-print, .wave-deco, .toc, .footer, .exam-jump, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip").forEach((el) => el.remove());
+      clone.querySelectorAll(".no-print, .wave-deco, .toc, .footer, .exam-jump, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip, .page-folio").forEach((el) => el.remove());
       if (withAnswers) {
         clone.querySelectorAll(".blank").forEach((el) => {
           el.classList.add("revealed");
@@ -15,8 +19,19 @@
         });
         clone.querySelectorAll("[data-reveal]").forEach((el) => { el.hidden = false; });
       }
-      return clone.outerHTML;
+      const html = clone.outerHTML;
+      const isCover = clone.classList.contains("is-cover") || clone.dataset.kind === "cover";
+      if (isCover) coverNodes.push(html);
+      else bodyNodes.push(html);
     });
+
+    // 封面不編、不印頁碼；有內文才放 running folio（包在 .book-body，避免蓋到封面）
+    const folio = bodyNodes.length
+      ? '<p class="page-folio page-folio-running" id="book-print-folio" aria-hidden="true"></p>'
+      : "";
+    const bodyBlock = bodyNodes.length
+      ? `<div class="book-body">${bodyNodes.join("\n")}${folio}</div>`
+      : "";
 
     return `<!DOCTYPE html>
 <html lang="zh-Hant">
@@ -29,9 +44,13 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
 <style>
+  @page { size: A4; margin: 8mm 10mm 16mm; }
   body { margin:0; background:#fff; font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif; color:#1c1917; }
-  .book-section { break-before: page; page-break-before: always; color:#1c1917 !important; background:#fff !important; padding:8mm 10mm 6mm; }
+  .book-section { break-before: page; page-break-before: always; color:#1c1917 !important; background:#fff !important; padding:8mm 10mm 10mm; }
   .book-section:first-child { break-before: auto; page-break-before: auto; }
+  .book-section.is-cover { break-after: page; page-break-after: always; }
+  .book-body { transform: translateZ(0); }
+  .book-body > .book-section:first-child { break-before: auto; page-break-before: auto; }
   .book-kicker { font-size:8pt; color:#166534; margin:0 0 2mm; font-weight:800; }
   .hero { background:#fff !important; color:#14532d !important; border:0.5pt solid #166534; padding:4px 8px; margin:0 0 6px; }
   .hero h1,.hero .kicker,.hero p { color:#14532d !important; opacity:1 !important; }
@@ -40,12 +59,33 @@
   .blank { background:#fff !important; color:transparent !important; border:none; border-bottom:0.9pt solid #166534 !important; min-width:2.8em; display:inline-block; }
   .blank.revealed { background:#fde68a !important; color:#1c1917 !important; }
   .no-print, .wave-deco, .toc, .footer, .site-nav, .section-nav, .toolbar, .toast, .book-kicker.no-print { display:none !important; }
+  /* PDF 頁碼：固定每張紙底部置中（僅內文 .book-body，封面無頁碼） */
+  .page-folio {
+    display: block !important;
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 6mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    color: #44403c !important;
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.14em !important;
+    z-index: 10000 !important;
+    pointer-events: none !important;
+    background: transparent !important;
+  }
+  .page-folio-running::before { content: "— "; }
+  .page-folio-running::after { content: counter(page) " —"; }
   .card { box-shadow:none !important; border:none; }
   svg.diagram, .diagram { max-width:100%; height:auto; display:block; }
 </style>
 </head>
 <body data-page="book">
-${nodes.join("\n")}
+${coverNodes.join("\n")}
+${bodyBlock}
 <script>
 (function(){
   var done = false;

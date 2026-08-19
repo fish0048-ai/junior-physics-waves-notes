@@ -14,5 +14,6 @@
 6. `.cursor/skills/junior-physics-notes/exams.md` — 題庫
 7. `.cursor/skills/junior-physics-notes/reference.md` — 檔名與 config
 8. `.cursor/skills/junior-physics-notes/labs.md` — 實驗專區（步驟為主）
+9. `.cursor/skills/junior-physics-notes/pages.md` — PDF 頁碼（固定頁底）
 
 規則（Cursor 會依檔案自動套用）：`.cursor/rules/jpwn-*.mdc`

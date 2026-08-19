@@ -34,6 +34,10 @@
 
 共用、禁止複製第二份：`css/style.css`、`js/layout.js`、`js/app.js`、`js/class-notes.js`、`js/exam.js`。
 
+## PDF 頁碼
+
+整本順序與編號見 [pages.md](pages.md)、`js/book-manifest.js`。新節必須寫進 manifest，下載 PDF 才會有正確頁碼；列印樣式固定頁底置中（`.page-folio`）。
+
 ## config
 
 ```js

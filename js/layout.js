@@ -99,23 +99,40 @@
       const scope = root || document.body;
       if (!scope || !window.katex) return;
 
-      // 獨立公式框：直接用 katex.render，不依賴 auto-render 掃 delimiter（較穩）
+      // 獨立公式框：直接用 katex.render（支援同一格多條 \[...\]）
       scope.querySelectorAll(".formula").forEach((el) => {
-        if (el.querySelector(".katex")) return;
-        let tex = (el.textContent || "").trim();
-        if (!tex) return;
-        tex = tex.replace(/^\\\[[\s\n]*/, "").replace(/[\s\n]*\\\]$/, "");
-        tex = tex.replace(/^\\\([\s\n]*/, "").replace(/[\s\n]*\\\)$/, "");
-        tex = tex.replace(/^\$\$[\s\n]*/, "").replace(/[\s\n]*\$\$$/, "");
-        try {
-          window.katex.render(tex, el, {
-            displayMode: true,
-            throwOnError: false,
-            strict: "ignore"
-          });
-        } catch (err) {
-          /* keep raw text */
+        if (el.querySelector(".katex") && !el.querySelector(".katex-error")) return;
+        if (!el.dataset.mathSrc) el.dataset.mathSrc = el.innerHTML;
+        const src = el.dataset.mathSrc;
+        const blocks = [];
+        const re = /\\\[([\s\S]*?)\\\]|\$\$([\s\S]*?)\$\$/g;
+        let m;
+        while ((m = re.exec(src)) !== null) {
+          const tex = (m[1] != null ? m[1] : m[2]).trim();
+          if (tex) blocks.push(tex);
         }
+        if (!blocks.length) {
+          let tex = src.replace(/<[^>]+>/g, " ").replace(/&nbsp;/gi, " ").trim();
+          tex = tex.replace(/^\\\[[\s\n]*/, "").replace(/[\s\n]*\\\]$/, "");
+          tex = tex.replace(/^\\\([\s\n]*/, "").replace(/[\s\n]*\\\)$/, "");
+          tex = tex.replace(/^\$\$[\s\n]*/, "").replace(/[\s\n]*\$\$$/, "");
+          if (tex) blocks.push(tex);
+        }
+        if (!blocks.length) return;
+        el.innerHTML = "";
+        blocks.forEach((tex) => {
+          const host = document.createElement(blocks.length > 1 ? "div" : "span");
+          try {
+            window.katex.render(tex, host, {
+              displayMode: true,
+              throwOnError: false,
+              strict: "ignore"
+            });
+          } catch (err) {
+            host.textContent = tex;
+          }
+          el.appendChild(host);
+        });
       });
 
       // 行內 \(...\) 仍用 auto-render
@@ -129,7 +146,7 @@
           ],
           throwOnError: false,
           ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "input"],
-          ignoredClasses: ["katex"]
+          ignoredClasses: ["katex", "katex-error"]
         });
       }
     }
@@ -289,15 +306,132 @@
     `;
   }
 
+  function pageLabel(n) {
+    return n != null ? `第 ${n} 頁` : "";
+  }
+
+  function currentPathFile() {
+    const path = (location.pathname || "").replace(/\\/g, "/");
+    const sec = path.match(/\/(sections\/[^/]+\.html)$/i);
+    if (sec) return sec[1];
+    const exam = path.match(/\/(exams\/[^/]+\.html)$/i);
+    if (exam) return exam[1];
+    const base = path.split("/").pop() || "";
+    if (/\.html$/i.test(base)) return base;
+    return "";
+  }
+
+  function findPageEntry() {
+    const api = window.JPWNPages;
+    const man = window.JPWN_BOOK_MANIFEST;
+    if (!api || !man) return null;
+    // 封面永不編頁、不印頁碼
+    if (page === "cover") return null;
+    const file = currentPathFile();
+    if (file === "cover.html" || /(?:^|\/)cover\.html$/i.test(file)) return null;
+    if (file) {
+      const hit = api.lookup(file, man);
+      if (hit) return hit;
+    }
+    if (page === "section" && currentId) {
+      if (file && /(?:^|\/)lab-/.test(file)) return api.lookup(file, man);
+      const byId = api.index(man).byId[currentId];
+      if (byId && byId.kind === "section") return byId;
+    }
+    if (page === "exam" && currentId) {
+      const lecture = api.index(man).list.find((x) => x.id === currentId && x.kind === "section");
+      if (lecture) return { ...lecture, examRef: true };
+    }
+    return null;
+  }
+
+  function chapterPageRange() {
+    const api = window.JPWNPages;
+    const man = window.JPWN_BOOK_MANIFEST;
+    if (!api || !man) return null;
+    const chId = String(cfg.chapter?.id || "");
+    if (chId === "lab") return api.rangeForPack(man.labs?.title || "實驗專區", man);
+    const pack = (man.packs || []).find((p) => (p.title || "").indexOf(`第 ${chId} 章`) === 0);
+    if (!pack) return null;
+    return api.rangeForPack(pack.title, man);
+  }
+
+  function ensurePageFolio(text) {
+    let el = document.querySelector(".page-folio:not(.page-folio-running)");
+    if (!el) {
+      el = document.createElement("p");
+      el.className = "page-folio";
+      el.setAttribute("aria-label", "頁碼");
+      // 固定在 body，列印時 position:fixed 才能每張紙都在頁底
+      document.body.appendChild(el);
+    }
+    el.textContent = text;
+  }
+
+  function applyPageNumbers() {
+    // 封面不顯示、不列印頁碼
+    if (page === "cover") {
+      document.querySelectorAll(".page-folio").forEach((el) => el.remove());
+      return;
+    }
+
+    const entry = findPageEntry();
+    const range = (page === "home") ? chapterPageRange() : null;
+    let folioText = "";
+
+    if (entry && !entry.examRef) {
+      folioText = `— ${entry.page} —`;
+      document.body.dataset.bookPage = String(entry.page);
+      const total = window.JPWNPages?.index(window.JPWN_BOOK_MANIFEST).total;
+      if (total) document.body.dataset.bookPages = String(total);
+    } else if (entry && entry.examRef) {
+      folioText = `— ${entry.page} —`;
+    } else if (range) {
+      // 章目錄／實驗目錄：PDF 仍印範圍起頁，方便對照
+      folioText = `— ${range.from} —`;
+    }
+
+    // 頁碼主要給 PDF：螢幕用 CSS 隱藏 .page-folio，列印才顯示
+    if (folioText && page !== "book") ensurePageFolio(folioText);
+
+    // 章首卡片標頁碼（螢幕導覽用）
+    if (page === "home") {
+      const idx = window.JPWNPages?.index(window.JPWN_BOOK_MANIFEST);
+      if (idx) {
+        document.querySelectorAll(".section-card[data-section-id]").forEach((card) => {
+          const id = card.dataset.sectionId;
+          const hit = idx.byId[id] || idx.list.find((x) => x.id === id);
+          const slot = card.querySelector("[data-page-slot]");
+          if (slot && hit) slot.textContent = pageLabel(hit.page);
+        });
+      }
+    }
+
+    // 側欄小節連結標頁碼（螢幕導覽用）
+    const idxNav = window.JPWNPages?.index(window.JPWN_BOOK_MANIFEST);
+    if (idxNav) {
+      document.querySelectorAll(".section-nav a[href]").forEach((a) => {
+        const href = a.getAttribute("href") || "";
+        const m = href.replace(/\\/g, "/").match(/(sections\/[^/?#]+\.html)/i);
+        if (!m || a.dataset.pageNav) return;
+        const hit = idxNav.byFile[m[1]];
+        if (!hit) return;
+        a.dataset.pageNav = "1";
+        a.insertAdjacentHTML("beforeend", ` <span class="nav-page">${hit.page}</span>`);
+      });
+    }
+  }
+
   function renderHomeCards() {
     const host = document.getElementById("section-cards");
     if (!host) return;
+    const isLabHome = String(cfg.chapter?.id) === "lab";
     host.innerHTML = (cfg.sections || []).map((s) => `
-      <div class="section-card ${s.ready ? "" : "is-draft"}">
+      <div class="section-card ${s.ready ? "" : "is-draft"}" data-section-id="${isLabHome ? (s.id.startsWith("lab-") ? s.id : "lab-" + s.id) : s.id}">
         <a class="section-card-main" href="${url(s.file)}">
           <div class="section-card-top">
             <strong>${s.id}</strong>
-            <small>${s.ready ? "講義" : "講義建置中"}</small>
+            <small data-page-slot>${s.ready ? "講義" : "講義建置中"}</small>
           </div>
           <h2>${s.title}</h2>
           ${s.ask ? `<p class="section-card-ask">${s.ask}</p>` : ""}
@@ -328,9 +462,19 @@
     ` : "");
   }
 
+  async function setupPageNumbers() {
+    try {
+      await loadBookScript("js/book-manifest.js");
+    } catch (err) {
+      return;
+    }
+    applyPageNumbers();
+  }
+
   renderHeader();
   renderHomeCards();
   setupImmersive();
+  setupPageNumbers();
   setupBookPrefetch();
 
   if (!document.querySelector("script[data-class-ink]")) {

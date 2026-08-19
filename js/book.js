@@ -293,10 +293,15 @@
     section.dataset.src = item.file;
     section.dataset.kind = item.kind || "section";
     section.dataset.chapter = chapterOf(item);
+    const pageInfo = item.kind === "cover"
+      ? null
+      : (window.JPWNPages?.lookup(item.file, cfg) || window.JPWNPages?.lookup(item.id, cfg));
+    if (pageInfo && pageInfo.page != null) section.dataset.bookPage = String(pageInfo.page);
     if (item.kind !== "cover") {
       const kicker = document.createElement("p");
       kicker.className = "book-kicker";
-      kicker.textContent = (item.pack ? item.pack + "　" : "") + navId(item) + "　" + (item.title || "");
+      const pageBit = pageInfo && pageInfo.page != null ? `第 ${pageInfo.page} 頁　` : "";
+      kicker.textContent = pageBit + (item.pack ? item.pack + "　" : "") + navId(item) + "　" + (item.title || "");
       section.append(kicker);
     }
     if (node.matches(".cover-sheet")) section.append(node);
@@ -304,6 +309,23 @@
       while (node.firstChild) section.append(node.firstChild);
     }
     return section;
+  }
+
+  function ensureRunningPrintFolio() {
+    // 封面不印頁碼；僅在有非封面內文時才放 running folio
+    if (!pagesEl.querySelector('.book-section:not(.is-cover)')) {
+      document.getElementById("book-print-folio")?.remove();
+      return null;
+    }
+    let el = document.getElementById("book-print-folio");
+    if (!el) {
+      el = document.createElement("p");
+      el.id = "book-print-folio";
+      el.className = "page-folio page-folio-running";
+      el.setAttribute("aria-hidden", "true");
+      document.body.appendChild(el);
+    }
+    return el;
   }
 
   async function appendList(list, label, progress) {
@@ -401,6 +423,7 @@
       setStatus("沒有載入任何頁面。" + extra + hint + "請按「重新合成」再試一次。");
       return;
     }
+    ensureRunningPrintFolio();
     window.JPWNBookCache?.writeProgress({
       status: failed.length ? "error" : "done",
       done: failed.length ? 0 : 1,

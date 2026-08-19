@@ -1055,6 +1055,32 @@ ol.q li, ul.q li { margin: 5px 0; }
 
 .footer a { color: var(--green-800); font-weight: 700; }
 
+.page-folio {
+  /* 螢幕不顯示：頁碼以下載 PDF／列印為主 */
+  display: none;
+}
+
+.section-card-top small[data-page-slot] {
+  font-variant-numeric: tabular-nums;
+}
+
+.section-nav a .nav-page {
+  display: inline-block;
+  min-width: 1.1em;
+  margin-left: 2px;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: rgba(22, 101, 52, 0.1);
+  color: var(--green-800);
+  font-size: 11px;
+  font-weight: 800;
+  font-variant-numeric: tabular-nums;
+}
+.section-nav a.is-on .nav-page {
+  background: rgba(255, 255, 255, 0.22);
+  color: #fff;
+}
+
 .site-nav,
 .section-nav {
   display: flex;
@@ -2260,6 +2286,41 @@ html.is-immersive .brand > span:last-child {
   .wrap { zoom: 1 !important; }
   .font-scale { display: none !important; }
   .toolbar, .toc, .footer, .toast, .wave-deco, .site-nav, .section-nav, .no-print, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip, .book-loader { display: none !important; }
+
+  /* PDF 頁碼：固定於每張紙底部置中（勿改成 flow 內容，否則多頁時會跑掉） */
+  .page-folio {
+    display: block !important;
+    position: fixed !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 6mm !important;
+    top: auto !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    text-align: center !important;
+    color: #44403c !important;
+    font-size: 10pt !important;
+    font-weight: 700 !important;
+    letter-spacing: 0.14em !important;
+    line-height: 1 !important;
+    z-index: 10000 !important;
+    background: transparent !important;
+    pointer-events: none !important;
+  }
+  /* 整本合成：只用一顆 running folio，避免多個 fixed 疊在每一頁 */
+  body[data-page="book"] .book-section.is-cover .page-folio,
+  body[data-page="cover"] .page-folio {
+    display: none !important;
+  }
+  body[data-page="book"] .page-folio-running {
+    display: block !important;
+  }
+  body[data-page="book"] .page-folio-running::before {
+    content: "— ";
+  }
+  body[data-page="book"] .page-folio-running::after {
+    content: counter(page) " —";
+  }
   .wrap { width: auto; max-width: none; margin: 0; padding: 0; }
   .hero {
     box-shadow: none;
@@ -2698,5 +2759,5 @@ html.is-immersive .brand > span:last-child {
     margin: 2px 0 0;
     border-radius: 0;
   }
-  @page { size: A4; margin: 8mm 10mm; }
+  @page { size: A4; margin: 8mm 10mm 16mm; }
 }

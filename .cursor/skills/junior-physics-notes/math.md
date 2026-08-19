@@ -8,14 +8,17 @@ KaTeX 由 `js/layout.js` 自動載入（`JPWNMath`）。段考注入題目後要
 
 HTML **原始碼**寫 LaTeX（`.formula` 內用 `\[...\]`，行內用 `\(...\)`），但瀏覽器畫面必須是 **KaTeX 排版結果**（分數有橫線、變數斜體、希臘字母），**絕對不能**讓學生看到 `\[v=\dfrac{s}{t}\]` 這種原始碼字串。
 
-若頁面出現原始碼，代表 `JPWNMath.render()` 沒跑成功；`.formula` 會由 `katex.render` 直接排版。
+若頁面出現原始碼，代表 `JPWNMath.render()` 沒跑成功；`.formula` 會由 `katex.render` 直接排版（會保存 `data-math-src`，同一格若誤放多條 `\[...\]` 也能拆開渲染，但 HTML 仍應一格一式）。
+- **一行一式**：同一個 `.formula` 不要用 `<br>` 串兩條 `\[...\]`；請拆成兩個 `.formula`
 - 變數斜體（KaTeX 預設）、單位直立體：`\(\mathrm{g}\)`、`\(\mathrm{cm}^3\)`、`\(^{\circ}\mathrm{C}\)`、`\(\mathrm{m/s}\)`、`\(\mathrm{g}/\mathrm{cm}^3\)`
 - 分數用 `\dfrac`（獨立）或行內 `\dfrac`／`\tfrac`；乘號用 `\,` 或 `\times`，不要 `*`、`x`、`／`
 - 等號用 `=`，減號用 `-`；指數用 `^{}`（`\(10^{-9}\,\mathrm{m}\)`）
 - 挖空不要放進 `\( \)` 裡，否則 KaTeX 會吃掉 input
+- 不要用 `<em>V</em>＝…` 冒充公式；改 `\(...\)`
 
 ```html
 <p class="formula">\[\text{密度}=\dfrac{\text{質量}}{\text{體積}}\qquad D=\dfrac{M}{V}\]</p>
+<p class="formula">\[\text{測量值}=\text{數值}+\text{單位}\]</p>
 <p>同一物質 \(M\) 與 \(V\) 成正比，斜率就是密度 \(D\)。</p>
 ```
 

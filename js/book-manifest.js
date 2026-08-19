@@ -70,3 +70,71 @@ window.JPWN_BOOK_MANIFEST = {
     ]
   }
 };
+
+/** 依各章小節 → 實驗專區 連續編頁碼（封面不編頁；與整本講義內文順序一致） */
+window.JPWNPages = (function () {
+  function normalizeFile(file) {
+    return String(file || "")
+      .replace(/\\/g, "/")
+      .replace(/^\.\//, "")
+      .replace(/^\/+/, "");
+  }
+
+  function build(manifest) {
+    const m = manifest || window.JPWN_BOOK_MANIFEST || {};
+    const list = [];
+    let n = 1;
+    // 封面不編頁碼
+    (m.packs || []).forEach((pack) => {
+      (pack.files || []).forEach((f) => {
+        list.push({
+          page: n++,
+          id: f.id,
+          title: f.title || "",
+          file: normalizeFile(f.file),
+          pack: pack.title || "",
+          kind: "section"
+        });
+      });
+    });
+    if (m.labs && m.labs.files) {
+      m.labs.files.forEach((f) => {
+        list.push({
+          page: n++,
+          id: f.id,
+          title: f.title || "",
+          file: normalizeFile(f.file),
+          pack: m.labs.title || "實驗專區",
+          kind: "lab"
+        });
+      });
+    }
+    return list;
+  }
+
+  function index(manifest) {
+    const list = build(manifest);
+    const byFile = Object.create(null);
+    const byId = Object.create(null);
+    list.forEach((item) => {
+      byFile[item.file] = item;
+      byFile[item.file.replace(/^sections\//, "")] = item;
+      if (item.id) byId[item.id] = item;
+    });
+    return { list, byFile, byId, total: list.length };
+  }
+
+  function lookup(fileOrId, manifest) {
+    const idx = index(manifest);
+    const key = normalizeFile(fileOrId);
+    return idx.byFile[key] || idx.byId[fileOrId] || null;
+  }
+
+  function rangeForPack(packTitle, manifest) {
+    const items = build(manifest).filter((x) => x.pack === packTitle);
+    if (!items.length) return null;
+    return { from: items[0].page, to: items[items.length - 1].page, items };
+  }
+
+  return { build, index, lookup, rangeForPack, normalizeFile };
+})();

@@ -11,8 +11,9 @@ alwaysApply: true
 ## 硬規則
 
 1. **獨立公式**放 `.formula`，內容寫 LaTeX `\[ ... \]`。頁面必須顯示 **KaTeX 排版**（分數橫線、斜體變數），**禁止**學生看到 `\[v=\dfrac{s}{t}\]` 原始碼字串。
-2. **行內**用 `\(...\)`，例如 \(D=\dfrac{M}{V}\)、\(v=f\lambda\)。
-3. `JPWNMath.render()`／`scheduleRender()` 必須成功；`.formula` 用 `katex.render` 直接排版。
+2. **一行一式**：同一個 `.formula` 不要用 `<br>` 串兩條 `\[...\]`；要分開兩個 `.formula`（渲染器雖可拆多條，HTML 仍以一格一式為準）。
+3. **行內**用 `\(...\)`，例如 \(D=\dfrac{M}{V}\)、\(v=f\lambda\)。不要用 `<em>V</em>＝…` 冒充公式。
+4. `JPWNMath.render()`／`scheduleRender()` 必須成功；`.formula` 用 `katex.render` 直接排版（會保存 `data-math-src`，支援同格多條）。
 4. **分數**用 `\dfrac`（獨立）或 `\tfrac`／`\dfrac`（行內）；**乘**用 `\,` 或 `\times`；**等號** `=`；**減號** `-` 或 `\minus`；指數用 `^{}`（`\(\mathrm{cm}^3\)`、`\(10^{-9}\)`）。
 5. **禁止當正式公式**：`D ＝ M／V`、`g/cm 3`、`cm 3`、`10－9m`、`H = M x ΔT`、`1/2 * v * t`、全形 `＝／×÷`、把單位寫成 `cm3`／`g/cm3` 卻不排成上標。
 6. **挖空**不要包進 `\(...\)`／`\[...\]`，否則 KaTeX 會吃掉 `input.blank`。

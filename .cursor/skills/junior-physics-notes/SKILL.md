@@ -16,6 +16,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 - 題庫與評量：[exams.md](exams.md)
 - 檔名與 config：[reference.md](reference.md)
 - 實驗專區（步驟為主）：[labs.md](labs.md)
+- PDF 頁碼（固定頁底）：[pages.md](pages.md)
 
 範本頁：`ch4.html`、`js/config-ch4.js`、`sections/4-1.html`、`exams/4-1.html`、`review-ch4.html`。實驗專區範本：`lab.html`、`js/config-lab.js`、`sections/lab-1-2.html`。
 
