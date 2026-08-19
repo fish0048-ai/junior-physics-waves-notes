@@ -2,14 +2,24 @@
 
   /* ─── 產生獨立列印視窗 ─── */
 
-  function buildPrintHtml(sections, cssHref, withAnswers) {
+  function cssUrl() {
+    const link = document.querySelector('link[href*="style.css"]');
+    if (link) return new URL(link.getAttribute("href"), location.href).href;
+    return new URL("css/style.css", location.href).href;
+  }
+
+  function printFoliosUrl() {
+    return new URL("../js/print-folios.js", cssUrl()).href;
+  }
+
+  function buildPrintHtml(sections, styleHref, foliosHref, withAnswers) {
     const list = [...(sections || [])].filter(Boolean);
     const coverNodes = [];
     const bodyNodes = [];
 
     list.forEach((sec) => {
       const clone = sec.cloneNode(true);
-      clone.querySelectorAll(".no-print, .wave-deco, .toc, .footer, .exam-jump, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip, .page-folio").forEach((el) => el.remove());
+      clone.querySelectorAll(".no-print, .wave-deco, .toc, .footer, .exam-jump, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip, .page-folio, .print-folio-stack").forEach((el) => el.remove());
       if (withAnswers) {
         clone.querySelectorAll(".blank").forEach((el) => {
           el.classList.add("revealed");
@@ -25,12 +35,19 @@
       else bodyNodes.push(html);
     });
 
-    // 封面不編、不印頁碼；有內文才放 running folio（包在 .book-body，避免蓋到封面）
-    const folio = bodyNodes.length
-      ? '<p class="page-folio page-folio-running" id="book-print-folio" aria-hidden="true"></p>'
-      : "";
+    let startPage = 1;
+    for (let i = 0; i < list.length; i += 1) {
+      const sec = list[i];
+      if (sec.classList?.contains("is-cover") || sec.dataset?.kind === "cover") continue;
+      const n = Number(sec.dataset?.bookPage || 0);
+      if (n > 0) {
+        startPage = n;
+        break;
+      }
+    }
+
     const bodyBlock = bodyNodes.length
-      ? `<div class="book-body">${bodyNodes.join("\n")}${folio}</div>`
+      ? `<div class="book-body" data-print-start="${startPage}">${bodyNodes.join("\n")}</div>`
       : "";
 
     return `<!DOCTYPE html>
@@ -38,7 +55,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<link rel="stylesheet" href="${cssHref}">
+<link rel="stylesheet" href="${styleHref}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -49,7 +66,7 @@
   .book-section { break-before: page; page-break-before: always; color:#1c1917 !important; background:#fff !important; padding:8mm 10mm 10mm; }
   .book-section:first-child { break-before: auto; page-break-before: auto; }
   .book-section.is-cover { break-after: page; page-break-after: always; }
-  .book-body { transform: translateZ(0); }
+  .book-body { position: relative; }
   .book-body > .book-section:first-child { break-before: auto; page-break-before: auto; }
   .book-kicker { font-size:8pt; color:#166534; margin:0 0 2mm; font-weight:800; }
   .hero { background:#fff !important; color:#14532d !important; border:0.5pt solid #166534; padding:4px 8px; margin:0 0 6px; }
@@ -59,57 +76,80 @@
   .blank { background:#fff !important; color:transparent !important; border:none; border-bottom:0.9pt solid #166534 !important; min-width:2.8em; display:inline-block; }
   .blank.revealed { background:#fde68a !important; color:#1c1917 !important; }
   .no-print, .wave-deco, .toc, .footer, .site-nav, .section-nav, .toolbar, .toast, .book-kicker.no-print { display:none !important; }
-  /* PDF 頁碼：固定每張紙底部置中（僅內文 .book-body，封面無頁碼） */
-  .page-folio {
+  .page-folio, .page-folio-running { display:none !important; }
+  .print-folio-stack {
     display: block !important;
-    position: fixed !important;
+    position: absolute !important;
+    left: 0 !important;
+    top: 0 !important;
+    width: 100% !important;
+    height: 0 !important;
+    overflow: visible !important;
+    z-index: 10000 !important;
+    pointer-events: none !important;
+  }
+  .print-folio-abs {
+    position: absolute !important;
     left: 0 !important;
     right: 0 !important;
-    bottom: 6mm !important;
-    margin: 0 !important;
-    padding: 0 !important;
     text-align: center !important;
     color: #44403c !important;
     font-size: 10pt !important;
     font-weight: 700 !important;
     letter-spacing: 0.14em !important;
-    z-index: 10000 !important;
-    pointer-events: none !important;
-    background: transparent !important;
   }
-  .page-folio-running::before { content: "— "; }
-  .page-folio-running::after { content: counter(page) " —"; }
   .card { box-shadow:none !important; border:none; }
   svg.diagram, .diagram { max-width:100%; height:auto; display:block; }
 </style>
 </head>
-<body data-page="book">
+<body data-page="book" data-print-start-page="${startPage}">
 ${coverNodes.join("\n")}
 ${bodyBlock}
+<script src="${foliosHref}"><\/script>
 <script>
 (function(){
   var done = false;
+  function stamp() {
+    var body = document.querySelector(".book-body");
+    if (!body || !window.JPWNPrintFolios) return;
+    var start = Number(body.getAttribute("data-print-start") || 1);
+    window.JPWNPrintFolios.install({ startPage: start, root: body, host: body });
+  }
   function go() {
     if (done) return;
     done = true;
-    window.print();
+    stamp();
+    window.setTimeout(function(){ window.print(); }, 80);
   }
-  if (document.fonts && document.fonts.ready) {
-    document.fonts.ready.then(function(){
-      var imgs = document.querySelectorAll("img");
-      var pending = 0;
-      imgs.forEach(function(img) {
-        if (!img.complete) {
-          pending++;
-          function finish() { pending--; if (pending === 0) go(); }
-          img.addEventListener("load", finish, {once:true});
-          img.addEventListener("error", finish, {once:true});
-        }
-      });
-      if (pending === 0) go();
-    }).catch(go);
-  } else {
-    setTimeout(go, 1200);
+  function boot() {
+    if (document.fonts && document.fonts.ready) {
+      document.fonts.ready.then(function(){
+        var imgs = document.querySelectorAll("img");
+        var pending = 0;
+        imgs.forEach(function(img) {
+          if (!img.complete) {
+            pending++;
+            function finish() { pending--; if (pending === 0) go(); }
+            img.addEventListener("load", finish, {once:true});
+            img.addEventListener("error", finish, {once:true});
+          }
+        });
+        if (pending === 0) go();
+      }).catch(go);
+    } else {
+      setTimeout(go, 1200);
+    }
+  }
+  if (window.JPWNPrintFolios) boot();
+  else {
+    var t = 0;
+    var iv = setInterval(function(){
+      t++;
+      if (window.JPWNPrintFolios || t > 40) {
+        clearInterval(iv);
+        boot();
+      }
+    }, 50);
   }
   window.addEventListener("afterprint", function() {
     setTimeout(function(){ try { window.close(); } catch(e){} }, 400);
@@ -120,12 +160,6 @@ ${bodyBlock}
 </html>`;
   }
 
-  function cssUrl() {
-    const link = document.querySelector('link[href*="style.css"]');
-    if (link) return new URL(link.getAttribute("href"), location.href).href;
-    return new URL("css/style.css", location.href).href;
-  }
-
   function download({ sections, filename, withAnswers, onProgress }) {
     const list = [...(sections || [])].filter(Boolean);
     if (!list.length) {
@@ -134,7 +168,7 @@ ${bodyBlock}
     }
     if (typeof onProgress === "function") onProgress(0, list.length, "building");
 
-    const html = buildPrintHtml(list, cssUrl(), !!withAnswers);
+    const html = buildPrintHtml(list, cssUrl(), printFoliosUrl(), !!withAnswers);
     const blob = new Blob([html], { type: "text/html;charset=utf-8" });
     const blobUrl = URL.createObjectURL(blob);
 
@@ -154,7 +188,7 @@ ${bodyBlock}
         URL.revokeObjectURL(blobUrl);
       }, { once: true });
     } catch (e) {
-      /* cross-origin guard, ignore */
+      /* ignore */
     }
   }
 

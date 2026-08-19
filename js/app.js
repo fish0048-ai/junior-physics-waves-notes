@@ -369,6 +369,7 @@
     const restoreScale = window.NotesLayout?.resetFontScaleForPrint?.();
     document.body.classList.add("is-printing");
     document.body.classList.toggle("is-print-answers", !!withAnswers);
+    window.NotesLayout?.preparePrintFolios?.();
     let restored = false;
     function restore() {
       if (restored) return;
@@ -377,6 +378,7 @@
       applyRevealState(snap);
       if (typeof restoreScale === "function") restoreScale();
       document.body.classList.remove("is-printing", "is-print-answers");
+      window.JPWNPrintFolios?.remove?.();
       window.dispatchEvent(new Event("jpwn-after-print"));
       window.NotesApp.persistPaused = false;
     }

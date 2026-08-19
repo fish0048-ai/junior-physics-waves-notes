@@ -312,20 +312,9 @@
   }
 
   function ensureRunningPrintFolio() {
-    // 封面不印頁碼；僅在有非封面內文時才放 running folio
-    if (!pagesEl.querySelector('.book-section:not(.is-cover)')) {
-      document.getElementById("book-print-folio")?.remove();
-      return null;
-    }
-    let el = document.getElementById("book-print-folio");
-    if (!el) {
-      el = document.createElement("p");
-      el.id = "book-print-folio";
-      el.className = "page-folio page-folio-running";
-      el.setAttribute("aria-hidden", "true");
-      document.body.appendChild(el);
-    }
-    return el;
+    // 頁碼改由 book-pdf.js + print-folios.js 在列印視窗安裝；合成頁不放 fixed folio
+    document.getElementById("book-print-folio")?.remove();
+    return null;
   }
 
   async function appendList(list, label, progress) {

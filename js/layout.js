@@ -356,45 +356,37 @@
     return api.rangeForPack(pack.title, man);
   }
 
-  function ensurePageFolio(text) {
-    let el = document.querySelector(".page-folio:not(.page-folio-running)");
-    if (!el) {
-      el = document.createElement("p");
-      el.className = "page-folio";
-      el.setAttribute("aria-label", "頁碼");
-      // 固定在 body，列印時 position:fixed 才能每張紙都在頁底
-      document.body.appendChild(el);
-    }
-    el.textContent = text;
+  function ensurePageFolio(startPage) {
+    // 改由 JPWNPrintFolios 在 beforeprint 依張數產生遞增頁碼；此處只記錄起始頁
+    const n = Math.max(1, Number(startPage) || 1);
+    document.body.dataset.bookPage = String(n);
+    document.body.dataset.printStartPage = String(n);
+    // 清掉舊的單顆固定 folio（會造成整節同號）
+    document.querySelectorAll(".page-folio:not(.page-folio-running)").forEach((el) => el.remove());
   }
 
   function applyPageNumbers() {
     // 封面不顯示、不列印頁碼
     if (page === "cover") {
-      document.querySelectorAll(".page-folio").forEach((el) => el.remove());
+      document.querySelectorAll(".page-folio, .print-folio-stack").forEach((el) => el.remove());
+      delete document.body.dataset.bookPage;
+      delete document.body.dataset.printStartPage;
       return;
     }
 
     const entry = findPageEntry();
     const range = (page === "home") ? chapterPageRange() : null;
-    let folioText = "";
+    let startPage = 0;
 
-    if (entry && !entry.examRef) {
-      folioText = `— ${entry.page} —`;
-      document.body.dataset.bookPage = String(entry.page);
-      const total = window.JPWNPages?.index(window.JPWN_BOOK_MANIFEST).total;
-      if (total) document.body.dataset.bookPages = String(total);
-    } else if (entry && entry.examRef) {
-      folioText = `— ${entry.page} —`;
+    if (entry && entry.page) {
+      startPage = entry.page;
     } else if (range) {
-      // 章目錄／實驗目錄：PDF 仍印範圍起頁，方便對照
-      folioText = `— ${range.from} —`;
+      startPage = range.from;
     }
 
-    // 頁碼主要給 PDF：螢幕用 CSS 隱藏 .page-folio，列印才顯示
-    if (folioText && page !== "book") ensurePageFolio(folioText);
+    if (startPage && page !== "book") ensurePageFolio(startPage);
 
-    // 章首卡片標頁碼（螢幕導覽用）
+    // 章首卡片標頁碼（螢幕導覽：該節起始頁）
     if (page === "home") {
       const idx = window.JPWNPages?.index(window.JPWN_BOOK_MANIFEST);
       if (idx) {
@@ -407,7 +399,7 @@
       }
     }
 
-    // 側欄小節連結標頁碼（螢幕導覽用）
+    // 側欄小節連結標頁碼（螢幕導覽：該節起始頁）
     const idxNav = window.JPWNPages?.index(window.JPWN_BOOK_MANIFEST);
     if (idxNav) {
       document.querySelectorAll(".section-nav a[href]").forEach((a) => {
@@ -420,6 +412,23 @@
         a.insertAdjacentHTML("beforeend", ` <span class="nav-page">${hit.page}</span>`);
       });
     }
+  }
+
+  function setupPrintFolios() {
+    if (page === "cover" || page === "book") return;
+    const run = () => {
+      if (!window.JPWNPrintFolios) return;
+      window.JPWNPrintFolios.remove();
+      const start = Number(document.body.dataset.printStartPage || document.body.dataset.bookPage || 0);
+      if (!start) return;
+      const root = document.querySelector(".wrap") || document.body;
+      window.JPWNPrintFolios.install({ startPage: start, root, host: root });
+    };
+    window.addEventListener("beforeprint", run);
+    window.addEventListener("afterprint", () => window.JPWNPrintFolios?.remove());
+    // 供 app.js 列印前手動呼叫
+    window.NotesLayout = window.NotesLayout || {};
+    window.NotesLayout.preparePrintFolios = run;
   }
 
   function renderHomeCards() {
@@ -465,6 +474,15 @@
   async function setupPageNumbers() {
     try {
       await loadBookScript("js/book-manifest.js");
+      if (!window.JPWNPrintFolios) {
+        await new Promise((resolve) => {
+          const s = document.createElement("script");
+          s.src = url("js/print-folios.js");
+          s.onload = () => resolve();
+          s.onerror = () => resolve();
+          document.body.appendChild(s);
+        });
+      }
     } catch (err) {
       return;
     }
@@ -475,6 +493,7 @@
   renderHomeCards();
   setupImmersive();
   setupPageNumbers();
+  setupPrintFolios();
   setupBookPrefetch();
 
   if (!document.querySelector("script[data-class-ink]")) {
@@ -672,7 +691,7 @@
 
   setupFontScale();
 
-  window.NotesLayout = {
+  window.NotesLayout = Object.assign(window.NotesLayout || {}, {
     resetFontScaleForPrint() {
       const html = document.documentElement;
       const prev = currentFontScale();
@@ -684,5 +703,5 @@
         html.classList.toggle("is-proj", had);
       };
     }
-  };
+  });
 })();
