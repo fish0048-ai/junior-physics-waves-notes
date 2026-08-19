@@ -18,7 +18,7 @@
 | 螢幕 | 側欄／卡片顯示**起始頁**；不顯示大頁碼 |
 | 單節「下載 PDF」 | 從該節起始頁起，**每一張紙遞增**（如 1-1 起始為 2，則 2、3、4…） |
 | 整本／分章 PDF | 封面無頁碼；內文用 `js/print-folios.js` 沿高度每隔一張 A4 放一個號碼 |
-| 技術 | 不可再用單顆 `position:fixed` 寫死同一號碼（會造成整節同號） |
+| `@page` | 必須 `margin: 0`（避免瀏覽器印出 file:// 路徑）；留白用內容 padding |
 
 相關檔：`js/print-folios.js`、`css/style.css`、`js/layout.js`、`js/app.js`、`js/book-pdf.js`。
 

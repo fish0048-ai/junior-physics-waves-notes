@@ -365,7 +365,7 @@
     document.title = withAnswers
       ? `國中理化_${secId}_${kind}_含答案`
       : `國中理化_${secId}_${kind}`;
-    toast("請將印表機選成「另存為 PDF」或 Microsoft Print to PDF");
+    toast("請選「另存為 PDF」，並取消勾選「頁首與頁尾」（才不會印出檔案路徑）");
     const restoreScale = window.NotesLayout?.resetFontScaleForPrint?.();
     document.body.classList.add("is-printing");
     document.body.classList.toggle("is-print-answers", !!withAnswers);

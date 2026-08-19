@@ -16,12 +16,13 @@ alwaysApply: true
 
 ## 顯示規則
 
-1. **PDF／列印**：頁碼在每張紙底部置中，且**同節多頁必須遞增**（由 `js/print-folios.js` 依內容高度每隔一張 A4 放置號碼；起始頁來自 `JPWNPages`）。`@page` 下緣留白約 `16mm`。
-2. **螢幕**：側欄／章首卡片可顯示該節**起始頁**；不要用單顆 fixed 大頁碼。
-3. **禁止**用一顆 `position: fixed` 寫死 `— N —` 蓋在整節所有紙上（會造成「每一節裡面的頁碼都一樣」）。
-4. **整本／分章 PDF**（`book-pdf.js`）：封面段無頁碼；內文 `.book-body` 安裝 folio stack。
-5. **不要**把頁碼寫死在各 HTML；由 `layout.js`／`print-folios.js`／`book-pdf.js` 注入。
-6. **封面無頁碼**：`data-page="cover"`、整本 `.book-section.is-cover`、只下載封面時，都不可出現頁碼。
+1. **PDF／列印**：頁碼在每張紙底部置中，且**同節多頁必須遞增**（由 `js/print-folios.js` 依內容高度每隔一張 A4 放置號碼；起始頁來自 `JPWNPages`）。
+2. **關掉瀏覽器路徑頁尾**：`@page { margin: 0 }`，留白改放在 `.wrap`／`.book-section` 的 padding（約 `8mm 10mm 16mm`）。否則 Chrome／Edge 會在左下角印 `file://…` 或網址。
+3. **螢幕**：側欄／章首卡片可顯示該節**起始頁**；不要用單顆 fixed 大頁碼。
+4. **禁止**用一顆 `position: fixed` 寫死 `— N —` 蓋在整節所有紙上（會造成「每一節裡面的頁碼都一樣」）。
+5. **整本／分章 PDF**（`book-pdf.js`）：封面段無頁碼；內文 `.book-body` 安裝 folio stack。
+6. **不要**把頁碼寫死在各 HTML；由 `layout.js`／`print-folios.js`／`book-pdf.js` 注入。
+7. **封面無頁碼**：`data-page="cover"`、整本 `.book-section.is-cover`、只下載封面時，都不可出現頁碼。
 
 ## 禁止
 

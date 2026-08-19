@@ -61,9 +61,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
 <style>
-  @page { size: A4; margin: 8mm 10mm 16mm; }
+  @page { size: A4; margin: 0; }
   body { margin:0; background:#fff; font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif; color:#1c1917; }
-  .book-section { break-before: page; page-break-before: always; color:#1c1917 !important; background:#fff !important; padding:8mm 10mm 10mm; }
+  .book-section { break-before: page; page-break-before: always; color:#1c1917 !important; background:#fff !important; padding:8mm 10mm 16mm; box-sizing:border-box; }
   .book-section:first-child { break-before: auto; page-break-before: auto; }
   .book-section.is-cover { break-after: page; page-break-after: always; }
   .book-body { position: relative; }

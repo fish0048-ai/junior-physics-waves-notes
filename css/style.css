@@ -2328,7 +2328,14 @@ html.is-immersive .brand > span:last-child {
   .page-folio-running {
     display: none !important;
   }
-  .wrap { width: auto; max-width: none; margin: 0; padding: 0; }
+  .wrap {
+    width: auto;
+    max-width: none;
+    margin: 0;
+    /* 留白改放內容區：@page margin:0 可關掉瀏覽器預設的檔案路徑頁尾 */
+    padding: 8mm 10mm 16mm;
+    box-sizing: border-box;
+  }
   .hero {
     box-shadow: none;
     border-radius: 0;
@@ -2766,5 +2773,6 @@ html.is-immersive .brand > span:last-child {
     margin: 2px 0 0;
     border-radius: 0;
   }
-  @page { size: A4; margin: 8mm 10mm 16mm; }
+  /* margin:0 → Chrome／Edge 不會印出左下角 file:// 或網址頁尾 */
+  @page { size: A4; margin: 0; }
 }
