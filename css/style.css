@@ -566,6 +566,13 @@ img.diagram-photo {
   object-position: center top;
   background: #fff;
 }
+img.diagram-lg {
+  max-height: 340px;
+}
+.gear-photo-single img.diagram-photo {
+  max-width: 100%;
+  margin: 0 auto;
+}
 
 .gear-photos {
   display: grid;
