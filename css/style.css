@@ -728,11 +728,20 @@ svg.math-graph text {
   gap: 10px;
   margin: 10px 0 6px;
 }
-@media (min-width: 800px) {
+.math-graphs-2 {
+  grid-template-columns: 1fr 1fr;
+}
+.math-graphs-3 {
+  grid-template-columns: 1fr 1fr 1fr;
+}
+@media (max-width: 700px) {
+  .math-graphs-2,
   .math-graphs-3 {
-    grid-template-columns: 1fr 1fr 1fr;
+    grid-template-columns: 1fr;
   }
-  .math-graphs-2 {
+}
+@media (min-width: 701px) and (max-width: 980px) {
+  .math-graphs-3 {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -2662,48 +2671,94 @@ html.is-immersive .brand > span:last-child {
     border-radius: 0;
     font-size: 9pt;
   }
+  /* 圖表：撐滿欄寬並排，禁止固定矮高度＋置中造成「一行一圖旁邊空白」 */
   svg.diagram,
   .diagram {
     display: block !important;
-    width: auto !important;
+    width: 100% !important;
     max-width: 100% !important;
-    height: 24mm !important;
-    max-height: 24mm !important;
-    margin: 0.8mm auto !important;
-    padding: 0.5mm !important;
+    height: auto !important;
+    max-height: 52mm !important;
+    margin: 0.6mm 0 !important;
+    padding: 0.4mm !important;
     break-inside: auto !important;
     page-break-inside: auto !important;
   }
-  .diagram-lg { height: 28mm !important; max-height: 28mm !important; }
-  .diagram-sm { height: 18mm !important; max-height: 18mm !important; }
+  .diagram-lg { max-height: 58mm !important; }
+  .diagram-sm { max-height: 36mm !important; }
   svg.math-graph {
-    height: 36mm !important;
-    max-height: 36mm !important;
+    max-height: 48mm !important;
   }
-  .math-graphs { gap: 2mm; margin: 1.5mm 0; }
+  .split svg.diagram,
+  .split .diagram,
+  .split svg.math-graph {
+    max-height: 58mm !important;
+  }
+  .math-graphs {
+    display: grid !important;
+    gap: 2mm;
+    margin: 1.5mm 0;
+    align-items: start;
+  }
+  .math-graphs > figure {
+    margin: 0;
+    min-width: 0;
+  }
+  .math-graphs-2 {
+    grid-template-columns: 1fr 1fr !important;
+  }
+  .math-graphs-3 {
+    grid-template-columns: 1fr 1fr 1fr !important;
+  }
+  .math-graphs .diagram,
+  .math-graphs svg.math-graph {
+    max-height: 42mm !important;
+  }
   .gear-photos {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 2mm;
     break-inside: auto;
   }
   .gear-photos > figure,
   .gear-photo-single {
     break-inside: avoid;
+    margin: 0;
+    min-width: 0;
   }
   .gear-photos img,
   .gear-photo-single img {
-    height: 22mm;
-    max-height: 22mm;
-    padding: 1mm;
+    width: 100%;
+    height: auto;
+    max-height: 28mm;
+    object-fit: contain;
+    padding: 0.5mm;
   }
   .gear-photos-many {
     grid-template-columns: repeat(4, 1fr) !important;
   }
+  .gear-photos-many img {
+    max-height: 22mm;
+  }
   .gear-photos-pair img {
-    height: 28mm;
-    max-height: 28mm;
+    max-height: 32mm;
+  }
+  .gear-photo-single {
+    max-width: 55% !important;
+    margin: 1mm auto !important;
+  }
+  .split .gear-photo-single {
+    max-width: none !important;
+    margin: 0 !important;
   }
   .split, .two-col, .drill-grid {
     grid-template-columns: 1fr 1fr !important;
-    gap: 4px;
+    gap: 3mm;
+    align-items: start;
+  }
+  .split > figure,
+  .two-col > figure {
+    min-width: 0;
   }
   .db-scale { grid-template-columns: repeat(5, 1fr) !important; }
   .blank {
