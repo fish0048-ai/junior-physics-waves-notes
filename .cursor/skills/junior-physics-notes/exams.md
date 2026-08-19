@@ -6,13 +6,14 @@
 
 ## 轉題時的品管
 
-Word／PDF 轉出來常見：題幹黏下一題、選項黏圖檔名、殘句「〔會考〕」、空 `q`、一題十張圖。處理順序：
+Word／PDF 轉出來常見：題幹黏下一題、選項黏圖檔名、殘句「〔會考〕」、空 `q`、一題十張圖、破公式（`g/cm 3`、`10－9`、全形 `＝／`）。處理順序：
 
 1. 人工或腳本切成一題四選一。
 2. 圖存 `exams/img/N-x/image001.png`，題目寫 `imgs: ["exams/img/N-x/image001.png"]`。
 3. 不要解壓縮 docx（Cortex）。使用者若只給 docx，請他貼文字、匯出 PDF 圖片，或已解出的資料夾。
 4. 寫進 `exam-chN-sections.js`。`ans` 不確定就先填 0，再用 keys 字串一次覆寫。
-5. 打開該節段考頁，看有沒有被 `isJunkStem` 丟掉；丟掉的要修題幹再放回。
+5. 公式修到能 KaTeX 顯示（或交給 `JPWNMath.polish`），見 [math.md](math.md)。
+6. 打開該節段考頁，看有沒有被 `isJunkStem` 丟掉；丟掉的要修題幹再放回。
 
 丢掉規則（與 `js/exam.js` 一致）：
 

@@ -31,6 +31,70 @@
 
   (function loadKatex() {
     const cdn = "https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/";
+
+    /** 把題庫／純文字常見破公式轉成 KaTeX inline（已有 \( \) 的區段不重複處理） */
+    function polish(text) {
+      let s = String(text || "");
+      if (!s) return s;
+      const slots = [];
+      s = s.replace(/\\\[[\s\S]*?\\\]|\\\([\s\S]*?\\\)/g, (m) => {
+        slots.push(m);
+        return `\uE000${slots.length - 1}\uE001`;
+      });
+      // 全形符號 → 半形（稍後再包進數學）
+      s = s.replace(/＝/g, "=").replace(/／/g, "/").replace(/－/g, "-").replace(/÷/g, "/");
+
+      function wrap(inner) {
+        return `\\(${inner}\\)`;
+      }
+
+      s = s.replace(/\bcm³\b/gi, () => wrap("\\mathrm{cm}^{3}"));
+      s = s.replace(/\bm²\b/gi, () => wrap("\\mathrm{m}^{2}"));
+      s = s.replace(/\b(\d+(?:\.\d+)?)\s*cm³\b/gi, (_, n) => wrap(`${n}\\,\\mathrm{cm}^{3}`));
+      s = s.replace(/\b(\d+(?:\.\d+)?)\s*g\/cm³\b/gi, (_, n) => wrap(`${n}\\,\\mathrm{g}/\\mathrm{cm}^{3}`));
+      s = s.replace(/\bg\/cm³\b/gi, () => wrap("\\mathrm{g}/\\mathrm{cm}^{3}"));
+
+      // 單位與指數（先長後短）
+      s = s.replace(/\b(\d+(?:\.\d+)?)\s*g\s*\/\s*cm\s*3\b/gi, (_, n) => wrap(`${n}\\,\\mathrm{g}/\\mathrm{cm}^{3}`));
+      s = s.replace(/\bg\s*\/\s*cm\s*3\b/gi, () => wrap("\\mathrm{g}/\\mathrm{cm}^{3}"));
+      s = s.replace(/\b(\d+(?:\.\d+)?)\s*kg\s*\/\s*m\s*3\b/gi, (_, n) => wrap(`${n}\\,\\mathrm{kg}/\\mathrm{m}^{3}`));
+      s = s.replace(/\b(\d+(?:\.\d+)?)\s*g\s*\/\s*mL\b/gi, (_, n) => wrap(`${n}\\,\\mathrm{g}/\\mathrm{mL}`));
+      s = s.replace(/\b(\d+(?:\.\d+)?)\s*cm\s*3\b/gi, (_, n) => wrap(`${n}\\,\\mathrm{cm}^{3}`));
+      s = s.replace(/\bcm\s*3\b/gi, () => wrap("\\mathrm{cm}^{3}"));
+      s = s.replace(/\b(\d+(?:\.\d+)?)\s*m\s*\/\s*s\b/gi, (_, n) => wrap(`${n}\\,\\mathrm{m}/\\mathrm{s}`));
+      s = s.replace(/\b10\s*-\s*(\d+)\s*m\b/gi, (_, e) => wrap(`10^{-${e}}\\,\\mathrm{m}`));
+      s = s.replace(/\b10\s*-\s*(\d+)\b/g, (_, e) => wrap(`10^{-${e}}`));
+      s = s.replace(/\b1\s*nm\b/gi, () => wrap("1\\,\\mathrm{nm}"));
+
+      // 常見物理式
+      s = s.replace(/\bv\s*=\s*f\s*λ\b/g, () => wrap("v=f\\lambda"));
+      s = s.replace(/\bv\s*=\s*fλ\b/g, () => wrap("v=f\\lambda"));
+      s = s.replace(/\bv\s*=\s*331\s*\+\s*0\.6\s*T\b/g, () => wrap("v=331+0.6T"));
+      s = s.replace(/\bD\s*=\s*M\s*\/\s*V\b/g, () => wrap("D=\\dfrac{M}{V}"));
+      s = s.replace(/\bH\s*=\s*MS\s*ΔT\b/g, () => wrap("H=MS\\Delta T"));
+      s = s.replace(/\bH\s*=\s*M\s*ΔT\b/g, () => wrap("H=M\\,\\Delta T"));
+      s = s.replace(/\bh\s*=\s*1\s*\/\s*2\s*v\s*t\b/gi, () => wrap("h=\\dfrac{1}{2}vt"));
+      s = s.replace(/\b9\s*\/\s*5\b/g, () => wrap("\\dfrac{9}{5}"));
+      s = s.replace(/\b5\s*\/\s*9\b/g, () => wrap("\\dfrac{5}{9}"));
+
+      // 溫度單位
+      s = s.replace(/(-?\d+(?:\.\d+)?)\s*°\s*C\b/g, (_, n) => wrap(`${n}^{\\circ}\\mathrm{C}`));
+      s = s.replace(/(-?\d+(?:\.\d+)?)\s*°\s*F\b/g, (_, n) => wrap(`${n}^{\\circ}\\mathrm{F}`));
+      s = s.replace(/(-?\d+(?:\.\d+)?)\s*℃/g, (_, n) => wrap(`${n}^{\\circ}\\mathrm{C}`));
+      s = s.replace(/(-?\d+(?:\.\d+)?)\s*℉/g, (_, n) => wrap(`${n}^{\\circ}\\mathrm{F}`));
+      s = s.replace(/°\s*C\b/g, () => wrap("^{\\circ}\\mathrm{C}"));
+      s = s.replace(/°\s*F\b/g, () => wrap("^{\\circ}\\mathrm{F}"));
+      s = s.replace(/℃/g, () => wrap("^{\\circ}\\mathrm{C}"));
+      s = s.replace(/℉/g, () => wrap("^{\\circ}\\mathrm{F}"));
+
+      // 乘號只在「數字 × 數字／變數」時包進數學
+      s = s.replace(/(\d+(?:\.\d+)?)\s*×\s*(\d+(?:\.\d+)?)/g, (_, a, b) => wrap(`${a}\\times ${b}`));
+      s = s.replace(/(\d+(?:\.\d+)?)\s*×\s*([A-Za-zΔλ])/g, (_, a, b) => wrap(`${a}\\times ${b === "λ" ? "\\lambda" : b === "Δ" ? "\\Delta" : b}`));
+
+      s = s.replace(/\uE000(\d+)\uE001/g, (_, i) => slots[Number(i)] || "");
+      return s;
+    }
+
     function render(root) {
       if (!window.renderMathInElement) return;
       window.renderMathInElement(root || document.body, {
@@ -39,10 +103,10 @@
           { left: "\\(", right: "\\)", display: false }
         ],
         throwOnError: false,
-        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code"]
+        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "input"]
       });
     }
-    window.JPWNMath = { render };
+    window.JPWNMath = { render, polish };
     if (!document.querySelector("link[data-jpwn-katex]")) {
       const css = document.createElement("link");
       css.rel = "stylesheet";

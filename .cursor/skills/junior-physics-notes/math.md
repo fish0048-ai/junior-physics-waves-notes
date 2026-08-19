@@ -1,16 +1,16 @@
-# 公式與圖表（正式數學格式）
+# 公式與圖表（正式數學格式・學術級精準）
 
-講義、實驗專區、段考題裡，**公式與座標圖**一律用正式數學格式。光線示意、器材照片、原子模型不是圖表，維持 SVG／照片。
+講義、實驗專區、段考題裡，**公式與座標圖**一律用正式數學格式，必須在瀏覽器呈現為 KaTeX 學術排版（分數線、上標、希臘字母、直立單位）。光線示意、器材照片、原子模型不是圖表，維持 SVG／照片。
 
-KaTeX 由 `js/layout.js` 自動載入。段考注入題目後要再呼叫 `JPWNMath.render()`（`exam.js` 已做）。
+KaTeX 由 `js/layout.js` 自動載入（`JPWNMath`）。段考注入題目後要再呼叫 `JPWNMath.render()`（`exam.js` 已做）。題庫破公式可先 `JPWNMath.polish(text)` 再注入。
 
-## 公式
+## 公式（不可破）
 
 - 獨立公式放 `.formula`，內容用 display 數學：`\[ ... \]`
-- 句子中的符號用 inline：`\(D=\dfrac{M}{V}\)`
-- 變數斜體（KaTeX 預設）、單位直立體：`\(\mathrm{g}\)`、`\(\mathrm{cm}^3\)`、`\(^{\circ}\mathrm{C}\)`、`\(\mathrm{m/s}\)`
-- 分數用 `\dfrac`（獨立）或 `\tfrac`（行內）；乘號用 `\,` 或 `\times`，不要 `*`、`x`、`／`
-- 等號用 `=`，減號用 `-`（LaTeX），不要 `＝`、`÷`
+- 句子中的符號與算式用 inline：`\(D=\dfrac{M}{V}\)`、`\(v=f\lambda\)`
+- 變數斜體（KaTeX 預設）、單位直立體：`\(\mathrm{g}\)`、`\(\mathrm{cm}^3\)`、`\(^{\circ}\mathrm{C}\)`、`\(\mathrm{m/s}\)`、`\(\mathrm{g}/\mathrm{cm}^3\)`
+- 分數用 `\dfrac`（獨立）或行內 `\dfrac`／`\tfrac`；乘號用 `\,` 或 `\times`，不要 `*`、`x`、`／`
+- 等號用 `=`，減號用 `-`；指數用 `^{}`（`\(10^{-9}\,\mathrm{m}\)`）
 - 挖空不要放進 `\( \)` 裡，否則 KaTeX 會吃掉 input
 
 ```html
@@ -18,7 +18,18 @@ KaTeX 由 `js/layout.js` 自動載入。段考注入題目後要再呼叫 `JPWNM
 <p>同一物質 \(M\) 與 \(V\) 成正比，斜率就是密度 \(D\)。</p>
 ```
 
-禁止：`D ＝ M／V`、`H = M x ΔT`、`1/2 * v * t` 當公式框。
+### 禁止（這些都不算「正確學術顯示」）
+
+| 錯誤寫法 | 正確寫法 |
+|---|---|
+| `D ＝ M／V`、`密度=質量/體積` 當公式框 | `.formula` + `\[D=\dfrac{M}{V}\]` |
+| `g/cm 3`、`cm 3`、`cm3` | `\(\mathrm{g}/\mathrm{cm}^3\)`、`\(\mathrm{cm}^3\)` |
+| `10－9m`、`10-9 m` | `\(10^{-9}\,\mathrm{m}\)` |
+| `H = M x ΔT`、`1/2 * v * t` | `\[H=M\,\Delta T\]`、`\[h=\dfrac{1}{2}vt\]` |
+| `v＝fλ`、`9／5` 純文字當式子 | `\(v=f\lambda\)`、`\(\dfrac{9}{5}\)` |
+| 全形 `＝／×÷` 充公式 | ASCII/`\times`/`\div` 包進 KaTeX |
+
+化學式可用 HTML `<sub>`（H<sub>2</sub>O）或 `\mathrm{H_2O}`，同一頁一致即可。
 
 ## 座標圖（尤其要正式）
 
@@ -41,3 +52,7 @@ KaTeX 由 `js/layout.js` 自動載入。段考注入題目後要再呼叫 `JPWNM
 ## 數據表
 
 表頭寫符號與單位：`\(V\,(\mathrm{cm}^3)\)`、`\(M\,(\mathrm{g})\)`、時間（分）。數字對齊，不要在儲存格裡寫 `10cm3`。
+
+## 段考題庫
+
+轉檔後常見：`g/cm 3`、`＝＝`、`10－9`。寫進 `exam-chN-sections.js` 前要修；渲染前 `exam.js` 會呼叫 `JPWNMath.polish`。解析裡的算式同樣要能排版。

@@ -297,7 +297,7 @@
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：同一點、不同刻度</div>
         <ul class="q">
           <li>0°C 和 32°F 是<strong>同一個物理狀態</strong>（1 大氣壓下水的冰點），只是刻度起點不同。100°C 和 212°F 則都是沸點。</li>
-          <li>「間隔」和「讀數」要分開：攝氏切 100 份、華氏切 180 份，所以 1°C 的間隔＝ 9／5 °F。甲從 20°C 升到 40°C，改變量是 20°C；乙從 60°F 升到 80°F，改變量只有 20°F，甲的改變量比較大。</li>
+          <li>「間隔」和「讀數」要分開：攝氏切 100 份、華氏切 180 份，所以 \(1\,^{\circ}\mathrm{C}\) 的間隔＝ \(\dfrac{9}{5}\,^{\circ}\mathrm{F}\)。甲從 \(20\,^{\circ}\mathrm{C}\) 升到 \(40\,^{\circ}\mathrm{C}\)，改變量是 \(20\,^{\circ}\mathrm{C}\)；乙從 \(60\,^{\circ}\mathrm{F}\) 升到 \(80\,^{\circ}\mathrm{F}\)，改變量只有 \(20\,^{\circ}\mathrm{F}\)，甲的改變量比較大。</li>
           <li>自製溫標只要知道冰點、沸點兩個錨點，就能用「這一段佔全部的幾分之幾」去換算，不必背很多公式。</li>
         </ul>
       </section>
@@ -309,11 +309,11 @@
         </ul>
       </section>
       <section class="gifted">
-        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 為什麼是 9／5，不是隨便一個分數？</div>
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 為什麼是 \(\dfrac{9}{5}\)，不是隨便一個分數？</div>
         <ul class="q">
-          <li>冰點到沸點這段「真實溫度差」是同一段。攝氏把它切成 100 格，華氏切成 180 格，所以 1 格攝氏＝180／100＝9／5 格華氏。公式裡的 32，只是華氏不從 0 開始數。</li>
+          <li>冰點到沸點這段「真實溫度差」是同一段。攝氏把它切成 100 格，華氏切成 180 格，所以 1 格攝氏＝ \(\dfrac{180}{100}=\dfrac{9}{5}\) 格華氏。公式裡的 32，只是華氏不從 0 開始數。</li>
           <li>任意溫標 N 都是<strong>線性刻度</strong>：液柱高度（或電阻等）假設跟溫度成正比。先算「這點距離冰點佔冰點～沸點的幾分之幾」，再乘上另一套溫標的總格數。</li>
-          <li>兩套溫標讀數相同的溫度：令 °C＝°F＝x，則 x＝(9／5)x＋32 → x＝−40。也就是 −40°C＝−40°F。國中偶爾出現，用來檢查有沒有把公式背反。</li>
+          <li>兩套溫標讀數相同的溫度：令 \(^{\circ}\mathrm{C}=\,^{\circ}\mathrm{F}=x\)，則 \(x=\dfrac{9}{5}x+32\Rightarrow x=-40\)。也就是 \(-40\,^{\circ}\mathrm{C}=-40\,^{\circ}\mathrm{F}\)。國中偶爾出現，用來檢查有沒有把公式背反。</li>
         </ul>
       </section>
       <section class="ex-box think">
@@ -362,15 +362,19 @@
         <section class="ex-box skill">
           <div class="ex-title"><span class="tag tag-blue">範例 1</span></div>
           <p>美國雜誌寫「嬰兒洗澡最佳水溫約 104°F」。約等於多少 °C？</p>
-          <p>解：°C ＝ (5／9)(104 − 32) ＝ (5／9)×72 ＝
+          <p>解：</p>
+          <p class="formula">\[\,^{\circ}\mathrm{C}=\dfrac{5}{9}(104-32)=\dfrac{5}{9}\times 72\]</p>
+          <p>得
             <input class="blank" data-answer="40" style="width:3em">
-            °C。
+            \(^{\circ}\mathrm{C}\)。
           </p>
         </section>
         <section class="ex-box skill">
           <div class="ex-title"><span class="tag tag-blue">類題 1</span></div>
           <p>自製溫度計：1 大氣壓下水的冰點 50°X、沸點 140°X。則 100°X 相當於多少 °F？</p>
-          <p>解：（100−50）／（140−50）＝（°F−32）／180　→　50／90 ＝（°F−32）／180　→　°F ＝
+          <p>解：</p>
+          <p class="formula">\[\dfrac{100-50}{140-50}=\dfrac{\,^{\circ}\mathrm{F}-32}{180}\quad\Rightarrow\quad \dfrac{50}{90}=\dfrac{\,^{\circ}\mathrm{F}-32}{180}\]</p>
+          <p>得 \(^{\circ}\mathrm{F}=\)
             <input class="blank" data-answer="132" style="width:3.5em">。
           </p>
         </section>
@@ -446,9 +450,9 @@
         <tbody>
           <tr><td>溫度</td><td>冷熱程度；手的感覺不可靠</td></tr>
           <tr><td>溫度計</td><td>利用隨溫度規則變化的性質</td></tr>
-          <tr><td>攝氏／華氏</td><td>0↔32、100↔212；°F＝(9／5)°C＋32</td></tr>
-          <tr><td>間隔</td><td>1°C＝9／5 °F；冰點到沸點攝氏 100 等分、華氏 180 等分</td></tr>
-          <tr><td>克氏</td><td>K＝°C＋273；絕對零度 0 K＝−273°C</td></tr>
+          <tr><td>攝氏／華氏</td><td>0↔32、100↔212；\(^{\circ}\mathrm{F}=\dfrac{9}{5}\,^{\circ}\mathrm{C}+32\)</td></tr>
+          <tr><td>間隔</td><td>\(1\,^{\circ}\mathrm{C}=\dfrac{9}{5}\,^{\circ}\mathrm{F}\)；冰點到沸點攝氏 100 等分、華氏 180 等分</td></tr>
+          <tr><td>克氏</td><td>\(K=\,^{\circ}\mathrm{C}+273\)；絕對零度 \(0\,\mathrm{K}=-273\,^{\circ}\mathrm{C}\)</td></tr>
         </tbody>
       </table>
     </article>

@@ -110,13 +110,20 @@
     return false;
   }
 
+  function mathText(s) {
+    const polish = window.JPWNMath && typeof window.JPWNMath.polish === "function"
+      ? window.JPWNMath.polish
+      : (t) => t;
+    return polish(cleanText(s));
+  }
+
   function sanitizeItem(item) {
     const next = Object.assign({}, item);
-    next.q = cleanText(next.q);
-    next.lead = cleanText(next.lead);
-    next.explain = cleanText(next.explain).replace(/\/$/, "");
+    next.q = mathText(next.q);
+    next.lead = mathText(next.lead);
+    next.explain = mathText(next.explain).replace(/\/$/, "");
     next.group = cleanText(next.group);
-    next.choices = (next.choices || []).slice(0, 4).map((c) => stripLeakedNext(cleanText(c)));
+    next.choices = (next.choices || []).slice(0, 4).map((c) => stripLeakedNext(mathText(c)));
     const filled = next.choices.filter(Boolean);
     next.imgs = dedupeWordPairs(next.imgs);
     next.choiceImgs = dedupeWordPairs(next.choiceImgs);

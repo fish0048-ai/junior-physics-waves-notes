@@ -1,23 +1,33 @@
 ---
-description: 講義公式用 KaTeX；座標圖要有原點、刻度、單位。編輯公式或關係圖時套用。
-globs: "{sections,exams,js}/**/*.{html,js}"
-alwaysApply: false
+description: 數學公式與座標圖必須用 KaTeX 學術級精準顯示。改講義、段考、實驗、公式、關係圖時必套用。
+globs: "{sections,exams,js,css}/**/*.{html,js,css}"
+alwaysApply: true
 ---
 
-# 公式與圖表
+# 數學公式：學術級精準顯示（不可破）
 
-細節見技能 `math.md`。KaTeX 由 `layout.js` 載入，不要每頁手寫 CDN。
+細節與範例見技能 `.cursor/skills/junior-physics-notes/math.md`。KaTeX 由 `js/layout.js` 的 `JPWNMath` 載入；段考注入後必須再 `JPWNMath.render()`（`exam.js` 已做）。可用 `JPWNMath.polish(text)` 把題庫破公式轉成 KaTeX。
 
-## 公式
+## 硬規則
 
-- `.formula` 用 `\[...\]`；行內用 `\(...\)`
-- 變數斜體、單位 `\mathrm{}`；分數 `\dfrac`；不要 `＝`、`／`、`*`、`x` 當乘
-- 挖空不要包進數學分隔符
+1. **獨立公式**放 `.formula`，內容只用 display：`\[ ... \]`。不要用純文字、`＝`、`／`、`*`、`x` 當乘號充數。
+2. **行內符號／式子**一律 `\(...\)`，例如 \(D=\dfrac{M}{V}\)、\(v=f\lambda\)、\(^{\circ}\mathrm{C}\)。
+3. **變數斜體**（KaTeX 預設）、**單位直立** `\mathrm{}`：`\(\mathrm{g}\)`、`\(\mathrm{cm}^3\)`、`\(\mathrm{m/s}\)`、`\(\mathrm{g}/\mathrm{cm}^3\)`、`\(^{\circ}\mathrm{C}\)`、`\(\mathrm{cal}\)`。
+4. **分數**用 `\dfrac`（獨立）或 `\tfrac`／`\dfrac`（行內）；**乘**用 `\,` 或 `\times`；**等號** `=`；**減號** `-` 或 `\minus`；指數用 `^{}`（`\(\mathrm{cm}^3\)`、`\(10^{-9}\)`）。
+5. **禁止當正式公式**：`D ＝ M／V`、`g/cm 3`、`cm 3`、`10－9m`、`H = M x ΔT`、`1/2 * v * t`、全形 `＝／×÷`、把單位寫成 `cm3`／`g/cm3` 卻不排成上標。
+6. **挖空**不要包進 `\(...\)`／`\[...\]`，否則 KaTeX 會吃掉 `input.blank`。
+7. **段考／題庫**：題幹、選項、題組 lead、解析裡的密度、體積、指數、溫度公式都要能被 KaTeX 正確顯示；轉檔後若出現 `g/cm 3`、`10－9` 等，要修源檔或經 `JPWNMath.polish` 再渲染。
+8. **化學式**可用 HTML `<sub>`（如 H<sub>2</sub>O）或 KaTeX `\mathrm{H_2O}`，同一頁風格一致即可。
 
 ## 座標圖
 
-`svg.diagram.math-graph` 必有：原點 O、軸箭頭、軸名（斜體變數＋單位）、刻度、格線、圖例、`.caption`。
+`svg.diagram.math-graph` 必有：原點 **O**、軸箭頭、軸名（斜體變數＋直立單位）、刻度、格線、圖例、`.caption`。座標比例要算準。範本：`sections/1-2.html`、`sections/5-3.html`。
 
-範本：`sections/1-2.html`（\(M\)－\(V\)）、`sections/5-3.html`（加熱曲線）。
+光線／器材／原子模型示意不是座標圖，維持普通 SVG 或照片，但標的物理量仍用斜體符號。
 
-光線／器材／原子模型不是圖表，維持普通 SVG 或照片。
+## 完成前自查
+
+- [ ] 每個 `.formula` 內是 `\[...\]`，預覽可見排版（分數線、上標、希臘字母）
+- [ ] 行內物理量不是「純文字貼上」
+- [ ] 單位無 `cm 3`／`g/cm 3` 這種被空格拆開的上標
+- [ ] 段考頁 `JPWNMath.render()` 後公式正確

@@ -32,7 +32,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 5. 禁止解壓縮 docx、禁止字元碼混淆的 PowerShell。
 6. 每個重點卡課文後必備兩層補充：`.extra` 國中程度、`.gifted` 國中資優（見 extras.md）。不能只抄課本。
 7. 實驗專區以**步驟**為主軸：活動紀錄本每一步單獨一格 `.lab-step`，見 `labs.md`。頂欄寫「實驗專區」，不要「第 lab 章」。**不要**練習、段考前練習、章末評量（不要 `#drill`、不要 `exam`／`review`、不要 `exams/lab-*.html`、不要 `review-lab.html`）。
-8. 公式與座標圖用正式數學格式，見 [math.md](math.md)。
+8. 公式與座標圖用正式數學格式，**必須學術級精準顯示（KaTeX）**，見 [math.md](math.md) 與規則 `jpwn-math.mdc`。禁止 `＝／`、`g/cm 3`、`cm 3`、`10－9` 當正式公式。
 
 ## 工作流程
 
