@@ -29,7 +29,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 1. 內容不刪減，只加探究鏈。
 2. 新章對齊第 4 章；不要用第 3 章的 `exam-bank.js`。
 3. 講義 `input.blank` 凍成 span；探究 textarea 由 `app.js` 自動插。
-4. 繁體中文。未要求不 commit／push。
+4. 繁體中文。**每次改完必須 commit＋push GitHub**（見 `jpwn-github.mdc`）；僅當使用者明確說先不要上傳才跳過。
 5. 禁止解壓縮 docx、禁止字元碼混淆的 PowerShell。
 6. 每個重點卡課文後必備兩層補充：`.extra` 國中程度、`.gifted` 國中資優（見 extras.md）。不能只抄課本。
 7. 實驗專區以**步驟**為主軸：活動紀錄本每一步單獨一格 `.lab-step`，見 `labs.md`。頂欄寫「實驗專區」，不要「第 lab 章」。**不要**練習、段考前練習、章末評量（不要 `#drill`、不要 `exam`／`review`、不要 `exams/lab-*.html`、不要 `review-lab.html`）。
@@ -78,4 +78,4 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 
 ## 完成後
 
-未要求就不要 commit。提醒平板 Ctrl+F5。使用者說推 GitHub 再 push，並給 Pages 網址。
+完成修改後依 `jpwn-github.mdc` **自動 commit＋push**。提醒平板 Ctrl+F5。Pages：https://fish0048-ai.github.io/junior-physics-waves-notes/

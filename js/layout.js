@@ -357,12 +357,11 @@
   }
 
   function ensurePageFolio(startPage) {
-    // 改由 JPWNPrintFolios 在 beforeprint 依張數產生遞增頁碼；此處只記錄起始頁
+    // 只記起始頁供導覽；PDF 頁碼改由 @page counter，不疊 absolute folio
     const n = Math.max(1, Number(startPage) || 1);
     document.body.dataset.bookPage = String(n);
     document.body.dataset.printStartPage = String(n);
-    // 清掉舊的單顆固定 folio（會造成整節同號）
-    document.querySelectorAll(".page-folio:not(.page-folio-running)").forEach((el) => el.remove());
+    document.querySelectorAll(".page-folio, .print-folio-stack").forEach((el) => el.remove());
   }
 
   function applyPageNumbers() {

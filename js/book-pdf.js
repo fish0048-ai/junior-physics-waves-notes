@@ -59,22 +59,22 @@
 <style>
   @page {
     size: A4;
-    margin: 12mm 12mm 16mm;
+    margin: 8mm 8mm 11mm;
     @bottom-center {
       content: "— " counter(page) " —";
       font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-size: 9pt;
+      font-size: 8pt;
       color: #44403c;
     }
   }
-  body { margin:0; background:#fff; font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif; color:#1c1917; }
+  body { margin:0; background:#fff; font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif; color:#1c1917; line-height:1.2; font-size:9.5pt; }
   .book-section { break-before: page; page-break-before: always; color:#1c1917 !important; background:#fff !important; padding:0; }
   .book-section:first-child { break-before: auto; page-break-before: auto; }
   .book-section.is-cover { break-after: page; page-break-after: always; }
   .book-body { position: relative; }
   .book-body > .book-section:first-child { break-before: auto; page-break-before: auto; }
-  .book-kicker { font-size:8pt; color:#166534; margin:0 0 2mm; font-weight:800; }
-  .hero { background:#fff !important; color:#14532d !important; border:0.5pt solid #166534; padding:4px 8px; margin:0 0 6px; }
+  .book-kicker { font-size:8pt; color:#166534; margin:0 0 1mm; font-weight:800; }
+  .hero { background:#fff !important; color:#14532d !important; border:0.5pt solid #166534; padding:2px 6px; margin:0 0 3px; }
   .hero h1,.hero .kicker,.hero p { color:#14532d !important; opacity:1 !important; }
   .cover-sheet { background:#fff !important; color:#14532d !important; border:0.8pt solid #166534; padding:12mm 14mm 10mm; box-sizing:border-box; min-height:277mm; }
   .cover-sheet h1,.cover-kicker,.cover-series,.cover-lead { color:#14532d !important; opacity:1 !important; }

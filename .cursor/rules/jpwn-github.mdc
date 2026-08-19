@@ -1,0 +1,27 @@
+---
+description: 每次完成修改後必須 commit 並 push 到 GitHub；訊息繁中 type: 主旨。
+alwaysApply: true
+---
+
+# GitHub 上傳（不可破）
+
+本倉庫每次改完講義／CSS／JS／規則／技能，**自動**提交並推上 GitHub，不必等使用者再說「上傳」。
+
+## 流程（任務收尾必做）
+
+1. `git status`／`git diff`／`git log` 確認變更與訊息風格
+2. `git add` 相關檔（不要加 `_bank_extract/`、密鑰、`.env`）
+3. `git commit`，訊息格式：`<type>: <主旨>`（**繁體中文**）
+4. `git push origin HEAD`（或目前追蹤的 remote 分支）
+5. 回覆時附上短 commit hash 或說明已上線
+
+## 例外（才可不 push）
+
+- 使用者**明確**說：先不要上傳／不要 commit／不要 push
+- 變更只有本機暫存、尚未完成的半成品（應先問是否要暫存 commit）
+- 會動到 secrets／憑證的檔案 → 警告並排除，不要推上去
+
+## 與其他規則的關係
+
+- 覆寫一般「未要求不要 commit／push」：在本專案以本規則為準。
+- 仍禁止：改 `git config`、force push `main`、`--no-verify`、未經要求的 amend（除非符合既有 amend 安全條件）。

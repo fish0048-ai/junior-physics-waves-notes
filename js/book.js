@@ -312,8 +312,9 @@
   }
 
   function ensureRunningPrintFolio() {
-    // 頁碼改由 book-pdf.js + print-folios.js 在列印視窗安裝；合成頁不放 fixed folio
+    // 合成頁不放 fixed folio；PDF 用 @page counter
     document.getElementById("book-print-folio")?.remove();
+    document.querySelectorAll(".print-folio-stack, .page-folio").forEach((el) => el.remove());
     return null;
   }
 

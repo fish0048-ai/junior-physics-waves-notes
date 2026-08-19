@@ -2278,11 +2278,16 @@ html.is-immersive .brand > span:last-child {
     height: auto !important;
     overflow: visible !important;
     margin: 0;
-    line-height: 1.28;
-    font-size: 10pt;
+    line-height: 1.2;
+    font-size: 9.5pt;
     zoom: 1 !important;
     --proj-scale: 1 !important;
   }
+  p { margin: 0 0 0.28em; }
+  ol, ul { margin: 0.2em 0; }
+  ol.q, ul.q { margin: 2px 0; }
+  ol.q li, ul.q li { margin: 1.5px 0; }
+  h3.subh { margin: 3px 0 2px; font-size: 11pt; }
   .wrap { zoom: 1 !important; }
   .font-scale { display: none !important; }
   .toolbar, .toc, .footer, .toast, .wave-deco, .site-nav, .section-nav, .no-print, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip, .book-loader, .print-folio-stack { display: none !important; }
@@ -2296,8 +2301,8 @@ html.is-immersive .brand > span:last-child {
   .hero {
     box-shadow: none;
     border-radius: 0;
-    padding: 4px 8px;
-    margin: 0 0 6px;
+    padding: 2px 6px;
+    margin: 0 0 3px;
     overflow: visible;
     break-inside: auto;
     min-height: 0;
@@ -2312,8 +2317,8 @@ html.is-immersive .brand > span:last-child {
     -webkit-text-fill-color: #14532d !important;
     opacity: 1 !important;
   }
-  .hero h1 { font-size: 15pt; margin: 2px 0; }
-  .hero p { font-size: 9pt; }
+  .hero h1 { font-size: 13pt; margin: 1px 0; }
+  .hero p { font-size: 8.5pt; margin: 0; }
   body[data-page="home"] .wrap {
     margin: 0;
     padding: 0;
@@ -2538,39 +2543,144 @@ html.is-immersive .brand > span:last-child {
     overflow: visible;
   }
   .card {
-    padding: 2px 0 4px;
-    margin: 0 0 5px;
+    padding: 1px 0 2px;
+    margin: 0 0 2.5mm;
     border: none;
     border-radius: 0;
     background: #fff;
   }
   .section-head {
-    margin: 0 0 4px;
-    padding-bottom: 2px;
+    margin: 0 0 2px;
+    padding-bottom: 1px;
+    gap: 6px;
     border-bottom: 0.4pt solid #ccc;
   }
-  .section-head, h2, h3.subh, .formula, table {
+  .section-head h2 { font-size: 11.5pt; }
+  .section-head p { font-size: 8pt; margin: 0; }
+  .badge {
+    width: 22px;
+    min-width: 22px;
+    height: 22px;
+    font-size: 10px;
+    border-radius: 6px;
+    box-shadow: none;
+  }
+  /* 避免 break-after 在頁尾留大片空白 */
+  .formula, table {
     break-inside: avoid;
-    break-after: avoid;
+  }
+  table {
+    margin: 1.5mm 0;
+    font-size: 8.5pt;
+  }
+  th, td {
+    padding: 1.5px 3px;
+  }
+  .def {
+    padding: 2px 6px;
+    margin: 0 0 2mm;
+    border-radius: 0;
+    border-left-width: 2.5pt;
+  }
+  .formula {
+    padding: 2px 6px;
+    margin: 1.5mm 0;
+    border-radius: 0;
+    font-size: 10.5pt;
+  }
+  .formula .katex { font-size: 1.05em; }
+  .formula .katex-display { margin: 0.05em 0; }
+  .ex-box {
+    padding: 3px 6px 2px;
+    margin: 2mm 0 0;
+    border-radius: 0;
+  }
+  .extra,
+  .tips,
+  .wrong-note,
+  .gifted,
+  .teacher {
+    padding: 2px 6px;
+    margin: 1.5mm 0 0;
+    border-radius: 0;
+    border-left-width: 2.5pt;
+  }
+  .extra p, .extra li,
+  .gifted p, .gifted li,
+  .tips p, .tips li,
+  .wrong-note p, .wrong-note li { margin: 1px 0; }
+  .ex-title { margin: 0 0 2px; font-size: 10pt; gap: 4px; }
+  .tag { padding: 0 5px; font-size: 8pt; }
+  .inquiry-ask {
+    padding: 2px 6px;
+    margin: 0 0 2mm;
+    border-radius: 0;
+    border-left-width: 2.5pt;
+    font-size: 9pt;
+  }
+  .inquiry-steps li { margin: 1px 0; line-height: 1.25; }
+  .inquiry-writebox {
+    padding: 1.5mm !important;
+    margin: 1.5mm 0 !important;
+  }
+  .inquiry-write {
+    min-height: 8mm !important;
+    font-size: 9pt !important;
+    padding: 2px 4px !important;
+  }
+  .inquiry-writebox label { font-size: 8.5pt; margin: 0 0 1px; }
+  .inquiry-writebox.is-line .inquiry-write { min-height: 5.5mm !important; }
+  .inquiry-lead, .inquiry-ask + .inquiry-writebox { margin-bottom: 1.5mm; }
+  .lab-steps {
+    gap: 2mm;
+    margin: 2mm 0;
+  }
+  .lab-steps::before {
+    font-size: 9pt;
+    padding: 2px 6px;
+    border-radius: 0;
+    margin-bottom: 1mm;
+  }
+  .lab-step {
+    padding: 3px 6px 3px 28px;
+    border-radius: 0;
+    border-width: 0.6pt;
+  }
+  .lab-step::before {
+    left: 4px;
+    top: 4px;
+    width: 18px;
+    height: 18px;
+    font-size: 10px;
+    line-height: 18px;
+  }
+  .lab-step > .subh { font-size: 10.5pt; margin: 0 0 1px; }
+  .lab-step > p { margin: 1px 0; }
+  .lab-caution, .lab-record, .lab-check {
+    padding: 2px 6px;
+    margin: 1.5mm 0;
+    border-radius: 0;
+    font-size: 9pt;
   }
   svg.diagram,
   .diagram {
     display: block !important;
     width: auto !important;
     max-width: 100% !important;
-    height: 28mm !important;
-    max-height: 28mm !important;
-    margin: 1mm auto !important;
-    padding: 1mm !important;
+    height: 24mm !important;
+    max-height: 24mm !important;
+    margin: 0.8mm auto !important;
+    padding: 0.5mm !important;
     break-inside: auto !important;
     page-break-inside: auto !important;
   }
-  .diagram-lg { height: 32mm !important; max-height: 32mm !important; }
-  .diagram-sm { height: 22mm !important; max-height: 22mm !important; }
+  .diagram-lg { height: 28mm !important; max-height: 28mm !important; }
+  .diagram-sm { height: 18mm !important; max-height: 18mm !important; }
   svg.math-graph {
-    height: 42mm !important;
-    max-height: 42mm !important;
+    height: 36mm !important;
+    max-height: 36mm !important;
   }
+  .math-graphs { gap: 2mm; margin: 1.5mm 0; }
   .gear-photos {
     break-inside: auto;
   }
@@ -2613,14 +2723,10 @@ html.is-immersive .brand > span:last-child {
   .inquiry-writebox {
     break-inside: avoid;
     border: 0.5pt dashed #666;
-    padding: 2mm;
-    margin: 2mm 0;
   }
   .inquiry-write {
     border: 0.5pt solid #666 !important;
     background: #fff !important;
-    min-height: 14mm;
-    font-size: 10pt;
   }
   .lab-kit {
     min-width: 0;
@@ -2643,9 +2749,13 @@ html.is-immersive .brand > span:last-child {
     min-height: 6mm;
   }
   p, li { orphans: 2; widows: 2; }
-  .overview { margin: 0 0 4px; padding: 4px 8px; box-shadow: none; }
+  .overview { margin: 0 0 2px; padding: 2px 6px; box-shadow: none; }
   figure { margin: 0; }
-  .flow, .flow-h { break-inside: auto; }
+  figcaption, .caption { font-size: 8pt; margin: 0.5mm 0 0; line-height: 1.2; }
+  .flow, .flow-h { break-inside: auto; margin: 1.5mm 0; gap: 3px; }
+  .drill-col { padding: 3px 6px; margin: 0 0 2mm; }
+  .drill-col p { margin: 0 0 2px; font-size: 9pt; }
+  .drill-grid { gap: 3px; margin: 0 0 2mm; }
   .exam-toolbar { display: none !important; }
   .exam-choice { background: #fff !important; }
 
@@ -2730,14 +2840,14 @@ html.is-immersive .brand > span:last-child {
     margin: 2px 0 0;
     border-radius: 0;
   }
-  /* 正常頁邊；頁碼用 @bottom-center（支援的引擎會逐張遞增） */
+  /* 緊湊頁邊；頁碼用 @bottom-center（支援的引擎會逐張遞增） */
   @page {
     size: A4;
-    margin: 12mm 12mm 16mm;
+    margin: 8mm 8mm 11mm;
     @bottom-center {
       content: "— " counter(page) " —";
       font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
-      font-size: 9pt;
+      font-size: 8pt;
       color: #44403c;
     }
   }

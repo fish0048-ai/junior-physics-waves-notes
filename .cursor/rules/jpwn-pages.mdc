@@ -9,7 +9,7 @@ alwaysApply: true
 
 ## 版面優先
 
-1. `@page { size: A4; margin: 12mm 12mm 16mm; }` 保留正常頁邊。
+1. `@page { size: A4; margin: 8mm 8mm 11mm; }` 保留可用頁邊；講義 PDF 間距緊湊（卡片／補充／探究／圖縮小）。
 2. **禁止**用 absolute／fixed 沿高度每張 A4 疊頁碼（會切字、號碼跑到奇怪位置）。
 3. **禁止**為了藏網址而設 `@page { margin: 0 }` 卻沒把留白還給內容。
 4. 瀏覽器左下角路徑：提示使用者取消「頁首與頁尾」。

@@ -2,7 +2,7 @@
 
 ## 版面（優先於花俏頁碼）
 
-- `@page { size: A4; margin: 12mm 12mm 16mm; }` — **不要**用 `margin: 0` 再自己 absolute 疊層（會切版、錯位）
+- `@page { size: A4; margin: 8mm 8mm 11mm; }` — **不要**用 `margin: 0` 再自己 absolute 疊層（會切版、錯位）；講義 PDF 列印間距要緊湊（見 `style.css` `@media print`）
 - 列印時隱藏 `.print-folio-stack`；`js/print-folios.js` 的 install 為 no-op
 - 瀏覽器左下角 `file://` 路徑：請使用者取消勾選「頁首與頁尾」
 

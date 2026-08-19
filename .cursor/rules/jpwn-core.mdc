@@ -23,7 +23,7 @@ alwaysApply: true
 - **Windows／Cortex**：禁止解壓縮 docx；禁止用字元碼拼路徑的 PowerShell。`_bank_extract/` 勿推 GitHub。
 - **公式必須學術級精準顯示（KaTeX）**：獨立公式 `.formula`＋`\[...\]`；行內 `\(...\)`；變數斜體、單位 `\mathrm{}`；禁止 `＝／`、`g/cm 3`、`cm 3`、`10－9`、`*`/`x` 當乘號。座標圖 `svg.math-graph`（原點 O、刻度、單位）。見 `math.md` 與規則 `jpwn-math.mdc`。光線示意與器材照片不套這條。
 - **PDF 頁碼固定頁底**：編號來自 `book-manifest.js`／`JPWNPages`；列印用 `.page-folio`＋`position: fixed` 置中於每張紙底部。螢幕隱藏大頁碼。見 `pages.md` 與規則 `jpwn-pages.mdc`。
-- **Git**：未要求不要 commit／push／改 config／force push。訊息 `<type>: <主旨>`（繁中）。
+- **GitHub 每次改完就上傳**：完成修改後必須 `commit`＋`push`（見規則 `jpwn-github.mdc`）。訊息 `<type>: <主旨>`（繁中）。仍禁止改 git config、force push、`--no-verify`。僅當使用者明確說先不要上傳時才跳過。
 
 ## 新章一定要有
 
