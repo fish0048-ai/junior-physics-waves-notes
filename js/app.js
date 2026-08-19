@@ -22,6 +22,7 @@
   }
 
   freezeBlanks();
+  window.JPWNMath?.scheduleRender?.() || window.JPWNMath?.render?.();
 
   const LS_INQUIRY = "jpwn.inquiryWrites";
   const LS_REVEAL = "jpwn.revealed";

@@ -96,17 +96,52 @@
     }
 
     function render(root) {
-      if (!window.renderMathInElement) return;
-      window.renderMathInElement(root || document.body, {
-        delimiters: [
-          { left: "\\[", right: "\\]", display: true },
-          { left: "\\(", right: "\\)", display: false }
-        ],
-        throwOnError: false,
-        ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "input"]
+      const scope = root || document.body;
+      if (!scope || !window.katex) return;
+
+      // 獨立公式框：直接用 katex.render，不依賴 auto-render 掃 delimiter（較穩）
+      scope.querySelectorAll(".formula").forEach((el) => {
+        if (el.querySelector(".katex")) return;
+        let tex = (el.textContent || "").trim();
+        if (!tex) return;
+        tex = tex.replace(/^\\\[[\s\n]*/, "").replace(/[\s\n]*\\\]$/, "");
+        tex = tex.replace(/^\\\([\s\n]*/, "").replace(/[\s\n]*\\\)$/, "");
+        tex = tex.replace(/^\$\$[\s\n]*/, "").replace(/[\s\n]*\$\$$/, "");
+        try {
+          window.katex.render(tex, el, {
+            displayMode: true,
+            throwOnError: false,
+            strict: "ignore"
+          });
+        } catch (err) {
+          /* keep raw text */
+        }
       });
+
+      // 行內 \(...\) 仍用 auto-render
+      if (typeof window.renderMathInElement === "function") {
+        window.renderMathInElement(scope, {
+          delimiters: [
+            { left: "\\[", right: "\\]", display: true },
+            { left: "\\(", right: "\\)", display: false },
+            { left: "$$", right: "$$", display: true },
+            { left: "$", right: "$", display: false }
+          ],
+          throwOnError: false,
+          ignoredTags: ["script", "noscript", "style", "textarea", "pre", "code", "input"],
+          ignoredClasses: ["katex"]
+        });
+      }
     }
-    window.JPWNMath = { render, polish };
+
+    function scheduleRender() {
+      render();
+      window.requestAnimationFrame(() => render());
+      window.setTimeout(() => render(), 200);
+      window.setTimeout(() => render(), 800);
+    }
+
+    window.JPWNMath = { render, polish, scheduleRender };
     if (!document.querySelector("link[data-jpwn-katex]")) {
       const css = document.createElement("link");
       css.rel = "stylesheet";
@@ -115,23 +150,26 @@
       document.head.appendChild(css);
     }
     function loadAutoRender() {
-      if (window.renderMathInElement) {
-        render();
+      if (typeof window.renderMathInElement === "function") {
+        scheduleRender();
         return;
       }
       const auto = document.createElement("script");
       auto.src = cdn + "contrib/auto-render.min.js";
-      auto.onload = render;
+      auto.onload = scheduleRender;
+      auto.onerror = scheduleRender; // 沒有 auto-render 也至少渲染 .formula
       document.head.appendChild(auto);
     }
     if (window.katex) {
       loadAutoRender();
-      return;
+    } else {
+      const core = document.createElement("script");
+      core.src = cdn + "katex.min.js";
+      core.onload = loadAutoRender;
+      core.onerror = () => console.warn("[JPWNMath] KaTeX 載入失敗");
+      document.head.appendChild(core);
     }
-    const core = document.createElement("script");
-    core.src = cdn + "katex.min.js";
-    core.onload = loadAutoRender;
-    document.head.appendChild(core);
+    window.addEventListener("load", () => scheduleRender());
   })();
 
   function url(path) {
