@@ -242,60 +242,79 @@
       <p class="inquiry-ask"><strong>探究線索：</strong>先加純水再加雙氧水，哪一瓶會冒泡？線香在氧氣瓶和空氣瓶裡哪一邊火花較大？</p>
       <p>目的：用排水集氣法收集氧氣，比較空氣與氧氣的助燃性。</p>
       <h3 class="subh">實驗幫手：薊頭漏斗</h3>
-      <p class="note">左邊講義原圖、右邊重繪版，請比較哪一邊比較清楚。</p>
+      <p class="note">左邊講義原圖、右邊重繪版。</p>
       <div class="split compare-figs">
         <figure>
           <img class="diagram diagram-photo" src="../img/2-3/thistle-funnel.png" alt="薊頭漏斗講義原圖">
           <p class="caption">講義原圖</p>
         </figure>
         <figure>
-          <svg class="diagram" viewBox="0 0 320 240" aria-label="重繪：薊頭漏斗插入吸濾瓶，長管沒入液面下">
+          <svg class="diagram" viewBox="0 0 340 260" aria-label="重繪：薊頭漏斗、吸濾瓶、長管沒入液面下">
             <defs>
-              <linearGradient id="th-gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity=".55"/><stop offset="50%" stop-color="#bae6fd" stop-opacity=".08"/><stop offset="100%" stop-color="#fff" stop-opacity=".3"/></linearGradient>
-              <linearGradient id="th-liq" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0284c7"/></linearGradient>
-              <linearGradient id="th-rub" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fdba74"/><stop offset="100%" stop-color="#c2410c"/></linearGradient>
-              <marker id="th-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1.2 L10 5 L0 8.8 Z" fill="#dc2626"/></marker>
+              <linearGradient id="th2-glass" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#fff" stop-opacity=".65"/>
+                <stop offset="45%" stop-color="#7dd3fc" stop-opacity=".12"/>
+                <stop offset="100%" stop-color="#fff" stop-opacity=".35"/>
+              </linearGradient>
+              <linearGradient id="th2-liq" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#93c5fd"/>
+                <stop offset="100%" stop-color="#1d4ed8"/>
+              </linearGradient>
+              <linearGradient id="th2-stop" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="#fdba74"/>
+                <stop offset="55%" stop-color="#ea580c"/>
+                <stop offset="100%" stop-color="#c2410c"/>
+              </linearGradient>
+              <linearGradient id="th2-hose" x1="0" y1="0" x2="1" y2="0">
+                <stop offset="0%" stop-color="#fb923c"/>
+                <stop offset="100%" stop-color="#ea580c"/>
+              </linearGradient>
+              <marker id="th2-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M0 1.2 L10 5 L0 8.8 Z" fill="#dc2626"/>
+              </marker>
             </defs>
-            <rect width="320" height="240" rx="10" fill="#f8fafc"/>
-            <!-- 吸濾瓶／錐形瓶 -->
-            <path d="M96 88 C 96 72 224 72 224 88 L 208 200 Q 160 218 112 200 Z" fill="#e0f2fe" stroke="#0369a1" stroke-width="2.2"/>
-            <ellipse cx="160" cy="88" rx="64" ry="14" fill="#f0f9ff" stroke="#0369a1" stroke-width="2.2"/>
-            <path d="M96 88 C 96 72 224 72 224 88 L 208 200 Q 160 218 112 200 Z" fill="url(#th-gl)"/>
-            <!-- 液面 -->
-            <path d="M112 158 L 110 196 Q 160 210 210 196 L 208 158" fill="url(#th-liq)" opacity=".9"/>
-            <ellipse cx="160" cy="158" rx="48" ry="10" fill="#38bdf8" opacity=".85"/>
-            <!-- 固體藥品（顆粒） -->
-            <g fill="#57534e">
-              <ellipse cx="140" cy="188" rx="7" ry="4"/><ellipse cx="156" cy="192" rx="6" ry="3.5"/><ellipse cx="172" cy="186" rx="8" ry="4.5"/>
-              <ellipse cx="150" cy="198" rx="5" ry="3"/><ellipse cx="168" cy="196" rx="6" ry="3"/>
+            <rect width="340" height="260" rx="10" fill="#fff"/>
+            <path d="M108 108 C 108 90 232 90 232 108 L 216 208 Q 170 228 124 208 Z" fill="#e0f2fe" stroke="#0284c7" stroke-width="2.4"/>
+            <ellipse cx="170" cy="108" rx="62" ry="13" fill="#f0f9ff" stroke="#0284c7" stroke-width="2.4"/>
+            <path d="M108 108 C 108 90 232 90 232 108 L 216 208 Q 170 228 124 208 Z" fill="url(#th2-glass)"/>
+            <path d="M148 70 V 108 M 192 70 V 108" stroke="#0284c7" stroke-width="2.4"/>
+            <rect x="148" y="66" width="44" height="22" rx="2" fill="#e0f2fe" stroke="#0284c7" stroke-width="2"/>
+            <path d="M192 84 H 222" stroke="#0284c7" stroke-width="3.2" stroke-linecap="round"/>
+            <ellipse cx="222" cy="84" rx="5" ry="4" fill="#bae6fd" stroke="#0284c7" stroke-width="1.6"/>
+            <path d="M122 162 L 120 204 Q 170 220 220 204 L 218 162 Z" fill="url(#th2-liq)" opacity=".82"/>
+            <ellipse cx="170" cy="162" rx="48" ry="9" fill="#60a5fa" opacity=".9"/>
+            <circle cx="152" cy="178" r="3" fill="#bfdbfe"/><circle cx="170" cy="186" r="2.4" fill="#dbeafe"/>
+            <circle cx="188" cy="174" r="2.8" fill="#bfdbfe"/><circle cx="160" cy="196" r="2" fill="#e0f2fe"/>
+            <g fill="#57534e" stroke="#292524" stroke-width=".4">
+              <ellipse cx="148" cy="200" rx="5.5" ry="3.2"/><ellipse cx="162" cy="204" rx="6" ry="3.5"/>
+              <ellipse cx="178" cy="198" rx="5" ry="3"/><ellipse cx="156" cy="208" rx="4.5" ry="2.6"/>
+              <ellipse cx="172" cy="208" rx="5" ry="2.8"/><ellipse cx="188" cy="204" rx="4" ry="2.4"/>
             </g>
-            <!-- 瓶頸 -->
-            <path d="M138 58 L 138 88" stroke="#0369a1" stroke-width="2.2" fill="none"/>
-            <path d="M182 58 L 182 88" stroke="#0369a1" stroke-width="2.2" fill="none"/>
-            <rect x="138" y="52" width="44" height="18" rx="3" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.6"/>
-            <!-- 橡皮塞 -->
-            <path d="M142 44 L 142 62 L 178 62 L 178 44 Q 160 38 142 44 Z" fill="url(#th-rub)" stroke="#9a3412" stroke-width="1.4"/>
-            <!-- 側管＋橡皮管（連續） -->
-            <path d="M182 70 H 214" stroke="#0369a1" stroke-width="3.2" stroke-linecap="round"/>
-            <path d="M208 70 C 236 70 248 96 248 126" fill="none" stroke="#ea580c" stroke-width="5" stroke-linecap="round"/>
-            <path d="M208 70 C 236 70 248 96 248 126" fill="none" stroke="#fb923c" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
-            <!-- 薊頭漏斗：整根連續，沒入液面 -->
-            <ellipse cx="160" cy="18" rx="22" ry="10" fill="#e0f2fe" stroke="#0f172a" stroke-width="2"/>
-            <path d="M138 18 L 138 28 Q 138 36 160 36 Q 182 36 182 28 L 182 18" fill="#bae6fd" stroke="#0f172a" stroke-width="1.6"/>
-            <path d="M160 36 L 160 176" stroke="#0f172a" stroke-width="3.4" stroke-linecap="round"/>
-            <path d="M160 36 L 160 176" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>
-            <circle cx="160" cy="176" r="3.2" fill="#0f172a"/>
-            <circle cx="160" cy="176" r="8" fill="none" stroke="#dc2626" stroke-width="2"/>
-            <!-- 標註 -->
-            <path d="M120 8 Q 100 4 88 14" fill="none" stroke="#dc2626" stroke-width="1.6" marker-end="url(#th-arr)"/>
-            <text x="20" y="22" font-size="12" fill="#dc2626" font-weight="700">液體藥品由此加入</text>
-            <text x="196" y="28" font-size="12" fill="#0f172a" font-weight="700">薊頭漏斗</text>
-            <path d="M88 176 H 128" stroke="#334155" stroke-width="1.2"/>
-            <text x="8" y="180" font-size="12" fill="#b91c1c" font-weight="700">長管須沒入液面下</text>
-            <text x="214" y="198" font-size="12" fill="#0f172a" font-weight="700">固體藥品</text>
-            <text x="160" y="230" text-anchor="middle" font-size="11" fill="#57534e">重繪版</text>
+            <path d="M152 52 L 150 74 L 190 74 L 188 52 Q 170 46 152 52 Z" fill="url(#th2-stop)" stroke="#9a3412" stroke-width="1.5"/>
+            <ellipse cx="170" cy="58" rx="5" ry="3" fill="#fed7aa" opacity=".7"/>
+            <!-- 球狀薊頭＋雙線玻璃長管（整根連續沒入液面） -->
+            <ellipse cx="170" cy="28" rx="20" ry="18" fill="#e0f2fe" stroke="#0c4a6e" stroke-width="2.2"/>
+            <ellipse cx="170" cy="22" rx="14" ry="6" fill="#f0f9ff" stroke="#0c4a6e" stroke-width="1.8"/>
+            <ellipse cx="170" cy="22" rx="9" ry="3.5" fill="#bae6fd" stroke="#0369a1" stroke-width="1"/>
+            <path d="M165 44 L 165 192" stroke="#0c4a6e" stroke-width="2.8"/>
+            <path d="M175 44 L 175 192" stroke="#0c4a6e" stroke-width="2.8"/>
+            <path d="M167 44 L 167 192" stroke="#7dd3fc" stroke-width="1.4" opacity=".75"/>
+            <path d="M173 44 L 173 192" stroke="#7dd3fc" stroke-width="1.4" opacity=".75"/>
+            <ellipse cx="170" cy="192" rx="5" ry="2.2" fill="#0c4a6e"/>
+            <circle cx="170" cy="192" r="14" fill="none" stroke="#dc2626" stroke-width="2.4"/>
+            <path d="M222 84 C 248 84 262 108 262 138 C 262 162 250 178 236 188" fill="none" stroke="url(#th2-hose)" stroke-width="7" stroke-linecap="round"/>
+            <path d="M222 84 C 248 84 262 108 262 138 C 262 162 250 178 236 188" fill="none" stroke="#fdba74" stroke-width="2.4" stroke-linecap="round" opacity=".55"/>
+            <path d="M148 10 Q 118 0 96 16" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#th2-arr)"/>
+            <text x="12" y="22" font-size="13" fill="#dc2626" font-weight="800">液體藥品由此加入</text>
+            <line x1="196" y1="28" x2="228" y2="28" stroke="#334155" stroke-width="1.2"/>
+            <text x="232" y="32" font-size="13" fill="#0f172a" font-weight="800">薊頭漏斗</text>
+            <line x1="128" y1="192" x2="156" y2="192" stroke="#b91c1c" stroke-width="1.3"/>
+            <text x="8" y="196" font-size="13" fill="#b91c1c" font-weight="800">長管須沒入液面下</text>
+            <line x1="200" y1="208" x2="228" y2="220" stroke="#334155" stroke-width="1.2"/>
+            <text x="200" y="236" font-size="12" fill="#0f172a" font-weight="700">固體藥品置入瓶中並加水</text>
+            <text x="170" y="254" text-anchor="middle" font-size="11" fill="#64748b">重繪版</text>
           </svg>
-          <p class="caption">重繪版：紅圈標出「長管沒入液面」</p>
+          <p class="caption">重繪版：球狀薊頭、雙線玻璃長管、吸濾瓶側臂；紅圈＝沒入液面</p>
         </figure>
       </div>
       <ul class="q">
