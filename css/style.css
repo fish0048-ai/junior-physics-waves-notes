@@ -569,9 +569,21 @@ img.diagram-photo {
 img.diagram-lg {
   max-height: 340px;
 }
+svg.diagram.diagram-lg {
+  max-height: 360px;
+  width: 100%;
+  height: auto;
+}
 .gear-photo-single img.diagram-photo {
   max-width: 100%;
   margin: 0 auto;
+}
+.compare-figs {
+  align-items: start;
+}
+.compare-figs .caption {
+  font-weight: 700;
+  color: var(--green-800);
 }
 
 .gear-photos {

@@ -242,25 +242,153 @@
       <p class="inquiry-ask"><strong>探究線索：</strong>先加純水再加雙氧水，哪一瓶會冒泡？線香在氧氣瓶和空氣瓶裡哪一邊火花較大？</p>
       <p>目的：用排水集氣法收集氧氣，比較空氣與氧氣的助燃性。</p>
       <h3 class="subh">實驗幫手：薊頭漏斗</h3>
-      <div class="split">
+      <p class="note">左邊講義原圖、右邊重繪版，請比較哪一邊比較清楚。</p>
+      <div class="split compare-figs">
         <figure>
-          <img class="diagram diagram-photo" src="../img/2-3/thistle-funnel.png" alt="薊頭漏斗：液體由此加入；長管須沒入液面下；固體置瓶中並加水">
-          <p class="caption">長管須沒入液面下，氣體才不會從漏斗衝出（講義原圖）</p>
+          <img class="diagram diagram-photo" src="../img/2-3/thistle-funnel.png" alt="薊頭漏斗講義原圖">
+          <p class="caption">講義原圖</p>
         </figure>
-        <ul class="q">
-          <li><strong>薊頭漏斗：</strong>液體由此加入；長管下端必須
-            <input class="blank" data-answer="沒入液面|插入液體" style="width:6em">，
-            避免氣體從漏斗衝出把藥品噴上來。</li>
-          <li><strong>二氧化錳：</strong>雙氧水自己會慢慢分解；加少量二氧化錳可
-            <input class="blank" data-answer="加速" style="width:3.2em">
-            分解（觸媒，本身質量不變）。</li>
-        </ul>
+        <figure>
+          <svg class="diagram" viewBox="0 0 320 240" aria-label="重繪：薊頭漏斗插入吸濾瓶，長管沒入液面下">
+            <defs>
+              <linearGradient id="th-gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity=".55"/><stop offset="50%" stop-color="#bae6fd" stop-opacity=".08"/><stop offset="100%" stop-color="#fff" stop-opacity=".3"/></linearGradient>
+              <linearGradient id="th-liq" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0284c7"/></linearGradient>
+              <linearGradient id="th-rub" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fdba74"/><stop offset="100%" stop-color="#c2410c"/></linearGradient>
+              <marker id="th-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 1.2 L10 5 L0 8.8 Z" fill="#dc2626"/></marker>
+            </defs>
+            <rect width="320" height="240" rx="10" fill="#f8fafc"/>
+            <!-- 吸濾瓶／錐形瓶 -->
+            <path d="M96 88 C 96 72 224 72 224 88 L 208 200 Q 160 218 112 200 Z" fill="#e0f2fe" stroke="#0369a1" stroke-width="2.2"/>
+            <ellipse cx="160" cy="88" rx="64" ry="14" fill="#f0f9ff" stroke="#0369a1" stroke-width="2.2"/>
+            <path d="M96 88 C 96 72 224 72 224 88 L 208 200 Q 160 218 112 200 Z" fill="url(#th-gl)"/>
+            <!-- 液面 -->
+            <path d="M112 158 L 110 196 Q 160 210 210 196 L 208 158" fill="url(#th-liq)" opacity=".9"/>
+            <ellipse cx="160" cy="158" rx="48" ry="10" fill="#38bdf8" opacity=".85"/>
+            <!-- 固體藥品（顆粒） -->
+            <g fill="#57534e">
+              <ellipse cx="140" cy="188" rx="7" ry="4"/><ellipse cx="156" cy="192" rx="6" ry="3.5"/><ellipse cx="172" cy="186" rx="8" ry="4.5"/>
+              <ellipse cx="150" cy="198" rx="5" ry="3"/><ellipse cx="168" cy="196" rx="6" ry="3"/>
+            </g>
+            <!-- 瓶頸 -->
+            <path d="M138 58 L 138 88" stroke="#0369a1" stroke-width="2.2" fill="none"/>
+            <path d="M182 58 L 182 88" stroke="#0369a1" stroke-width="2.2" fill="none"/>
+            <rect x="138" y="52" width="44" height="18" rx="3" fill="#e0f2fe" stroke="#0369a1" stroke-width="1.6"/>
+            <!-- 橡皮塞 -->
+            <path d="M142 44 L 142 62 L 178 62 L 178 44 Q 160 38 142 44 Z" fill="url(#th-rub)" stroke="#9a3412" stroke-width="1.4"/>
+            <!-- 側管＋橡皮管（連續） -->
+            <path d="M182 70 H 214" stroke="#0369a1" stroke-width="3.2" stroke-linecap="round"/>
+            <path d="M208 70 C 236 70 248 96 248 126" fill="none" stroke="#ea580c" stroke-width="5" stroke-linecap="round"/>
+            <path d="M208 70 C 236 70 248 96 248 126" fill="none" stroke="#fb923c" stroke-width="2.2" stroke-linecap="round" opacity=".7"/>
+            <!-- 薊頭漏斗：整根連續，沒入液面 -->
+            <ellipse cx="160" cy="18" rx="22" ry="10" fill="#e0f2fe" stroke="#0f172a" stroke-width="2"/>
+            <path d="M138 18 L 138 28 Q 138 36 160 36 Q 182 36 182 28 L 182 18" fill="#bae6fd" stroke="#0f172a" stroke-width="1.6"/>
+            <path d="M160 36 L 160 176" stroke="#0f172a" stroke-width="3.4" stroke-linecap="round"/>
+            <path d="M160 36 L 160 176" stroke="#38bdf8" stroke-width="1.5" stroke-linecap="round" opacity=".65"/>
+            <circle cx="160" cy="176" r="3.2" fill="#0f172a"/>
+            <circle cx="160" cy="176" r="8" fill="none" stroke="#dc2626" stroke-width="2"/>
+            <!-- 標註 -->
+            <path d="M120 8 Q 100 4 88 14" fill="none" stroke="#dc2626" stroke-width="1.6" marker-end="url(#th-arr)"/>
+            <text x="20" y="22" font-size="12" fill="#dc2626" font-weight="700">液體藥品由此加入</text>
+            <text x="196" y="28" font-size="12" fill="#0f172a" font-weight="700">薊頭漏斗</text>
+            <path d="M88 176 H 128" stroke="#334155" stroke-width="1.2"/>
+            <text x="8" y="180" font-size="12" fill="#b91c1c" font-weight="700">長管須沒入液面下</text>
+            <text x="214" y="198" font-size="12" fill="#0f172a" font-weight="700">固體藥品</text>
+            <text x="160" y="230" text-anchor="middle" font-size="11" fill="#57534e">重繪版</text>
+          </svg>
+          <p class="caption">重繪版：紅圈標出「長管沒入液面」</p>
+        </figure>
       </div>
+      <ul class="q">
+        <li><strong>薊頭漏斗：</strong>液體由此加入；長管下端必須
+          <input class="blank" data-answer="沒入液面|插入液體" style="width:6em">，
+          避免氣體從漏斗衝出把藥品噴上來。</li>
+        <li><strong>二氧化錳：</strong>雙氧水自己會慢慢分解；加少量二氧化錳可
+          <input class="blank" data-answer="加速" style="width:3.2em">
+          分解（觸媒，本身質量不變）。</li>
+      </ul>
       <p class="formula">\[\text{雙氧水}\xrightarrow{\text{二氧化錳}}\text{水}+\text{氧氣}\]</p>
       <h3 class="subh">製備與檢測（排水集氣）</h3>
+      <p class="note">上：講義原圖　｜　下：重繪版（請比較）</p>
       <figure class="gear-photo-single" style="max-width:100%">
-        <img class="diagram diagram-photo diagram-lg" src="../img/2-3/oxygen-prep-test.png" alt="氧氣製備：雙氧水經薊頭漏斗加入吸濾瓶中的二氧化錳，導管接排水集氣；再以線香比較氧氣瓶與空氣瓶">
-        <p class="caption">左：排水集氣法收集氧氣　｜　右：線香比較氧氣瓶與空氣瓶（講義原圖）</p>
+        <img class="diagram diagram-photo diagram-lg" src="../img/2-3/oxygen-prep-test.png" alt="氧氣製備講義原圖">
+        <p class="caption">講義原圖：排水集氣＋線香對照</p>
+      </figure>
+      <figure>
+        <svg class="diagram diagram-lg" viewBox="0 0 640 280" aria-label="重繪：氧氣製備排水集氣與線香檢測">
+          <defs>
+            <linearGradient id="ox2-gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity=".5"/><stop offset="100%" stop-color="#fff" stop-opacity=".15"/></linearGradient>
+            <linearGradient id="ox2-w" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0369a1"/></linearGradient>
+            <linearGradient id="ox2-rub" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#fdba74"/><stop offset="100%" stop-color="#c2410c"/></linearGradient>
+            <marker id="ox2-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 1.2 L10 5 L0 8.8 Z" fill="#dc2626"/></marker>
+          </defs>
+          <rect width="640" height="280" rx="10" fill="#f8fafc"/>
+          <text x="180" y="22" text-anchor="middle" font-size="14" fill="#0f172a" font-weight="800">① 製備與排水集氣</text>
+          <text x="500" y="22" text-anchor="middle" font-size="14" fill="#0f172a" font-weight="800">② 線香檢測</text>
+          <!-- 水槽 -->
+          <path d="M24 150 L 20 230 H 236 L 232 150 Z" fill="#bae6fd" stroke="#0369a1" stroke-width="2"/>
+          <ellipse cx="128" cy="150" rx="108" ry="16" fill="#7dd3fc" stroke="#0369a1" stroke-width="1.6"/>
+          <path d="M24 150 L 20 230 H 236 L 232 150 Z" fill="url(#ox2-gl)"/>
+          <!-- 倒立集氣瓶 -->
+          <rect x="88" y="88" width="72" height="100" rx="4" fill="#f0f9ff" stroke="#0f172a" stroke-width="2"/>
+          <ellipse cx="124" cy="88" rx="36" ry="10" fill="#e0f2fe" stroke="#0f172a" stroke-width="2"/>
+          <path d="M92 130 L 90 184 H 158 L 156 130" fill="url(#ox2-w)" opacity=".55"/>
+          <ellipse cx="124" cy="130" rx="32" ry="8" fill="#38bdf8" opacity=".7"/>
+          <!-- 氣泡 -->
+          <circle cx="118" cy="168" r="3" fill="#fff" opacity=".9"/><circle cx="132" cy="156" r="2.4" fill="#fff" opacity=".85"/><circle cx="124" cy="144" r="2" fill="#e0f2fe"/>
+          <!-- 反應瓶 -->
+          <path d="M280 100 C 280 84 380 84 380 100 L 368 200 Q 330 214 292 200 Z" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+          <ellipse cx="330" cy="100" rx="50" ry="12" fill="#f0f9ff" stroke="#0369a1" stroke-width="2"/>
+          <path d="M280 100 C 280 84 380 84 380 100 L 368 200 Q 330 214 292 200 Z" fill="url(#ox2-gl)"/>
+          <path d="M292 158 L 290 196 Q 330 208 368 196 L 366 158" fill="url(#ox2-w)" opacity=".75"/>
+          <ellipse cx="330" cy="158" rx="36" ry="8" fill="#38bdf8" opacity=".8"/>
+          <g fill="#44403c">
+            <ellipse cx="314" cy="186" rx="6" ry="3.5"/><ellipse cx="330" cy="190" rx="7" ry="4"/><ellipse cx="348" cy="184" rx="6" ry="3"/>
+          </g>
+          <!-- 瓶頸＋塞 -->
+          <rect x="312" y="72" width="36" height="16" rx="2" fill="#e0f2fe" stroke="#0369a1"/>
+          <path d="M314 62 L 314 82 L 346 82 L 346 62 Q 330 56 314 62 Z" fill="url(#ox2-rub)" stroke="#9a3412"/>
+          <!-- 薊頭漏斗整根 -->
+          <ellipse cx="324" cy="36" rx="16" ry="7" fill="#bae6fd" stroke="#0f172a" stroke-width="1.8"/>
+          <path d="M308 36 L 308 44 Q 308 50 324 50 Q 340 50 340 44 L 340 36" fill="#e0f2fe" stroke="#0f172a" stroke-width="1.4"/>
+          <path d="M324 50 L 324 176" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
+          <path d="M324 50 L 324 176" stroke="#38bdf8" stroke-width="1.3" opacity=".6"/>
+          <circle cx="324" cy="176" r="2.8" fill="#0f172a"/>
+          <!-- 滴管／手示意 -->
+          <path d="M318 18 v12" stroke="#64748b" stroke-width="2"/>
+          <ellipse cx="318" cy="14" rx="6" ry="5" fill="#fecaca" stroke="#b91c1c"/>
+          <path d="M316 18 L 312 28 L 324 28 Z" fill="#e2e8f0" stroke="#64748b"/>
+          <!-- 側管＋整根橡皮管接到水槽 -->
+          <path d="M348 78 H 372" stroke="#0369a1" stroke-width="2.8" stroke-linecap="round"/>
+          <path d="M368 78 C 400 78 410 120 410 150 C 410 170 200 190 124 190" fill="none" stroke="#ea580c" stroke-width="5" stroke-linecap="round"/>
+          <path d="M368 78 C 400 78 410 120 410 150 C 410 170 200 190 124 190" fill="none" stroke="#fb923c" stroke-width="2" opacity=".65"/>
+          <circle cx="124" cy="190" r="3" fill="#c2410c"/>
+          <!-- 標籤 -->
+          <text x="318" y="10" text-anchor="middle" font-size="11" fill="#0f172a" font-weight="700">純水／雙氧水</text>
+          <text x="330" y="228" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="700">二氧化錳</text>
+          <text x="128" y="248" text-anchor="middle" font-size="12" fill="#0369a1" font-weight="700">排水集氣法</text>
+          <!-- 右側：線香檢測 -->
+          <line x1="440" y1="40" x2="440" y2="250" stroke="#cbd5e1" stroke-width="1.5" stroke-dasharray="4 3"/>
+          <!-- 氧氣瓶 -->
+          <rect x="460" y="80" width="56" height="100" rx="4" fill="#f0f9ff" stroke="#0369a1" stroke-width="2"/>
+          <ellipse cx="488" cy="80" rx="28" ry="8" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+          <rect x="464" y="162" width="48" height="14" fill="#7dd3fc" opacity=".7"/>
+          <text x="488" y="130" text-anchor="middle" font-size="13" fill="#0369a1" font-weight="800">氧氣</text>
+          <text x="488" y="176" text-anchor="middle" font-size="10" fill="#0369a1">水</text>
+          <!-- 空氣瓶 -->
+          <rect x="548" y="80" width="56" height="100" rx="4" fill="#f8fafc" stroke="#64748b" stroke-width="2"/>
+          <ellipse cx="576" cy="80" rx="28" ry="8" fill="#f1f5f9" stroke="#64748b" stroke-width="2"/>
+          <rect x="552" y="162" width="48" height="14" fill="#cbd5e1" opacity=".6"/>
+          <text x="576" y="130" text-anchor="middle" font-size="13" fill="#475569" font-weight="800">空氣</text>
+          <text x="576" y="176" text-anchor="middle" font-size="10" fill="#64748b">水</text>
+          <!-- 線香 -->
+          <path d="M452 56 L 500 96" stroke="#78716c" stroke-width="3.2" stroke-linecap="round"/>
+          <circle cx="452" cy="56" r="4" fill="#ef4444"/>
+          <path d="M448 48 Q 444 40 450 36" fill="none" stroke="#f97316" stroke-width="1.5"/>
+          <text x="438" y="52" font-size="12" fill="#0f172a" font-weight="700">線香</text>
+          <path d="M470 70 Q 478 78 486 84" fill="none" stroke="#dc2626" stroke-width="1.8" marker-end="url(#ox2-arr)"/>
+          <text x="320" y="268" text-anchor="middle" font-size="12" fill="#57534e">重繪版：導管與薊頭漏斗皆為連續整根</text>
+        </svg>
+        <p class="caption">重繪版：薊頭漏斗沒入液面、橡皮管連續接到倒立集氣瓶；右側線香比較氧氣／空氣</p>
       </figure>
       <ul class="q">
         <li>收集方法：氧氣不易溶於水、密度小於水 →
@@ -307,10 +435,59 @@
       <p class="inquiry-ask"><strong>探究線索：</strong>氣體又溶於水又比空氣重，導管該伸到集氣瓶底還是口朝下？薊頭漏斗為什麼要插到液面下？</p>
       <p class="formula">\[\text{碳酸鈣}+\text{鹽酸}\rightarrow\text{氯化鈣}+\text{水}+\text{二氧化碳}\]</p>
       <p>常用大理石（主成分碳酸鈣）。雖微溶於水，仍常用排水集氣，因為得到的氣體較純。</p>
-      <figure class="gear-photo-single" style="max-width:min(100%,420px)">
-        <img class="diagram diagram-photo" src="../img/2-3/co2-prep.png" alt="二氧化碳製備：稀鹽酸經薊頭漏斗加入錐形瓶中的大理石，導管接到水槽倒立集氣瓶排水集氣">
-        <p class="caption">稀鹽酸＋大理石；長管沒入液面；排水集氣收集 \(\mathrm{CO_2}\)（講義原圖）</p>
-      </figure>
+      <p class="note">左邊講義原圖、右邊重繪版，請比較。</p>
+      <div class="split compare-figs">
+        <figure>
+          <img class="diagram diagram-photo" src="../img/2-3/co2-prep.png" alt="二氧化碳製備講義原圖">
+          <p class="caption">講義原圖</p>
+        </figure>
+        <figure>
+          <svg class="diagram" viewBox="0 0 360 240" aria-label="重繪：稀鹽酸加大理石製二氧化碳並排水集氣">
+            <defs>
+              <linearGradient id="co2-gl" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#fff" stop-opacity=".5"/><stop offset="100%" stop-color="#fff" stop-opacity=".15"/></linearGradient>
+              <linearGradient id="co2-w" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#7dd3fc"/><stop offset="100%" stop-color="#0369a1"/></linearGradient>
+              <linearGradient id="co2-rub" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#f87171"/><stop offset="100%" stop-color="#b91c1c"/></linearGradient>
+            </defs>
+            <rect width="360" height="240" rx="10" fill="#f8fafc"/>
+            <!-- 錐形瓶 -->
+            <path d="M48 96 C 48 78 148 78 148 96 L 136 188 Q 98 204 60 188 Z" fill="#e0f2fe" stroke="#0369a1" stroke-width="2"/>
+            <ellipse cx="98" cy="96" rx="50" ry="12" fill="#f0f9ff" stroke="#0369a1" stroke-width="2"/>
+            <path d="M48 96 C 48 78 148 78 148 96 L 136 188 Q 98 204 60 188 Z" fill="url(#co2-gl)"/>
+            <path d="M62 148 L 60 184 Q 98 196 134 184 L 132 148" fill="url(#co2-w)" opacity=".8"/>
+            <ellipse cx="98" cy="148" rx="34" ry="8" fill="#38bdf8" opacity=".8"/>
+            <!-- 大理石碎片 -->
+            <g fill="#78716c" stroke="#44403c" stroke-width=".6">
+              <path d="M78 172 L 86 164 L 94 176 Z"/><path d="M96 168 L 108 162 L 112 178 L 98 180 Z"/>
+              <path d="M112 170 L 122 166 L 126 178 L 114 180 Z"/>
+            </g>
+            <!-- 雙孔塞 -->
+            <rect x="80" y="68" width="36" height="16" rx="2" fill="#e0f2fe" stroke="#0369a1"/>
+            <path d="M82 58 L 82 78 L 114 78 L 114 58 Q 98 52 82 58 Z" fill="url(#co2-rub)" stroke="#7f1d1d"/>
+            <!-- 薊頭漏斗整根沒入 -->
+            <ellipse cx="90" cy="28" rx="14" ry="7" fill="#bae6fd" stroke="#0f172a" stroke-width="1.8"/>
+            <path d="M76 28 L 76 36 Q 76 42 90 42 Q 104 42 104 36 L 104 28" fill="#e0f2fe" stroke="#0f172a" stroke-width="1.4"/>
+            <path d="M90 42 L 90 168" stroke="#0f172a" stroke-width="3" stroke-linecap="round"/>
+            <path d="M90 42 L 90 168" stroke="#38bdf8" stroke-width="1.3" opacity=".6"/>
+            <circle cx="90" cy="168" r="2.8" fill="#0f172a"/>
+            <text x="90" y="18" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="700">稀鹽酸</text>
+            <text x="98" y="220" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="700">大理石</text>
+            <!-- 導管：瓶內短管不入液面，外接連續彎管到水槽 -->
+            <path d="M110 70 L 110 88" stroke="#0f172a" stroke-width="2.6" stroke-linecap="round"/>
+            <path d="M110 70 H 168 V 120 H 220 V 176 H 268 V 148" fill="none" stroke="#0f172a" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"/>
+            <path d="M110 70 H 168 V 120 H 220 V 176 H 268 V 148" fill="none" stroke="#38bdf8" stroke-width="1.3" opacity=".55"/>
+            <!-- 水槽＋倒立瓶 -->
+            <path d="M200 130 L 196 210 H 340 L 336 130 Z" fill="#bae6fd" stroke="#0369a1" stroke-width="2"/>
+            <ellipse cx="268" cy="130" rx="72" ry="12" fill="#7dd3fc" stroke="#0369a1"/>
+            <rect x="242" y="78" width="52" height="88" rx="3" fill="#f0f9ff" stroke="#0f172a" stroke-width="2"/>
+            <ellipse cx="268" cy="78" rx="26" ry="7" fill="#e0f2fe" stroke="#0f172a" stroke-width="2"/>
+            <path d="M246 120 L 244 162 H 292 L 290 120" fill="url(#co2-w)" opacity=".5"/>
+            <ellipse cx="268" cy="120" rx="22" ry="6" fill="#38bdf8" opacity=".65"/>
+            <circle cx="262" cy="148" r="2.5" fill="#fff"/><circle cx="274" cy="140" r="2" fill="#fff"/><circle cx="268" cy="132" r="1.8" fill="#e0f2fe"/>
+            <text x="268" y="232" text-anchor="middle" font-size="11" fill="#57534e">重繪版</text>
+          </svg>
+          <p class="caption">重繪版：長管沒入液面；導管連續接到倒立集氣瓶</p>
+        </figure>
+      </div>
       <h3 class="subh">其他收集方法</h3>
       <div class="split">
         <figure>
