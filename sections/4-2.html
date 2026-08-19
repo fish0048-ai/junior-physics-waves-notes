@@ -133,27 +133,44 @@
           <p>兩種都遵守反射定律</p>
         </div>
       </div>
+      <p><strong>鏡面反射：</strong>平行光打到光滑表面，反射後仍近似平行，能成清晰的像。</p>
+      <p><strong>漫反射：</strong>平行光打到粗糙表面，反射向四面八方，不能成清晰的像，但我們仍看得到物體。</p>
       <div class="two-col">
-        <div>
-          <p><strong>鏡面反射：</strong>平行光打到光滑表面，反射後仍近似平行，能成清晰的像。</p>
-          <p><strong>漫反射：</strong>平行光打到粗糙表面，反射向四面八方，不能成清晰的像，但我們仍看得到物體。</p>
-        </div>
-        <svg class="diagram" viewBox="0 0 360 140" aria-label="鏡面反射與漫反射">
-          <rect width="360" height="140" rx="8" fill="#f8fafc"/>
-          <line x1="20" y1="70" x2="160" y2="70" stroke="#334155" stroke-width="5"/>
-          <g stroke="#ea580c" stroke-width="2">
-            <line x1="40" y1="20" x2="70" y2="70"/><line x1="70" y1="70" x2="40" y2="120"/>
-            <line x1="80" y1="20" x2="110" y2="70"/><line x1="110" y1="70" x2="80" y2="120"/>
-          </g>
-          <text x="90" y="20" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="700">鏡面反射</text>
-          <path d="M200 78 q20 -10 40 0 t40 0 t40 0" fill="none" stroke="#334155" stroke-width="5"/>
-          <g stroke="#2563eb" stroke-width="2">
-            <line x1="220" y1="24" x2="236" y2="72"/><line x1="236" y1="72" x2="210" y2="118"/>
-            <line x1="260" y1="24" x2="276" y2="70"/><line x1="276" y1="70" x2="310" y2="110"/>
-            <line x1="300" y1="24" x2="318" y2="74"/><line x1="318" y1="74" x2="348" y2="50"/>
-          </g>
-          <text x="280" y="20" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="700">漫反射</text>
-        </svg>
+        <figure>
+          <svg class="diagram" viewBox="0 0 320 200" aria-label="鏡面反射：平行入射、平行反射">
+            <rect width="320" height="200" rx="8" fill="#f8fafc"/>
+            <text x="160" y="22" text-anchor="middle" font-size="13" fill="#0f172a" font-weight="700">鏡面反射</text>
+            <line x1="24" y1="150" x2="296" y2="150" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+            <defs>
+              <marker id="arr-in" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+                <path d="M0 1.2 L9 5 L0 8.8 z" fill="#ea580c"/>
+              </marker>
+              <marker id="arr-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto">
+                <path d="M0 1.2 L9 5 L0 8.8 z" fill="#2563eb"/>
+              </marker>
+            </defs>
+            <!-- 平行入射（橘）與平行反射（藍），皆在鏡面上方 -->
+            <g stroke="#ea580c" stroke-width="2.2" marker-end="url(#arr-in)">
+              <line x1="40" y1="40" x2="100" y2="145"/>
+              <line x1="100" y1="40" x2="160" y2="145"/>
+              <line x1="160" y1="40" x2="220" y2="145"/>
+            </g>
+            <g stroke="#2563eb" stroke-width="2.2" marker-end="url(#arr-out)">
+              <line x1="100" y1="150" x2="160" y2="45"/>
+              <line x1="160" y1="150" x2="220" y2="45"/>
+              <line x1="220" y1="150" x2="280" y2="45"/>
+            </g>
+            <circle cx="100" cy="150" r="3.2" fill="#0f172a"/>
+            <circle cx="160" cy="150" r="3.2" fill="#0f172a"/>
+            <circle cx="220" cy="150" r="3.2" fill="#0f172a"/>
+            <text x="160" y="188" text-anchor="middle" font-size="12" fill="#64748b">平行光 → 仍平行反射</text>
+          </svg>
+          <p class="caption">光滑平面：平行入射光反射後仍近似平行</p>
+        </figure>
+        <figure>
+          <img class="diagram diagram-photo" src="../img/4-2/diffuse-reflection.png" width="640" height="420" alt="漫反射：平行入射光打到粗糙表面後向不同方向反射" style="max-height:280px;background:#fff">
+          <p class="caption">粗糙表面：平行入射光反射向四面八方（仍遵守入射角＝反射角）</p>
+        </figure>
       </div>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 為什麼能看見黑板、牆壁？</div>
