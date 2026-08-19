@@ -1,29 +1,20 @@
-# PDF 頁碼
+# PDF 頁碼與列印版面
 
-頁碼**主要給下載 PDF／列印**用；螢幕上只在章首卡片、側欄顯示「該節起始頁」方便對照。
+## 版面（優先於花俏頁碼）
 
-## 清單
+- `@page { size: A4; margin: 12mm 12mm 16mm; }` — **不要**用 `margin: 0` 再自己 absolute 疊層（會切版、錯位）
+- 列印時隱藏 `.print-folio-stack`；`js/print-folios.js` 的 install 為 no-op
+- 瀏覽器左下角 `file://` 路徑：請使用者取消勾選「頁首與頁尾」
 
-`js/book-manifest.js` 定義順序（**封面不編頁**）：
-
-1. 第 1～6 章各小節（依 `packs`）← 從第 1 頁起
-2. 實驗專區各實驗（`labs.files`）
-
-封面永遠不出現頁碼。查詢用 `window.JPWNPages`（同檔）。
-
-## 實作要點
+## 頁碼
 
 | 情境 | 行為 |
 |---|---|
-| 螢幕 | 側欄／卡片顯示**起始頁**；不顯示大頁碼 |
-| 單節「下載 PDF」 | 從該節起始頁起，**每一張紙遞增**（如 1-1 起始為 2，則 2、3、4…） |
-| 整本／分章 PDF | 封面無頁碼；內文用 `js/print-folios.js` 沿高度每隔一張 A4 放一個號碼 |
-| `@page` | 必須 `margin: 0`（避免瀏覽器印出 file:// 路徑）；留白用內容 padding |
+| 螢幕 | 側欄／章首顯示各節**起始頁**（`JPWNPages`） |
+| PDF | `@page @bottom-center { content: counter(page) }`（Firefox 等支援；Chrome 可能無此功能，但不破壞版面） |
+| 封面 | 不佔 `JPWNPages` 編號；目錄仍可從 1-0＝第 1 頁起算 |
 
-相關檔：`js/print-folios.js`、`css/style.css`、`js/layout.js`、`js/app.js`、`js/book-pdf.js`。
+## 禁止
 
-## 新章檢查
-
-- [ ] 新節已寫入 `book-manifest.js` 的 `packs`（或實驗的 `labs`）
-- [ ] 單節 PDF 多頁時頁碼會遞增，不是整節同一個數字
-- [ ] 封面無頁碼
+- 用 absolute／fixed 沿文件高度每 297mm 塞頁碼（已證實會錯位、切字）
+- `@page { margin: 0 }` 又沒把留白正確還給內容

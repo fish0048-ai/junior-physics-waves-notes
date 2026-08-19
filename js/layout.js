@@ -415,20 +415,12 @@
   }
 
   function setupPrintFolios() {
-    if (page === "cover" || page === "book") return;
-    const run = () => {
-      if (!window.JPWNPrintFolios) return;
-      window.JPWNPrintFolios.remove();
-      const start = Number(document.body.dataset.printStartPage || document.body.dataset.bookPage || 0);
-      if (!start) return;
-      const root = document.querySelector(".wrap") || document.body;
-      window.JPWNPrintFolios.install({ startPage: start, root, host: root });
-    };
-    window.addEventListener("beforeprint", run);
-    window.addEventListener("afterprint", () => window.JPWNPrintFolios?.remove());
-    // 供 app.js 列印前手動呼叫
+    // 絕對定位 folio 已停用；列印前清掉殘留節點即可
+    const clean = () => window.JPWNPrintFolios?.remove?.();
+    window.addEventListener("beforeprint", clean);
+    window.addEventListener("afterprint", clean);
     window.NotesLayout = window.NotesLayout || {};
-    window.NotesLayout.preparePrintFolios = run;
+    window.NotesLayout.preparePrintFolios = clean;
   }
 
   function renderHomeCards() {

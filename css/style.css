@@ -1055,13 +1055,9 @@ ol.q li, ul.q li { margin: 5px 0; }
 
 .footer a { color: var(--green-800); font-weight: 700; }
 
-.page-folio {
-  /* 舊單顆 folio：螢幕隱藏；列印改用 .print-folio-stack 遞增 */
-  display: none;
-}
-
+.page-folio,
 .print-folio-stack {
-  display: none;
+  display: none !important;
 }
 
 .section-card-top small[data-page-slot] {
@@ -2289,52 +2285,13 @@ html.is-immersive .brand > span:last-child {
   }
   .wrap { zoom: 1 !important; }
   .font-scale { display: none !important; }
-  .toolbar, .toc, .footer, .toast, .wave-deco, .site-nav, .section-nav, .no-print, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip, .book-loader { display: none !important; }
+  .toolbar, .toc, .footer, .toast, .wave-deco, .site-nav, .section-nav, .no-print, .ink-dock, .ink-banner, .ink-fab, .ink-panel, .ink-strip, .book-loader, .print-folio-stack { display: none !important; }
 
-  /* PDF 頁碼：沿文件高度每隔一張 A4 放一個號碼（同節多頁會 3、4、5… 遞增） */
-  .page-folio {
-    display: none !important;
-  }
-  .print-folio-stack {
-    display: block !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 100% !important;
-    height: 0 !important;
-    overflow: visible !important;
-    z-index: 10000 !important;
-    pointer-events: none !important;
-  }
-  .print-folio-abs {
-    position: absolute !important;
-    left: 0 !important;
-    right: 0 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    text-align: center !important;
-    color: #44403c !important;
-    font-size: 10pt !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.14em !important;
-    line-height: 1 !important;
-    background: transparent !important;
-  }
-  body[data-page="cover"] .print-folio-stack,
-  .book-section.is-cover .print-folio-stack {
-    display: none !important;
-  }
-  /* 相容：整本 running（若仍存在）改隱藏，改由 stack 負責 */
-  .page-folio-running {
-    display: none !important;
-  }
   .wrap {
     width: auto;
     max-width: none;
     margin: 0;
-    /* 留白改放內容區：@page margin:0 可關掉瀏覽器預設的檔案路徑頁尾 */
-    padding: 8mm 10mm 16mm;
-    box-sizing: border-box;
+    padding: 0;
   }
   .hero {
     box-shadow: none;
@@ -2773,6 +2730,15 @@ html.is-immersive .brand > span:last-child {
     margin: 2px 0 0;
     border-radius: 0;
   }
-  /* margin:0 → Chrome／Edge 不會印出左下角 file:// 或網址頁尾 */
-  @page { size: A4; margin: 0; }
+  /* 正常頁邊；頁碼用 @bottom-center（支援的引擎會逐張遞增） */
+  @page {
+    size: A4;
+    margin: 12mm 12mm 16mm;
+    @bottom-center {
+      content: "— " counter(page) " —";
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 9pt;
+      color: #44403c;
+    }
+  }
 }

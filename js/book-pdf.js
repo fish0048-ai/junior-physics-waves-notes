@@ -8,11 +8,7 @@
     return new URL("css/style.css", location.href).href;
   }
 
-  function printFoliosUrl() {
-    return new URL("../js/print-folios.js", cssUrl()).href;
-  }
-
-  function buildPrintHtml(sections, styleHref, foliosHref, withAnswers) {
+  function buildPrintHtml(sections, styleHref, withAnswers) {
     const list = [...(sections || [])].filter(Boolean);
     const coverNodes = [];
     const bodyNodes = [];
@@ -61,9 +57,18 @@
 <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.min.css">
 <style>
-  @page { size: A4; margin: 0; }
+  @page {
+    size: A4;
+    margin: 12mm 12mm 16mm;
+    @bottom-center {
+      content: "— " counter(page) " —";
+      font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
+      font-size: 9pt;
+      color: #44403c;
+    }
+  }
   body { margin:0; background:#fff; font-family:"Noto Sans TC","Microsoft JhengHei","PingFang TC",sans-serif; color:#1c1917; }
-  .book-section { break-before: page; page-break-before: always; color:#1c1917 !important; background:#fff !important; padding:8mm 10mm 16mm; box-sizing:border-box; }
+  .book-section { break-before: page; page-break-before: always; color:#1c1917 !important; background:#fff !important; padding:0; }
   .book-section:first-child { break-before: auto; page-break-before: auto; }
   .book-section.is-cover { break-after: page; page-break-after: always; }
   .book-body { position: relative; }
@@ -75,29 +80,7 @@
   .cover-sheet h1,.cover-kicker,.cover-series,.cover-lead { color:#14532d !important; opacity:1 !important; }
   .blank { background:#fff !important; color:transparent !important; border:none; border-bottom:0.9pt solid #166534 !important; min-width:2.8em; display:inline-block; }
   .blank.revealed { background:#fde68a !important; color:#1c1917 !important; }
-  .no-print, .wave-deco, .toc, .footer, .site-nav, .section-nav, .toolbar, .toast, .book-kicker.no-print { display:none !important; }
-  .page-folio, .page-folio-running { display:none !important; }
-  .print-folio-stack {
-    display: block !important;
-    position: absolute !important;
-    left: 0 !important;
-    top: 0 !important;
-    width: 100% !important;
-    height: 0 !important;
-    overflow: visible !important;
-    z-index: 10000 !important;
-    pointer-events: none !important;
-  }
-  .print-folio-abs {
-    position: absolute !important;
-    left: 0 !important;
-    right: 0 !important;
-    text-align: center !important;
-    color: #44403c !important;
-    font-size: 10pt !important;
-    font-weight: 700 !important;
-    letter-spacing: 0.14em !important;
-  }
+  .no-print, .wave-deco, .toc, .footer, .site-nav, .section-nav, .toolbar, .toast, .book-kicker.no-print, .print-folio-stack, .page-folio { display:none !important; }
   .card { box-shadow:none !important; border:none; }
   svg.diagram, .diagram { max-width:100%; height:auto; display:block; }
 </style>
@@ -105,21 +88,13 @@
 <body data-page="book" data-print-start-page="${startPage}">
 ${coverNodes.join("\n")}
 ${bodyBlock}
-<script src="${foliosHref}"><\/script>
 <script>
 (function(){
   var done = false;
-  function stamp() {
-    var body = document.querySelector(".book-body");
-    if (!body || !window.JPWNPrintFolios) return;
-    var start = Number(body.getAttribute("data-print-start") || 1);
-    window.JPWNPrintFolios.install({ startPage: start, root: body, host: body });
-  }
   function go() {
     if (done) return;
     done = true;
-    stamp();
-    window.setTimeout(function(){ window.print(); }, 80);
+    window.print();
   }
   function boot() {
     if (document.fonts && document.fonts.ready) {
@@ -140,17 +115,7 @@ ${bodyBlock}
       setTimeout(go, 1200);
     }
   }
-  if (window.JPWNPrintFolios) boot();
-  else {
-    var t = 0;
-    var iv = setInterval(function(){
-      t++;
-      if (window.JPWNPrintFolios || t > 40) {
-        clearInterval(iv);
-        boot();
-      }
-    }, 50);
-  }
+  boot();
   window.addEventListener("afterprint", function() {
     setTimeout(function(){ try { window.close(); } catch(e){} }, 400);
   }, {once:true});
@@ -168,7 +133,7 @@ ${bodyBlock}
     }
     if (typeof onProgress === "function") onProgress(0, list.length, "building");
 
-    const html = buildPrintHtml(list, cssUrl(), printFoliosUrl(), !!withAnswers);
+    const html = buildPrintHtml(list, cssUrl(), !!withAnswers);
     const blob = new Blob([html], { type: "text/html;charset=utf-8" });
     const blobUrl = URL.createObjectURL(blob);
 

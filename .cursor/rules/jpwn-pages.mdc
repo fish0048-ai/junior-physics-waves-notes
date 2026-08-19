@@ -1,31 +1,21 @@
 ---
-description: 講義 PDF／列印頁碼：依整本順序編號，固定頁底置中；螢幕僅作導覽提示。
+description: 講義 PDF／列印：先保版面正確；頁碼用 @page；禁止 absolute 疊層切版。
 alwaysApply: true
 ---
 
-# PDF 頁碼（不可破）
+# PDF 列印與頁碼（不可破）
 
-頁碼**以下載 PDF／瀏覽器列印為主**，不是螢幕閱讀裝飾。細節見技能 `.cursor/skills/junior-physics-notes/pages.md`。
+細節見 `.cursor/skills/junior-physics-notes/pages.md`。
 
-## 編號來源
+## 版面優先
 
-- 唯一清單：`js/book-manifest.js`（各章小節 → 實驗專區；**封面不編頁**）
-- API：`JPWNPages`（`build`／`lookup`／`rangeForPack`）
-- 新節／新實驗必須寫進 `packs` 或 `labs.files`，頁碼才會連續正確
-- **封面**（`cover.html`／整本裡的封面段）**永不印頁碼**，也不佔編號；內文從第 1 頁起（例如 1-0＝第 1 頁）
+1. `@page { size: A4; margin: 12mm 12mm 16mm; }` 保留正常頁邊。
+2. **禁止**用 absolute／fixed 沿高度每張 A4 疊頁碼（會切字、號碼跑到奇怪位置）。
+3. **禁止**為了藏網址而設 `@page { margin: 0 }` 卻沒把留白還給內容。
+4. 瀏覽器左下角路徑：提示使用者取消「頁首與頁尾」。
 
-## 顯示規則
+## 編號
 
-1. **PDF／列印**：頁碼在每張紙底部置中，且**同節多頁必須遞增**（由 `js/print-folios.js` 依內容高度每隔一張 A4 放置號碼；起始頁來自 `JPWNPages`）。
-2. **關掉瀏覽器路徑頁尾**：`@page { margin: 0 }`，留白改放在 `.wrap`／`.book-section` 的 padding（約 `8mm 10mm 16mm`）。否則 Chrome／Edge 會在左下角印 `file://…` 或網址。
-3. **螢幕**：側欄／章首卡片可顯示該節**起始頁**；不要用單顆 fixed 大頁碼。
-4. **禁止**用一顆 `position: fixed` 寫死 `— N —` 蓋在整節所有紙上（會造成「每一節裡面的頁碼都一樣」）。
-5. **整本／分章 PDF**（`book-pdf.js`）：封面段無頁碼；內文 `.book-body` 安裝 folio stack。
-6. **不要**把頁碼寫死在各 HTML；由 `layout.js`／`print-folios.js`／`book-pdf.js` 注入。
-7. **封面無頁碼**：`data-page="cover"`、整本 `.book-section.is-cover`、只下載封面時，都不可出現頁碼。
-
-## 禁止
-
-- 把 `.page-folio` 放回文章 flow（只出現在最後一張）
-- 螢幕與 PDF 搶同一套大頁碼排版
-- 發明第二套頁碼清單（不經 `book-manifest.js`）
+- 清單：`js/book-manifest.js`／`JPWNPages`（封面不編；1-0 起算第 1 頁）
+- 螢幕：側欄／章首顯示起始頁即可
+- PDF：`@page @bottom-center` + `counter(page)`；`print-folios.js` 的 install 保持 no-op
