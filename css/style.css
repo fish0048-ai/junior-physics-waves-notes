@@ -832,11 +832,15 @@ svg.math-graph text {
 .inquiry-map a strong {
   color: var(--green-800);
 }
-.inquiry-map a span {
+.inquiry-map a > span {
   display: block;
   font-size: 13px;
   color: var(--muted);
   margin-top: 2px;
+}
+.inquiry-map a .katex,
+.inquiry-path a .katex {
+  white-space: nowrap;
 }
 
 .inquiry-lead { margin: 0 0 10px; }
@@ -857,7 +861,7 @@ svg.math-graph text {
 .inquiry-path a strong {
   color: var(--green-800);
 }
-.inquiry-path a span {
+.inquiry-path a > span {
   display: block;
   font-size: 13px;
   color: var(--muted);
