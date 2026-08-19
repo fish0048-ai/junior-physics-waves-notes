@@ -281,7 +281,7 @@
       <section class="gifted">
         <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 用 P、S 波時間差估震央</div>
         <ul class="q">
-          <li>設 P 波速 v<sub>P</sub>、S 波速 v<sub>S</sub>，震央距離 d。到達時間差 Δt＝d／v<sub>S</sub>－d／v<sub>P</sub>，所以 d＝Δt／(1／v<sub>S</sub>－1／v<sub>P</sub>)。</li>
+          <li>設 P 波速 \(v_{\mathrm{P}}\)、S 波速 \(v_{\mathrm{S}}\)，震央距離 \(d\)。到達時間差 \(\Delta t=\dfrac{d}{v_{\mathrm{S}}}-\dfrac{d}{v_{\mathrm{P}}}\)，所以 \(d=\dfrac{\Delta t}{\dfrac{1}{v_{\mathrm{S}}}-\dfrac{1}{v_{\mathrm{P}}}}\)。</li>
           <li>三個測站各畫一個圓（半徑＝各自算出的 d），三圓交點就是震央。這就是地震定位的基本想法。</li>
           <li>外地核沒有 S 波通過 → 推論是液態；更裡面又出現某種波 → 內地核是固態。橫波不能在液體中走，是關鍵證據。</li>
         </ul>
@@ -636,21 +636,22 @@
           <input class="blank" data-answer="Hz|赫|赫茲" style="width:3.2em">。
         </li>
         <li>週期與頻率互為倒數：
-          <input class="blank" data-answer="f=1/T|f＝1/T|f=1÷T" style="width:6em">。
+          \(f=\dfrac{1}{T}\)、\(T=\dfrac{1}{f}\)。
         </li>
       </ol>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 週期與頻率怎麼換算</div>
         <p>1 Hz 就是「每秒 1 次」。兩者永遠互為倒數，國中計算很常考：</p>
         <ul class="q">
-          <li>T ＝ 0.2 s → f ＝ 1／0.2 ＝ 5 Hz（每秒振動 5 次）</li>
-          <li>f ＝ 10 Hz → T ＝ 0.1 s（產生一個全波要 0.1 秒）</li>
+          <li>\(T=0.2\,\mathrm{s}\) → \(f=\dfrac{1}{0.2}=5\,\mathrm{Hz}\)（每秒振動 5 次）</li>
+          <li>\(f=10\,\mathrm{Hz}\) → \(T=0.1\,\mathrm{s}\)（產生一個全波要 0.1 秒）</li>
           <li>手搖得愈快：頻率變大、週期變小；同一條繩子上波速不變，所以波長會變短。</li>
         </ul>
       </section>
 
       <h3 class="subh">波速</h3>
-      <div class="formula">\[v=\dfrac{s}{t}=\dfrac{\lambda}{T}=f\lambda\]</div>
+      <p class="formula">\[v=\dfrac{s}{t}\]</p>
+      <p class="formula">\[v=\dfrac{\lambda}{T}=f\lambda\]</p>
       <p>
         機械波的波速主要由
         <input class="blank" data-answer="介質" style="width:4em">
@@ -698,11 +699,11 @@
         </ul>
       </section>
       <section class="gifted">
-        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 強度 ∝ 1／r²　與　駐波</div>
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 強度 \(I\propto\dfrac{1}{r^{2}}\)　與　駐波</div>
         <ul class="q">
-          <li><strong>球面波強度：</strong>點波源向四面八方傳，能量攤在球面上，面積 ∝ r²，所以強度 I ∝ 1／r²。距離變 2 倍，單位面積能量約剩 1／4，聽起來明顯變小（不是變 1／2）。</li>
-          <li><strong>駐波：</strong>兩列頻率相同、振幅相近、方向相反的波疊加，有些點永遠不動（<strong>波節</strong>），有些點振幅最大（<strong>波腹</strong>）。相鄰兩波節距離＝½λ。</li>
-          <li>吉他弦兩端固定都是波節，弦長 L＝n×½λ（n＝1, 2, 3…）。n＝1 是基音，n＝2 頻率剛好高一個八度。</li>
+          <li><strong>球面波強度：</strong>點波源向四面八方傳，能量攤在球面上，面積 \(\propto r^{2}\)，所以強度 \(I\propto\dfrac{1}{r^{2}}\)。距離變 2 倍，單位面積能量約剩 \(\dfrac{1}{4}\)，聽起來明顯變小（不是變 \(\dfrac{1}{2}\)）。</li>
+          <li><strong>駐波：</strong>兩列頻率相同、振幅相近、方向相反的波疊加，有些點永遠不動（<strong>波節</strong>），有些點振幅最大（<strong>波腹</strong>）。相鄰兩波節距離 \(=\dfrac{1}{2}\lambda\)。</li>
+          <li>吉他弦兩端固定都是波節，弦長 \(L=n\times\dfrac{1}{2}\lambda\)（\(n=1,2,3,\ldots\)）。\(n=1\) 是基音，\(n=2\) 頻率剛好高一個八度。</li>
         </ul>
       </section>
 
@@ -743,13 +744,14 @@
           <p>讀圖求 λ、f、T、v</p>
         </div>
       </div>
-      <div class="formula">\[v=\dfrac{\text{波前進距離}}{\text{時間}}=f\lambda=\dfrac{\lambda}{T}\]</div>
+      <p class="formula">\[v=\dfrac{\text{波前進距離}}{\text{時間}}\]</p>
+      <p class="formula">\[v=f\lambda=\dfrac{\lambda}{T}\]</p>
       <section class="tips">
         <div class="ex-title"><span class="tag tag-cyan">讀圖三步驟</span></div>
         <ol class="q">
           <li>先找<strong>波長</strong>：相鄰兩波峰（或兩波谷）的水平距離才是 1 個波長。</li>
           <li>再找<strong>週期或頻率</strong>：波走 1 個波長所需時間就是 T；每秒振動幾次就是 f。</li>
-          <li>最後算<strong>波速</strong>：v＝距離／時間，或 \(v=f\lambda\)。兩種算法要相同，可互相驗算。</li>
+          <li>最後算<strong>波速</strong>：\(v=\dfrac{\text{距離}}{\text{時間}}\)，或 \(v=f\lambda\)。兩種算法要相同，可互相驗算。</li>
         </ol>
       </section>
 
@@ -778,7 +780,7 @@
         → <input class="blank" data-answer="A|(A)" style="width:2.8em">
         <span data-reveal hidden>　（同一繩子波速不變；f 變大、T 變小、λ 變小）</span>
       </p>
-      <p data-reveal hidden class="note">解析：A、B 為相鄰波峰 ⇒ λ＝20 cm；走 1 個波長要 4 s ⇒ T＝4 s，f＝1／4＝0.25 Hz；v＝20／4＝5 cm/s（或 \(v=f\lambda\)＝0.25×20＝5）。</p>
+      <p data-reveal hidden class="note">解析：A、B 為相鄰波峰 ⇒ \(\lambda=20\,\mathrm{cm}\)；走 1 個波長要 4 s ⇒ \(T=4\,\mathrm{s}\)，\(f=\dfrac{1}{4}=0.25\,\mathrm{Hz}\)；\(v=\dfrac{20}{4}=5\,\mathrm{cm/s}\)（或 \(v=f\lambda=0.25\times 20=5\)）。</p>
 
       <h3 class="subh">範例 1　水波</h3>
       <div class="split">
@@ -794,9 +796,9 @@
         </svg>
         <div>
           <p>波源每秒振動 10 次。圖中藍圈為波峰，從波源到最外圈半徑 20 cm，其間共 4 個波長。求波速。</p>
-          <p>f ＝ <input class="blank" data-answer="10" style="width:3em"> Hz</p>
-          <p>λ ＝ 20／4 ＝ <input class="blank" data-answer="5" style="width:3em"> cm</p>
-          <p>v ＝ fλ ＝ <input class="blank" data-answer="50" style="width:3.5em"> cm/s</p>
+          <p>\(f=\) <input class="blank" data-answer="10" style="width:3em"> \(\mathrm{Hz}\)</p>
+          <p>\(\lambda=\dfrac{20}{4}=\) <input class="blank" data-answer="5" style="width:3em"> \(\mathrm{cm}\)</p>
+          <p>\(v=f\lambda=\) <input class="blank" data-answer="50" style="width:3.5em"> \(\mathrm{cm/s}\)</p>
         </div>
       </div>
 
@@ -815,9 +817,9 @@
         </svg>
         <div>
           <p>振動週期為 0.2 秒，圖中標示長度為 25 cm（含 2.5 個波長）。求波速。</p>
-          <p>λ ＝ 25／2.5 ＝ <input class="blank" data-answer="10" style="width:3em"> cm</p>
-          <p>f ＝ 1／0.2 ＝ <input class="blank" data-answer="5" style="width:3em"> Hz</p>
-          <p>v ＝ <input class="blank" data-answer="50" style="width:3.5em"> cm/s</p>
+          <p>\(\lambda=\dfrac{25}{2.5}=\) <input class="blank" data-answer="10" style="width:3em"> \(\mathrm{cm}\)</p>
+          <p>\(f=\dfrac{1}{0.2}=\) <input class="blank" data-answer="5" style="width:3em"> \(\mathrm{Hz}\)</p>
+          <p>\(v=\) <input class="blank" data-answer="50" style="width:3.5em"> \(\mathrm{cm/s}\)</p>
         </div>
       </div>
     </article>

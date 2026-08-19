@@ -726,6 +726,10 @@ tr:nth-child(even) td { background: var(--green-50); }
   overflow-wrap: normal;
   letter-spacing: normal;
 }
+.formula > div {
+  display: block;
+  width: 100%;
+}
 .formula .katex {
   font-size: 1.2em;
   font-weight: 400;

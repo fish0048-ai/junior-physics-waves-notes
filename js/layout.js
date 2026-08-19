@@ -121,7 +121,8 @@
         if (!blocks.length) return;
         el.innerHTML = "";
         blocks.forEach((tex) => {
-          const host = document.createElement(blocks.length > 1 ? "div" : "span");
+          // displayMode 會產生 .katex-display（block），不可放在 span 裡否則版面會跑掉
+          const host = document.createElement("div");
           try {
             window.katex.render(tex, host, {
               displayMode: true,
