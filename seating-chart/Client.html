@@ -1,0 +1,485 @@
+<script>
+(function () {
+  var pin = sessionStorage.getItem('jpwnSeatPin') || '';
+  var state = {
+    className: '',
+    rows: 6,
+    cols: 7,
+    aisleAfter: 3,
+    students: [],
+    revision: 0,
+    savedAt: '',
+    canUndo: false,
+    classes: []
+  };
+  var dirty = false;
+  var busy = false;
+  var selected = null;
+  var drawn = {};
+  var pollTimer = null;
+  var toastTimer = null;
+  var chain = Promise.resolve();
+
+  var $ = function (id) { return document.getElementById(id); };
+  var grid = $('grid');
+  var tray = $('tray');
+
+  function api(name, a, b, c) {
+    return new Promise(function (resolve, reject) {
+      var runner = google.script.run
+        .withSuccessHandler(resolve)
+        .withFailureHandler(reject);
+      if (typeof c !== 'undefined') runner[name](a, b, c);
+      else if (typeof b !== 'undefined') runner[name](a, b);
+      else runner[name](a);
+    });
+  }
+
+  function toast(msg, kind) {
+    var el = $('toast');
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function () { el.classList.add('hidden'); }, 2200);
+    if (kind) setSync(msg, kind);
+  }
+
+  function setSync(text, kind) {
+    var el = $('sync-text');
+    el.textContent = text;
+    el.className = 'sync' + (kind ? ' ' + kind : '');
+  }
+
+  function applyState(next) {
+    if (!next || !next.ok) {
+      throw new Error((next && next.error) || '讀取失敗');
+    }
+    state = {
+      className: next.className,
+      rows: next.rows,
+      cols: next.cols,
+      aisleAfter: next.aisleAfter,
+      students: next.students || [],
+      revision: next.revision,
+      savedAt: next.savedAt,
+      canUndo: !!next.canUndo,
+      classes: next.classes || []
+    };
+    dirty = false;
+    fillClassSelect();
+    $('rows-input').value = state.rows;
+    $('cols-input').value = state.cols;
+    $('btn-undo').disabled = !state.canUndo;
+    render();
+    var when = state.savedAt ? '已同步 ' + state.savedAt : '已連上雲端';
+    setSync(when, 'ok');
+  }
+
+  function fillClassSelect() {
+    var sel = $('class-select');
+    var cur = state.className;
+    sel.innerHTML = '';
+    state.classes.forEach(function (name) {
+      var opt = document.createElement('option');
+      opt.value = name;
+      opt.textContent = name;
+      if (name === cur) opt.selected = true;
+      sel.appendChild(opt);
+    });
+  }
+
+  function render() {
+    var rows = state.rows;
+    var cols = state.cols;
+    var aisle = state.aisleAfter;
+    var template = [];
+    for (var c = 1; c <= cols; c++) {
+      template.push('1fr');
+      if (c === aisle && aisle > 0 && aisle < cols) template.push('10px');
+    }
+    grid.style.gridTemplateColumns = template.join(' ');
+    grid.innerHTML = '';
+    tray.innerHTML = '';
+
+    var bySeat = {};
+    state.students.forEach(function (s) {
+      if (s.row > 0 && s.col > 0) bySeat[s.row + ',' + s.col] = s;
+    });
+
+    for (var r = 1; r <= rows; r++) {
+      for (var c2 = 1; c2 <= cols; c2++) {
+        if (c2 === aisle + 1 && aisle > 0 && aisle < cols) {
+          var gap = document.createElement('div');
+          gap.className = 'aisle';
+          gap.style.gridColumn = String(aisle + 1);
+          gap.style.gridRow = String(r);
+          grid.appendChild(gap);
+        }
+        var cell = document.createElement('div');
+        cell.className = 'cell';
+        cell.dataset.row = String(r);
+        cell.dataset.col = String(c2);
+        var gc = c2 > aisle && aisle > 0 && aisle < cols ? c2 + 1 : c2;
+        cell.style.gridColumn = String(gc);
+        cell.style.gridRow = String(r);
+        var student = bySeat[r + ',' + c2];
+        if (student) cell.appendChild(makeSeat(student));
+        bindDrop(cell, r, c2);
+        grid.appendChild(cell);
+      }
+    }
+
+    var unseated = state.students.filter(function (s) { return !(s.row > 0 && s.col > 0); });
+    $('tray-count').textContent = String(unseated.length);
+    unseated.forEach(function (s) { tray.appendChild(makeSeat(s)); });
+    bindDrop(tray, 0, 0);
+  }
+
+  function makeSeat(student) {
+    var el = document.createElement('div');
+    el.className = 'seat';
+    el.dataset.seat = String(student.seatNo);
+    if (drawn[student.seatNo]) el.classList.add('picked');
+    el.innerHTML = '<div class="no">' + pad(student.seatNo) + '</div>' +
+      '<div class="name">' + escapeHtml(student.name) + '</div>' +
+      '<div class="pts ' + scoreClass(student.score) + '">' + formatScore(student.score) + '</div>';
+    bindPointer(el, student);
+    return el;
+  }
+
+  function pad(n) {
+    var s = String(n);
+    return s.length < 2 ? '0' + s : s;
+  }
+
+  function formatScore(n) {
+    n = Number(n || 0);
+    return n > 0 ? '+' + n : String(n);
+  }
+
+  function scoreClass(n) {
+    n = Number(n || 0);
+    if (n > 0) return 'up';
+    if (n < 0) return 'down';
+    return '';
+  }
+
+  function escapeHtml(s) {
+    return String(s).replace(/[&<>"']/g, function (ch) {
+      return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+    });
+  }
+
+  function findStudent(seatNo) {
+    for (var i = 0; i < state.students.length; i++) {
+      if (String(state.students[i].seatNo) === String(seatNo)) return state.students[i];
+    }
+    return null;
+  }
+
+  function occupant(row, col) {
+    if (!(row > 0 && col > 0)) return null;
+    for (var i = 0; i < state.students.length; i++) {
+      var s = state.students[i];
+      if (s.row === row && s.col === col) return s;
+    }
+    return null;
+  }
+
+  function bindPointer(el, student) {
+    el.addEventListener('pointerdown', function (e) {
+      if (e.button && e.button !== 0) return;
+      e.preventDefault();
+      var startX = e.clientX;
+      var startY = e.clientY;
+      var ghost = null;
+      var dragging = false;
+      var pointerId = e.pointerId;
+
+      function onMove(ev) {
+        if (ev.pointerId !== pointerId) return;
+        var dx = ev.clientX - startX;
+        var dy = ev.clientY - startY;
+        if (!dragging && (dx * dx + dy * dy) > 64) {
+          dragging = true;
+          el.classList.add('dragging');
+          ghost = el.cloneNode(true);
+          ghost.classList.add('ghost');
+          ghost.style.width = el.offsetWidth + 'px';
+          ghost.style.height = el.offsetHeight + 'px';
+          document.body.appendChild(ghost);
+        }
+        if (ghost) {
+          ghost.style.left = (ev.clientX - ghost.offsetWidth / 2) + 'px';
+          ghost.style.top = (ev.clientY - ghost.offsetHeight / 2) + 'px';
+          highlightDrop(ev.clientX, ev.clientY);
+        }
+      }
+
+      function onUp(ev) {
+        if (ev.pointerId !== pointerId) return;
+        document.removeEventListener('pointermove', onMove);
+        document.removeEventListener('pointerup', onUp);
+        document.removeEventListener('pointercancel', onUp);
+        el.classList.remove('dragging');
+        clearOver();
+        if (ghost) ghost.remove();
+        ghost = null;
+        if (dragging) dropAt(student, ev.clientX, ev.clientY);
+        else openScore(student);
+      }
+
+      document.addEventListener('pointermove', onMove);
+      document.addEventListener('pointerup', onUp);
+      document.addEventListener('pointercancel', onUp);
+    });
+  }
+
+  function highlightDrop(x, y) {
+    clearOver();
+    var t = dropTarget(x, y);
+    if (t) t.classList.add('over');
+  }
+
+  function clearOver() {
+    document.querySelectorAll('.over').forEach(function (n) { n.classList.remove('over'); });
+  }
+
+  function dropTarget(x, y) {
+    var node = document.elementFromPoint(x, y);
+    while (node && node !== document.body) {
+      if (node.classList && (node.classList.contains('cell') || node.id === 'tray')) return node;
+      node = node.parentNode;
+    }
+    return null;
+  }
+
+  function dropAt(student, x, y) {
+    var t = dropTarget(x, y);
+    if (!t) return;
+    var fromRow = student.row;
+    var fromCol = student.col;
+    var toRow = t.id === 'tray' ? 0 : Number(t.dataset.row);
+    var toCol = t.id === 'tray' ? 0 : Number(t.dataset.col);
+    if (fromRow === toRow && fromCol === toCol) return;
+
+    var other = occupant(toRow, toCol);
+    var swapped = null;
+    if (other && other.seatNo !== student.seatNo) {
+      swapped = { seatNo: other.seatNo, fromRow: other.row, fromCol: other.col };
+      other.row = fromRow;
+      other.col = fromCol;
+    }
+    student.row = toRow;
+    student.col = toCol;
+    dirty = true;
+    render();
+    setSync('尚未存檔', 'busy');
+    saveMove(student, fromRow, fromCol, swapped);
+  }
+
+  function bindDrop(el) {
+    el.addEventListener('dragover', function (e) { e.preventDefault(); });
+  }
+
+  function openScore(student) {
+    selected = student;
+    $('sheet-name').textContent = student.name;
+    $('sheet-meta').textContent = '座號 ' + pad(student.seatNo);
+    $('sheet-score').textContent = formatScore(student.score);
+    $('score-sheet').classList.remove('hidden');
+  }
+
+  function closeScore() {
+    $('score-sheet').classList.add('hidden');
+    selected = null;
+  }
+
+  function payload(extra) {
+    var body = {
+      pin: pin,
+      className: state.className,
+      rows: Number($('rows-input').value || state.rows),
+      cols: Number($('cols-input').value || state.cols),
+      aisleAfter: state.aisleAfter,
+      students: state.students
+    };
+    if (extra) {
+      Object.keys(extra).forEach(function (k) { body[k] = extra[k]; });
+    }
+    return body;
+  }
+
+  function run(name, extra, okMsg) {
+    var body = payload(extra);
+    chain = chain.then(function () {
+      busy = true;
+      setSync('同步中…', 'busy');
+      return api(name, body).then(function (res) {
+        busy = false;
+        if (res && res.error === '密碼錯誤') {
+          showPin(true);
+          return;
+        }
+        applyState(res);
+        if (okMsg) toast(okMsg, 'ok');
+      }).catch(function (err) {
+        busy = false;
+        setSync('同步失敗', 'err');
+        toast(String(err && err.message ? err.message : err), 'err');
+      });
+    });
+    return chain;
+  }
+
+  function saveMove(student, fromRow, fromCol, swapped) {
+    run('logMove', {
+      moved: {
+        seatNo: student.seatNo,
+        name: student.name,
+        fromRow: fromRow,
+        fromCol: fromCol
+      },
+      swapped: swapped || {}
+    });
+  }
+
+  function load(className) {
+    busy = true;
+    setSync('讀取中…', 'busy');
+    return api('getState', className || '', pin).then(function (res) {
+      busy = false;
+      if (res && res.error === '密碼錯誤') {
+        showPin(true);
+        return;
+      }
+      applyState(res);
+    }).catch(function (err) {
+      busy = false;
+      var msg = String(err && err.message ? err.message : err);
+      if (msg.indexOf('密碼') !== -1) showPin(true);
+      else {
+        setSync('讀取失敗', 'err');
+        toast(msg, 'err');
+      }
+    });
+  }
+
+  function showPin(bad) {
+    $('pin-gate').classList.remove('hidden');
+    if (bad) {
+      $('pin-error').textContent = '密碼錯誤，請再試一次。';
+      $('pin-error').classList.remove('hidden');
+    }
+  }
+
+  function poll() {
+    if (busy || dirty || document.hidden) return;
+    api('pollState', state.className, pin, state.revision).then(function (res) {
+      if (!res || res.unchanged || busy || dirty) return;
+      if (res.error === '密碼錯誤') return;
+      if (res.ok) applyState(res);
+    }).catch(function () {});
+  }
+
+  function pickRandom() {
+    var unique = $('draw-unique').checked;
+    var pool = state.students.filter(function (s) {
+      return !unique || !drawn[s.seatNo];
+    });
+    if (!pool.length) {
+      toast('可以抽的學生都抽過了，請重設。', 'busy');
+      return;
+    }
+    var seats = document.querySelectorAll('.seat');
+    var i = 0;
+    var spins = Math.min(18, 8 + pool.length);
+    var timer = setInterval(function () {
+      seats.forEach(function (n) { n.classList.remove('win'); });
+      if (seats[i % seats.length]) seats[i % seats.length].classList.add('win');
+      i += 1;
+      if (i >= spins) {
+        clearInterval(timer);
+        seats.forEach(function (n) { n.classList.remove('win'); });
+        var pick = pool[Math.floor(Math.random() * pool.length)];
+        drawn[pick.seatNo] = true;
+        render();
+        var el = document.querySelector('[data-seat="' + pick.seatNo + '"]');
+        if (el) el.classList.add('win');
+        $('winner-no').textContent = '座號 ' + pad(pick.seatNo);
+        $('winner-name').textContent = pick.name;
+        $('winner').classList.remove('hidden');
+        $('draw-remain').textContent = unique
+          ? '還剩 ' + (pool.length - 1) + ' 人未抽'
+          : '可重複抽籤';
+      }
+    }, 70);
+  }
+
+  $('pin-form').addEventListener('submit', function (e) {
+    e.preventDefault();
+    pin = $('pin-input').value || '';
+    sessionStorage.setItem('jpwnSeatPin', pin);
+    $('pin-gate').classList.add('hidden');
+    load();
+  });
+
+  $('class-select').addEventListener('change', function () {
+    load(this.value);
+  });
+
+  $('btn-layout').addEventListener('click', function () {
+    run('setLayoutSize', {
+      rows: Number($('rows-input').value),
+      cols: Number($('cols-input').value)
+    }, '格數已更新');
+  });
+
+  $('btn-save').addEventListener('click', function () {
+    run('saveAll', null, '已存檔，其他平板會一起更新');
+  });
+
+  $('btn-undo').addEventListener('click', function () {
+    run('undoLast', null, '已復原上一步');
+  });
+
+  $('btn-draw').addEventListener('click', function () {
+    $('draw-sheet').classList.remove('hidden');
+  });
+  $('draw-close').addEventListener('click', function () {
+    $('draw-sheet').classList.add('hidden');
+  });
+  $('btn-draw-go').addEventListener('click', pickRandom);
+  $('btn-draw-reset').addEventListener('click', function () {
+    drawn = {};
+    render();
+    $('draw-remain').textContent = '已重設，全員可再抽。';
+    toast('抽籤已重設');
+  });
+  $('winner-ok').addEventListener('click', function () {
+    $('winner').classList.add('hidden');
+    document.querySelectorAll('.win').forEach(function (n) { n.classList.remove('win'); });
+  });
+
+  $('sheet-close').addEventListener('click', closeScore);
+  $('score-sheet').addEventListener('click', function (e) {
+    if (e.target.id === 'score-sheet') closeScore();
+  });
+  document.querySelectorAll('#score-sheet [data-delta]').forEach(function (btn) {
+    btn.addEventListener('click', function () {
+      if (!selected) return;
+      var delta = Number(btn.getAttribute('data-delta'));
+      var seatNo = selected.seatNo;
+      closeScore();
+      run('adjustScore', { seatNo: seatNo, delta: delta });
+    });
+  });
+
+  pollTimer = setInterval(poll, 4000);
+  document.addEventListener('visibilitychange', function () {
+    if (!document.hidden) poll();
+  });
+
+  load();
+})();
+</script>

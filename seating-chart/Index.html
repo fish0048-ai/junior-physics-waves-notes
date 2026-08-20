@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="theme-color" content="#0f766e">
+  <title>課堂座位表</title>
+  <?!= include('Styles'); ?>
+</head>
+<body>
+  <div id="pin-gate" class="gate hidden">
+    <form class="gate-card" id="pin-form">
+      <h1>課堂座位表</h1>
+      <p>請輸入試算表「設定」裡的網頁密碼</p>
+      <input type="password" id="pin-input" inputmode="numeric" autocomplete="off" placeholder="密碼">
+      <button type="submit" class="btn primary">進入</button>
+      <p id="pin-error" class="error hidden"></p>
+    </form>
+  </div>
+
+  <header class="top">
+    <div class="brand">
+      <strong>課堂座位表</strong>
+      <span id="sync-text" class="sync">讀取中…</span>
+    </div>
+    <label class="field">
+      班級
+      <select id="class-select"></select>
+    </label>
+    <label class="field slim">
+      列
+      <input id="rows-input" type="number" min="1" max="12">
+    </label>
+    <label class="field slim">
+      欄
+      <input id="cols-input" type="number" min="1" max="12">
+    </label>
+    <button type="button" id="btn-layout" class="btn">套用格數</button>
+    <button type="button" id="btn-draw" class="btn">隨機抽籤</button>
+    <button type="button" id="btn-undo" class="btn">復原</button>
+    <button type="button" id="btn-save" class="btn primary">一鍵存檔</button>
+  </header>
+
+  <main>
+    <div class="stage-label">講台／黑板</div>
+    <section id="grid" class="grid" aria-label="座位表"></section>
+    <section class="tray-wrap">
+      <h2>尚未入座 <span id="tray-count">0</span></h2>
+      <div id="tray" class="tray"></div>
+    </section>
+  </main>
+
+  <div id="score-sheet" class="sheet hidden" role="dialog" aria-modal="true">
+    <div class="sheet-card">
+      <div class="sheet-head">
+        <div>
+          <div id="sheet-name" class="sheet-name"></div>
+          <div id="sheet-meta" class="sheet-meta"></div>
+        </div>
+        <button type="button" id="sheet-close" class="btn icon" aria-label="關閉">×</button>
+      </div>
+      <div id="sheet-score" class="sheet-score">0</div>
+      <div class="score-grid">
+        <button type="button" class="btn good" data-delta="1">+1</button>
+        <button type="button" class="btn good" data-delta="2">+2</button>
+        <button type="button" class="btn good" data-delta="5">+5</button>
+        <button type="button" class="btn bad" data-delta="-1">-1</button>
+        <button type="button" class="btn bad" data-delta="-2">-2</button>
+        <button type="button" class="btn bad" data-delta="-5">-5</button>
+      </div>
+    </div>
+  </div>
+
+  <div id="draw-sheet" class="sheet hidden" role="dialog" aria-modal="true">
+    <div class="sheet-card">
+      <div class="sheet-head">
+        <strong>隨機抽籤</strong>
+        <button type="button" id="draw-close" class="btn icon" aria-label="關閉">×</button>
+      </div>
+      <label class="check">
+        <input type="checkbox" id="draw-unique" checked>
+        不重複（抽過的先排除，抽完可重設）
+      </label>
+      <div class="draw-actions">
+        <button type="button" id="btn-draw-go" class="btn primary">抽出一人</button>
+        <button type="button" id="btn-draw-reset" class="btn">重設抽籤</button>
+      </div>
+      <p id="draw-remain" class="hint"></p>
+    </div>
+  </div>
+
+  <div id="winner" class="winner hidden" role="status">
+    <div class="winner-card">
+      <div class="winner-kicker">抽中</div>
+      <div id="winner-no" class="winner-no"></div>
+      <div id="winner-name" class="winner-name"></div>
+      <button type="button" id="winner-ok" class="btn primary">知道了</button>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+  <?!= include('Client'); ?>
+</body>
+</html>
