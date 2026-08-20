@@ -2,6 +2,7 @@
 
 以第 4 章為新章範本。第 3 章章首是 `index.html`＋`js/config.js`。
 
+- 人工 vs AI 工作流 → [workflow.md](workflow.md)
 - 探究文案 → [inquiry.md](inquiry.md)
 - 頁面骨架 → [html-templates.md](html-templates.md)
 - 公式與圖表 → [math.md](math.md)

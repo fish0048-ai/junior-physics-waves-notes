@@ -4,14 +4,22 @@
 
 **實驗專區不要套用本檔**：不要做 `exams/lab-*.html`、不要 `review-lab.html`、不要各節 `#drill`。見 [labs.md](labs.md)。
 
+**人工 vs AI 完整步驟**見 [workflow.md](workflow.md) §4。摘要：
+
+| 人工交 | AI 做 |
+|--------|--------|
+| `題目卷.htm`＋`.files`、答案卷／解析卷（docx 可） | 拷圖、Word COM 抽 ans／exp、parse → `exam-chN-*.js` |
+| 決策：填充／甲乙題要不要收（預設不收進四選一） | keys 長度對齊題數；題組 lead 掛下一題 |
+| 瀏覽器抽查答案與圖 | commit＋push（不含 `_bank_extract/`） |
+
 ## 轉題時的品管
 
 Word／PDF 轉出來常見：題幹黏下一題、選項黏圖檔名、殘句「〔會考〕」、空 `q`、一題十張圖、破公式（`g/cm 3`、`10－9`、全形 `＝／`）。處理順序：
 
-1. 人工或腳本切成一題四選一。
+1. **人工**交 HTM＋答案／解析（或可貼文字）；**AI**用腳本切成一題四選一。
 2. 圖存 `exams/img/N-x/image001.png`，題目寫 `imgs: ["exams/img/N-x/image001.png"]`。
-3. 不要解壓縮 docx（Cortex）。使用者若只給 docx，請他貼文字、匯出 PDF 圖片，或已解出的資料夾。
-4. 寫進 `exam-chN-sections.js`。`ans` 不確定就先填 0，再用 keys 字串一次覆寫。
+3. 不要解壓縮 docx（Cortex）。使用者若只給 docx，請他匯出 HTM＋`.files`、貼文字，或給已解出的資料夾。
+4. 寫進 `exam-chN-sections.js`。`ans` 不確定就先填 0，再用 keys 字串一次覆寫（依**陣列順序**，不要用跳號題號當索引）。
 5. 公式修到能 KaTeX 顯示（或交給 `JPWNMath.polish`），見 [math.md](math.md)。
 6. 打開該節段考頁，看有沒有被 `isJunkStem` 丟掉；丟掉的要修題幹再放回。
 

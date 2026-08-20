@@ -1,0 +1,41 @@
+---
+description: 全站工作流總表：人工輸入 vs AI 產出；新章／題庫／實驗／修圖／上線分工。
+alwaysApply: true
+---
+
+# 工作流：人工 vs AI（不可破）
+
+細節見技能 `.cursor/skills/junior-physics-notes/workflow.md`。做事前先對表；缺「人工必交」就停下來問，不要瞎掰或解壓 docx。
+
+## 標記
+
+| 標記 | 誰 | 意思 |
+|------|-----|------|
+| **人工** | 老師／使用者 | 提供原料、決策、驗收；AI 不可代替 |
+| **AI** | Agent | 轉檔、組頁、對齊範本、commit／push |
+| **共驗** | 兩邊 | AI 做完後人工在瀏覽器／平板確認 |
+
+## 人工必交（缺一不可開做）
+
+- **新章講義**：Word／PDF／已匯出 HTM＋`.files`，或可貼全文；說清章號與小節
+- **隨堂／段考題庫**：`N-x-題目卷.htm`＋`.files`、答案卷／解析卷（docx 可，**勿解壓**）；或明確路徑資料夾
+- **實驗專區**：活動紀錄本 PDF／掃描／可貼步驟原文
+- **修圖／改錯**：問題頁碼或截圖、期望長相（參考圖更佳）
+- **不要上傳**：必須口頭／文字明確說；否則 AI 依 `jpwn-github.mdc` 自動 push
+
+## AI 負責（有原料才做）
+
+- 建／改 `chN`、`config`、`sections`、`exams`、`review`、`lab`（對齊第 4 章／`labs.md`）
+- 探究鏈、挖空、`.extra`／`.gifted`、KaTeX、頁碼 manifest
+- 題庫：拷圖 → Word COM 抽答案／解析 → `_parse_chN.ps1` → `exam-chN-*.js`（`_bank_extract/` 不提交）
+- 收尾：繁中 `type: 主旨` commit＋push；回覆附 hash
+
+## AI 禁止假裝人工
+
+- 禁止解壓縮 docx；禁止發明未提供的題幹／答案／實驗步驟
+- 禁止把填充／甲乙複選硬塞成四選一充數（題數須對 keys）
+- 禁止改 `git config`、force push、提交密鑰／`_bank_extract/`
+
+## 共驗（人工）
+
+平板 Ctrl+F5；段考抽幾題對答案；列印 PDF 看頁碼與公式；實驗頁逐步跟做一輪。

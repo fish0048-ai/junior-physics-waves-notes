@@ -10,6 +10,8 @@ alwaysApply: false
 
 實驗專區不要套用本規則：不要 `exams/lab-*.html`、不要 `review-lab.html`、不要 `js/exam-lab*.js`。見 `labs.md`。
 
+**匯入題庫**：人工交 HTM＋答案／解析；AI 轉 JS／拷圖。分工見 `jpwn-workflow.mdc`、`workflow.md` §4。禁止解壓 docx、禁止瞎編答案。
+
 ## 檔案
 
 - 小節頁 `exams/N-x.html` 載入：config-chN、layout、app、exam-chN-sections、exam-chN-keys、exam.js

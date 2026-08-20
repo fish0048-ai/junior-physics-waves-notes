@@ -1,6 +1,6 @@
 ---
 name: junior-physics-notes
-description: Converts junior-high physics lecture notes into this site's HTML workbook with inquiry teaching, frozen blanks, drills, exam banks, and a step-first lab chapter. Use when the user uploads a new chapter, Word/PDF/docx 講義, 活動紀錄本, 實驗 PDF, 段考題, 隨堂練習, or asks to add 第N章／實驗專區 the same way as chapters 3 and 4.
+description: Converts junior-high physics lecture notes into this site's HTML workbook with inquiry teaching, frozen blanks, drills, exam banks, and a step-first lab chapter. Distinguishes human-supplied sources vs AI build steps (see workflow.md). Use when the user uploads a new chapter, Word/PDF/docx 講義, 活動紀錄本, 實驗 PDF, 段考題, 隨堂練習, or asks to add 第N章／實驗專區 the same way as chapters 3 and 4.
 ---
 
 # 國中八年級理化講義製作
@@ -9,6 +9,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 
 分冊（做到哪就讀哪）：
 
+- **人工 vs AI 工作流**：[workflow.md](workflow.md)（開做前先對表）
 - 探究怎麼寫：[inquiry.md](inquiry.md)
 - HTML 骨架與 class：[html-templates.md](html-templates.md)
 - 公式與圖表：[math.md](math.md)
@@ -37,27 +38,30 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 
 ## 工作流程
 
+**分工與清單全文**：[workflow.md](workflow.md)＋規則 `jpwn-workflow.mdc`。缺人工原料就停問，不要解壓 docx、不要瞎編題目。
+
 ```
-新章進度：
+新章進度（AI；原料由人工交）：
+- [ ] 對照 workflow.md §3：確認講義檔／章號已齊
 - [ ] 讀範本頁（上列五個檔）
 - [ ] 列出小節、每節探究問題、主張方向（填 inquiry.md 那種表）
 - [ ] 抽出定義／挖空／圖／實驗／練習／題庫（不刪）
 - [ ] 新增 js/config-chN.js，並改所有現有 config 的 chapters
 - [ ] 章首 chN.html：該章目錄（hero 鏈 + 探究故事段，不要 inquiry-map 清單）
 - [ ] 各節 sections/N-x.html（順序見 inquiry.md；每張重點卡要有 extra＋gifted）
-- [ ] 各節 exams/N-x.html + exam-chN-sections.js + exam-chN-keys.js
-- [ ] review-chN.html + exam-chN.js（約 120 抽 40）
-- [ ] 附圖 exams/img/N-x/，路徑 exams/img/...
+- [ ] 各節 exams/N-x.html；有題庫再走 workflow.md §4 → exam-chN-sections.js + keys
+- [ ] review-chN.html + exam-chN.js（約 120 抽 40；無題庫勿瞎編）
+- [ ] 附圖 exams/img/N-x/；book-manifest 頁碼
 - [ ] 搜尋檢查：每個 id="p2" 都還有完整 <article> 開頭
-- [ ] 不要提交 _bank_extract/
+- [ ] 不要提交 _bank_extract/；做完依 jpwn-github 上傳
 
-活動紀錄本／實驗專區另走 labs.md（不要當普通講義寫）：
+題庫匯入（人工交 HTM＋答案／解析 → AI 轉 JS）：見 workflow.md §4、exams.md。
+
+活動紀錄本／實驗專區另走 labs.md＋workflow.md §5（不要當普通講義寫）：
 - [ ] 讀 labs.md 與 sections/lab-1-2.html
 - [ ] 操作步驟全部 .lab-step，禁止收成 ol.q；假設／器材才可用 ol.q
-- [ ] 每個實驗在器材表之後、動手之前有材料確認 `.lab-step`，內含 `.lab-kit` 核對表（勾到齊／完好，備註寫缺件；不要 class="blank"）
-- [ ] 每步保留原句、注意、紀錄、步驟 Q、該步的圖
-- [ ] toc 寫「步驟」，頁面最長區塊必須是逐步操作
-- [ ] 不要 #drill、不要 exams/lab-*.html、不要 review-lab.html、config 不要 exam 也不要 review
+- [ ] 每個實驗在器材表之後、動手之前有材料確認 `.lab-step`，內含 `.lab-kit` 核對表
+- [ ] 不要 #drill、不要 exams/lab-*、不要 review-lab；config 不要 exam／review
 - [ ] lab.html + js/config-lab.js；每一份 config 的 chapters 都加 nav: "實驗專區"
 ```
 

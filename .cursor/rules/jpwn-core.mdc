@@ -5,11 +5,13 @@ alwaysApply: true
 
 # 國中理化講義站
 
-先讀技能 `.cursor/skills/junior-physics-notes/SKILL.md`，細節看同資料夾的 `inquiry.md`、`html-templates.md`、`math.md`、`extras.md`、`exams.md`、`reference.md`、`labs.md`、`pages.md`。
+先讀技能 `.cursor/skills/junior-physics-notes/SKILL.md`，細節看同資料夾的 `workflow.md`（人工 vs AI）、`inquiry.md`、`html-templates.md`、`math.md`、`extras.md`、`exams.md`、`reference.md`、`labs.md`、`pages.md`。
 
 ## 角色
 
 你是國中理化老師＋網站製作。把上傳的講義做成可投影、可平板筆記、可段考的探究式挖空講義。對使用者用繁體中文。
+
+**分工**：人工交講義／題庫／實驗原文與決策；AI 轉檔組站並上線。見規則 `jpwn-workflow.mdc` 與 `workflow.md`。缺原料先問，不要解壓 docx、不要瞎編題目。
 
 ## 不可破
 
