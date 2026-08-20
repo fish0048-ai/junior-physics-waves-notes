@@ -210,6 +210,34 @@
     return cfg.chapter?.nav || `第 ${cfg.chapter?.id || ""} 章`;
   }
 
+  function escapeAttr(s) {
+    return String(s || "")
+      .replace(/&/g, "&amp;")
+      .replace(/"/g, "&quot;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;");
+  }
+
+  /** 開啟班級座位表（加扣分／抽籤）。可在 APP_CONFIG.seatingChart 覆寫網址。 */
+  function seatingChartUrl() {
+    const fallback = "https://fish0048-ai.github.io/class-seating-chart/";
+    let base = String(cfg.seatingChart || fallback).trim() || fallback;
+    try {
+      const u = new URL(base, location.href);
+      let className = "";
+      try {
+        const id = localStorage.getItem("jpwn.classId") || "";
+        const list = JSON.parse(localStorage.getItem("jpwn.classes") || "[]");
+        const hit = Array.isArray(list) ? list.find((c) => c && c.id === id) : null;
+        if (hit && hit.name && hit.name !== "預設班級") className = String(hit.name).trim();
+      } catch (err) { /* ignore */ }
+      if (className) u.searchParams.set("class", className);
+      return u.toString();
+    } catch (err) {
+      return base;
+    }
+  }
+
   function renderHeader() {
     const host = document.getElementById("site-header");
     if (!host) return;
@@ -251,6 +279,7 @@
       : bookLink;
     const inkBtn = `<button class="btn btn-ghost" id="btn-ink" type="button" aria-pressed="false">筆記</button>`;
     const immersiveBtn = `<button class="btn btn-ghost" id="btn-immersive" type="button" aria-pressed="false">全螢幕</button>`;
+    const seatingBtn = `<a class="btn btn-ghost" id="btn-seating" href="${escapeAttr(seatingChartUrl())}" target="_blank" rel="noopener" title="開啟班級座位表（加扣分／抽籤）">座位表</a>`;
     const fontScale = `<span class="font-scale no-print" role="group" aria-label="投影字級">
           <button class="btn btn-ghost btn-font" id="btn-font-minus" type="button" title="縮小投影字級">A−</button>
           <span class="font-scale-label" id="font-scale-label">100%</span>
@@ -294,6 +323,7 @@
           ${immersiveBtn}
           ${fontScale}
           ${inkBtn}
+          ${seatingBtn}
           ${tools}
           <a class="btn btn-github" href="${cfg.githubRepo || "#"}" target="_blank" rel="noopener">GitHub</a>
         </div>

@@ -2235,6 +2235,7 @@ html.is-immersive .embed-banner,
 html.is-immersive .book-prefetch {
   display: none !important;
 }
+/* 全螢幕上課仍保留座位表入口，方便隨時加扣分 */
 html.is-immersive .toolbar {
   padding: 4px 8px;
   padding-top: max(4px, env(safe-area-inset-top, 0px));

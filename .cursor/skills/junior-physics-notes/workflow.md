@@ -31,6 +31,7 @@
 | D 修圖／改錯 | 截圖或說明 | 改 SVG／PNG／CSS／JS | §6 |
 | E 公式／頁碼 | （通常含在 A） | KaTeX、`book-manifest`、列印頁碼 | `math.md`／`pages.md` |
 | F 上線 | 「先不要上傳」才擋 | commit＋push | `jpwn-github.mdc` |
+| G 座位表加扣分 | 在座位表建同名班級；講義用「筆記」選班 | 頂欄「座位表」開新分頁（`seatingChart`） | 講義站＋座位表站分 origin，分數仍在座位表 |
 
 ---
 
