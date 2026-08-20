@@ -594,6 +594,7 @@
     };
     localStorage.setItem(LS_SETS, JSON.stringify(all));
     updateSetStatus();
+    try { window.JPWNCloud?.bump?.(); } catch (err) { /* ignore */ }
     toast(`已把目前 ${items.length} 題存給「${cls.name}」`);
   }
 

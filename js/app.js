@@ -134,6 +134,7 @@
     }
     all[inquiryStoreKey()] = bag;
     localStorage.setItem(LS_INQUIRY, JSON.stringify(all));
+    try { window.JPWNCloud?.bump?.(); } catch (err) { /* ignore */ }
   }
 
   setupInquiryWrites();
@@ -176,6 +177,7 @@
     }
     all[pageStoreKey()] = bag;
     localStorage.setItem(LS_KIT, JSON.stringify(all));
+    try { window.JPWNCloud?.bump?.(); } catch (err) { /* ignore */ }
   }
 
   function setupLabKit() {
@@ -277,6 +279,7 @@
     }
     all[pageStoreKey()] = collectRevealState();
     localStorage.setItem(LS_REVEAL, JSON.stringify(all));
+    try { window.JPWNCloud?.bump?.(); } catch (err) { /* ignore */ }
   }
 
   function loadRevealState() {

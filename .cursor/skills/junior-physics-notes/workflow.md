@@ -32,6 +32,7 @@
 | E 公式／頁碼 | （通常含在 A） | KaTeX、`book-manifest`、列印頁碼 | `math.md`／`pages.md` |
 | F 上線 | 「先不要上傳」才擋 | commit＋push | `jpwn-github.mdc` |
 | G 座位表加扣分 | 在座位表建同名班級；講義用「筆記」選班 | 頂欄「座位表」開新分頁（`seatingChart`） | 講義站＋座位表站分 origin，分數仍在座位表 |
+| H 班級筆記雲端同步 | 建立 GitHub Token（gist）；一臺上傳後抄 Gist ID 到其他裝置 | `cloud-sync.js` 自動上傳／開頁下載 | Token 只存瀏覽器，勿提交倉庫 |
 
 ---
 

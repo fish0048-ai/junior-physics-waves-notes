@@ -56,6 +56,7 @@
   function saveClasses() {
     localStorage.setItem(LS_CLASSES, JSON.stringify(state.classes));
     localStorage.setItem(LS_CURRENT, state.classId);
+    try { window.JPWNCloud?.bump?.(); } catch (err) { /* ignore */ }
   }
 
   function inkKey() {
@@ -330,6 +331,10 @@
       state.dirty = false;
       state.savedAt = Date.now();
       setStatus("已儲存");
+      try {
+        window.JPWNCloud?.markLocalDirty?.();
+        window.JPWNCloud?.scheduleSync?.(2500);
+      } catch (err) { /* ignore */ }
     } else {
       setStatus("儲存失敗");
       toast("筆記儲存失敗，可能是空間不足");
@@ -550,7 +555,25 @@
         <button type="button" class="btn btn-ghost" id="ink-import">匯入</button>
       </div>
       <input id="ink-file" type="file" accept="application/json,.json" hidden>
-      <p class="ink-hint">筆記存在這臺平板的瀏覽器裡，依班級分開。換頁、換班會自動儲存。換裝置請先匯出。</p>
+      <div class="ink-cloud" id="ink-cloud">
+        <strong class="ink-cloud-title">雲端同步（跨裝置）</strong>
+        <label class="ink-check"><input id="ink-cloud-on" type="checkbox"> 啟用自動同步到 GitHub Gist</label>
+        <label class="ink-field ink-cloud-token">
+          <span>GitHub Token</span>
+          <input id="ink-cloud-token" type="password" autocomplete="off" placeholder="貼上 gist 權限的 Personal Access Token">
+        </label>
+        <label class="ink-field">
+          <span>Gist ID（可空白，第一次上傳會自動建立）</span>
+          <input id="ink-cloud-gist" type="text" autocomplete="off" placeholder="例如 abc123…">
+        </label>
+        <div class="ink-row">
+          <button type="button" class="btn btn-green" id="ink-cloud-push">立即上傳</button>
+          <button type="button" class="btn btn-ghost" id="ink-cloud-pull">立即下載</button>
+        </div>
+        <p class="ink-cloud-status" id="ink-cloud-status">尚未設定</p>
+        <p class="ink-hint ink-cloud-help">Token 只存在這臺瀏覽器。到 GitHub → Settings → Developer settings → Personal access tokens，開一個有 <code>gist</code> 權限的 token。每臺裝置貼同一個 token，並填同一組 Gist ID（或先在一臺上傳，再把 Gist ID 抄到其他裝置）。</p>
+      </div>
+      <p class="ink-hint">筆記會先存在本機；啟用雲端後，寫完約數秒會自動上傳。換平板／筆電請先設好同步再上課。</p>
     </div>
   `;
   document.body.appendChild(dock);
@@ -797,6 +820,130 @@
     }
   });
 
+  function formatSyncTime(ts) {
+    if (!ts) return "";
+    try {
+      return new Date(ts).toLocaleString("zh-TW", { hour12: false });
+    } catch (err) {
+      return "";
+    }
+  }
+
+  function renderCloudStatus(st) {
+    const el = document.getElementById("ink-cloud-status");
+    if (!el) return;
+    const s = st || window.JPWNCloud?.status?.();
+    if (!s) {
+      el.textContent = "雲端模組未載入";
+      return;
+    }
+    if (s.busy) {
+      el.textContent = s.phase === "pull" ? "下載中…" : (s.phase === "push" ? "上傳中…" : "同步中…");
+      return;
+    }
+    if (s.lastError) {
+      el.textContent = "同步失敗：" + s.lastError;
+      return;
+    }
+    if (!s.enabled) {
+      el.textContent = "尚未啟用";
+      return;
+    }
+    if (!s.hasToken) {
+      el.textContent = "請貼上 GitHub Token";
+      return;
+    }
+    if (!s.gistId) {
+      el.textContent = "已啟用：第一次按「立即上傳」會建立私密 Gist";
+      return;
+    }
+    el.textContent = s.lastSync
+      ? ("已同步 " + formatSyncTime(s.lastSync) + "　Gist " + s.gistId.slice(0, 8) + "…")
+      : ("已設定 Gist " + s.gistId.slice(0, 8) + "…，等待第一次同步");
+  }
+
+  function bindCloudUi() {
+    const cloud = window.JPWNCloud;
+    if (!cloud) {
+      renderCloudStatus(null);
+      return;
+    }
+    const on = document.getElementById("ink-cloud-on");
+    const token = document.getElementById("ink-cloud-token");
+    const gist = document.getElementById("ink-cloud-gist");
+    const st = cloud.status();
+    if (on) on.checked = !!st.enabled;
+    if (token) token.placeholder = st.hasToken ? "已儲存 Token（若要更換再貼上）" : token.placeholder;
+    if (gist) gist.value = st.gistId || "";
+    renderCloudStatus(st);
+    cloud.onChange(renderCloudStatus);
+
+    on?.addEventListener("change", () => {
+      cloud.setCfg({ enabled: on.checked });
+      if (on.checked) {
+        toast("已啟用雲端同步");
+        cloud.scheduleSync(800);
+      } else {
+        toast("已關閉自動同步");
+      }
+      renderCloudStatus();
+    });
+    token?.addEventListener("change", () => {
+      const v = (token.value || "").trim();
+      if (!v) return;
+      cloud.setCfg({ token: v });
+      token.value = "";
+      token.placeholder = "已儲存 Token（若要更換再貼上）";
+      toast("已儲存 Token");
+      renderCloudStatus();
+    });
+    gist?.addEventListener("change", () => {
+      cloud.setCfg({ gistId: (gist.value || "").trim() });
+      toast("已更新 Gist ID");
+      renderCloudStatus();
+    });
+    document.getElementById("ink-cloud-push")?.addEventListener("click", async () => {
+      try {
+        await flushSave();
+        cloud.setCfg({ enabled: true });
+        if (on) on.checked = true;
+        await cloud.syncNow("push");
+        if (gist) gist.value = cloud.status().gistId || "";
+        toast("已上傳到雲端");
+      } catch (err) {
+        toast(err.message || "上傳失敗");
+      }
+      renderCloudStatus();
+    });
+    document.getElementById("ink-cloud-pull")?.addEventListener("click", async () => {
+      try {
+        cloud.setCfg({ enabled: true });
+        if (on) on.checked = true;
+        await cloud.syncNow("pull");
+        toast("已從雲端下載");
+      } catch (err) {
+        toast(err.message || "下載失敗");
+      }
+      renderCloudStatus();
+    });
+  }
+
+  async function reloadAfterCloud(detail) {
+    await flushSave();
+    state.classes = loadClasses();
+    const id = detail?.classId || localStorage.getItem(LS_CURRENT);
+    state.classId = state.classes.some((c) => c.id === id) ? id : state.classes[0].id;
+    saveClasses();
+    fillClassSelect();
+    await loadStrokes();
+    updateChrome();
+    notifyClassChange();
+  }
+
+  window.addEventListener("jpwn-cloud-applied", (e) => {
+    reloadAfterCloud(e.detail).catch(() => {});
+  });
+
   document.getElementById("btn-answers")?.addEventListener("click", () => {
     setTimeout(fitCanvas, 80);
   });
@@ -822,9 +969,20 @@
       state.db = null;
     }
     fillClassSelect();
+    bindCloudUi();
+    try {
+      const pulled = await window.JPWNCloud?.bootPull?.();
+      if (pulled) {
+        state.classes = loadClasses();
+        const id = localStorage.getItem(LS_CURRENT);
+        state.classId = state.classes.some((c) => c.id === id) ? id : state.classes[0].id;
+        fillClassSelect();
+      }
+    } catch (err) { /* ignore */ }
     await loadStrokes();
     updateChrome();
     setPanel(false);
+    renderCloudStatus();
   }
 
   window.ClassInk = {

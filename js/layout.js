@@ -518,11 +518,23 @@
   setupPrintFolios();
   setupBookPrefetch();
 
-  if (!document.querySelector("script[data-class-ink]")) {
-    const s = document.createElement("script");
-    s.src = url("js/class-notes.js");
-    s.dataset.classInk = "1";
-    document.body.appendChild(s);
+  if (!document.querySelector("script[data-class-ink], script[data-jpwn-cloud]")) {
+    const cloud = document.createElement("script");
+    cloud.src = url("js/cloud-sync.js");
+    cloud.dataset.jpwnCloud = "1";
+    cloud.onload = () => {
+      const s = document.createElement("script");
+      s.src = url("js/class-notes.js");
+      s.dataset.classInk = "1";
+      document.body.appendChild(s);
+    };
+    cloud.onerror = () => {
+      const s = document.createElement("script");
+      s.src = url("js/class-notes.js");
+      s.dataset.classInk = "1";
+      document.body.appendChild(s);
+    };
+    document.body.appendChild(cloud);
   }
 
   function pagesUrl() {

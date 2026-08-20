@@ -33,7 +33,18 @@
 
 實驗專區：`lab.html`、`js/config-lab.js`、`sections/lab-N-x.html`。`chapter.id` 為 `"lab"`，必填 `nav: "實驗專區"`。**步驟是上課主軸**（一格一步 `.lab-step`）。**不要** `exams/lab-*.html`、不要 `#drill`、不要 `review-lab.html`、config 不要 `exam`／`review`。寫法見 [labs.md](labs.md)。
 
-共用、禁止複製第二份：`css/style.css`、`js/layout.js`、`js/app.js`、`js/class-notes.js`、`js/exam.js`。
+共用、禁止複製第二份：`css/style.css`、`js/layout.js`、`js/app.js`、`js/class-notes.js`、`js/cloud-sync.js`、`js/exam.js`。
+
+## 班級筆記雲端同步
+
+講義「筆記」面板可啟用 **GitHub Gist** 自動同步（跨平板／筆電）：
+
+1. GitHub → Settings → Developer settings → Personal access tokens → 開有 `gist` 權限的 token  
+2. 筆記面板勾選「啟用自動同步」、貼上 Token →「立即上傳」（會建立私密 Gist）  
+3. 其他裝置貼**同一個 Token**，並填**同一個 Gist ID**（或先下載）  
+4. 寫筆記後約數秒自動上傳；開頁會先嘗試下載合併（筆劃依各頁 `updatedAt`）
+
+Token／Gist ID 存在 `localStorage`（`jpwn.cloud.*`），**不要**寫進倉庫。同步內容含：班級清單、觸控筆筆記、探究填答、實驗核對、段考題本。
 
 ## PDF 頁碼
 
@@ -103,4 +114,4 @@ window.APP_CONFIG = {
 
 ## 筆記模式（已有）
 
-`class-notes.js`：筆記鈕、觸控筆、手指預設滑動；開「手指可寫」才用手指當筆。探究 textarea 在筆記模式下仍可打字。
+`class-notes.js`：筆記鈕、觸控筆、手指預設滑動；開「手指可寫」才用手指當筆。探究 textarea 在筆記模式下仍可打字。雲端同步見 `cloud-sync.js`（GitHub Gist）。

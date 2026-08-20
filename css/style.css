@@ -2079,6 +2079,34 @@ body.ink-draw .ink-fab {
   color: var(--muted);
   line-height: 1.45;
 }
+.ink-cloud {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px dashed #d6d3d1;
+  display: grid;
+  gap: 8px;
+}
+.ink-cloud-title {
+  font-size: 13px;
+  color: #14532d;
+}
+.ink-cloud .ink-field input[type="text"],
+.ink-cloud .ink-field input[type="password"] {
+  width: 100%;
+}
+.ink-cloud-status {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.4;
+  color: #1d4ed8;
+  word-break: break-word;
+}
+.ink-cloud-help code {
+  font-size: 11px;
+  background: #f5f5f4;
+  padding: 1px 4px;
+  border-radius: 4px;
+}
 
 html.is-touch,
 html.is-immersive,
