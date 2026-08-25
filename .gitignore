@@ -3,6 +3,8 @@ Thumbs.db
 *.log
 .vscode/
 _bank_extract/
+_refs/**/*.pdf
+_refs/**/*.docx
 _parse_ch3_review.ps1
 _parse_ch4_exams.ps1
 _parse_ch2.ps1

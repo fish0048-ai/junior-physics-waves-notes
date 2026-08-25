@@ -33,6 +33,7 @@
 | F 上線 | 「先不要上傳」才擋 | commit＋push | `jpwn-github.mdc` |
 | G 座位表加扣分 | 在座位表建同名班級；講義用「筆記」選班 | 頂欄「座位表」開新分頁（`seatingChart`） | 講義站＋座位表站分 origin，分數仍在座位表 |
 | H 班級筆記雲端同步 | 建立 GitHub Token（gist）；一臺上傳後抄 Gist ID 到其他裝置 | `cloud-sync.js` 自動上傳／開頁下載 | Token 只存瀏覽器，勿提交倉庫 |
+| I 補充資料參考 | 把教用 PDF 放進 `_refs/supplements/` | 備課需要時再讀；**PDF 不 push** | 見該夾 `README.md` |
 
 ---
 

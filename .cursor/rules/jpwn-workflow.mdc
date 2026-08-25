@@ -22,6 +22,7 @@ alwaysApply: true
 - **實驗專區**：活動紀錄本 PDF／掃描／可貼步驟原文
 - **修圖／改錯**：問題頁碼或截圖、期望長相（參考圖更佳）
 - **跨裝置筆記**：教師自備 GitHub Token（gist）；AI 只做同步功能，不代管 Token
+- **補充資料 PDF**：放 `_refs/supplements/`（本機參考）；**勿**把大 PDF commit／push
 - **不要上傳**：必須口頭／文字明確說；否則 AI 依 `jpwn-github.mdc` 自動 push
 
 ## AI 負責（有原料才做）
