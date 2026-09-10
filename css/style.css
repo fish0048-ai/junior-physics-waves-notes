@@ -563,6 +563,8 @@ figure {
   border: 1.5px solid #a5f3fc;
   border-radius: 14px;
   background: linear-gradient(180deg, #ecfeff 0%, #fff 70%);
+  width: 100%;
+  box-sizing: border-box;
 }
 .video-card .ex-title { margin-bottom: 6px; }
 .video-lead {
@@ -570,6 +572,13 @@ figure {
   font-size: 14px;
   color: #334155;
   line-height: 1.55;
+}
+.video-stage {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 128px;
+  gap: 12px;
+  align-items: stretch;
+  width: 100%;
 }
 .video-embed {
   position: relative;
@@ -587,6 +596,36 @@ figure {
   height: 100%;
   border: 0;
 }
+.video-qr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 10px 8px;
+  border-radius: 12px;
+  background: #fff;
+  border: 1.5px dashed #67e8f9;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.35;
+  color: #0e7490;
+  font-weight: 700;
+}
+.video-qr img {
+  width: 112px;
+  height: 112px;
+  display: block;
+  border-radius: 6px;
+  background: #fff;
+}
+.video-qr a {
+  color: #0e7490;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-size: 11px;
+  font-weight: 700;
+}
 .video-card .caption {
   margin-top: 8px;
 }
@@ -595,6 +634,23 @@ figure {
   font-weight: 700;
   text-decoration: underline;
   text-underline-offset: 2px;
+}
+@media (max-width: 720px) {
+  .video-stage {
+    grid-template-columns: 1fr;
+  }
+  .video-qr {
+    flex-direction: row;
+    justify-content: flex-start;
+    gap: 12px;
+    text-align: left;
+    padding: 10px 12px;
+  }
+  .video-qr img {
+    width: 88px;
+    height: 88px;
+    flex-shrink: 0;
+  }
 }
 img.diagram,
 img.diagram-photo {
