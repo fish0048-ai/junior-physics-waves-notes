@@ -88,7 +88,7 @@
       });
       const hint = document.createElement("p");
       hint.className = "inquiry-ref-hint no-print";
-      hint.textContent = "寫完後可按「顯示答案」，對照下面的參考主張。";
+      hint.textContent = "寫完後可按「顯示本卡答案」或「全頁答案」，對照下面的參考主張。";
       if (official) {
         official.classList.add("inquiry-ref");
         official.setAttribute("data-reveal", "");
@@ -245,12 +245,75 @@
       && extras.every((el) => !el.hidden);
   }
 
+  function cardAnswerTargets(card) {
+    if (!card) return { blanks: [], extras: [] };
+    return {
+      blanks: Array.from(card.querySelectorAll(".blank")),
+      extras: Array.from(card.querySelectorAll("[data-reveal]"))
+    };
+  }
+
+  function cardHasAnswers(card) {
+    const t = cardAnswerTargets(card);
+    return t.blanks.length + t.extras.length > 0;
+  }
+
+  function cardAnswersOn(card) {
+    const t = cardAnswerTargets(card);
+    if (!t.blanks.length && !t.extras.length) return false;
+    return t.blanks.every((el) => el.classList.contains("revealed"))
+      && t.extras.every((el) => !el.hidden);
+  }
+
+  function currentCard() {
+    const cards = $$(".wrap .card, .wrap article.card").filter(cardHasAnswers);
+    if (!cards.length) return null;
+    const mid = window.innerHeight * 0.42;
+    let best = cards[0];
+    let bestScore = -Infinity;
+    cards.forEach((card) => {
+      const r = card.getBoundingClientRect();
+      if (r.bottom < 64 || r.top > window.innerHeight - 48) return;
+      const visible = Math.min(r.bottom, window.innerHeight) - Math.max(r.top, 0);
+      const containsMid = r.top <= mid && r.bottom >= mid;
+      const score = (containsMid ? 100000 : 0) + visible - Math.abs((r.top + r.bottom) / 2 - mid) * 0.15;
+      if (score > bestScore) {
+        bestScore = score;
+        best = card;
+      }
+    });
+    return best;
+  }
+
+  function cardLabel(card) {
+    if (!card) return "本卡";
+    const h = card.querySelector("h2");
+    if (h && h.textContent.trim()) {
+      const t = h.textContent.trim().replace(/\s+/g, " ");
+      return t.length > 14 ? `${t.slice(0, 14)}…` : t;
+    }
+    return "本卡";
+  }
+
   function syncAnswerButton() {
-    const on = answersAllOn();
+    const allOn = answersAllOn();
+    const card = currentCard();
+    const cardOn = card ? cardAnswersOn(card) : false;
     const btn = $("#btn-answers");
-    if (!btn) return;
-    btn.textContent = on ? "隱藏答案" : "顯示答案";
-    btn.setAttribute("data-on", on ? "1" : "0");
+    if (btn) {
+      const label = card ? cardLabel(card) : "本卡";
+      btn.textContent = cardOn ? `隱藏本卡答案` : `顯示本卡答案`;
+      btn.title = card
+        ? (cardOn ? `隱藏「${label}」的答案` : `只顯示「${label}」的答案（目前畫面這一張）`)
+        : "目前沒有可揭的挖空";
+      btn.setAttribute("data-on", cardOn ? "1" : "0");
+      btn.disabled = !card;
+    }
+    const btnAll = $("#btn-answers-all");
+    if (btnAll) {
+      btnAll.textContent = allOn ? "隱藏全頁" : "全頁答案";
+      btnAll.setAttribute("data-on", allOn ? "1" : "0");
+    }
   }
 
   function applyRevealState(bag) {
@@ -302,6 +365,20 @@
     saveRevealState();
   }
 
+  function revealCard(card, on) {
+    if (!card) {
+      toast("請先捲到有挖空的重點卡");
+      return;
+    }
+    const t = cardAnswerTargets(card);
+    t.blanks.forEach((el) => revealOne(el, on));
+    t.extras.forEach((el) => { el.hidden = !on; });
+    syncAnswerButton();
+    saveRevealState();
+    const label = cardLabel(card);
+    toast(on ? `已顯示「${label}」答案` : `已隱藏「${label}」答案`);
+  }
+
   function check() {
     if ($$("input.blank").length) {
       let ok = 0;
@@ -320,7 +397,7 @@
       toast(`已檢查：${ok} / ${total} 題空格正確`);
       return;
     }
-    toast("挖空無需輸入，請按「顯示答案」");
+    toast("挖空無需輸入，請按「顯示本卡答案」或點單一空格");
   }
 
   function toast(msg) {
@@ -407,8 +484,23 @@
   });
 
   $("#btn-answers")?.addEventListener("click", () => {
-    const on = $("#btn-answers").getAttribute("data-on") === "1";
+    const card = currentCard();
+    const on = card ? cardAnswersOn(card) : false;
+    revealCard(card, !on);
+  });
+  $("#btn-answers-all")?.addEventListener("click", () => {
+    const on = $("#btn-answers-all").getAttribute("data-on") === "1";
     (window.NotesApp?.reveal || reveal)(!on);
+    toast(on ? "已隱藏全頁答案" : "已顯示全頁答案");
+  });
+  let revealScrollTimer = 0;
+  window.addEventListener("scroll", () => {
+    window.clearTimeout(revealScrollTimer);
+    revealScrollTimer = window.setTimeout(syncAnswerButton, 120);
+  }, { passive: true });
+  window.addEventListener("resize", () => {
+    window.clearTimeout(revealScrollTimer);
+    revealScrollTimer = window.setTimeout(syncAnswerButton, 120);
   });
   $("#btn-check")?.addEventListener("click", () => {
     (window.NotesApp?.check || check)();
@@ -425,5 +517,5 @@
   window.addEventListener("jpwn-class-will-change", saveRevealState);
   window.addEventListener("jpwn-class-change", loadRevealState);
 
-  window.NotesApp = { reveal, check, normalize, toast, printPdf, persistPaused: false };
+  window.NotesApp = { reveal, revealCard, currentCard, check, normalize, toast, printPdf, persistPaused: false };
 })();

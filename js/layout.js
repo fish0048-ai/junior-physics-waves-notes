@@ -267,11 +267,13 @@
       ? `<button class="btn btn-orange" id="btn-pdf" type="button">下載目錄 PDF</button>
          ${bookLink}`
       : (page === "book")
-      ? `<button class="btn btn-green" id="btn-answers" type="button">顯示答案</button>
+      ? `<button class="btn btn-green" id="btn-answers" type="button" title="只揭目前這張重點卡／主張卡的答案">顯示本卡答案</button>
+         <button class="btn btn-ghost" id="btn-answers-all" type="button" title="一次揭開本頁全部挖空與參考主張">全頁答案</button>
          <button class="btn btn-orange" id="btn-pdf" type="button">下載整本 PDF</button>
          <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>`
       : (page === "section" || page === "review" || page === "exam")
-      ? `<button class="btn btn-green" id="btn-answers" type="button">顯示答案</button>
+      ? `<button class="btn btn-green" id="btn-answers" type="button" title="只揭目前這張重點卡／主張卡的答案">顯示本卡答案</button>
+         <button class="btn btn-ghost" id="btn-answers-all" type="button" title="一次揭開本頁全部挖空與參考主張">全頁答案</button>
          ${checkBtn}
          <button class="btn btn-orange" id="btn-pdf" type="button">下載 PDF</button>
          <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>

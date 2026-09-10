@@ -947,6 +947,9 @@
   document.getElementById("btn-answers")?.addEventListener("click", () => {
     setTimeout(fitCanvas, 80);
   });
+  document.getElementById("btn-answers-all")?.addEventListener("click", () => {
+    setTimeout(fitCanvas, 80);
+  });
 
   window.addEventListener("resize", () => fitCanvas());
   window.addEventListener("pagehide", () => { flushSave(); });
