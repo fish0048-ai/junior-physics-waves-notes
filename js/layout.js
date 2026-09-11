@@ -407,7 +407,6 @@
           ${inkBtn}
           ${seatingBtn}
           ${tools}
-          <a class="btn btn-github" href="${cfg.githubRepo || "#"}" target="_blank" rel="noopener">GitHub</a>
         </div>
       </header>
       <nav class="site-nav no-print" aria-label="全書導覽">

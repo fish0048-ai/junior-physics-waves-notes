@@ -2,11 +2,6 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
-  const github = window.APP_CONFIG?.githubRepo || "#";
-  $$("[data-github]").forEach((a) => {
-    a.href = github;
-  });
-
   function freezeBlanks() {
     $$("input.blank").forEach((input) => {
       const span = document.createElement("span");

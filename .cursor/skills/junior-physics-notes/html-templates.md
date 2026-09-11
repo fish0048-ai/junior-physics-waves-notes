@@ -38,7 +38,7 @@
       <a href="../exams/N-1.html"><small>段考</small>練習</a>
     </nav>
     <!-- 探究卡、重點卡、memo、claim、drill -->
-    <p class="footer">…<br>原始碼：<a data-github target="_blank" rel="noopener">GitHub 專案</a></p>
+    <p class="footer">…</p>
   </div>
   <div class="toast" id="toast"></div>
   <script src="../js/config-chN.js"></script>
