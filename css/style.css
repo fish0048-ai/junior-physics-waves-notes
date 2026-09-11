@@ -212,6 +212,50 @@ html.is-proj .wrap {
   margin: 16px auto 48px;
 }
 
+.hero-practice {
+  background: linear-gradient(135deg, #0f766e 0%, #115e59 55%, #134e4a 100%);
+}
+.portal-gates {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin: 0 0 18px;
+}
+.portal-gate {
+  display: block;
+  padding: 16px 18px;
+  border-radius: 16px;
+  text-decoration: none;
+  border: 2px solid transparent;
+  box-shadow: 0 8px 20px rgba(15, 23, 42, 0.08);
+}
+.portal-gate strong {
+  display: block;
+  font-size: 20px;
+  margin-bottom: 4px;
+}
+.portal-gate span {
+  display: block;
+  font-size: 14px;
+  line-height: 1.45;
+  opacity: 0.92;
+}
+.portal-gate.is-lecture {
+  background: linear-gradient(180deg, #ecfdf5, #fff);
+  border-color: #86efac;
+  color: #14532d;
+}
+.portal-gate.is-practice {
+  background: linear-gradient(180deg, #ecfeff, #fff);
+  border-color: #67e8f9;
+  color: #155e75;
+}
+.portal-gate:hover {
+  transform: translateY(-1px);
+}
+@media (max-width: 720px) {
+  .portal-gates { grid-template-columns: 1fr; }
+}
 .hero {
   position: relative;
   overflow: hidden;

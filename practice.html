@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#fffefb">
+  <title>國中八年級理化｜練習專區</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-root="." data-page="practice-home" data-mode="practice">
+  <div id="site-header"></div>
+  <div class="wrap">
+    <section class="hero hero-practice">
+      <span class="kicker">國中八年級　理化　學生練習</span>
+      <h1>練習專區</h1>
+      <p>這裡只有段考前練習與章末評量，不含講義正文。適合回家複習、段考前自測。若要看探究講義與挖空，請回<a href="cover.html?mode=lecture">講義封面</a>。</p>
+      <svg class="wave-deco" viewBox="0 0 280 90" aria-hidden="true">
+        <rect x="36" y="28" width="48" height="40" rx="8" fill="none" stroke="#fff" stroke-width="5"/>
+        <rect x="116" y="28" width="48" height="40" rx="8" fill="none" stroke="#fff" stroke-width="5"/>
+        <rect x="196" y="28" width="48" height="40" rx="8" fill="none" stroke="#fff" stroke-width="5"/>
+        <path d="M60 48 h20 M140 48 h20 M220 48 h20" stroke="#fff" stroke-width="4" stroke-linecap="round"/>
+      </svg>
+    </section>
+
+    <article class="card">
+      <div class="section-head">
+        <div class="badge calc">練</div>
+        <div>
+          <h2>怎麼用？</h2>
+          <p>先選章 → 再選小節練習或章末評量</p>
+        </div>
+      </div>
+      <ul class="q">
+        <li>每小節有「段考前練習」（四選一）。</li>
+        <li>章末有「全章複習評量」（抽題）。</li>
+        <li>頂欄可切回「講義」；練習模式不會把講義目錄混進來。</li>
+      </ul>
+    </article>
+
+    <div class="section-cards" id="practice-chapter-cards"></div>
+
+    <p class="footer">
+      國中八年級理化　練習專區<br>
+      原始碼：<a data-github target="_blank" rel="noopener">GitHub 專案</a>
+    </p>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="js/site-mode.js"></script>
+  <script src="js/config-practice.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>

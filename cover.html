@@ -57,9 +57,20 @@
         </svg>
       </div>
 
-      <ul class="cover-chapters">
+      <div class="portal-gates no-print">
+        <a class="portal-gate is-lecture" href="cover.html?mode=lecture#chapters">
+          <strong>探究講義</strong>
+          <span>上課投影、挖空筆記、實驗步驟</span>
+        </a>
+        <a class="portal-gate is-practice" href="practice.html">
+          <strong>練習專區</strong>
+          <span>學生自測：段考前練習＋章末評量</span>
+        </a>
+      </div>
+
+      <ul class="cover-chapters" id="chapters">
         <li>
-          <a href="ch1.html">
+          <a href="ch1.html?mode=lecture">
             <svg class="cover-ico" viewBox="0 0 48 48" aria-hidden="true">
               <rect width="48" height="48" rx="12" fill="#ecfeff"/>
               <rect x="8" y="20" width="32" height="8" rx="2" fill="none" stroke="#0e7490" stroke-width="2.2"/>
@@ -72,7 +83,7 @@
           </a>
         </li>
         <li>
-          <a href="ch2.html">
+          <a href="ch2.html?mode=lecture">
             <svg class="cover-ico" viewBox="0 0 48 48" aria-hidden="true">
               <rect width="48" height="48" rx="12" fill="#f5f3ff"/>
               <rect x="8" y="22" width="12" height="16" rx="2" fill="none" stroke="#6d28d9" stroke-width="2.2"/>
@@ -86,7 +97,7 @@
           </a>
         </li>
         <li>
-          <a href="index.html">
+          <a href="index.html?mode=lecture">
             <svg class="cover-ico" viewBox="0 0 48 48" aria-hidden="true">
               <rect width="48" height="48" rx="12" fill="#ecfdf5"/>
               <path d="M8 24 C 14 12 20 36 26 24 C 32 12 38 36 44 24" fill="none" stroke="#166534" stroke-width="3" stroke-linecap="round"/>
@@ -98,7 +109,7 @@
           </a>
         </li>
         <li>
-          <a href="ch4.html">
+          <a href="ch4.html?mode=lecture">
             <svg class="cover-ico" viewBox="0 0 48 48" aria-hidden="true">
               <rect width="48" height="48" rx="12" fill="#fff7ed"/>
               <path d="M10 16 L 24 32 L 38 16" fill="#fed7aa" stroke="#c2410c" stroke-width="2.2" stroke-linejoin="round"/>
@@ -113,7 +124,7 @@
           </a>
         </li>
         <li>
-          <a href="ch5.html">
+          <a href="ch5.html?mode=lecture">
             <svg class="cover-ico" viewBox="0 0 48 48" aria-hidden="true">
               <rect width="48" height="48" rx="12" fill="#fff1f2"/>
               <path d="M24 40 C 16 28 20 14 24 8 C 28 14 32 28 24 40" fill="#f97316"/>
@@ -126,7 +137,7 @@
           </a>
         </li>
         <li>
-          <a href="ch6.html">
+          <a href="ch6.html?mode=lecture">
             <svg class="cover-ico" viewBox="0 0 48 48" aria-hidden="true">
               <rect width="48" height="48" rx="12" fill="#f5f3ff"/>
               <circle cx="24" cy="24" r="5" fill="#6d28d9"/>
@@ -141,7 +152,7 @@
           </a>
         </li>
         <li>
-          <a href="lab.html">
+          <a href="lab.html?mode=lecture">
             <svg class="cover-ico" viewBox="0 0 48 48" aria-hidden="true">
               <rect width="48" height="48" rx="12" fill="#eff6ff"/>
               <rect x="14" y="10" width="20" height="28" rx="4" fill="none" stroke="#1d4ed8" stroke-width="2.4"/>
@@ -179,6 +190,7 @@
   </div>
   <div class="toast" id="toast"></div>
   <script src="js/config.js"></script>
+  <script src="js/site-mode.js"></script>
   <script src="js/layout.js"></script>
   <script src="js/app.js"></script>
   <script src="js/cover.js"></script>

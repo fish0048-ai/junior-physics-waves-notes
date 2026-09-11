@@ -1,44 +1,60 @@
 # 國中八年級理化講義
 
-第 3 章（波動與聲音）與第 4 章（光）的探究式挖空講義網站。之後新章請依同一套方法製作。
+探究式挖空講義網站（第 1～6 章＋實驗專區）。講義與**練習專區**可分開給學生使用。
 
-Cursor 製作規範（之後新章請整套遵守）：
+## 網址
 
-- `.cursor/skills/junior-physics-notes/SKILL.md`（流程）
-- `.cursor/skills/junior-physics-notes/inquiry.md`（探究）
-- `.cursor/skills/junior-physics-notes/html-templates.md`（樣板）
-- `.cursor/skills/junior-physics-notes/exams.md`（題庫）
-- `.cursor/skills/junior-physics-notes/reference.md`（檔名）
-- `.cursor/rules/jpwn-*.mdc`
+| 用途 | 網址 |
+|------|------|
+| GitHub 倉庫 | https://github.com/fish0048-ai/junior-physics-waves-notes |
+| GitHub Pages（部分校園網可能擋） | https://fish0048-ai.github.io/junior-physics-waves-notes/ |
+| **Vercel（建議學生用這個）** | 部署後見下方說明；入口 `cover.html`／`practice.html` |
 
-## GitHub
+## 兩個入口
 
-- 倉庫：<https://github.com/fish0048-ai/junior-physics-waves-notes>
-- 網頁：<https://fish0048-ai.github.io/junior-physics-waves-notes/>
+1. **探究講義**（上課／筆記）  
+   - 封面：`cover.html`  
+   - 各章目錄、小節挖空講義、實驗專區
+
+2. **練習專區**（學生自測，不含講義正文）  
+   - 總目錄：`practice.html`  
+   - 各章：`practice-ch1.html` … `practice-ch6.html`  
+   - 只有段考前練習（`exams/`）與章末評量（`review*.html`）
+
+頂欄有「講義／練習」切換。練習模式不會把講義小節目錄混進來。
+
+## 部署到 Vercel（繞過校園擋 GitHub Pages）
+
+1. 到 [vercel.com](https://vercel.com) 用 GitHub 登入  
+2. **Add New Project** → 選 `junior-physics-waves-notes`  
+3. Framework Preset 選 **Other**；Root Directory 留空；直接 Deploy  
+4. 部署完成後會得到 `https://xxxxx.vercel.app`  
+5. 把學生連結改成：  
+   - 講義封面：`https://xxxxx.vercel.app/cover`  
+   - 練習專區：`https://xxxxx.vercel.app/practice`
+
+本倉庫已含 `vercel.json`（靜態站）。本機若已登入 Vercel CLI，也可執行：
+
+```bash
+npx vercel --prod
+```
 
 ## 資料夾
 
 ```
-index.html / ch4.html   章首
-css/style.css           全站樣式
-js/config.js            第 3 章小節清單
-js/config-ch4.js        第 4 章小節清單
-js/layout.js            頂欄、章節導覽、章首卡片
-js/app.js               挖空、探究填答、PDF
-sections/               各節講義
-exams/                  各節段考頁與附圖
-review.html             第 3 章章末評量
-review-ch4.html         第 4 章章末評量
+cover.html / practice.html   雙入口
+practice-chN.html            各章練習目錄
+sections/                    講義
+exams/                       段考前練習
+review*.html                 章末評量
+css/ style.js layout.js …
+media/labs/                  實驗示範影片
+vercel.json                  Vercel 設定
 ```
-
-## 之後要加新章／小節
-
-請依 `.cursor/skills/junior-physics-notes/SKILL.md`：複製第 4 章檔案結構，不刪原文，補上探究鏈。頂欄由 `js/layout.js` 產生，不必每頁重貼。
-
-頂欄按鈕（顯示答案、PDF）由 `js/layout.js` 統一產生，不必在每個小節重複貼一次。
 
 ## 使用方式
 
-1. 開啟 `index.html`（或 GitHub Pages），點小節進入。
-2. 點綠色空格可顯示該格答案；可下載 PDF（列印視窗選「另存為 PDF」）。
-3. 頂欄「整本講義」請用 GitHub Pages 或本機網站打開（不要直接雙擊 HTML）。合成中可暫停。完成後按「下載整本 PDF」會直接存檔；也可分章下載。實驗專區可勾選附加在最後。
+1. 學生若校園網擋 GitHub：請用 **Vercel 網址**。  
+2. 只要練習：開 `practice.html`。  
+3. 上課講義：開 `cover.html` 或各章目錄。  
+4. 挖空點一下可顯示答案；頂欄可「本卡答案／全頁答案」。

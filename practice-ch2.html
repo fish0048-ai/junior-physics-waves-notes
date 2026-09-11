@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#fffefb">
+  <title>國中八年級理化｜練習專區｜第 2 章 物質的世界</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body data-root="." data-page="practice-chapter" data-mode="practice">
+  <div id="site-header"></div>
+  <div class="wrap">
+    <section class="hero hero-practice">
+      <span class="kicker">練習專區　第 2 章</span>
+      <h1>第 2 章　物質的世界</h1>
+      <p>本頁只列出段考前練習與章末評量。講義挖空請走<a id="lecture-home-link" href="#">本章講義目錄</a>。</p>
+    </section>
+    <div class="section-cards" id="section-cards"></div>
+    <p class="footer">
+      練習專區　第 2 章　物質的世界<br>
+      <a href="practice.html">回練習總目錄</a>
+      ｜
+      原始碼：<a data-github target="_blank" rel="noopener">GitHub 專案</a>
+    </p>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="js/site-mode.js"></script>
+  <script src="js/config-ch2.js"></script>
+  <script src="js/practice-patch.js"></script>
+  <script src="js/layout.js"></script>
+  <script src="js/app.js"></script>
+  <script>
+    (function () {
+      const map = { "1": "ch1.html", "2": "ch2.html", "3": "index.html", "4": "ch4.html", "5": "ch5.html", "6": "ch6.html" };
+      const a = document.getElementById("lecture-home-link");
+      if (a) a.href = (map["2"] || "cover.html") + "?mode=lecture";
+    })();
+  </script>
+</body>
+</html>

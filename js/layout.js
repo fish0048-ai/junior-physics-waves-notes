@@ -29,6 +29,55 @@
   const page = document.body.dataset.page || "home";
   const currentId = document.body.dataset.section || "";
 
+  const LS_MODE = "jpwn.siteMode";
+  function detectSiteMode() {
+    if (window.JPWNSiteMode?.detect) return window.JPWNSiteMode.detect();
+    try {
+      const q = new URLSearchParams(location.search).get("mode");
+      if (q === "practice" || q === "lecture") {
+        localStorage.setItem(LS_MODE, q);
+        return q;
+      }
+    } catch (err) { /* ignore */ }
+    const forced = document.body.dataset.mode || "";
+    if (forced === "practice" || forced === "lecture") {
+      try { localStorage.setItem(LS_MODE, forced); } catch (err) { /* ignore */ }
+      return forced;
+    }
+    if (page === "practice-home" || page === "practice-chapter") return "practice";
+    try {
+      const saved = localStorage.getItem(LS_MODE);
+      if (saved === "practice" || saved === "lecture") return saved;
+    } catch (err) { /* ignore */ }
+    return "lecture";
+  }
+  const siteMode = detectSiteMode();
+  document.documentElement.dataset.siteMode = siteMode;
+  document.body.dataset.mode = siteMode;
+
+  function appendPracticeMode(href) {
+    if (window.JPWNSiteMode?.appendMode) return window.JPWNSiteMode.appendMode(href, siteMode);
+    if (!href || href === "#" || siteMode !== "practice") return href;
+    if (/[?&]mode=/.test(href)) return href;
+    const hashIdx = href.indexOf("#");
+    const hash = hashIdx >= 0 ? href.slice(hashIdx) : "";
+    const base = hashIdx >= 0 ? href.slice(0, hashIdx) : href;
+    return base + (base.includes("?") ? "&" : "?") + "mode=practice" + hash;
+  }
+
+  function practiceChapterFile(chapterId) {
+    const id = String(chapterId || "");
+    if (!id || id === "lab") return url("practice.html");
+    return url(`practice-ch${id}.html`);
+  }
+
+  function lectureChapterFile(c) {
+    if (!c) return url("cover.html");
+    if (String(c.id) === "3") return url("index.html");
+    if (String(c.id) === "lab") return url(c.file || "lab.html");
+    return url(c.file || `ch${c.id}.html`);
+  }
+
   (function loadKatex() {
     const cdn = "https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/";
 
@@ -245,6 +294,10 @@
     const review = cfg.review;
     const brandText = page === "cover"
       ? `${cfg.chapter?.grade || "八年級理化"}　講義封面`
+      : page === "practice-home"
+      ? `${cfg.chapter?.grade || "八年級理化"}　練習專區`
+      : page === "practice-chapter"
+      ? `${cfg.chapter?.grade || "八年級理化"}　第 ${cfg.chapter?.id || ""} 章練習`
       : page === "review"
       ? `${cfg.chapter?.grade || "八年級理化"}　${review?.title || "章末評量"}`
       : page === "book"
@@ -257,13 +310,13 @@
     const checkBtn = (page === "review" || page === "exam")
       ? `<button class="btn btn-ghost" id="btn-check" type="button">檢查作答</button>`
       : "";
-    const bookLink = page === "book"
+    const bookLink = (page === "book" || siteMode === "practice")
       ? ""
       : `<a class="btn btn-ghost" id="btn-book" href="${url("book.html")}" target="_blank" rel="noopener">整本講義</a>`;
     const tools = (page === "cover")
       ? `<button class="btn btn-orange" id="btn-pdf" type="button">下載封面 PDF</button>
          ${bookLink}`
-      : (page === "home")
+      : (page === "home" || page === "practice-home" || page === "practice-chapter")
       ? `<button class="btn btn-orange" id="btn-pdf" type="button">下載目錄 PDF</button>
          ${bookLink}`
       : (page === "book")
@@ -287,41 +340,68 @@
           <span class="font-scale-label" id="font-scale-label">100%</span>
           <button class="btn btn-ghost btn-font" id="btn-font-plus" type="button" title="放大投影字級">A＋</button>
         </span>`;
-    const chapterLinks = (cfg.chapters || []).map((c) => `
-          <a href="${url(c.file)}" class="${page !== "cover" && String(cfg.chapter?.id) === String(c.id) ? "is-on" : ""}">${chapterNavText(c)}</a>
-        `).join("");
-    const sectionLinks = page === "cover" ? "" : (cfg.sections || []).map((s) => `
+    const modeToggle = siteMode === "practice"
+      ? `<a class="btn btn-ghost" id="btn-mode-lecture" href="${url(cfg.cover?.file || "cover.html")}?mode=lecture" title="切換到探究講義">講義</a>
+         <a class="btn btn-orange" id="btn-mode-practice" href="${url(cfg.practiceHome || "practice.html")}" title="目前在練習專區">練習</a>`
+      : `<a class="btn btn-orange" id="btn-mode-lecture" href="${url(cfg.cover?.file || "cover.html")}?mode=lecture" title="目前在探究講義">講義</a>
+         <a class="btn btn-ghost" id="btn-mode-practice" href="${url("practice.html")}" title="切換到練習專區">練習</a>`;
+
+    const chapterLinks = (cfg.chapters || []).map((c) => {
+      const href = siteMode === "practice"
+        ? (String(c.id) === "lab" ? url("practice.html") : (c.file && String(c.file).startsWith("practice") ? url(c.file) : practiceChapterFile(c.id)))
+        : url(c.file);
+      const on = page !== "cover" && page !== "practice-home" && String(cfg.chapter?.id) === String(c.id);
+      return `<a href="${href}" class="${on ? "is-on" : ""}">${chapterNavText(c)}</a>`;
+    }).join("");
+
+    const sectionLinks = (page === "cover" || siteMode === "practice") ? "" : (cfg.sections || []).map((s) => `
           <a href="${url(s.file)}" class="${s.id === currentId && page === "section" ? "is-on" : ""} ${s.ready ? "" : "is-draft"}">
             ${s.id} ${s.title}${s.ready ? "" : "（未完成）"}
           </a>
         `).join("");
+
     const examLinks = page === "cover" ? "" : (cfg.sections || []).filter((s) => s.exam).map((s) => `
-          <a href="${url(s.exam)}" class="is-practice ${s.id === currentId && page === "exam" ? "is-on" : ""}">${s.id}</a>
+          <a href="${appendPracticeMode(url(s.exam))}" class="is-practice ${s.id === currentId && page === "exam" ? "is-on" : ""}">${s.id}</a>
         `).join("");
-    const reviewLink = page === "cover" ? "" : (review ? `<a href="${url(review.file)}" class="${page === "review" ? "is-on" : ""}">${review.nav || "章末評量"}</a>` : "");
+
+    const reviewHref = review ? appendPracticeMode(url(review.file)) : "";
+    const reviewLink = page === "cover" ? "" : (review ? `<a href="${reviewHref}" class="${page === "review" ? "is-on" : ""}">${review.nav || "章末評量"}</a>` : "");
+
     const examNav = examLinks ? `
-      <details class="section-nav is-exam-nav no-print" aria-label="段考前練習">
-        <summary class="exam-nav-summary">段考前練習</summary>
+      <details class="section-nav is-exam-nav no-print" ${siteMode === "practice" ? "open" : ""} aria-label="段考前練習">
+        <summary class="exam-nav-summary">${siteMode === "practice" ? "本節練習" : "段考前練習"}</summary>
         ${examLinks}
       </details>
     ` : "";
-    const chapterNav = (page === "cover" || page === "book") ? "" : `
+
+    const chapterHomeHref = siteMode === "practice"
+      ? (page === "practice-home" ? url("practice.html") : url(cfg.home || "practice.html"))
+      : url(cfg.home || "index.html");
+
+    const chapterNav = (page === "cover" || page === "book" || page === "practice-home") ? "" : `
       <details class="section-nav no-print" open aria-label="${thisChapterNav()}目錄">
-        <summary class="section-nav-summary">${thisChapterNav()}</summary>
-        <a href="${url(cfg.home || "index.html")}" class="${page === "home" ? "is-on" : ""}">目錄</a>
+        <summary class="section-nav-summary">${siteMode === "practice" ? "練習目錄" : thisChapterNav()}</summary>
+        <a href="${chapterHomeHref}" class="${page === "home" || page === "practice-chapter" ? "is-on" : ""}">${siteMode === "practice" ? "本章練習" : "目錄"}</a>
         ${sectionLinks}
         ${reviewLink}
       </details>
       ${examNav}
     `;
 
+    const brandHref = siteMode === "practice"
+      ? url(cfg.practiceHome || cfg.home || "practice.html")
+      : url(page === "cover" ? (cfg.cover?.file || "cover.html") : (cfg.home || "index.html"));
+
+    const brandMark = siteMode === "practice" ? "練" : (page === "cover" ? "理" : (cfg.chapter?.mark || "波"));
+
     host.innerHTML = `
       <header class="toolbar no-print">
-        <a class="brand" href="${url(page === "cover" ? (cfg.cover?.file || "cover.html") : (cfg.home || "index.html"))}">
-          <span class="brand-mark">${page === "cover" ? "理" : (cfg.chapter?.mark || "波")}</span>
+        <a class="brand" href="${brandHref}">
+          <span class="brand-mark">${brandMark}</span>
           <span>${brandText}</span>
         </a>
         <div class="toolbar-actions">
+          ${modeToggle}
           ${immersiveBtn}
           ${fontScale}
           ${inkBtn}
@@ -331,12 +411,21 @@
         </div>
       </header>
       <nav class="site-nav no-print" aria-label="全書導覽">
-        <span class="nav-label">全書</span>
-        ${cfg.cover ? `<a href="${url(cfg.cover.file)}" class="${page === "cover" ? "is-on" : ""}">${cfg.cover.nav || "封面"}</a>` : ""}
+        <span class="nav-label">${siteMode === "practice" ? "練習" : "全書"}</span>
+        ${siteMode === "practice"
+          ? `<a href="${url("practice.html")}" class="${page === "practice-home" ? "is-on" : ""}">練習總目錄</a>`
+          : (cfg.cover ? `<a href="${url(cfg.cover.file)}?mode=lecture" class="${page === "cover" ? "is-on" : ""}">${cfg.cover.nav || "封面"}</a>` : "")}
         ${chapterLinks}
       </nav>
       ${chapterNav}
     `;
+
+    document.getElementById("btn-mode-lecture")?.addEventListener("click", () => {
+      try { localStorage.setItem(LS_MODE, "lecture"); } catch (err) { /* ignore */ }
+    });
+    document.getElementById("btn-mode-practice")?.addEventListener("click", () => {
+      try { localStorage.setItem(LS_MODE, "practice"); } catch (err) { /* ignore */ }
+    });
   }
 
   function pageLabel(n) {
@@ -458,6 +547,28 @@
   function renderHomeCards() {
     const host = document.getElementById("section-cards");
     if (!host) return;
+    if (page === "practice-chapter" || siteMode === "practice") {
+      host.innerHTML = (cfg.sections || []).filter((s) => s.exam).map((s) => `
+      <a class="section-card is-practice" href="${appendPracticeMode(url(s.exam))}">
+        <div class="section-card-top">
+          <strong>${s.id}</strong>
+          <small>段考練習</small>
+        </div>
+        <h2>${s.title}</h2>
+        <p>${s.summary || "四選一　段考程度"}</p>
+      </a>
+    `).join("") + (cfg.review ? `
+      <a class="section-card is-exam" href="${appendPracticeMode(url(cfg.review.file))}">
+        <div class="section-card-top">
+          <strong>章末</strong>
+          <small>全章複習</small>
+        </div>
+        <h2>${cfg.review.title}</h2>
+        <p>${cfg.review.summary || ""}</p>
+      </a>
+    ` : "");
+      return;
+    }
     const isLabHome = String(cfg.chapter?.id) === "lab";
     host.innerHTML = (cfg.sections || []).map((s) => `
       <div class="section-card ${s.ready ? "" : "is-draft"}" data-section-id="${isLabHome ? (s.id.startsWith("lab-") ? s.id : "lab-" + s.id) : s.id}">
@@ -470,12 +581,12 @@
           ${s.ask ? `<p class="section-card-ask">${s.ask}</p>` : ""}
           <p>${s.summary || ""}</p>
         </a>
-        ${s.exam ? `<a class="section-card-exam" href="${url(s.exam)}">段考前練習</a>` : ""}
+        ${s.exam ? `<a class="section-card-exam" href="${appendPracticeMode(url(s.exam))}">段考前練習</a>` : ""}
       </div>
     `).join("") + ((cfg.sections || []).some((s) => s.exam) ? `
       <p class="home-label">段考前練習</p>
     ` : "") + (cfg.sections || []).filter((s) => s.exam).map((s) => `
-      <a class="section-card is-practice" href="${url(s.exam)}">
+      <a class="section-card is-practice" href="${appendPracticeMode(url(s.exam))}">
         <div class="section-card-top">
           <strong>${s.id}</strong>
           <small>段考練習</small>
@@ -484,7 +595,7 @@
         <p>四選一　較難段考程度</p>
       </a>
     `).join("") + (cfg.review ? `
-      <a class="section-card is-exam" href="${url(cfg.review.file)}">
+      <a class="section-card is-exam" href="${appendPracticeMode(url(cfg.review.file))}">
         <div class="section-card-top">
           <strong>章末</strong>
           <small>全章複習</small>
@@ -493,6 +604,22 @@
         <p>${cfg.review.summary || ""}</p>
       </a>
     ` : "");
+  }
+
+  function renderPracticeHubCards() {
+    const host = document.getElementById("practice-chapter-cards");
+    if (!host) return;
+    const chapters = (cfg.chapters || []).filter((c) => String(c.id) !== "lab" && String(c.id) !== "practice");
+    host.innerHTML = `<p class="home-label">依章選擇練習</p>` + chapters.map((c) => `
+      <a class="section-card is-practice" href="${url(c.file || `practice-ch${c.id}.html`)}">
+        <div class="section-card-top">
+          <strong>第 ${c.id} 章</strong>
+          <small>練習</small>
+        </div>
+        <h2>${c.title}</h2>
+        <p>段考前練習　＋　章末評量</p>
+      </a>
+    `).join("");
   }
 
   async function setupPageNumbers() {
@@ -515,6 +642,7 @@
 
   renderHeader();
   renderHomeCards();
+  renderPracticeHubCards();
   setupImmersive();
   setupPageNumbers();
   setupPrintFolios();
