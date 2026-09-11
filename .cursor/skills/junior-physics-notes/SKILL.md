@@ -82,4 +82,4 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 
 ## 完成後
 
-完成修改後依 `jpwn-github.mdc` **自動 commit＋push**。提醒平板 Ctrl+F5。Pages：https://fish0048-ai.github.io/junior-physics-waves-notes/
+完成修改後依 `jpwn-github.mdc` **自動 commit＋push**。提醒平板 Ctrl+F5。正式站（Vercel）：https://junior-physics-waves-notes.vercel.app/ （講義 `/cover`、練習 `/practice`）

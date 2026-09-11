@@ -144,7 +144,7 @@
 | 半成品不確定 | 人工說要不要暫存 | 先問再 commit |
 | `_bank_extract/`、`.env` | — | 永不提交 |
 
-訊息格式：`<type>: <主旨>`（繁中）。Pages：https://fish0048-ai.github.io/junior-physics-waves-notes/
+訊息格式：`<type>: <主旨>`（繁中）。正式站：https://junior-physics-waves-notes.vercel.app/
 
 ---
 

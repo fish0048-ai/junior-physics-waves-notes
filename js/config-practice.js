@@ -2,7 +2,7 @@
 window.APP_CONFIG = {
   githubRepo: "https://github.com/fish0048-ai/junior-physics-waves-notes",
   githubPages: "https://fish0048-ai.github.io/junior-physics-waves-notes/",
-  siteUrl: "",
+  siteUrl: "https://junior-physics-waves-notes.vercel.app/",
   chapter: {
     id: "practice",
     mark: "練",
