@@ -32,22 +32,24 @@
   const LS_MODE = "jpwn.siteMode";
   function detectSiteMode() {
     if (window.JPWNSiteMode?.detect) return window.JPWNSiteMode.detect();
+    /* fallback：與 site-mode.js 同邏輯（未載入時） */
+    const forced = document.body.dataset.mode || "";
+    if (page === "practice-home" || page === "practice-chapter" || forced === "practice") {
+      try { localStorage.setItem(LS_MODE, "practice"); } catch (err) { /* ignore */ }
+      return "practice";
+    }
+    if (page === "cover" || page === "home" || page === "section" || page === "book" || forced === "lecture") {
+      try { localStorage.setItem(LS_MODE, "lecture"); } catch (err) { /* ignore */ }
+      return "lecture";
+    }
     try {
       const q = new URLSearchParams(location.search).get("mode");
       if (q === "practice" || q === "lecture") {
         localStorage.setItem(LS_MODE, q);
         return q;
       }
-    } catch (err) { /* ignore */ }
-    const forced = document.body.dataset.mode || "";
-    if (forced === "practice" || forced === "lecture") {
-      try { localStorage.setItem(LS_MODE, forced); } catch (err) { /* ignore */ }
-      return forced;
-    }
-    if (page === "practice-home" || page === "practice-chapter") return "practice";
-    try {
       const saved = localStorage.getItem(LS_MODE);
-      if (saved === "practice" || saved === "lecture") return saved;
+      if ((page === "exam" || page === "review") && (saved === "practice" || saved === "lecture")) return saved;
     } catch (err) { /* ignore */ }
     return "lecture";
   }
