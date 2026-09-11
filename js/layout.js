@@ -340,9 +340,9 @@
           <span class="font-scale-label" id="font-scale-label">100%</span>
           <button class="btn btn-ghost btn-font" id="btn-font-plus" type="button" title="放大投影字級">A＋</button>
         </span>`;
+    /* 練習專區獨立給學生：不連回講義；講義側仍可進練習 */
     const modeToggle = siteMode === "practice"
-      ? `<a class="btn btn-ghost" id="btn-mode-lecture" href="${url(cfg.cover?.file || "cover.html")}?mode=lecture" title="切換到探究講義">講義</a>
-         <a class="btn btn-orange" id="btn-mode-practice" href="${url(cfg.practiceHome || "practice.html")}" title="目前在練習專區">練習</a>`
+      ? `<span class="btn btn-orange" id="btn-mode-practice" title="練習專區（獨立入口）" aria-current="page">練習</span>`
       : `<a class="btn btn-orange" id="btn-mode-lecture" href="${url(cfg.cover?.file || "cover.html")}?mode=lecture" title="目前在探究講義">講義</a>
          <a class="btn btn-ghost" id="btn-mode-practice" href="${url("practice.html")}" title="切換到練習專區">練習</a>`;
 

@@ -11,7 +11,6 @@ window.APP_CONFIG = {
     nav: "練習專區"
   },
   home: "practice.html",
-  cover: { file: "cover.html", nav: "封面" },
   practiceHome: "practice.html",
   chapters: [
     { id: "1", title: "基本測量", file: "practice-ch1.html", nav: "第 1 章" },
