@@ -332,9 +332,13 @@
          <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>
          ${bookLink}`
       : bookLink;
-    const inkBtn = `<button class="btn btn-ghost" id="btn-ink" type="button" aria-pressed="false">筆記</button>`;
+    const inkBtn = siteMode === "practice"
+      ? ""
+      : `<button class="btn btn-ghost" id="btn-ink" type="button" aria-pressed="false">筆記</button>`;
     const immersiveBtn = `<button class="btn btn-ghost" id="btn-immersive" type="button" aria-pressed="false">全螢幕</button>`;
-    const seatingBtn = `<a class="btn btn-ghost" id="btn-seating" href="${escapeAttr(seatingChartUrl())}" target="_blank" rel="noopener" title="開啟班級座位表（加扣分／抽籤）">座位表</a>`;
+    const seatingBtn = siteMode === "practice"
+      ? ""
+      : `<a class="btn btn-ghost" id="btn-seating" href="${escapeAttr(seatingChartUrl())}" target="_blank" rel="noopener" title="開啟班級座位表（加扣分／抽籤）">座位表</a>`;
     const fontScale = `<span class="font-scale no-print" role="group" aria-label="投影字級">
           <button class="btn btn-ghost btn-font" id="btn-font-minus" type="button" title="縮小投影字級">A−</button>
           <span class="font-scale-label" id="font-scale-label">100%</span>
@@ -647,7 +651,7 @@
   setupPrintFolios();
   setupBookPrefetch();
 
-  if (!document.querySelector("script[data-class-ink], script[data-jpwn-cloud]")) {
+  if (siteMode !== "practice" && !document.querySelector("script[data-class-ink], script[data-jpwn-cloud]")) {
     const cloud = document.createElement("script");
     cloud.src = url("js/cloud-sync.js");
     cloud.dataset.jpwnCloud = "1";
