@@ -332,9 +332,7 @@
          <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>
          ${bookLink}`
       : bookLink;
-    const inkBtn = siteMode === "practice"
-      ? ""
-      : `<button class="btn btn-ghost" id="btn-ink" type="button" aria-pressed="false">筆記</button>`;
+    const inkBtn = `<button class="btn btn-ghost" id="btn-ink" type="button" aria-pressed="false">筆記</button>`;
     const immersiveBtn = `<button class="btn btn-ghost" id="btn-immersive" type="button" aria-pressed="false">全螢幕</button>`;
     const seatingBtn = siteMode === "practice"
       ? ""
@@ -651,7 +649,7 @@
   setupPrintFolios();
   setupBookPrefetch();
 
-  if (siteMode !== "practice" && !document.querySelector("script[data-class-ink], script[data-jpwn-cloud]")) {
+  if (!document.querySelector("script[data-class-ink], script[data-jpwn-cloud]")) {
     const cloud = document.createElement("script");
     cloud.src = url("js/cloud-sync.js");
     cloud.dataset.jpwnCloud = "1";
@@ -668,6 +666,11 @@
       document.body.appendChild(s);
     };
     document.body.appendChild(cloud);
+  }
+
+  /* 練習模式：段考頁目錄不要連回講義 */
+  if (siteMode === "practice") {
+    document.querySelectorAll(".toc a[href*='sections/']").forEach((a) => a.remove());
   }
 
   function pagesUrl() {

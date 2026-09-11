@@ -9,7 +9,12 @@
   const wrap = document.querySelector(".wrap");
   if (!wrap) return;
 
-  const pageKey = `${document.body.dataset.page || "page"}:${document.body.dataset.section || "home"}`;
+  const pageKey = (() => {
+    const path = (location.pathname || "").replace(/\\/g, "/");
+    const leaf = path.split("/").filter(Boolean).pop() || "index.html";
+    const mode = document.body.dataset.mode || "";
+    return `${document.body.dataset.page || "page"}:${document.body.dataset.section || leaf}:${mode || "lecture"}`;
+  })();
 
   const state = {
     classes: [],
@@ -577,6 +582,12 @@
     </div>
   `;
   document.body.appendChild(dock);
+
+  /* 練習專區：只要本機筆跡，不顯示教師用的 GitHub 雲端同步 */
+  if ((document.body.dataset.mode || document.documentElement.dataset.siteMode) === "practice") {
+    document.getElementById("ink-cloud")?.remove();
+    document.querySelector(".ink-hint")?.remove();
+  }
 
   function setPanel(open) {
     const panel = document.getElementById("ink-panel");
