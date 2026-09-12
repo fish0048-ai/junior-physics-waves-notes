@@ -86,8 +86,14 @@
   ) 錯誤敘述。
   <br>訂正：<input class="blank" data-answer="正確說法" style="width:8em">
 </p>
+<p>2. (
+  <input class="blank ox" data-answer="○|O|o" style="width:2.2em">
+  ) 正確敘述。
+  <br>訂正：<input class="blank" data-answer="不需要訂正|不用訂正|無需訂正" style="width:7em">
+</p>
 ```
 
+正確（○）也要有訂正格；答案揭開為「不需要訂正」（可接受「不用訂正／無需訂正」）。
 ## 挖空寬度經驗
 
 | 答案字數 | width |
