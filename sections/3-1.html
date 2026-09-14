@@ -137,6 +137,20 @@
         </figure>
       </div>
 
+      <section class="wave-particle-embed no-print" aria-label="互動觀察：波向右傳，質點上下振動">
+        <div class="ex-title"><span class="tag tag-cyan">互動觀察</span> 波往右走，紅點去哪裡？</div>
+        <p class="wave-particle-lead">線上版可操作下方動畫：先盯住紅點，再追蹤金色圓環標記的波峰。（列印／PDF 仍保留上方靜態絲帶圖）</p>
+        <iframe id="wave-particle-frame"
+          class="wave-particle-frame"
+          src="../animations/wave-particle.html"
+          title="3-1 波向右傳，紅色質點上下振動"
+          width="100%"
+          height="880"
+          loading="lazy"
+          referrerpolicy="same-origin"></iframe>
+        <p class="wave-open-link"><a href="../animations/wave-particle.html" target="_blank" rel="noopener">另開視窗操作動畫</a></p>
+      </section>
+
       <h3 class="subh">日常生活中的波動</h3>
       <div class="two-col">
         <div>
@@ -1155,5 +1169,19 @@
   <script src="../js/config.js"></script>
   <script src="../js/layout.js"></script>
   <script src="../js/app.js"></script>
+  <script>
+    (function () {
+      const frame = document.getElementById("wave-particle-frame");
+      if (!frame) return;
+      function resizeFrame(event) {
+        if (event.origin !== location.origin || event.source !== frame.contentWindow) return;
+        const data = event.data;
+        if (!data || data.type !== "wave-particle:resize" || !Number.isFinite(data.height)) return;
+        if (data.height < 200 || data.height > 3000) return;
+        frame.style.height = Math.ceil(data.height) + "px";
+      }
+      window.addEventListener("message", resizeFrame);
+    })();
+  </script>
 </body>
 </html>

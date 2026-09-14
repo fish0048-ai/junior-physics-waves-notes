@@ -13,7 +13,7 @@
       ]
     },
     {
-      "source": "/(css|js|img)/(.*)",
+      "source": "/(css|js|img|animations)/(.*)",
       "headers": [
         { "key": "Cache-Control", "value": "public, max-age=3600" }
       ]
