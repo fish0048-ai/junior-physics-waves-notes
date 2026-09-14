@@ -1,39 +1,238 @@
 <!doctype html>
 <html lang="zh-Hant">
-<head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>波向右傳，質點上下振動｜3-1</title>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>波向右傳，質點上下振動｜3-1</title>
 <style>
-*{box-sizing:border-box}body{margin:0;background:#f6f8fa;color:#182e42;font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.6}main{max-width:1040px;margin:auto;padding:24px}header small{color:#49677a;font-weight:700;letter-spacing:.12em}h1{font-size:clamp(22px,4vw,32px);margin:6px 0}header p{margin:4px 0 20px;color:#476174}.stage{background:white;border:1px solid #dce5ec;border-radius:18px;overflow:hidden}.legend{display:flex;gap:16px;flex-wrap:wrap;padding:16px 20px;font-size:14px}.legend span{display:flex;align-items:center;gap:8px}.dot{width:11px;height:11px;border-radius:50%;background:#d52b47}.line{width:25px;border-top:3px solid #087fa4}.ring{width:12px;height:12px;border:2px solid #bb760c;border-radius:50%}svg{display:block;width:100%;height:290px}svg text{font:14px system-ui,sans-serif;fill:#496174}.readout{display:flex;gap:10px;flex-wrap:wrap;justify-content:space-between;padding:12px 20px;border-top:1px solid #e8eef2;background:#f9fbfc;font-size:15px;font-variant-numeric:tabular-nums}.readout strong{color:#bd203b}.controls{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:18px}button,select{font:inherit;min-height:44px;border:1px solid #bbcad5;border-radius:9px;padding:8px 14px;background:white;color:#182e42;cursor:pointer}button.primary{background:#075f7d;border-color:#075f7d;color:white}button:hover{filter:brightness(.96)}:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}label{display:flex;gap:8px;align-items:center}.timeline{margin:16px 0}.timeline label{justify-content:space-between}input[type=range]{width:100%;accent-color:#087fa4;min-height:38px;cursor:pointer}.hint{padding:14px 18px;background:#eaf4f7;border-left:4px solid #087fa4;border-radius:6px}.hint p{margin:0}.answer{margin-top:12px}details{margin-top:18px}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}.note{font-size:13px;color:#536978;margin-top:18px}#state{font-size:14px;color:#496174} @media(max-width:480px){main{padding:14px}svg{height:260px}.legend{padding:12px;gap:10px;font-size:13px}.readout{padding:10px 12px}.controls{gap:8px}button,select{padding:8px 11px}}
-</style></head>
-<body><main id="wave-app">
-<header><small>3-1 波的傳播 · 互動觀察</small><h1>波往右走，紅點去哪裡？</h1><p>先盯住紅點，再追蹤金色圓環標記的波峰。</p></header>
-<section class="stage" aria-label="繩波觀察區"><div class="legend"><span><i class="line"></i>繩上的波形</span><span><i class="dot"></i>紅點：繩上的同一質點</span><span><i class="ring"></i>圓環：追蹤波峰</span></div>
-<svg id="scene" role="img" aria-labelledby="scene-title scene-desc"><title id="scene-title">向右傳播的繩波</title><desc id="scene-desc">藍色波形與金色波峰向右移動；紅色質點的水平位置固定，只上下振動。虛線標記紅點所在的固定水平位置。</desc><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse"><path d="M0 0L10 5L0 10Z" fill="#087fa4"/></marker></defs><g id="drawing"></g></svg>
-<div class="readout"><span>紅點水平位置：<strong>固定不變</strong></span><span id="motion">紅點：向上</span><span id="clock">經過 0.00 T</span></div></section>
-<div class="controls"><button id="play" class="primary" type="button">播放</button><button id="step" type="button">前進 ¼ 週期</button><button id="reset" type="button">重設</button><label for="speed">播放速度<select id="speed"><option value="0.25">¼ 倍慢速</option><option value="0.5">½ 倍慢速</option><option value="1" selected>正常速度</option></select></label><span id="state" role="status" aria-live="polite">已暫停，可拖動時間</span></div>
-<div class="timeline"><label for="time"><span>拖動時間觀察</span><span>0 → 2 週期</span></label><input id="time" type="range" min="0" max="2" step="0.005" value="0" aria-label="經過時間，單位為週期"></div>
-<div class="hint"><p><b>觀察任務：</b>前進一個週期後，紅點是否回到原位？同一個波峰又往哪裡去了？</p><details><summary>看觀察結論</summary><p>紅點上下振動一次後回到原位；同一個波峰向右移動一個波長。<b>波的傳播方向向右，介質振動方向上下，兩者垂直，因此這是橫波。</b></p><p class="answer">在這個理想繩波模型中，波傳遞能量，繩上的質點不隨波向右搬移。</p></details></div>
+*{box-sizing:border-box}
+html,body{margin:0;background:#f6f8fa;color:#182e42;font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.45}
+main{max-width:1040px;margin:auto;padding:12px 14px 10px}
+header small{color:#49677a;font-weight:700;letter-spacing:.08em;font-size:12px}
+h1{font-size:clamp(18px,3.2vw,24px);margin:2px 0 2px}
+header p{margin:0 0 8px;color:#476174;font-size:13px}
+.stage{background:white;border:1px solid #dce5ec;border-radius:12px;overflow:hidden}
+.legend{display:flex;gap:10px 14px;flex-wrap:wrap;padding:8px 12px;font-size:12px}
+.legend span{display:flex;align-items:center;gap:6px}
+.dot{width:9px;height:9px;border-radius:50%;background:#d52b47}
+.line{width:20px;border-top:3px solid #087fa4}
+.ring{width:10px;height:10px;border:2px solid #bb760c;border-radius:50%}
+svg{display:block;width:100%;height:clamp(150px,28vh,210px)}
+svg text{font:12px system-ui,sans-serif;fill:#496174}
+.readout{display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;padding:6px 12px;border-top:1px solid #e8eef2;background:#f9fbfc;font-size:13px;font-variant-numeric:tabular-nums}
+.readout strong{color:#bd203b}
+.controls{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
+button,select{font:inherit;min-height:36px;border:1px solid #bbcad5;border-radius:8px;padding:6px 11px;background:white;color:#182e42;cursor:pointer}
+button.primary{background:#075f7d;border-color:#075f7d;color:white}
+button:hover{filter:brightness(.96)}
+:focus-visible{outline:3px solid #e5a12a;outline-offset:2px}
+label{display:flex;gap:6px;align-items:center;font-size:13px}
+.timeline{margin:8px 0 6px}
+.timeline label{justify-content:space-between;font-size:12px;margin-bottom:2px}
+input[type=range]{width:100%;accent-color:#087fa4;min-height:28px;cursor:pointer}
+.hint{padding:8px 12px;background:#eaf4f7;border-left:4px solid #087fa4;border-radius:6px;font-size:13px}
+.hint p{margin:0}
+.answer{margin-top:6px}
+details{margin-top:4px}
+summary{cursor:pointer;min-height:28px;padding:4px 0;font-weight:600}
+.note{font-size:11px;color:#536978;margin:6px 0 0;line-height:1.4}
+#state{font-size:12px;color:#496174}
+
+/* 嵌入講義 iframe：壓進一屏，避免父頁超高 */
+html.is-embed body{background:#f8fbfd}
+html.is-embed main{padding:6px 8px 4px;max-width:none}
+html.is-embed header p{display:none}
+html.is-embed h1{font-size:17px;margin:0 0 4px}
+html.is-embed header small{font-size:11px}
+html.is-embed svg{height:clamp(120px,22vh,170px)}
+html.is-embed .legend{padding:5px 10px;font-size:11px;gap:8px 12px}
+html.is-embed .readout{padding:4px 10px;font-size:12px}
+html.is-embed .controls{margin-top:6px;gap:6px}
+html.is-embed button,html.is-embed select{min-height:32px;padding:4px 9px;font-size:13px}
+html.is-embed .timeline{margin:4px 0}
+html.is-embed .hint{padding:6px 10px;font-size:12px}
+html.is-embed .note{display:none}
+html.is-embed details[open]{max-height:none}
+
+@media(max-width:480px){
+  main{padding:8px}
+  svg{height:clamp(140px,26vh,190px)}
+  .legend{padding:6px 8px;gap:8px;font-size:11px}
+  .readout{padding:6px 8px;font-size:12px}
+  .controls{gap:6px}
+  button,select{padding:5px 8px;min-height:34px}
+}
+</style>
+</head>
+<body>
+<main id="wave-app">
+<header>
+  <small>3-1 波的傳播 · 互動觀察</small>
+  <h1>波往右走，紅點去哪裡？</h1>
+  <p>先盯住紅點，再追蹤金色圓環標記的波峰。</p>
+</header>
+<section class="stage" aria-label="繩波觀察區">
+  <div class="legend">
+    <span><i class="line"></i>繩上的波形</span>
+    <span><i class="dot"></i>紅點：繩上的同一質點</span>
+    <span><i class="ring"></i>圓環：追蹤波峰</span>
+  </div>
+  <svg id="scene" role="img" aria-labelledby="scene-title scene-desc">
+    <title id="scene-title">向右傳播的繩波</title>
+    <desc id="scene-desc">藍色波形與金色波峰向右移動；紅色質點的水平位置固定，只上下振動。虛線標記紅點所在的固定水平位置。</desc>
+    <defs>
+      <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+        <path d="M0 0L10 5L0 10Z" fill="#087fa4"/>
+      </marker>
+    </defs>
+    <g id="drawing"></g>
+  </svg>
+  <div class="readout">
+    <span>紅點水平位置：<strong>固定不變</strong></span>
+    <span id="motion">紅點：向上</span>
+    <span id="clock">經過 0.00 T</span>
+  </div>
+</section>
+<div class="controls">
+  <button id="play" class="primary" type="button">播放</button>
+  <button id="step" type="button">前進 ¼ 週期</button>
+  <button id="reset" type="button">重設</button>
+  <label for="speed">播放速度
+    <select id="speed">
+      <option value="0.25">¼ 倍慢速</option>
+      <option value="0.5">½ 倍慢速</option>
+      <option value="1" selected>正常速度</option>
+    </select>
+  </label>
+  <span id="state" role="status" aria-live="polite">已暫停，可拖動時間</span>
+</div>
+<div class="timeline">
+  <label for="time"><span>拖動時間觀察</span><span>0 → 2 週期</span></label>
+  <input id="time" type="range" min="0" max="2" step="0.005" value="0" aria-label="經過時間，單位為週期">
+</div>
+<div class="hint">
+  <p><b>觀察任務：</b>前進一個週期後，紅點是否回到原位？同一個波峰又往哪裡去了？</p>
+  <details>
+    <summary>看觀察結論</summary>
+    <p>紅點上下振動一次後回到原位；同一個波峰向右移動一個波長。<b>波的傳播方向向右，介質振動方向上下，兩者垂直，因此這是橫波。</b></p>
+    <p class="answer">在這個理想繩波模型中，波傳遞能量，繩上的質點不隨波向右搬移。</p>
+  </details>
+</div>
 <p class="note">理想化繩波示意，忽略阻尼與端點反射。金色圓環標記波形的波峰，不是同一顆粒子。T 表示一次完整振動所需的時間；播放速度只調整觀看快慢。播放至 2T 會自動暫停。</p>
 </main>
 <script>
-(()=>{'use strict';const $=id=>document.getElementById(id);const svg=$('scene'),g=$('drawing'),slider=$('time'),play=$('play');let phase=0,running=false,last=null;const tau=2*Math.PI;const ns='http://www.w3.org/2000/svg';
-function el(tag,attrs,text){const n=document.createElementNS(ns,tag);Object.entries(attrs).forEach(([k,v])=>n.setAttribute(k,v));if(text)n.textContent=text;g.append(n);return n}
-function draw(){const w=Math.max(250,svg.clientWidth),h=svg.clientHeight,left=24,right=w-24,span=right-left,lambda=span/3.25,x0=left+lambda*.65,cy=h*.57,amp=52;svg.setAttribute('viewBox',`0 0 ${w} ${h}`);g.replaceChildren();
-const y=x=>cy-amp*Math.sin(tau*(phase-(x-x0)/lambda));
-el('line',{x1:left,y1:cy,x2:right,y2:cy,stroke:'#a7b9c6','stroke-dasharray':'5 5'});
-el('line',{x1:x0,y1:cy-amp-24,x2:x0,y2:cy+amp+24,stroke:'#df9ca8','stroke-dasharray':'4 4'});
-el('line',{x1:left+10,y1:35,x2:right-10,y2:35,stroke:'#087fa4','stroke-width':2,'marker-end':'url(#arrow)'});el('text',{x:w/2,y:22,'text-anchor':'middle'},'波的傳播方向 →');
-let d='';for(let x=left;x<=right;x+=2)d+=(d?'L':'M')+x.toFixed(2)+' '+y(x).toFixed(2)+' ';d+='L'+right+' '+y(right);el('path',{d,fill:'none',stroke:'#087fa4','stroke-width':3.5,'stroke-linecap':'round'});
-for(let i=0;i<=32;i++){const x=left+span*i/32;el('circle',{cx:x,cy:y(x),r:2.5,fill:'#087fa4',opacity:.45})}
-const peakX=x0+lambda*(phase-.25);el('circle',{cx:peakX,cy:cy-amp,r:9,fill:'#fff8e7',stroke:'#bb760c','stroke-width':2.5});
-el('circle',{cx:x0,cy:y(x0),r:8,fill:'#d52b47',stroke:'white','stroke-width':2});el('text',{x:x0,y:cy+amp+46,'text-anchor':'middle'},'固定水平位置');
-$('motion').textContent=Math.abs(Math.cos(tau*phase))<.0001?'紅點：轉折點（瞬間靜止）':Math.cos(tau*phase)>0?'紅點：向上 ↑':'紅點：向下 ↓';$('clock').textContent=`經過 ${phase.toFixed(2)} T`;slider.value=phase;slider.setAttribute('aria-valuetext',`${phase.toFixed(2)} 個週期`);
-}
-function stop(message='已暫停，可拖動時間'){running=false;last=null;play.textContent=phase>=2?'重新播放':'播放';$('state').textContent=message}
-play.addEventListener('click',()=>{if(running){stop();return}if(phase>=2)phase=0;running=true;last=null;play.textContent='暫停';$('state').textContent='播放中';draw()});
-$('step').addEventListener('click',()=>{phase=Math.min(2,phase+.25);stop(phase>=2?'已到 2T；可重設或重新播放':'已前進 ¼ 週期');draw()});$('reset').addEventListener('click',()=>{phase=0;stop('已重設至 0T');draw()});slider.addEventListener('input',()=>{phase=Number(slider.value);stop();draw()});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)stop('頁面暫時隱藏，已暫停')});
-function tick(now){if(running){if(last!==null)phase=Math.min(2,phase+Math.min((now-last)/1000,.1)*Number($('speed').value)/4);last=now;if(phase>=2)stop('已完成 2 個週期；紅點回到起始位置');draw()}requestAnimationFrame(tick)}new ResizeObserver(draw).observe(svg);draw();requestAnimationFrame(tick);
-// Same-origin iframe embedding: parent must validate origin and source before using height.
-let sentHeight=0;new ResizeObserver(()=>{const height=Math.ceil(document.querySelector("main").getBoundingClientRect().height);if(height!==sentHeight&&window.parent!==window){sentHeight=height;window.parent.postMessage({type:'wave-particle:resize',height},window.location.origin==='null'?'*':window.location.origin)}}).observe(document.body);
+(() => {
+  'use strict';
+  if (window.parent !== window) document.documentElement.classList.add('is-embed');
+
+  const $ = (id) => document.getElementById(id);
+  const svg = $('scene');
+  const g = $('drawing');
+  const slider = $('time');
+  const play = $('play');
+  let phase = 0, running = false, last = null;
+  const tau = 2 * Math.PI;
+  const ns = 'http://www.w3.org/2000/svg';
+
+  function el(tag, attrs, text) {
+    const n = document.createElementNS(ns, tag);
+    Object.entries(attrs).forEach(([k, v]) => n.setAttribute(k, v));
+    if (text) n.textContent = text;
+    g.append(n);
+    return n;
+  }
+
+  function draw() {
+    const w = Math.max(250, svg.clientWidth);
+    const h = Math.max(110, svg.clientHeight);
+    const left = 18, right = w - 18, span = right - left;
+    const lambda = span / 3.25;
+    const x0 = left + lambda * 0.65;
+    const cy = h * 0.55;
+    const amp = Math.min(42, Math.max(22, h * 0.28));
+    svg.setAttribute('viewBox', `0 0 ${w} ${h}`);
+    g.replaceChildren();
+    const y = (x) => cy - amp * Math.sin(tau * (phase - (x - x0) / lambda));
+    el('line', { x1: left, y1: cy, x2: right, y2: cy, stroke: '#a7b9c6', 'stroke-dasharray': '5 5' });
+    el('line', { x1: x0, y1: cy - amp - 16, x2: x0, y2: cy + amp + 16, stroke: '#df9ca8', 'stroke-dasharray': '4 4' });
+    el('line', { x1: left + 8, y1: 22, x2: right - 8, y2: 22, stroke: '#087fa4', 'stroke-width': 2, 'marker-end': 'url(#arrow)' });
+    el('text', { x: w / 2, y: 14, 'text-anchor': 'middle' }, '波的傳播方向 →');
+    let d = '';
+    for (let x = left; x <= right; x += 2) d += (d ? 'L' : 'M') + x.toFixed(2) + ' ' + y(x).toFixed(2) + ' ';
+    d += 'L' + right + ' ' + y(right);
+    el('path', { d, fill: 'none', stroke: '#087fa4', 'stroke-width': 3.2, 'stroke-linecap': 'round' });
+    for (let i = 0; i <= 28; i++) {
+      const x = left + span * i / 28;
+      el('circle', { cx: x, cy: y(x), r: 2.2, fill: '#087fa4', opacity: 0.45 });
+    }
+    const peakX = x0 + lambda * (phase - 0.25);
+    el('circle', { cx: peakX, cy: cy - amp, r: 7.5, fill: '#fff8e7', stroke: '#bb760c', 'stroke-width': 2.2 });
+    el('circle', { cx: x0, cy: y(x0), r: 7, fill: '#d52b47', stroke: 'white', 'stroke-width': 2 });
+    el('text', { x: x0, y: Math.min(h - 6, cy + amp + 28), 'text-anchor': 'middle' }, '固定水平位置');
+    $('motion').textContent = Math.abs(Math.cos(tau * phase)) < 0.0001
+      ? '紅點：轉折點（瞬間靜止）'
+      : (Math.cos(tau * phase) > 0 ? '紅點：向上 ↑' : '紅點：向下 ↓');
+    $('clock').textContent = `經過 ${phase.toFixed(2)} T`;
+    slider.value = phase;
+    slider.setAttribute('aria-valuetext', `${phase.toFixed(2)} 個週期`);
+  }
+
+  function stop(message = '已暫停，可拖動時間') {
+    running = false;
+    last = null;
+    play.textContent = phase >= 2 ? '重新播放' : '播放';
+    $('state').textContent = message;
+  }
+
+  play.addEventListener('click', () => {
+    if (running) { stop(); return; }
+    if (phase >= 2) phase = 0;
+    running = true;
+    last = null;
+    play.textContent = '暫停';
+    $('state').textContent = '播放中';
+    draw();
+  });
+  $('step').addEventListener('click', () => {
+    phase = Math.min(2, phase + 0.25);
+    stop(phase >= 2 ? '已到 2T；可重設或重新播放' : '已前進 ¼ 週期');
+    draw();
+  });
+  $('reset').addEventListener('click', () => { phase = 0; stop('已重設至 0T'); draw(); });
+  slider.addEventListener('input', () => { phase = Number(slider.value); stop(); draw(); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop('頁面暫時隱藏，已暫停'); });
+
+  function tick(now) {
+    if (running) {
+      if (last !== null) phase = Math.min(2, phase + Math.min((now - last) / 1000, 0.1) * Number($('speed').value) / 4);
+      last = now;
+      if (phase >= 2) stop('已完成 2 個週期；紅點回到起始位置');
+      draw();
+    }
+    requestAnimationFrame(tick);
+  }
+  new ResizeObserver(draw).observe(svg);
+  draw();
+  requestAnimationFrame(tick);
+
+  let sentHeight = 0;
+  function reportHeight() {
+    if (window.parent === window) return;
+    const height = Math.ceil(document.querySelector('main').getBoundingClientRect().height) + 4;
+    if (height === sentHeight || height < 180 || height > 3000) return;
+    sentHeight = height;
+    window.parent.postMessage(
+      { type: 'wave-particle:resize', height },
+      window.location.origin === 'null' ? '*' : window.location.origin
+    );
+  }
+  new ResizeObserver(reportHeight).observe(document.body);
+  document.querySelector('details')?.addEventListener('toggle', () => {
+    sentHeight = 0;
+    requestAnimationFrame(reportHeight);
+  });
+  reportHeight();
 })();
-</script></body></html>
+</script>
+</body>
+</html>

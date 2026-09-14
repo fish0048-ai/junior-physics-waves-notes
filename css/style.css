@@ -620,38 +620,38 @@ figure {
 
 /* 3-1 繩波質點互動動畫（iframe） */
 .wave-particle-embed {
-  margin: 14px 0 18px;
-  padding: 12px 14px 14px;
+  margin: 10px 0 14px;
+  padding: 8px 10px 10px;
   border: 1px solid #cfe3ec;
-  border-radius: 14px;
+  border-radius: 12px;
   background: #f8fbfd;
   overflow: visible;
 }
 .wave-particle-lead {
-  margin: 0 0 10px;
-  font-size: 14px;
+  margin: 0 0 6px;
+  font-size: 13px;
   color: #334155;
-  line-height: 1.55;
+  line-height: 1.45;
 }
 .wave-particle-frame {
   display: block;
   width: 100%;
   max-width: 100%;
-  min-height: 640px;
-  height: 880px;
+  min-height: 420px;
+  height: 520px;
   border: 0;
-  border-radius: 16px;
+  border-radius: 12px;
   background: #f6f8fa;
   overflow: hidden;
 }
 .wave-open-link {
-  margin: 8px 0 0;
-  font-size: 13px;
+  margin: 4px 0 0;
+  font-size: 12px;
 }
 .wave-open-link a { color: #075f7d; font-weight: 600; }
 @media (max-width: 480px) {
-  .wave-particle-embed { padding: 10px; }
-  .wave-particle-frame { min-height: 720px; border-radius: 12px; }
+  .wave-particle-embed { padding: 6px 8px; }
+  .wave-particle-frame { min-height: 460px; border-radius: 10px; }
 }
 @media print {
   .wave-particle-embed,
