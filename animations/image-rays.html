@@ -1,0 +1,67 @@
+<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>沿著光線找像的位置</title><style>
+*{box-sizing:border-box}body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}main{max-width:1050px;margin:auto;padding:24px}small{color:#547082}h1{font-size:clamp(23px,4vw,31px);line-height:1.4;margin:6px 0 8px}p{margin:8px 0 16px}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;align-items:center}.control{flex:1 1 190px;max-width:340px}.control label{display:flex;justify-content:space-between;gap:10px;font-size:15px}.control output{font-variant-numeric:tabular-nums;font-weight:600}input[type=range]{width:100%;min-height:38px;accent-color:#087fa4}select,button{font:inherit;min-height:44px;padding:8px 12px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white}select{max-width:100%}button{cursor:pointer}button.primary{background:#076b87;color:white;border-color:#076b87}button:disabled{opacity:.5;cursor:default}button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}.visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden}svg{display:block;width:100%;height:390px}svg text{font:14px system-ui,"Microsoft JhengHei",sans-serif;fill:#29495e}.readout{padding:12px 16px;background:#edf5f8;min-height:52px;font-variant-numeric:tabular-nums}.note{font-size:13px;color:#526c7d}.question{margin-top:18px;padding:16px;background:#eaf3f7;border-left:4px solid #087fa4;border-radius:7px}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}details p{margin:6px 0}#status{color:#496579;font-size:14px}.legend{font-size:14px;margin:12px 0}.key{display:inline-block;padding:2px 8px;border-radius:6px;background:#e6f1f5;margin:2px}.panel{display:flex;gap:12px;flex-wrap:wrap}.panel>div{flex:1 1 200px}a{color:#075f7d}@media(max-width:480px){main{padding:14px}.controls{gap:10px}.control{flex-basis:140px}svg{height:430px}.readout{font-size:14px}}
+
+html.is-embed body{background:#f8fbfd}
+html.is-embed main{padding:6px 8px 4px;max-width:none}
+html.is-embed h1{font-size:17px;margin:2px 0 4px;line-height:1.3}
+html.is-embed small{font-size:11px}
+html.is-embed main>header+p,html.is-embed main>small+h1+p{margin:0 0 6px}
+html.is-embed svg{height:clamp(130px,24vh,200px)!important}
+html.is-embed .controls{margin:6px 0;gap:8px}
+html.is-embed button,html.is-embed select{min-height:32px;padding:4px 9px;font-size:13px}
+html.is-embed .readout,.legend,.note,.question,.control label{font-size:12px}
+html.is-embed .question{margin-top:8px;padding:8px 10px}
+html.is-embed .note{margin:4px 0 0}
+html.is-embed summary{min-height:28px;padding:2px 0}</style></head><body><script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script><main><small>國中理化 · 4-2／4-3 成像光路</small><h1>沿著光線找像的位置</h1><p>先找光從哪個物點出發，再沿箭頭追到眼睛或紙屏的受光點。紅色虛線只用來反推像的位置。</p><div class="controls"><label>情境 <select id="mode"><option value="mirror">平面鏡</option><option value="depth">水中視深</option><option value="convex">凸透鏡</option><option value="concave">凹透鏡</option></select></label><div class="control"><label for="distance">物距／實深<output id="distance-out"></output></label><input id="distance" type="range" min="5" max="60" step="1" value="30"></div><div class="control"><label for="cover">透鏡遮擋比例<output id="cover-out"></output></label><input id="cover" type="range" min="0" max="50" step="10" value="0"></div></div><p class="legend"><span class="key">P：光的出發物點</span><span class="key">E：眼睛受光位置</span><span class="key">S：紙屏受光點</span><span class="key">I：像點</span><br>物點可以自行發光，也可以反射照到它的光；看到物體，是因為光進入眼睛。</p><div class="visual"><svg id="scene" role="img" aria-label="沿著光線找像的位置的互動示意"></svg><div class="readout" id="result"></div></div><div class="controls"><span role="status" aria-live="polite" id="status">可調整條件觀察</span></div><div class="question"><b>先想一想：</b>虛線交會的地方，真的有光線經過嗎？<details><summary>查看解釋</summary><p>實線表示實際光路，虛線表示反向延長。平面鏡及水中視深的像是虛像。凸透鏡焦距外可成倒立實像，焦距內成正立放大虛像；凹透鏡對實物成正立縮小虛像。遮住部分透鏡不會切掉半個像，只減少通光量。</p></details></div><p class="note">透鏡採薄透鏡、近軸模型，焦距大小 10 cm；光路僅取代表線。水中視深的兩條光線依史涅爾定律追跡（n水＝1.33、n空氣＝1），分別到達同一眼睛小瞳孔的兩端；觀察方向接近法線。兩條折射線反向延長的交點是此小光束的近似虛像，視深約為實深÷1.33。眼睛圖示放大；不模擬眼內聚焦。實線／虛線示意不表示光的實際行進速度。像超出畫面時仍顯示計算結果；此模組不含曲面鏡。</p></main><script>
+(()=>{'use strict';const $=id=>document.getElementById(id),svg=$('scene'),NS='http://www.w3.org/2000/svg';let W=800,H=390,frame=null,last=null,running=false;const C={blue:'#087fa4',red:'#d52b47',gold:'#a66a0a',green:'#258151',gray:'#92a8b7'};
+function n(tag,attrs={},text=''){const node=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>node.setAttribute(k,v));if(text!==undefined)node.textContent=text;svg.append(node);return node}
+function clear(){W=Math.max(260,svg.clientWidth);H=svg.clientHeight||390;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.replaceChildren()}
+function line(x1,y1,x2,y2,color=C.blue,dash=false,width=2){return n('line',{x1,y1,x2,y2,stroke:color,'stroke-width':width,...(dash?{'stroke-dasharray':'5 5'}:{})})}
+function text(x,y,t,anchor='middle',color){return n('text',{x,y,'text-anchor':anchor,...(color?{style:'fill:'+color}:{})},t)}
+function circle(x,y,r,color,fill=color){return n('circle',{cx:x,cy:y,r,stroke:color,fill,'stroke-width':2})}
+function rect(x,y,w,h,fill,stroke='none'){return n('rect',{x,y,width:Math.max(0,w),height:Math.max(0,h),rx:4,fill,stroke})}
+function path(points,color=C.blue,dash=false,width=2){return n('path',{d:points.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' '),fill:'none',stroke:color,'stroke-width':width,...(dash?{'stroke-dasharray':'5 5'}:{})})}
+function arrow(x1,y1,x2,y2,color=C.blue,dash=false){line(x1,y1,x2,y2,color,dash);const a=Math.atan2(y2-y1,x2-x1),l=8;return path([[x2-l*Math.cos(a-.45),y2-l*Math.sin(a-.45)],[x2,y2],[x2-l*Math.cos(a+.45),y2-l*Math.sin(a+.45)]],color)}
+function val(id){return Number($(id).value)}function out(id,v){$(id).textContent=v}function bind(ids,fn){ids.forEach(id=>$(id).addEventListener('input',()=>{stop();fn();draw()}))}
+function stop(msg='已暫停'){running=false;last=null;if($('play'))$('play').textContent='播放';out('status',msg)}
+function playback(update){$('play').addEventListener('click',()=>{if(running){stop();return}running=true;last=null;$('play').textContent='暫停';out('status','播放中')});function tick(t){if(running){if(last!==null)update(Math.min(.1,(t-last)/1000));last=t;draw()}frame=requestAnimationFrame(tick)}frame=requestAnimationFrame(tick)}
+document.addEventListener('visibilitychange',()=>{if(document.hidden)stop('頁面隱藏，已暫停')});
+
+function draw(){clear();const mode=$('mode').value,p=val('distance'),cy=H*.5;out('distance-out',p+' cm');out('cover-out',val('cover')+'%');$('cover').disabled=mode==='mirror'||mode==='depth';
+if(mode==='mirror'){const cx=W*.57,scale=(W*.38)/60,ox=cx-p*scale,ix=cx+p*scale,py=cy+15,ex=Math.max(24,cx-85),ey=75;
+line(cx,45,cx,H-80,C.gray,false,5);arrow(ox,cy+40,ox,py,C.gold);arrow(ix,cy+40,ix,py,C.red,true);
+[ey-5,ey+5].forEach(ry=>{const by=py+(ry-py)*(cx-ix)/(ex-ix);arrow(ox,py,cx,by,C.gold);arrow(cx,by,ex,ry,C.blue);line(cx,by,ix,py,C.red,true)});
+circle(ox,py,5,C.gold);circle(ix,py,5,C.red,'none');n('ellipse',{cx:ex-6,cy:ey,rx:12,ry:20,fill:'white',stroke:C.green,'stroke-width':2});line(ex,ey-6,ex,ey+6,C.green,false,4);text(ex,ey-29,'E 眼睛');text(ox,cy+67,'P 物點');text(Math.min(W-22,ix),cy+67,'I 虛像');text(cx,H-53,'平面鏡');out('result',`P 物點 → 鏡面反射 → E 眼睛 ｜ 物距 ${p} cm＝像距 ${p} cm ｜ 物與像相距 ${2*p} cm ｜ 虛像 I 不發光`);return}
+if(mode==='depth'){
+const surface=H*.35,x=W*.43,scale=(H*.43)/60,D=p*scale,oy=surface+D,eyeY=surface-82,eyeX=x+12,nw=1.33;
+rect(0,surface,W,H-surface,'#e6f5fa');line(0,surface,W,surface,C.blue);text(16,surface-14,'空氣','start');text(16,H-18,'水','start');
+const rays=[eyeX-5,eyeX+5].map(ex=>{let lo=Math.min(x,ex),hi=Math.max(x,ex);for(let k=0;k<70;k++){const bx=(lo+hi)/2;const f=nw*(bx-x)/Math.hypot(bx-x,D)-(ex-bx)/Math.hypot(ex-bx,surface-eyeY);if(f>0)hi=bx;else lo=bx}const bx=(lo+hi)/2;return {ex,bx,m:(ex-bx)/(eyeY-surface)}});
+const dep=(rays[1].bx-rays[0].bx)/(rays[0].m-rays[1].m),ix=rays[0].bx+rays[0].m*dep,iy=surface+dep;
+rays.forEach(r=>{arrow(x,oy,r.bx,surface,C.gold);arrow(r.bx,surface,r.ex,eyeY,C.blue);line(r.bx,surface,ix,iy,C.red,true)});
+line(rays[0].bx,surface-24,rays[0].bx,surface+35,C.gray,true);
+// All real rays end at this pupil, not elsewhere in the air.
+n('ellipse',{cx:eyeX,cy:eyeY-5,rx:22,ry:13,fill:'white',stroke:'#258151','stroke-width':2});line(eyeX-6,eyeY,eyeX+6,eyeY,C.green,false,5);text(eyeX,eyeY-26,'E 眼睛（受光）');
+circle(x,oy,6,C.gold);circle(ix,iy,6,C.red,'none');text(20,H-63,'P：水底物點（光從這裡出發）','start');text(20,H-39,'I：看起來較淺的虛像','start');
+// Leader labels separate nearby object/image points at shallow depths.
+line(x+7,oy,W-45,oy,C.gold,true);text(W-16,Math.min(H-91,oy+6),'P','end',C.gold);line(ix-7,iy,24,iy,C.red,true);text(18,iy+5,'I','start',C.red);
+svg.setAttribute('data-real-depth',p);svg.setAttribute('data-apparent-depth',dep/scale);svg.setAttribute('data-eye-x',eyeX);svg.setAttribute('data-eye-y',eyeY);
+out('result',`P 發出／反射光 → 水面折射 → E 眼睛接收。反向延長才得到 I；I 不是光源。實深 ${p} cm，視深約 ${(dep/scale).toFixed(1)} cm。`);return}
+const f=mode==='convex'?10:-10, q=Math.abs(p-f)<1e-9?Infinity:f*p/(p-f),m=-q/p,cx=W*.47,s=(W*.42)/65,ox=cx-p*s,oh=70;line(10,cy,W-10,cy,C.gray,true);line(cx,cy-85,cx,cy+85,C.blue,false,4);text(cx,30,mode==='convex'?'凸透鏡':'凹透鏡');for(const z of [-20,-10,10,20]){circle(cx+z*s,cy,2,C.gray);text(cx+z*s,cy+28,Math.abs(z)===10?'F':'2F')}line(ox,cy,ox,cy-oh+10,C.gold,false,9);n('path',{d:`M${ox-11} ${cy-oh+16}L${ox} ${cy-oh}L${ox+11} ${cy-oh+16}Z`,fill:C.gold});circle(ox,cy-oh,6,C.gold);text(ox,cy-oh-18,'P 物點');text(ox,cy+58,'物體');
+// Trace three rays from the same object point through the uncovered aperture.
+const apertureTop=cy-75+150*val('cover')/100, apertureBottom=cy+75;
+if(q<0){
+const ix=cx+q*s,iy=cy-oh*m,ex=cx+Math.min(30,W*.08),ly0=(apertureTop+apertureBottom)/2,ratio=(ex-cx)/(ix-cx),ey0=ly0+(iy-ly0)*ratio;
+[-4,4].forEach((dy,j)=>{const ey=ey0+dy,ly=(ey-iy*ratio)/(1-ratio),color=j?C.gold:C.blue;arrow(ox,cy-oh,cx,ly,color);arrow(cx,ly,ex,ey,color);line(cx,ly,ix,iy,C.red,true)});
+n('ellipse',{cx:ex+7,cy:ey0,rx:13,ry:18,fill:'white',stroke:C.green,'stroke-width':2});line(ex,ey0-6,ex,ey0+6,C.green,false,4);text(ex+10,ey0-27,'E 眼睛');
+}else{
+[.18,.5,.82].forEach((u,j)=>{const ly=apertureTop+(apertureBottom-apertureTop)*u,right=W-12,color=[C.blue,C.gold,C.green][j];arrow(ox,cy-oh,cx,ly,color);const slope=Number.isFinite(q)?(cy-oh*m-ly)/(q*s):oh/(p*s);
+const ix=cx+q*s,iy=cy-oh*m,onScreen=Number.isFinite(q)&&ix>cx&&ix<right&&iy>45&&iy<H-45;
+const rx=onScreen?ix:Math.min(right,cx+Math.min((right-cx)*.85,25/Math.max(.01,Math.abs(slope)))),ry=ly+(rx-cx)*slope;arrow(cx,ly,rx,ry,color);if(onScreen)circle(rx,ry,3,C.green);
+});}
+if(Number.isFinite(q)){const ix=cx+q*s,iy=cy-oh*m;if(ix>12&&ix<W-12&&iy>45&&iy<H-45){if(q>0){line(ix,Math.min(cy,iy)-12,ix,Math.max(cy,iy)+12,C.gray,false,3);circle(ix,iy,6,C.green);text(ix,iy+45,'S 紙屏受光點')}const imageStem=line(ix,cy,ix,iy,C.red,q<0,5);imageStem.setAttribute('opacity',1-val('cover')/100);const a=arrow(ix,cy,ix,iy,C.red,q<0);a.setAttribute('opacity',1-val('cover')/100);text(ix,Math.max(52,Math.min(H-25,iy+(m>0?-16:25))),q>0?'I 實像':'I 虛像')}
+let msg=`像距 ${Math.abs(q).toFixed(1)} cm（${q>0?'另一側':'物體同側'}）｜ ${m>0?'正立':'倒立'} ｜ ${Math.abs(m).toFixed(2)} 倍 ｜ ${q>0?'實像':'虛像'}`;if(ix<12||ix>W-12||iy<45||iy>H-45)msg+=' ｜ 像超出目前畫面（物體維持放大顯示）';out('result',msg+(q>0?' ｜ P 的光會聚在 S，實像可由紙屏接收':' ｜ P 的光經透鏡到達 E 眼睛；虛像 I 不發光'))}else out('result','物體在焦點：出射光平行，有限距離的紙屏接不到清晰像。');if(val('cover')>0)rect(cx-6,cy-75,12,150*val('cover')/100,'#253f52');}
+bind(['mode','distance','cover'],()=>{});
+
+const initialMode=new URLSearchParams(location.search).get('mode');if(initialMode&&Array.from($('mode').options).some(o=>o.value===initialMode))$('mode').value=initialMode;
+new ResizeObserver(draw).observe(svg);draw();let sent=0;new ResizeObserver(()=>{const height=Math.ceil(document.querySelector('main').getBoundingClientRect().height);if(height!==sent&&window.parent!==window){sent=height;window.parent.postMessage({type:'physics-animation:resize',height},location.origin==='null'?'*':location.origin)}}).observe(document.body);
+})();</script></body></html>

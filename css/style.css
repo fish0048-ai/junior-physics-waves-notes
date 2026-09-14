@@ -619,7 +619,8 @@ figure {
 }
 
 /* 3-1 繩波質點互動動畫（iframe） */
-.wave-particle-embed {
+.wave-particle-embed,
+.physics-animation-embed {
   margin: 10px 0 14px;
   padding: 8px 10px 10px;
   border: 1px solid #cfe3ec;
@@ -627,36 +628,47 @@ figure {
   background: #f8fbfd;
   overflow: visible;
 }
-.wave-particle-lead {
+.wave-particle-lead,
+.physics-animation-lead {
   margin: 0 0 6px;
   font-size: 13px;
   color: #334155;
   line-height: 1.45;
 }
-.wave-particle-frame {
+.wave-particle-frame,
+.physics-animation-frame,
+iframe.physics-animation {
   display: block;
   width: 100%;
   max-width: 100%;
-  min-height: 420px;
-  height: 520px;
+  min-height: 360px;
+  height: 480px;
   border: 0;
   border-radius: 12px;
   background: #f6f8fa;
   overflow: hidden;
 }
-.wave-open-link {
+.wave-open-link,
+.physics-animation-open-link {
   margin: 4px 0 0;
   font-size: 12px;
 }
-.wave-open-link a { color: #075f7d; font-weight: 600; }
+.wave-open-link a,
+.physics-animation-open-link a { color: #075f7d; font-weight: 600; }
 @media (max-width: 480px) {
-  .wave-particle-embed { padding: 6px 8px; }
-  .wave-particle-frame { min-height: 460px; border-radius: 10px; }
+  .wave-particle-embed,
+  .physics-animation-embed { padding: 6px 8px; }
+  .wave-particle-frame,
+  .physics-animation-frame,
+  iframe.physics-animation { min-height: 400px; border-radius: 10px; }
 }
 @media print {
   .wave-particle-embed,
+  .physics-animation-embed,
   #wave-particle-frame,
-  .wave-open-link { display: none !important; }
+  iframe[data-physics-animation],
+  .wave-open-link,
+  .physics-animation-open-link { display: none !important; }
 }
 .video-stage {
   display: grid;

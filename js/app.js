@@ -2,6 +2,19 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
+  /* 互動動畫 iframe 自動高度（同源 postMessage） */
+  function resizePhysicsAnimation(event) {
+    if (event.origin !== location.origin) return;
+    const frames = $$("iframe[data-physics-animation], #wave-particle-frame");
+    const frame = frames.find((f) => f.contentWindow === event.source);
+    const data = event.data;
+    if (!frame || !data) return;
+    if (!["physics-animation:resize", "wave-particle:resize"].includes(data.type)) return;
+    if (!Number.isFinite(data.height) || data.height < 200 || data.height > 3000) return;
+    frame.style.height = Math.ceil(data.height) + "px";
+  }
+  window.addEventListener("message", resizePhysicsAnimation);
+
   function freezeBlanks() {
     $$("input.blank").forEach((input) => {
       const span = document.createElement("span");
