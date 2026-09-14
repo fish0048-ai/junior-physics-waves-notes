@@ -38,21 +38,21 @@ summary{cursor:pointer;min-height:28px;padding:4px 0;font-weight:600}
 .note{font-size:11px;color:#536978;margin:6px 0 0;line-height:1.4}
 #state{font-size:12px;color:#496174}
 
-/* 嵌入講義 iframe：壓進一屏，避免父頁超高 */
+/* 嵌入講義 iframe：保留完整介面，僅略去頁寬限制 */
 html.is-embed body{background:#f8fbfd}
-html.is-embed main{padding:6px 8px 4px;max-width:none}
-html.is-embed header p{display:none}
-html.is-embed h1{font-size:17px;margin:0 0 4px}
-html.is-embed header small{font-size:11px}
-html.is-embed svg{height:clamp(120px,22vh,170px)}
-html.is-embed .legend{padding:5px 10px;font-size:11px;gap:8px 12px}
-html.is-embed .readout{padding:4px 10px;font-size:12px}
-html.is-embed .controls{margin-top:6px;gap:6px}
-html.is-embed button,html.is-embed select{min-height:32px;padding:4px 9px;font-size:13px}
-html.is-embed .timeline{margin:4px 0}
-html.is-embed .hint{padding:6px 10px;font-size:12px}
-html.is-embed .note{display:none}
-html.is-embed details[open]{max-height:none}
+html.is-embed main{padding:12px 14px 10px;max-width:none}
+html.is-embed h1{font-size:clamp(18px,3.5vw,24px);margin:2px 0 6px}
+html.is-embed header small{font-size:12px}
+html.is-embed header p{font-size:14px;margin:0 0 8px;color:#476174}
+html.is-embed svg{height:clamp(220px,36vh,280px)}
+html.is-embed .legend{padding:8px 12px;font-size:13px;gap:10px 14px}
+html.is-embed .readout{padding:8px 12px;font-size:14px}
+html.is-embed .controls{margin-top:10px;gap:10px}
+html.is-embed button,html.is-embed select{min-height:40px;padding:6px 12px;font-size:14px}
+html.is-embed .timeline{margin:8px 0 6px}
+html.is-embed .hint{padding:10px 12px;font-size:14px}
+html.is-embed .note{font-size:12px;margin:8px 0 0;line-height:1.45}
+html.is-embed summary{min-height:36px;padding:4px 0}
 
 @media(max-width:480px){
   main{padding:8px}

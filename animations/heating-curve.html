@@ -4,17 +4,29 @@
 .cup-grid{display:grid;grid-template-columns:minmax(260px,.85fr) minmax(280px,1.15fr);gap:16px;align-items:start}.cup-panel{background:white;border:1px solid #dbe7ed;border-radius:16px;padding:14px}.cup-panel h2{font-size:18px;margin:0 0 6px}.cup-panel svg{height:300px}.ratios{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;font-variant-numeric:tabular-nums}.ratios div{padding:10px 4px;text-align:center;background:#edf5f8;border-radius:9px}.ratios strong{display:block;font-size:20px}.ratios small{display:block;font-size:12px}.mass-note{font-size:13px;margin:10px 0 0;color:#476779}.jump{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0}@media(max-width:680px){.cup-grid{grid-template-columns:1fr}.cup-panel svg{height:280px}}
 
 html.is-embed body{background:#f8fbfd}
-html.is-embed main{padding:6px 8px 4px;max-width:none}
-html.is-embed h1{font-size:17px;margin:2px 0 4px;line-height:1.3}
-html.is-embed small{font-size:11px}
-html.is-embed main>header+p,html.is-embed main>small+h1+p{margin:0 0 6px}
-html.is-embed svg{height:clamp(130px,24vh,200px)!important}
-html.is-embed .controls{margin:6px 0;gap:8px}
-html.is-embed button,html.is-embed select{min-height:32px;padding:4px 9px;font-size:13px}
-html.is-embed .readout,.legend,.note,.question,.control label{font-size:12px}
-html.is-embed .question{margin-top:8px;padding:8px 10px}
-html.is-embed .note{margin:4px 0 0}
-html.is-embed summary{min-height:28px;padding:2px 0}</style></head><body><script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script><main><small>國中理化 · 5-3 狀態改變與潛熱</small><h1>加熱不停，溫度為什麼停住？</h1><p>拖動累積吸熱量，看杯中的冰融成水，再變成水蒸氣；比例與曲線同步更新。</p><div class="controls"><div class="control"><label for="energy">累積吸熱量<output id="energy-out"></output></label><input id="energy" type="range" min="0" max="730" step="1" value="0"></div></div><div class="jump"><button id="half-melt" type="button">看一半熔化</button><button id="half-vapor" type="button">看一半汽化</button></div><div class="cup-grid"><section class="cup-panel"><h2>這杯水現在是什麼狀態？</h2><svg id="cup" role="img" aria-label="杯中的冰、水與逸出水蒸氣示意"></svg><div class="ratios"><div>冰<strong id="ice-pct">100%</strong><small id="ice-mass">1.000 g</small></div><div>液態水<strong id="water-pct">0%</strong><small id="water-mass">0.000 g</small></div><div>已汽化<strong id="vapor-pct">0%</strong><small id="vapor-mass">0.000 g</small></div></div><p class="mass-note">以原先 1 g 水計算的質量比例；已汽化部分包含離開杯子的水蒸氣。杯子、液面、冰塊與氣流線是狀態示意，並非體積比例。</p></section><div class="visual"><svg id="scene" role="img" aria-label="加熱不停，溫度為什麼停住？的互動示意"></svg><div class="readout" id="result"></div></div></div><div class="controls"><button type="button" id="play" class="primary">播放</button><button type="button" id="reset">重設</button><span role="status" aria-live="polite" id="status">可調整條件觀察</span></div><div class="question"><b>先想一想：</b>曲線水平時，加熱器有停止供應能量嗎？<details><summary>查看解釋</summary><p>水平段仍持續吸熱，但能量主要用於狀態改變，溫度保持不變。1 g 冰從 −20°C 開始：先升至 0°C，再熔化；水升至 100°C 後，再汽化。汽化需要的能量比熔化多。</p></details></div><p class="note">模型：1 g 純水、1 大氣壓、均勻且近似平衡的理想加熱，忽略散熱。冰比熱取 0.5、水比熱 1 cal/(g·°C)，熔化熱 80、汽化熱 540 cal/g。色塊代表各相的質量比例，不是實際體積。水蒸氣本身不可見，杯外的虛線只是汽化示意，不代表白霧；白霧是凝結的小液滴。本模型忽略沸騰前少量蒸發。停止於全部汽化，不延伸水蒸氣升溫。</p></main><script>
+html.is-embed main{padding:14px 16px 12px;max-width:none}
+html.is-embed h1{font-size:clamp(20px,3.8vw,28px);margin:6px 0 10px;line-height:1.35}
+html.is-embed h2{font-size:clamp(17px,3vw,20px)}
+html.is-embed small{font-size:13px}
+html.is-embed p{margin:8px 0 14px;font-size:15px;line-height:1.55}
+html.is-embed main>header+p,html.is-embed main>small+h1+p{margin:0 0 12px}
+html.is-embed svg{height:clamp(280px,42vh,390px)!important}
+html.is-embed .visual{border-radius:14px}
+html.is-embed .controls{margin:14px 0;gap:12px}
+html.is-embed button,html.is-embed select{min-height:44px;padding:8px 12px;font-size:15px}
+html.is-embed .readout,.legend,.question,.control label,#status{font-size:14px}
+html.is-embed .readout{padding:10px 14px;min-height:48px}
+html.is-embed .note,.mass-note{font-size:13px;line-height:1.55;margin:10px 0 0}
+html.is-embed .question{margin-top:16px;padding:14px 16px}
+html.is-embed summary{min-height:44px;padding:8px 0}
+html.is-embed input[type=range]{min-height:38px}
+html.is-embed .control{flex:1 1 200px}
+html.is-embed .key{font-size:13px}
+html.is-embed .cup-grid{gap:14px}
+html.is-embed .cup-panel{padding:12px 14px}
+html.is-embed .cup-panel svg{height:clamp(240px,34vh,300px)!important}
+html.is-embed .ratios strong{font-size:18px}
+html.is-embed .jump{margin:10px 0;gap:10px}</style></head><body><script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script><main><small>國中理化 · 5-3 狀態改變與潛熱</small><h1>加熱不停，溫度為什麼停住？</h1><p>拖動累積吸熱量，看杯中的冰融成水，再變成水蒸氣；比例與曲線同步更新。</p><div class="controls"><div class="control"><label for="energy">累積吸熱量<output id="energy-out"></output></label><input id="energy" type="range" min="0" max="730" step="1" value="0"></div></div><div class="jump"><button id="half-melt" type="button">看一半熔化</button><button id="half-vapor" type="button">看一半汽化</button></div><div class="cup-grid"><section class="cup-panel"><h2>這杯水現在是什麼狀態？</h2><svg id="cup" role="img" aria-label="杯中的冰、水與逸出水蒸氣示意"></svg><div class="ratios"><div>冰<strong id="ice-pct">100%</strong><small id="ice-mass">1.000 g</small></div><div>液態水<strong id="water-pct">0%</strong><small id="water-mass">0.000 g</small></div><div>已汽化<strong id="vapor-pct">0%</strong><small id="vapor-mass">0.000 g</small></div></div><p class="mass-note">以原先 1 g 水計算的質量比例；已汽化部分包含離開杯子的水蒸氣。杯子、液面、冰塊與氣流線是狀態示意，並非體積比例。</p></section><div class="visual"><svg id="scene" role="img" aria-label="加熱不停，溫度為什麼停住？的互動示意"></svg><div class="readout" id="result"></div></div></div><div class="controls"><button type="button" id="play" class="primary">播放</button><button type="button" id="reset">重設</button><span role="status" aria-live="polite" id="status">可調整條件觀察</span></div><div class="question"><b>先想一想：</b>曲線水平時，加熱器有停止供應能量嗎？<details><summary>查看解釋</summary><p>水平段仍持續吸熱，但能量主要用於狀態改變，溫度保持不變。1 g 冰從 −20°C 開始：先升至 0°C，再熔化；水升至 100°C 後，再汽化。汽化需要的能量比熔化多。</p></details></div><p class="note">模型：1 g 純水、1 大氣壓、均勻且近似平衡的理想加熱，忽略散熱。冰比熱取 0.5、水比熱 1 cal/(g·°C)，熔化熱 80、汽化熱 540 cal/g。色塊代表各相的質量比例，不是實際體積。水蒸氣本身不可見，杯外的虛線只是汽化示意，不代表白霧；白霧是凝結的小液滴。本模型忽略沸騰前少量蒸發。停止於全部汽化，不延伸水蒸氣升溫。</p></main><script>
 (()=>{'use strict';const $=id=>document.getElementById(id),svg=$('scene'),NS='http://www.w3.org/2000/svg';let W=800,H=390,frame=null,last=null,running=false;const C={blue:'#087fa4',red:'#d52b47',gold:'#a66a0a',green:'#258151',gray:'#92a8b7'};
 function n(tag,attrs={},text=''){const node=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>node.setAttribute(k,v));if(text!==undefined)node.textContent=text;svg.append(node);return node}
 function clear(){W=Math.max(260,svg.clientWidth);H=svg.clientHeight||390;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.replaceChildren()}

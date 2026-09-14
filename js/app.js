@@ -10,7 +10,7 @@
     const data = event.data;
     if (!frame || !data) return;
     if (!["physics-animation:resize", "wave-particle:resize"].includes(data.type)) return;
-    if (!Number.isFinite(data.height) || data.height < 200 || data.height > 3000) return;
+    if (!Number.isFinite(data.height) || data.height < 400 || data.height > 5000) return;
     frame.style.height = Math.ceil(data.height) + "px";
   }
   window.addEventListener("message", resizePhysicsAnimation);
