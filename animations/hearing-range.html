@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>人耳聽覺範圍測試｜20～20000 Hz</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}
+main{max-width:1050px;margin:auto;padding:24px}
+small{color:#547082}
+h1{font-size:clamp(23px,4vw,31px);line-height:1.4;margin:6px 0 8px}
+p{margin:8px 0 16px}
+.controls{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;align-items:center}
+.control{flex:1 1 220px;max-width:420px}
+.control label{display:flex;justify-content:space-between;gap:10px;font-size:15px}
+.control output{font-variant-numeric:tabular-nums;font-weight:600}
+input[type=range]{width:100%;min-height:38px;accent-color:#087fa4}
+input[type=number],select,button{font:inherit;min-height:44px;padding:8px 12px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white}
+button{cursor:pointer}
+button.primary{background:#076b87;color:white;border-color:#076b87}
+button:disabled{opacity:.5;cursor:default}
+button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}
+.visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden}
+svg{display:block;width:100%;height:320px}
+svg text{font:14px system-ui,"Microsoft JhengHei",sans-serif;fill:#29495e}
+.readout{padding:12px 16px;background:#edf5f8;min-height:52px;font-variant-numeric:tabular-nums}
+.band{padding:10px 16px;font-weight:700;border-top:1px solid #dbe7ed}
+.band.low{background:#eef6fa;color:#075f7d}
+.band.mid{background:#eaf7ef;color:#1f6b3a}
+.band.high{background:#fff4e8;color:#9a4e00}
+.band.edge{background:#fdecef;color:#a31830}
+.note{font-size:13px;color:#526c7d}
+.question{margin-top:18px;padding:16px;background:#eaf3f7;border-left:4px solid #087fa4;border-radius:7px}
+summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
+#status{color:#496579;font-size:14px}
+.preset-row{display:flex;flex-wrap:wrap;gap:8px}
+.preset-row button{min-height:40px;padding:6px 10px;font-size:14px}
+@media(max-width:480px){main{padding:14px}svg{height:300px}}
+
+html.is-embed body{background:#f8fbfd}
+html.is-embed main{padding:14px 16px 12px;max-width:none}
+html.is-embed h1{font-size:clamp(20px,3.8vw,28px);margin:6px 0 10px;line-height:1.35}
+html.is-embed small{font-size:13px}
+html.is-embed p{margin:8px 0 14px;font-size:15px;line-height:1.55}
+html.is-embed .visual svg{min-height:280px!important;height:300px!important;max-height:none!important}
+html.is-embed svg{display:block;width:100%}
+html.is-embed .visual{border-radius:14px}
+html.is-embed .controls{margin:14px 0;gap:12px}
+html.is-embed button,html.is-embed select,html.is-embed input[type=number]{min-height:44px;padding:8px 12px;font-size:15px}
+html.is-embed .readout,.question,.control label,#status,.band{font-size:14px}
+html.is-embed .readout{padding:10px 14px;min-height:48px}
+html.is-embed .note{font-size:13px;line-height:1.55;margin:10px 0 0}
+html.is-embed .question{margin-top:16px;padding:14px 16px}
+html.is-embed summary{min-height:44px;padding:8px 0}
+html.is-embed input[type=range]{min-height:38px}
+</style>
+</head>
+<body>
+<script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script>
+<main>
+  <small>國中理化 · 3-3 超聲波</small>
+  <h1>人耳聽覺範圍測試</h1>
+  <p>用按鈕試聽 20～20000 Hz。能聽見不代表「聽到超聲波」；超過 20000 Hz 才叫超聲波。</p>
+
+  <div class="controls">
+    <div class="control">
+      <label for="frequency">頻率<output id="frequency-out"></output></label>
+      <input id="frequency" type="range" min="20" max="20000" step="1" value="1000">
+    </div>
+    <label>輸入 Hz
+      <input id="frequency-number" type="number" min="20" max="20000" step="1" value="1000" style="width:120px">
+    </label>
+  </div>
+
+  <div class="controls preset-row" aria-label="快速選擇頻率">
+    <button type="button" data-f="20">20</button>
+    <button type="button" data-f="100">100</button>
+    <button type="button" data-f="440">440</button>
+    <button type="button" data-f="1000">1000</button>
+    <button type="button" data-f="5000">5000</button>
+    <button type="button" data-f="10000">10000</button>
+    <button type="button" data-f="15000">15000</button>
+    <button type="button" data-f="18000">18000</button>
+    <button type="button" data-f="20000">20000</button>
+  </div>
+
+  <div class="visual">
+    <svg id="scene" role="img" aria-label="人耳聽覺範圍示意：20 到 20000 赫茲"></svg>
+    <div class="band mid" id="band">可聽聲範圍內</div>
+    <div class="readout" id="result"></div>
+  </div>
+
+  <div class="controls">
+    <button type="button" id="audio" class="primary">試聽 3 秒</button>
+    <button type="button" id="reset">重設為 1000 Hz</button>
+    <span role="status" aria-live="polite" id="status">音量請調低；需按按鈕才會發聲</span>
+  </div>
+
+  <div class="question">
+    <b>先想一想：</b>聽不到 18000 Hz，就代表自己聽力有問題嗎？
+    <details>
+      <summary>查看解釋</summary>
+      <p>不一定。年齡、耳機／喇叭品質、教室雜音，都會影響高頻是否聽得到。教材把人耳範圍記成大約 20～20000 Hz；個人實際範圍常比這個窄。聽不到高頻，也不能說「沒有聲波」——聲波仍可能存在，只是人耳收不到。</p>
+    </details>
+  </div>
+  <p class="note">試聽為正弦波、約 3 秒、低音量；改參數會停止。數位取樣率不是喇叭真實頻率響應：接近 20000 Hz 時，若裝置取樣率不夠或喇叭做不出來，可能聽不到，不代表已輸出經校準的超聲波。真正超聲波（＞20000 Hz）本頁不測試。勿用未聽見判定學生聽力。</p>
+</main>
+<script>
+(() => {
+  'use strict';
+  const $ = id => document.getElementById(id);
+  const svg = $('scene');
+  const NS = 'http://www.w3.org/2000/svg';
+  const C = { blue:'#087fa4', red:'#d52b47', gold:'#a66a0a', green:'#258151', gray:'#92a8b7', soft:'#d7e8ef' };
+  let W = 800, H = 320, ac = null, osc = null, gain = null, timer = null, starting = false, requestId = 0;
+
+  function n(tag, attrs = {}, text = '') {
+    const node = document.createElementNS(NS, tag);
+    Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+    if (text !== undefined) node.textContent = text;
+    svg.append(node);
+    return node;
+  }
+  function clear() {
+    W = Math.max(280, svg.clientWidth);
+    H = Math.max(260, svg.getBoundingClientRect().height || 320);
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.replaceChildren();
+  }
+  function text(x, y, t, anchor = 'middle', color) {
+    return n('text', { x, y, 'text-anchor': anchor, ...(color ? { style: 'fill:' + color } : {}) }, t);
+  }
+  function val(id) { return Number($(id).value); }
+  function out(id, v) { $(id).textContent = v; }
+
+  function zone(f) {
+    if (f <= 80) return { cls: 'low', label: '靠近次聲波邊界：頻率很低，可能「感覺到」振動多於聽到' };
+    if (f < 12000) return { cls: 'mid', label: '可聽聲範圍內（教材約 20～20000 Hz）' };
+    if (f < 18000) return { cls: 'high', label: '高頻可聽區：有些人聽得到，有些人已經聽不清楚' };
+    if (f < 20000) return { cls: 'edge', label: '接近超聲波邊界：多數人聽不到；仍屬可聽聲上限附近' };
+    return { cls: 'edge', label: '到達 20000 Hz：教材上的超聲波起點；本頁不送出超過此頻率' };
+  }
+
+  function logPos(f, x0, x1) {
+    const a = Math.log10(20), b = Math.log10(20000);
+    const t = (Math.log10(Math.max(20, Math.min(20000, f))) - a) / (b - a);
+    return x0 + (x1 - x0) * t;
+  }
+
+  function halt(msg = '已停止試聽') {
+    requestId++;
+    starting = false;
+    if (timer) { clearTimeout(timer); timer = null; }
+    try { if (osc) osc.stop(); } catch (e) {}
+    try { if (gain) gain.disconnect(); } catch (e) {}
+    try { if (osc) osc.disconnect(); } catch (e) {}
+    osc = null; gain = null;
+    $('audio').textContent = '試聽 3 秒';
+    out('status', msg);
+  }
+
+  function setFreq(f) {
+    const n = Math.round(Math.max(20, Math.min(20000, f)));
+    $('frequency').value = n;
+    $('frequency-number').value = n;
+    halt('參數已變更；請重新按試聽');
+    draw();
+  }
+
+  function draw() {
+    clear();
+    const f = val('frequency');
+    const x0 = 48, x1 = W - 28, y = H * 0.42, barH = 36;
+    const z = zone(f);
+
+    n('rect', { x: x0, y: y - barH / 2, width: x1 - x0, height: barH, rx: 10, fill: '#edf5f8', stroke: C.soft });
+    // audible band fills whole bar (this tester is only 20-20000)
+    n('rect', { x: x0, y: y - barH / 2, width: x1 - x0, height: barH, rx: 10, fill: '#d9f0e4' });
+
+    // markers
+    [20, 100, 1000, 10000, 20000].forEach(mark => {
+      const x = logPos(mark, x0, x1);
+      n('line', { x1: x, y1: y - barH / 2 - 6, x2: x, y2: y + barH / 2 + 6, stroke: C.gray, 'stroke-width': 1.5 });
+      text(x, y + barH / 2 + 24, mark >= 1000 ? (mark / 1000) + 'k' : String(mark), 'middle');
+    });
+
+    const px = logPos(f, x0, x1);
+    n('line', { x1: px, y1: y - 70, x2: px, y2: y + 55, stroke: C.red, 'stroke-width': 2.5 });
+    n('circle', { cx: px, cy: y, r: 9, fill: C.red, stroke: '#fff', 'stroke-width': 2 });
+    text(px, y - 82, f.toLocaleString() + ' Hz', 'middle', C.red);
+
+    text(x0, 36, '次聲波 ＜20 Hz', 'start', C.blue);
+    text(W / 2, 36, '人耳可聽聲（約）', 'middle', C.green);
+    text(x1, 36, '超聲波 ＞20000 Hz', 'end', C.gold);
+
+    text(W / 2, H - 28, '頻率刻度採對數（20～20000 Hz）', 'middle', C.gray);
+
+    out('frequency-out', f.toLocaleString() + ' Hz');
+    $('frequency-number').value = f;
+    const band = $('band');
+    band.className = 'band ' + z.cls;
+    band.textContent = z.label;
+    out('result', `目前設定 ${f.toLocaleString()} Hz　｜　週期 ${(1000 / f).toFixed(f < 100 ? 2 : 3)} ms　｜　教材：＞20000 Hz 才稱為超聲波`);
+  }
+
+  $('frequency').addEventListener('input', () => {
+    $('frequency-number').value = $('frequency').value;
+    halt('參數已變更；請重新按試聽');
+    draw();
+  });
+  $('frequency-number').addEventListener('change', () => {
+    const f = Number($('frequency-number').value);
+    if (!Number.isFinite(f) || f < 20 || f > 20000) {
+      out('status', '請輸入 20～20000 的頻率');
+      return;
+    }
+    setFreq(f);
+  });
+  document.querySelectorAll('.preset-row button').forEach(btn => {
+    btn.addEventListener('click', () => setFreq(Number(btn.dataset.f)));
+  });
+  $('reset').addEventListener('click', () => setFreq(1000));
+
+  $('audio').addEventListener('click', async () => {
+    if (osc || starting) { halt(); return; }
+    starting = true;
+    const token = ++requestId;
+    try {
+      const A = window.AudioContext || window.webkitAudioContext;
+      if (!A) throw Error();
+      if (!ac) {
+        try { ac = new A({ sampleRate: 96000 }); }
+        catch (e) { ac = new A(); }
+      }
+      await ac.resume();
+      if (token !== requestId) return;
+      const f = val('frequency');
+      if (f >= ac.sampleRate / 2) {
+        out('status', `無法輸出：取樣率 ${ac.sampleRate} Hz，Nyquist 上限為 ${Math.floor(ac.sampleRate / 2)} Hz。`);
+        starting = false;
+        return;
+      }
+      osc = ac.createOscillator();
+      gain = ac.createGain();
+      osc.type = 'sine';
+      osc.frequency.value = f;
+      const vol = f >= 12000 ? 0.05 : 0.07;
+      gain.gain.setValueAtTime(0, ac.currentTime);
+      gain.gain.linearRampToValueAtTime(vol, ac.currentTime + 0.04);
+      gain.gain.setValueAtTime(vol, ac.currentTime + 2.85);
+      gain.gain.linearRampToValueAtTime(0, ac.currentTime + 3);
+      osc.connect(gain);
+      gain.connect(ac.destination);
+      osc.start();
+      osc.stop(ac.currentTime + 3.05);
+      $('audio').textContent = '停止試聽';
+      out('status', `已送出 ${f.toLocaleString()} Hz 正弦波，約 3 秒；取樣率 ${ac.sampleRate} Hz。實際聲音未量測。`);
+      timer = setTimeout(() => halt('3 秒試聽完成'), 3100);
+    } catch (e) {
+      halt('此瀏覽器未能啟用音訊；仍可調整頻率觀察區間');
+    } finally {
+      starting = false;
+    }
+  });
+
+  document.addEventListener('visibilitychange', () => { if (document.hidden) halt('頁面隱藏，已停止試聽'); });
+
+  new ResizeObserver(draw).observe(svg);
+  draw();
+  let sent = 0;
+  new ResizeObserver(() => {
+    const height = Math.ceil(document.querySelector('main').getBoundingClientRect().height);
+    if (height !== sent && window.parent !== window) {
+      sent = height;
+      window.parent.postMessage(
+        { type: 'physics-animation:resize', height },
+        location.origin === 'null' ? '*' : location.origin
+      );
+    }
+  }).observe(document.body);
+})();
+</script>
+</body>
+</html>
