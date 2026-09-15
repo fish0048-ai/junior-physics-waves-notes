@@ -23,7 +23,7 @@ button.secondary{background:#fff;color:#075f7d}
 button:disabled{opacity:.5;cursor:default}
 button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}
 .visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden}
-svg{display:block;width:100%;height:320px}
+svg{display:block;width:100%;height:400px}
 svg text{font:14px system-ui,"Microsoft JhengHei",sans-serif;fill:#29495e}
 .readout{padding:12px 16px;background:#edf5f8;min-height:52px;font-variant-numeric:tabular-nums}
 .band{padding:10px 16px;font-weight:700;border-top:1px solid #dbe7ed}
@@ -37,14 +37,14 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
 #status{color:#496579;font-size:14px}
 .preset-row{display:flex;flex-wrap:wrap;gap:8px}
 .preset-row button{min-height:40px;padding:6px 10px;font-size:14px}
-@media(max-width:480px){main{padding:14px}svg{height:300px}}
+@media(max-width:480px){main{padding:14px}svg{height:360px}}
 
 html.is-embed body{background:#f8fbfd}
 html.is-embed main{padding:14px 16px 12px;max-width:none}
 html.is-embed h1{font-size:clamp(20px,3.8vw,28px);margin:6px 0 10px;line-height:1.35}
 html.is-embed small{font-size:13px}
 html.is-embed p{margin:8px 0 14px;font-size:15px;line-height:1.55}
-html.is-embed .visual svg{min-height:280px!important;height:300px!important;max-height:none!important}
+html.is-embed .visual svg{min-height:360px!important;height:380px!important;max-height:none!important}
 html.is-embed svg{display:block;width:100%}
 html.is-embed .visual{border-radius:14px}
 html.is-embed .controls{margin:14px 0;gap:12px}
@@ -62,7 +62,7 @@ html.is-embed input[type=range]{min-height:38px}
 <main>
   <small>國中理化 · 3-3 超聲波</small>
   <h1>人耳聽覺範圍測試</h1>
-  <p>聽頻率從低到高<strong>連續變化</strong>（20→20000 Hz）。能聽見屬於可聽聲；超過 20000 Hz 才叫超聲波。</p>
+  <p>聽頻率從低到高<strong>連續變化</strong>（20→20000 Hz），同時看波長怎麼變短。能聽見屬於可聽聲；超過 20000 Hz 才叫超聲波。</p>
 
   <div class="controls">
     <div class="control">
@@ -74,9 +74,9 @@ html.is-embed input[type=range]{min-height:38px}
     </label>
     <label>掃頻時間
       <select id="duration">
-        <option value="8">約 8 秒</option>
-        <option value="12" selected>約 12 秒</option>
+        <option value="12">約 12 秒</option>
         <option value="20">約 20 秒</option>
+        <option value="30" selected>約 30 秒</option>
       </select>
     </label>
   </div>
@@ -114,7 +114,7 @@ html.is-embed input[type=range]{min-height:38px}
       <p>聲波可能還在，只是超出人耳可聽範圍，或喇叭／裝置做不出那麼高的頻率。教材把人耳範圍記成大約 20～20000 Hz；個人實際範圍常比這個窄。聽不到高頻，不能說「沒有聲波」。</p>
     </details>
   </div>
-  <p class="note">掃頻採對數連續變化（聽起來像平滑由低到高），正弦波、低音量。數位取樣率不是喇叭真實頻率響應：接近 20000 Hz 時可能聽不到，不代表已輸出經校準的超聲波。真正超聲波（＞20000 Hz）本頁不測試。勿用未聽見判定學生聽力。</p>
+  <p class="note">掃頻預設約 30 秒，採對數連續變化；空氣聲速取約 340 m/s，波長 λ＝v／f。正弦波、低音量。接近 20000 Hz 時可能聽不到，不代表已輸出經校準的超聲波。真正超聲波（＞20000 Hz）本頁不測試。勿用未聽見判定學生聽力。</p>
 </main>
 <script>
 (() => {
@@ -123,12 +123,12 @@ html.is-embed input[type=range]{min-height:38px}
   const svg = $('scene');
   const NS = 'http://www.w3.org/2000/svg';
   const C = { blue:'#087fa4', red:'#d52b47', gold:'#a66a0a', green:'#258151', gray:'#92a8b7', soft:'#d7e8ef' };
-  const FMIN = 20, FMAX = 20000;
-  let W = 800, H = 320;
+  const FMIN = 20, FMAX = 20000, V_AIR = 340;
+  let W = 800, H = 400;
   let ac = null, osc = null, gain = null;
   let mode = 'idle'; // idle | sweep | hold
   let raf = null, requestId = 0, starting = false;
-  let sweepStart = 0, sweepDur = 12, sweepFrom = FMIN, sweepTo = FMAX;
+  let sweepStart = 0, sweepDur = 30, sweepFrom = FMIN, sweepTo = FMAX;
 
   function n(tag, attrs = {}, text = '') {
     const node = document.createElementNS(NS, tag);
@@ -139,7 +139,7 @@ html.is-embed input[type=range]{min-height:38px}
   }
   function clear() {
     W = Math.max(280, svg.clientWidth);
-    H = Math.max(260, svg.getBoundingClientRect().height || 320);
+    H = Math.max(340, svg.getBoundingClientRect().height || 400);
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
     svg.replaceChildren();
   }
@@ -172,6 +172,14 @@ html.is-embed input[type=range]{min-height:38px}
     if (f >= 15000) return 0.04;
     if (f >= 10000) return 0.055;
     return 0.07;
+  }
+  function lambdaM(f) {
+    return V_AIR / clampF(f);
+  }
+  function formatLambda(m) {
+    if (m >= 1) return m.toFixed(2) + ' m';
+    if (m >= 0.01) return (m * 100).toFixed(1) + ' cm';
+    return (m * 1000).toFixed(1) + ' mm';
   }
 
   function showFreq(f, silentStatus) {
@@ -284,7 +292,7 @@ html.is-embed input[type=range]{min-height:38px}
       }
       sweepFrom = from;
       sweepTo = to;
-      sweepDur = val('duration') || 12;
+      sweepDur = val('duration') || 30;
       sweepStart = 0;
       startOsc(from);
       showFreq(from, true);
@@ -329,40 +337,76 @@ html.is-embed input[type=range]{min-height:38px}
   function draw() {
     clear();
     const f = clampF(val('frequency'));
-    const x0 = 48, x1 = W - 28, y = H * 0.42, barH = 36;
+    const lam = lambdaM(f);
+    const x0 = 48, x1 = W - 28;
+    const yBar = H * 0.22, barH = 32;
+    const yWave = H * 0.62;
     const z = zone(f);
 
-    n('rect', { x: x0, y: y - barH / 2, width: x1 - x0, height: barH, rx: 10, fill: '#d9f0e4', stroke: C.soft });
-
-    // trail during sweep: from start to current
+    // frequency range bar
+    n('rect', { x: x0, y: yBar - barH / 2, width: x1 - x0, height: barH, rx: 10, fill: '#d9f0e4', stroke: C.soft });
     if (mode === 'sweep') {
       const xA = logPos(sweepFrom, x0, x1);
       const xB = logPos(f, x0, x1);
       const left = Math.min(xA, xB), w = Math.abs(xB - xA);
-      n('rect', { x: left, y: y - barH / 2, width: Math.max(2, w), height: barH, rx: 8, fill: '#9fd0e8', 'fill-opacity': 0.85 });
+      n('rect', { x: left, y: yBar - barH / 2, width: Math.max(2, w), height: barH, rx: 8, fill: '#9fd0e8', 'fill-opacity': 0.85 });
     }
-
     [20, 100, 1000, 10000, 20000].forEach(mark => {
       const x = logPos(mark, x0, x1);
-      n('line', { x1: x, y1: y - barH / 2 - 6, x2: x, y2: y + barH / 2 + 6, stroke: C.gray, 'stroke-width': 1.5 });
-      text(x, y + barH / 2 + 24, mark >= 1000 ? (mark / 1000) + 'k' : String(mark), 'middle');
+      n('line', { x1: x, y1: yBar - barH / 2 - 5, x2: x, y2: yBar + barH / 2 + 5, stroke: C.gray, 'stroke-width': 1.5 });
+      text(x, yBar + barH / 2 + 20, mark >= 1000 ? (mark / 1000) + 'k' : String(mark), 'middle');
     });
-
     const px = logPos(f, x0, x1);
-    n('line', { x1: px, y1: y - 70, x2: px, y2: y + 55, stroke: C.red, 'stroke-width': 2.5 });
-    n('circle', { cx: px, cy: y, r: 9, fill: C.red, stroke: '#fff', 'stroke-width': 2 });
-    text(px, y - 82, Math.round(f).toLocaleString() + ' Hz', 'middle', C.red);
+    n('line', { x1: px, y1: yBar - 58, x2: px, y2: yBar + 42, stroke: C.red, 'stroke-width': 2.5 });
+    n('circle', { cx: px, cy: yBar, r: 8, fill: C.red, stroke: '#fff', 'stroke-width': 2 });
+    text(px, yBar - 68, Math.round(f).toLocaleString() + ' Hz', 'middle', C.red);
 
-    text(x0, 36, '次聲波 ＜20 Hz', 'start', C.blue);
-    text(W / 2, 36, '人耳可聽聲（約）', 'middle', C.green);
-    text(x1, 36, '超聲波 ＞20000 Hz', 'end', C.gold);
-    text(W / 2, H - 28, mode === 'sweep' ? '連續掃頻中（對數頻率）' : '頻率刻度採對數（20～20000 Hz）', 'middle', C.gray);
+    text(x0, 28, '次聲波 ＜20', 'start', C.blue);
+    text(W / 2, 28, '人耳可聽聲（約）', 'middle', C.green);
+    text(x1, 28, '超聲波 ＞20k', 'end', C.gold);
+
+    // wavelength wave strip
+    text(x0, yWave - 78, '空氣中波長示意（v ≈ 340 m/s）', 'start', C.blue);
+    text(x1, yWave - 78, 'λ = v / f', 'end', C.gold);
+    n('line', { x1: x0, y1: yWave, x2: x1, y2: yWave, stroke: C.soft, 'stroke-width': 1 });
+
+    const lam20 = V_AIR / FMIN;
+    const span = x1 - x0;
+    // one λ at 20 Hz ≈ full width; higher f → shorter cycles
+    let lamPx = span * (lam / lam20);
+    lamPx = Math.max(6, Math.min(span, lamPx));
+    const amp = Math.min(42, H * 0.09);
+    const pts = [];
+    for (let i = 0; i <= 240; i++) {
+      const x = x0 + span * i / 240;
+      const y = yWave - Math.sin(2 * Math.PI * (x - x0) / lamPx) * amp;
+      pts.push((i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1));
+    }
+    n('path', { d: pts.join(' '), fill: 'none', stroke: C.blue, 'stroke-width': 3 });
+
+    // mark one wavelength if visible enough
+    if (lamPx >= 36) {
+      const ax = x0 + 8;
+      const bx = ax + lamPx;
+      if (bx <= x1 - 4) {
+        n('line', { x1: ax, y1: yWave + amp + 18, x2: bx, y2: yWave + amp + 18, stroke: C.gold, 'stroke-width': 2 });
+        n('line', { x1: ax, y1: yWave + amp + 12, x2: ax, y2: yWave + amp + 24, stroke: C.gold, 'stroke-width': 2 });
+        n('line', { x1: bx, y1: yWave + amp + 12, x2: bx, y2: yWave + amp + 24, stroke: C.gold, 'stroke-width': 2 });
+        text((ax + bx) / 2, yWave + amp + 38, '一個波長 λ ≈ ' + formatLambda(lam), 'middle', C.gold);
+      } else {
+        text(W / 2, yWave + amp + 34, '波長 λ ≈ ' + formatLambda(lam) + '（愈高頻愈密、愈短）', 'middle', C.gold);
+      }
+    } else {
+      text(W / 2, yWave + amp + 34, '波長很短 λ ≈ ' + formatLambda(lam) + '（高頻 → 波長短、指向性較好）', 'middle', C.gold);
+    }
+
+    text(W / 2, H - 16, mode === 'sweep' ? '連續掃頻中：頻率↑、波長↓' : '頻率升高時，同一介質中波長變短', 'middle', C.gray);
 
     out('frequency-out', Math.round(f).toLocaleString() + ' Hz');
     const band = $('band');
     band.className = 'band ' + z.cls;
     band.textContent = z.label;
-    out('result', `目前 ${Math.round(f).toLocaleString()} Hz　｜　週期 ${(1000 / f).toFixed(f < 100 ? 2 : 3)} ms　｜　教材：＞20000 Hz 才稱為超聲波`);
+    out('result', `頻率 ${Math.round(f).toLocaleString()} Hz　｜　波長 λ ≈ ${formatLambda(lam)}　｜　週期 ${(1000 / f).toFixed(f < 100 ? 2 : 3)} ms　｜　v≈340 m/s`);
   }
 
   $('frequency').addEventListener('input', () => {
