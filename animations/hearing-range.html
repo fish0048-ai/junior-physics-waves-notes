@@ -19,6 +19,7 @@ input[type=range]{width:100%;min-height:38px;accent-color:#087fa4}
 input[type=number],select,button{font:inherit;min-height:44px;padding:8px 12px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white}
 button{cursor:pointer}
 button.primary{background:#076b87;color:white;border-color:#076b87}
+button.secondary{background:#fff;color:#075f7d}
 button:disabled{opacity:.5;cursor:default}
 button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}
 .visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden}
@@ -61,19 +62,26 @@ html.is-embed input[type=range]{min-height:38px}
 <main>
   <small>國中理化 · 3-3 超聲波</small>
   <h1>人耳聽覺範圍測試</h1>
-  <p>用按鈕試聽 20～20000 Hz。能聽見不代表「聽到超聲波」；超過 20000 Hz 才叫超聲波。</p>
+  <p>聽頻率從低到高<strong>連續變化</strong>（20→20000 Hz）。能聽見屬於可聽聲；超過 20000 Hz 才叫超聲波。</p>
 
   <div class="controls">
     <div class="control">
       <label for="frequency">頻率<output id="frequency-out"></output></label>
-      <input id="frequency" type="range" min="20" max="20000" step="1" value="1000">
+      <input id="frequency" type="range" min="20" max="20000" step="1" value="20">
     </div>
     <label>輸入 Hz
-      <input id="frequency-number" type="number" min="20" max="20000" step="1" value="1000" style="width:120px">
+      <input id="frequency-number" type="number" min="20" max="20000" step="1" value="20" style="width:120px">
+    </label>
+    <label>掃頻時間
+      <select id="duration">
+        <option value="8">約 8 秒</option>
+        <option value="12" selected>約 12 秒</option>
+        <option value="20">約 20 秒</option>
+      </select>
     </label>
   </div>
 
-  <div class="controls preset-row" aria-label="快速選擇頻率">
+  <div class="controls preset-row" aria-label="快速跳到頻率">
     <button type="button" data-f="20">20</button>
     <button type="button" data-f="100">100</button>
     <button type="button" data-f="440">440</button>
@@ -92,19 +100,21 @@ html.is-embed input[type=range]{min-height:38px}
   </div>
 
   <div class="controls">
-    <button type="button" id="audio" class="primary">試聽 3 秒</button>
-    <button type="button" id="reset">重設為 1000 Hz</button>
+    <button type="button" id="sweep" class="primary">連續掃頻：低 → 高</button>
+    <button type="button" id="sweep-down" class="secondary">連續掃頻：高 → 低</button>
+    <button type="button" id="hold">持續發聲（可拖滑桿）</button>
+    <button type="button" id="stop">停止</button>
     <span role="status" aria-live="polite" id="status">音量請調低；需按按鈕才會發聲</span>
   </div>
 
   <div class="question">
-    <b>先想一想：</b>聽不到 18000 Hz，就代表自己聽力有問題嗎？
+    <b>先想一想：</b>掃到後面突然「沒聲音」了，是聲波消失了，還是你的耳朵／喇叭聽不到了？
     <details>
       <summary>查看解釋</summary>
-      <p>不一定。年齡、耳機／喇叭品質、教室雜音，都會影響高頻是否聽得到。教材把人耳範圍記成大約 20～20000 Hz；個人實際範圍常比這個窄。聽不到高頻，也不能說「沒有聲波」——聲波仍可能存在，只是人耳收不到。</p>
+      <p>聲波可能還在，只是超出人耳可聽範圍，或喇叭／裝置做不出那麼高的頻率。教材把人耳範圍記成大約 20～20000 Hz；個人實際範圍常比這個窄。聽不到高頻，不能說「沒有聲波」。</p>
     </details>
   </div>
-  <p class="note">試聽為正弦波、約 3 秒、低音量；改參數會停止。數位取樣率不是喇叭真實頻率響應：接近 20000 Hz 時，若裝置取樣率不夠或喇叭做不出來，可能聽不到，不代表已輸出經校準的超聲波。真正超聲波（＞20000 Hz）本頁不測試。勿用未聽見判定學生聽力。</p>
+  <p class="note">掃頻採對數連續變化（聽起來像平滑由低到高），正弦波、低音量。數位取樣率不是喇叭真實頻率響應：接近 20000 Hz 時可能聽不到，不代表已輸出經校準的超聲波。真正超聲波（＞20000 Hz）本頁不測試。勿用未聽見判定學生聽力。</p>
 </main>
 <script>
 (() => {
@@ -113,7 +123,12 @@ html.is-embed input[type=range]{min-height:38px}
   const svg = $('scene');
   const NS = 'http://www.w3.org/2000/svg';
   const C = { blue:'#087fa4', red:'#d52b47', gold:'#a66a0a', green:'#258151', gray:'#92a8b7', soft:'#d7e8ef' };
-  let W = 800, H = 320, ac = null, osc = null, gain = null, timer = null, starting = false, requestId = 0;
+  const FMIN = 20, FMAX = 20000;
+  let W = 800, H = 320;
+  let ac = null, osc = null, gain = null;
+  let mode = 'idle'; // idle | sweep | hold
+  let raf = null, requestId = 0, starting = false;
+  let sweepStart = 0, sweepDur = 12, sweepFrom = FMIN, sweepTo = FMAX;
 
   function n(tag, attrs = {}, text = '') {
     const node = document.createElementNS(NS, tag);
@@ -134,6 +149,13 @@ html.is-embed input[type=range]{min-height:38px}
   function val(id) { return Number($(id).value); }
   function out(id, v) { $(id).textContent = v; }
 
+  function clampF(f) {
+    return Math.max(FMIN, Math.min(FMAX, f));
+  }
+  function logLerp(a, b, t) {
+    const la = Math.log(a), lb = Math.log(b);
+    return Math.exp(la + (lb - la) * t);
+  }
   function zone(f) {
     if (f <= 80) return { cls: 'low', label: '靠近次聲波邊界：頻率很低，可能「感覺到」振動多於聽到' };
     if (f < 12000) return { cls: 'mid', label: '可聽聲範圍內（教材約 20～20000 Hz）' };
@@ -141,44 +163,185 @@ html.is-embed input[type=range]{min-height:38px}
     if (f < 20000) return { cls: 'edge', label: '接近超聲波邊界：多數人聽不到；仍屬可聽聲上限附近' };
     return { cls: 'edge', label: '到達 20000 Hz：教材上的超聲波起點；本頁不送出超過此頻率' };
   }
-
   function logPos(f, x0, x1) {
-    const a = Math.log10(20), b = Math.log10(20000);
-    const t = (Math.log10(Math.max(20, Math.min(20000, f))) - a) / (b - a);
+    const a = Math.log10(FMIN), b = Math.log10(FMAX);
+    const t = (Math.log10(clampF(f)) - a) / (b - a);
     return x0 + (x1 - x0) * t;
   }
+  function volFor(f) {
+    if (f >= 15000) return 0.04;
+    if (f >= 10000) return 0.055;
+    return 0.07;
+  }
 
-  function halt(msg = '已停止試聽') {
+  function showFreq(f, silentStatus) {
+    const n = Math.round(clampF(f));
+    $('frequency').value = n;
+    $('frequency-number').value = n;
+    draw();
+    if (silentStatus) return;
+  }
+
+  function updateButtons() {
+    $('sweep').textContent = mode === 'sweep' && sweepTo > sweepFrom ? '掃頻中…（點停止）' : '連續掃頻：低 → 高';
+    $('sweep-down').textContent = mode === 'sweep' && sweepTo < sweepFrom ? '掃頻中…（點停止）' : '連續掃頻：高 → 低';
+    $('hold').textContent = mode === 'hold' ? '持續發聲中（可拖滑桿）' : '持續發聲（可拖滑桿）';
+  }
+
+  function halt(msg = '已停止') {
     requestId++;
     starting = false;
-    if (timer) { clearTimeout(timer); timer = null; }
-    try { if (osc) osc.stop(); } catch (e) {}
-    try { if (gain) gain.disconnect(); } catch (e) {}
-    try { if (osc) osc.disconnect(); } catch (e) {}
-    osc = null; gain = null;
-    $('audio').textContent = '試聽 3 秒';
+    mode = 'idle';
+    if (raf) { cancelAnimationFrame(raf); raf = null; }
+    try {
+      if (gain && ac) {
+        const now = ac.currentTime;
+        gain.gain.cancelScheduledValues(now);
+        gain.gain.setValueAtTime(gain.gain.value, now);
+        gain.gain.linearRampToValueAtTime(0, now + 0.05);
+      }
+    } catch (e) {}
+    try { if (osc) osc.stop(ac ? ac.currentTime + 0.08 : 0); } catch (e) {}
+    setTimeout(() => {
+      try { if (gain) gain.disconnect(); } catch (e) {}
+      try { if (osc) osc.disconnect(); } catch (e) {}
+      osc = null; gain = null;
+    }, 120);
+    updateButtons();
     out('status', msg);
   }
 
-  function setFreq(f) {
-    const n = Math.round(Math.max(20, Math.min(20000, f)));
-    $('frequency').value = n;
-    $('frequency-number').value = n;
-    halt('參數已變更；請重新按試聽');
-    draw();
+  async function ensureAudio() {
+    const A = window.AudioContext || window.webkitAudioContext;
+    if (!A) throw Error('no-audio');
+    if (!ac) {
+      try { ac = new A({ sampleRate: 96000 }); }
+      catch (e) { ac = new A(); }
+    }
+    await ac.resume();
+    return ac;
+  }
+
+  function startOsc(f0) {
+    if (osc) {
+      try { osc.stop(); } catch (e) {}
+      try { osc.disconnect(); } catch (e) {}
+      try { gain.disconnect(); } catch (e) {}
+    }
+    osc = ac.createOscillator();
+    gain = ac.createGain();
+    osc.type = 'sine';
+    const f = clampF(f0);
+    const nyq = ac.sampleRate / 2;
+    if (f >= nyq) throw Error('nyquist');
+    osc.frequency.setValueAtTime(f, ac.currentTime);
+    gain.gain.setValueAtTime(0, ac.currentTime);
+    gain.gain.linearRampToValueAtTime(volFor(f), ac.currentTime + 0.05);
+    osc.connect(gain);
+    gain.connect(ac.destination);
+    osc.start();
+  }
+
+  function applyLiveFreq(f) {
+    if (!osc || !ac || mode === 'idle') return;
+    const nf = clampF(f);
+    const nyq = ac.sampleRate / 2 - 1;
+    const safe = Math.min(nf, nyq);
+    const now = ac.currentTime;
+    osc.frequency.cancelScheduledValues(now);
+    osc.frequency.setTargetAtTime(safe, now, 0.01);
+    gain.gain.setTargetAtTime(volFor(safe), now, 0.03);
+  }
+
+  function tickSweep(ts) {
+    if (mode !== 'sweep') return;
+    if (!sweepStart) sweepStart = ts;
+    const t = Math.min(1, (ts - sweepStart) / (sweepDur * 1000));
+    const f = logLerp(sweepFrom, sweepTo, t);
+    applyLiveFreq(f);
+    showFreq(f, true);
+    out('status', `連續掃頻中 ${Math.round(f).toLocaleString()} Hz（${Math.round(t * 100)}%）`);
+    if (t >= 1) {
+      halt(sweepTo > sweepFrom ? '低→高掃頻完成' : '高→低掃頻完成');
+      showFreq(sweepTo, true);
+      return;
+    }
+    raf = requestAnimationFrame(tickSweep);
+  }
+
+  async function beginSweep(from, to) {
+    if (mode !== 'idle' || starting) { halt('已停止'); return; }
+    starting = true;
+    const token = ++requestId;
+    try {
+      await ensureAudio();
+      if (token !== requestId) return;
+      const nyq = ac.sampleRate / 2;
+      if (Math.max(from, to) >= nyq) {
+        out('status', `無法完整掃到終點：取樣率 ${ac.sampleRate} Hz，Nyquist 上限約 ${Math.floor(nyq)} Hz。`);
+        starting = false;
+        return;
+      }
+      sweepFrom = from;
+      sweepTo = to;
+      sweepDur = val('duration') || 12;
+      sweepStart = 0;
+      startOsc(from);
+      showFreq(from, true);
+      mode = 'sweep';
+      starting = false;
+      updateButtons();
+      out('status', from < to ? '連續掃頻：低 → 高' : '連續掃頻：高 → 低');
+      raf = requestAnimationFrame(tickSweep);
+    } catch (e) {
+      starting = false;
+      halt(e.message === 'nyquist'
+        ? '取樣率不足以輸出此頻率'
+        : '此瀏覽器未能啟用音訊；仍可調整頻率觀察區間');
+    }
+  }
+
+  async function beginHold() {
+    if (mode === 'hold') { halt('已停止持續發聲'); return; }
+    if (mode !== 'idle' || starting) { halt('已停止'); return; }
+    starting = true;
+    const token = ++requestId;
+    try {
+      await ensureAudio();
+      if (token !== requestId) return;
+      const f = clampF(val('frequency'));
+      if (f >= ac.sampleRate / 2) {
+        out('status', `無法輸出：取樣率 ${ac.sampleRate} Hz。`);
+        starting = false;
+        return;
+      }
+      startOsc(f);
+      mode = 'hold';
+      starting = false;
+      updateButtons();
+      out('status', '持續發聲中：拖動滑桿可連續改變音高');
+    } catch (e) {
+      starting = false;
+      halt('此瀏覽器未能啟用音訊');
+    }
   }
 
   function draw() {
     clear();
-    const f = val('frequency');
+    const f = clampF(val('frequency'));
     const x0 = 48, x1 = W - 28, y = H * 0.42, barH = 36;
     const z = zone(f);
 
-    n('rect', { x: x0, y: y - barH / 2, width: x1 - x0, height: barH, rx: 10, fill: '#edf5f8', stroke: C.soft });
-    // audible band fills whole bar (this tester is only 20-20000)
-    n('rect', { x: x0, y: y - barH / 2, width: x1 - x0, height: barH, rx: 10, fill: '#d9f0e4' });
+    n('rect', { x: x0, y: y - barH / 2, width: x1 - x0, height: barH, rx: 10, fill: '#d9f0e4', stroke: C.soft });
 
-    // markers
+    // trail during sweep: from start to current
+    if (mode === 'sweep') {
+      const xA = logPos(sweepFrom, x0, x1);
+      const xB = logPos(f, x0, x1);
+      const left = Math.min(xA, xB), w = Math.abs(xB - xA);
+      n('rect', { x: left, y: y - barH / 2, width: Math.max(2, w), height: barH, rx: 8, fill: '#9fd0e8', 'fill-opacity': 0.85 });
+    }
+
     [20, 100, 1000, 10000, 20000].forEach(mark => {
       const x = logPos(mark, x0, x1);
       n('line', { x1: x, y1: y - barH / 2 - 6, x2: x, y2: y + barH / 2 + 6, stroke: C.gray, 'stroke-width': 1.5 });
@@ -188,84 +351,64 @@ html.is-embed input[type=range]{min-height:38px}
     const px = logPos(f, x0, x1);
     n('line', { x1: px, y1: y - 70, x2: px, y2: y + 55, stroke: C.red, 'stroke-width': 2.5 });
     n('circle', { cx: px, cy: y, r: 9, fill: C.red, stroke: '#fff', 'stroke-width': 2 });
-    text(px, y - 82, f.toLocaleString() + ' Hz', 'middle', C.red);
+    text(px, y - 82, Math.round(f).toLocaleString() + ' Hz', 'middle', C.red);
 
     text(x0, 36, '次聲波 ＜20 Hz', 'start', C.blue);
     text(W / 2, 36, '人耳可聽聲（約）', 'middle', C.green);
     text(x1, 36, '超聲波 ＞20000 Hz', 'end', C.gold);
+    text(W / 2, H - 28, mode === 'sweep' ? '連續掃頻中（對數頻率）' : '頻率刻度採對數（20～20000 Hz）', 'middle', C.gray);
 
-    text(W / 2, H - 28, '頻率刻度採對數（20～20000 Hz）', 'middle', C.gray);
-
-    out('frequency-out', f.toLocaleString() + ' Hz');
-    $('frequency-number').value = f;
+    out('frequency-out', Math.round(f).toLocaleString() + ' Hz');
     const band = $('band');
     band.className = 'band ' + z.cls;
     band.textContent = z.label;
-    out('result', `目前設定 ${f.toLocaleString()} Hz　｜　週期 ${(1000 / f).toFixed(f < 100 ? 2 : 3)} ms　｜　教材：＞20000 Hz 才稱為超聲波`);
+    out('result', `目前 ${Math.round(f).toLocaleString()} Hz　｜　週期 ${(1000 / f).toFixed(f < 100 ? 2 : 3)} ms　｜　教材：＞20000 Hz 才稱為超聲波`);
   }
 
   $('frequency').addEventListener('input', () => {
-    $('frequency-number').value = $('frequency').value;
-    halt('參數已變更；請重新按試聽');
+    const f = clampF(val('frequency'));
+    $('frequency-number').value = Math.round(f);
+    if (mode === 'hold') {
+      applyLiveFreq(f);
+      draw();
+      out('status', `持續發聲 ${Math.round(f).toLocaleString()} Hz`);
+      return;
+    }
+    if (mode === 'sweep') halt('已停止掃頻');
     draw();
   });
   $('frequency-number').addEventListener('change', () => {
     const f = Number($('frequency-number').value);
-    if (!Number.isFinite(f) || f < 20 || f > 20000) {
+    if (!Number.isFinite(f) || f < FMIN || f > FMAX) {
       out('status', '請輸入 20～20000 的頻率');
       return;
     }
-    setFreq(f);
+    if (mode === 'sweep') halt('已停止掃頻');
+    showFreq(f, true);
+    if (mode === 'hold') applyLiveFreq(f);
   });
   document.querySelectorAll('.preset-row button').forEach(btn => {
-    btn.addEventListener('click', () => setFreq(Number(btn.dataset.f)));
-  });
-  $('reset').addEventListener('click', () => setFreq(1000));
-
-  $('audio').addEventListener('click', async () => {
-    if (osc || starting) { halt(); return; }
-    starting = true;
-    const token = ++requestId;
-    try {
-      const A = window.AudioContext || window.webkitAudioContext;
-      if (!A) throw Error();
-      if (!ac) {
-        try { ac = new A({ sampleRate: 96000 }); }
-        catch (e) { ac = new A(); }
-      }
-      await ac.resume();
-      if (token !== requestId) return;
-      const f = val('frequency');
-      if (f >= ac.sampleRate / 2) {
-        out('status', `無法輸出：取樣率 ${ac.sampleRate} Hz，Nyquist 上限為 ${Math.floor(ac.sampleRate / 2)} Hz。`);
-        starting = false;
-        return;
-      }
-      osc = ac.createOscillator();
-      gain = ac.createGain();
-      osc.type = 'sine';
-      osc.frequency.value = f;
-      const vol = f >= 12000 ? 0.05 : 0.07;
-      gain.gain.setValueAtTime(0, ac.currentTime);
-      gain.gain.linearRampToValueAtTime(vol, ac.currentTime + 0.04);
-      gain.gain.setValueAtTime(vol, ac.currentTime + 2.85);
-      gain.gain.linearRampToValueAtTime(0, ac.currentTime + 3);
-      osc.connect(gain);
-      gain.connect(ac.destination);
-      osc.start();
-      osc.stop(ac.currentTime + 3.05);
-      $('audio').textContent = '停止試聽';
-      out('status', `已送出 ${f.toLocaleString()} Hz 正弦波，約 3 秒；取樣率 ${ac.sampleRate} Hz。實際聲音未量測。`);
-      timer = setTimeout(() => halt('3 秒試聽完成'), 3100);
-    } catch (e) {
-      halt('此瀏覽器未能啟用音訊；仍可調整頻率觀察區間');
-    } finally {
-      starting = false;
-    }
+    btn.addEventListener('click', () => {
+      const f = Number(btn.dataset.f);
+      if (mode === 'sweep') halt('已停止掃頻');
+      showFreq(f, true);
+      if (mode === 'hold') applyLiveFreq(f);
+    });
   });
 
-  document.addEventListener('visibilitychange', () => { if (document.hidden) halt('頁面隱藏，已停止試聽'); });
+  $('sweep').addEventListener('click', () => beginSweep(FMIN, FMAX));
+  $('sweep-down').addEventListener('click', () => beginSweep(FMAX, FMIN));
+  $('hold').addEventListener('click', () => beginHold());
+  $('stop').addEventListener('click', () => halt('已停止'));
+  $('duration').addEventListener('change', () => {
+    if (mode === 'sweep') halt('掃頻時間已變更；請重新開始');
+  });
 
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) halt('頁面隱藏，已停止');
+  });
+
+  updateButtons();
   new ResizeObserver(draw).observe(svg);
   draw();
   let sent = 0;
