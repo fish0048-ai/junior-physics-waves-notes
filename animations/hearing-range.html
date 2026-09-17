@@ -38,24 +38,8 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
 .preset-row{display:flex;flex-wrap:wrap;gap:8px}
 .preset-row button{min-height:40px;padding:6px 10px;font-size:14px}
 @media(max-width:480px){main{padding:14px}svg{height:360px}}
-
-html.is-embed body{background:#f8fbfd}
-html.is-embed main{padding:14px 16px 12px;max-width:none}
-html.is-embed h1{font-size:clamp(20px,3.8vw,28px);margin:6px 0 10px;line-height:1.35}
-html.is-embed small{font-size:13px}
-html.is-embed p{margin:8px 0 14px;font-size:15px;line-height:1.55}
-html.is-embed .visual svg{min-height:360px!important;height:380px!important;max-height:none!important}
-html.is-embed svg{display:block;width:100%}
-html.is-embed .visual{border-radius:14px}
-html.is-embed .controls{margin:14px 0;gap:12px}
-html.is-embed button,html.is-embed select,html.is-embed input[type=number]{min-height:44px;padding:8px 12px;font-size:15px}
-html.is-embed .readout,.question,.control label,#status,.band{font-size:14px}
-html.is-embed .readout{padding:10px 14px;min-height:48px}
-html.is-embed .note{font-size:13px;line-height:1.55;margin:10px 0 0}
-html.is-embed .question{margin-top:16px;padding:14px 16px}
-html.is-embed summary{min-height:44px;padding:8px 0}
-html.is-embed input[type=range]{min-height:38px}
 </style>
+<link rel="stylesheet" href="embed.css">
 </head>
 <body>
 <script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script>
@@ -114,7 +98,7 @@ html.is-embed input[type=range]{min-height:38px}
       <p>聲波可能還在，只是超出人耳可聽範圍，或喇叭／裝置做不出那麼高的頻率。教材把人耳範圍記成大約 20～20000 Hz；個人實際範圍常比這個窄。聽不到高頻，不能說「沒有聲波」。</p>
     </details>
   </div>
-  <p class="note">掃頻預設約 30 秒，採對數連續變化；滑桿也是對數刻度，低頻區比較好調。空氣聲速取約 340 m/s，波長 λ＝v／f。正弦波、低音量。接近 20000 Hz 時可能聽不到，不代表已輸出經校準的超聲波。真正超聲波（＞20000 Hz）本頁不測試。勿用未聽見判定學生聽力。</p>
+  <p class="note">掃頻預設約 30 秒，採對數連續變化；滑桿也是對數刻度。空氣聲速取約 340 m/s，波長 λ＝v／f。正弦波、低音量。接近 20000 Hz 時可能聽不到，不代表已輸出經校準的超聲波。真正超聲波（＞20000 Hz）本頁不測試。勿用未聽見判定學生聽力。</p>
 </main>
 <script>
 (() => {
@@ -124,10 +108,12 @@ html.is-embed input[type=range]{min-height:38px}
   const NS = 'http://www.w3.org/2000/svg';
   const C = { blue:'#087fa4', red:'#d52b47', gold:'#a66a0a', green:'#258151', gray:'#92a8b7', soft:'#d7e8ef' };
   const FMIN = 20, FMAX = 20000, V_AIR = 340, SLIDER_MAX = 1000;
-  const DRAW_INTERVAL_MS = 66; // ~15fps UI during sweep
+  const DRAW_INTERVAL_MS = 50;
   let W = 800, H = 400;
+  let layout = null; // cached geometry after full build
+  let els = null;    // mutable SVG nodes
   let ac = null, osc = null, gain = null;
-  let mode = 'idle'; // idle | sweep | hold
+  let mode = 'idle';
   let raf = null, requestId = 0, cleanupId = 0, starting = false;
   let sweepStart = 0, sweepDur = 30, sweepFrom = FMIN, sweepTo = FMAX;
   let lastDrawAt = 0, currentFreq = FMIN;
@@ -135,28 +121,22 @@ html.is-embed input[type=range]{min-height:38px}
   function n(tag, attrs = {}, text = '') {
     const node = document.createElementNS(NS, tag);
     Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
-    if (text !== undefined) node.textContent = text;
+    if (text !== undefined && text !== '') node.textContent = text;
     svg.append(node);
     return node;
   }
-  function clear() {
-    W = Math.max(280, svg.clientWidth);
-    H = Math.max(340, svg.getBoundingClientRect().height || 400);
-    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
-    svg.replaceChildren();
-  }
-  function text(x, y, t, anchor = 'middle', color) {
-    return n('text', { x, y, 'text-anchor': anchor, ...(color ? { style: 'fill:' + color } : {}) }, t);
+  function text(x, y, t, anchor = 'middle', color, id) {
+    return n('text', {
+      x, y, 'text-anchor': anchor,
+      ...(color ? { style: 'fill:' + color } : {}),
+      ...(id ? { id } : {})
+    }, t);
   }
   function val(id) { return Number($(id).value); }
   function out(id, v) { $(id).textContent = v; }
-
-  function clampF(f) {
-    return Math.max(FMIN, Math.min(FMAX, f));
-  }
+  function clampF(f) { return Math.max(FMIN, Math.min(FMAX, f)); }
   function logLerp(a, b, t) {
-    const la = Math.log(a), lb = Math.log(b);
-    return Math.exp(la + (lb - la) * t);
+    return Math.exp(Math.log(a) + (Math.log(b) - Math.log(a)) * t);
   }
   function sliderToFreq(s) {
     return clampF(logLerp(FMIN, FMAX, Number(s) / SLIDER_MAX));
@@ -182,26 +162,163 @@ html.is-embed input[type=range]{min-height:38px}
     if (f >= 10000) return 0.055;
     return 0.07;
   }
-  function lambdaM(f) {
-    return V_AIR / clampF(f);
-  }
+  function lambdaM(f) { return V_AIR / clampF(f); }
   function formatLambda(m) {
     if (m >= 1) return m.toFixed(2) + ' m';
     if (m >= 0.01) return (m * 100).toFixed(1) + ' cm';
     return (m * 1000).toFixed(1) + ' mm';
   }
   function syncControls(f) {
-    const n = Math.round(clampF(f));
-    currentFreq = n;
-    $('frequency').value = freqToSlider(n);
-    $('frequency').setAttribute('aria-valuetext', n + ' Hz');
-    $('frequency-number').value = n;
+    const nFreq = Math.round(clampF(f));
+    currentFreq = nFreq;
+    $('frequency').value = freqToSlider(nFreq);
+    $('frequency').setAttribute('aria-valuetext', nFreq + ' Hz');
+    $('frequency-number').value = nFreq;
   }
-
+  function wavePath(x0, span, yWave, lamPx, amp) {
+    const samples = Math.min(360, Math.max(120, Math.ceil(span / Math.max(2, lamPx / 8))));
+    const pts = [];
+    for (let i = 0; i <= samples; i++) {
+      const x = x0 + span * i / samples;
+      const y = yWave - Math.sin(2 * Math.PI * (x - x0) / lamPx) * amp;
+      pts.push((i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1));
+    }
+    return pts.join(' ');
+  }
   function updateButtons() {
     $('sweep').textContent = mode === 'sweep' && sweepTo > sweepFrom ? '掃頻中…（再按可停止）' : '連續掃頻：低 → 高';
     $('sweep-down').textContent = mode === 'sweep' && sweepTo < sweepFrom ? '掃頻中…（再按可停止）' : '連續掃頻：高 → 低';
     $('hold').textContent = mode === 'hold' ? '持續發聲中（可拖滑桿）' : '持續發聲（可拖滑桿）';
+  }
+
+  function measureLayout() {
+    W = Math.max(280, svg.clientWidth);
+    H = Math.max(340, svg.getBoundingClientRect().height || 400);
+    const x0 = 48, x1 = W - 28;
+    const yBar = H * 0.22, barH = 32;
+    const yWave = H * 0.62;
+    const amp = Math.min(42, H * 0.09);
+    return { x0, x1, span: x1 - x0, yBar, barH, yWave, amp, lam20: V_AIR / FMIN };
+  }
+
+  /** 完整重建靜態骨架 + 可變節點（尺寸變或首次） */
+  function buildScene() {
+    layout = measureLayout();
+    svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
+    svg.replaceChildren();
+    const { x0, x1, span, yBar, barH, yWave, amp } = layout;
+
+    n('rect', { x: x0, y: yBar - barH / 2, width: span, height: barH, rx: 10, fill: '#d9f0e4', stroke: C.soft });
+    const trail = n('rect', { id: 'trail', x: x0, y: yBar - barH / 2, width: 0, height: barH, rx: 8, fill: '#9fd0e8', 'fill-opacity': '0.85', visibility: 'hidden' });
+
+    [20, 100, 1000, 10000, 20000].forEach(mark => {
+      const x = logPos(mark, x0, x1);
+      n('line', { x1: x, y1: yBar - barH / 2 - 5, x2: x, y2: yBar + barH / 2 + 5, stroke: C.gray, 'stroke-width': 1.5 });
+      text(x, yBar + barH / 2 + 20, mark >= 1000 ? (mark / 1000) + 'k' : String(mark), 'middle');
+    });
+
+    text(x0, 28, '次聲波 ＜20', 'start', C.blue);
+    text(W / 2, 28, '人耳可聽聲（約）', 'middle', C.green);
+    text(x1, 28, '超聲波 ＞20k', 'end', C.gold);
+    text(x0, yWave - 78, '空氣中波長示意（v ≈ 340 m/s）', 'start', C.blue);
+    text(x1, yWave - 78, 'λ = v / f', 'end', C.gold);
+    n('line', { x1: x0, y1: yWave, x2: x1, y2: yWave, stroke: C.soft, 'stroke-width': 1 });
+
+    const marker = n('line', { id: 'freq-marker', x1: x0, y1: yBar - 58, x2: x0, y2: yBar + 42, stroke: C.red, 'stroke-width': 2.5 });
+    const dot = n('circle', { id: 'freq-dot', cx: x0, cy: yBar, r: 8, fill: C.red, stroke: '#fff', 'stroke-width': 2 });
+    const freqLabel = text(x0, yBar - 68, '20 Hz', 'middle', C.red, 'freq-label');
+    const wave = n('path', { id: 'wave-path', d: '', fill: 'none', stroke: C.blue, 'stroke-width': 3 });
+    const lamLine = n('line', { id: 'lam-line', x1: x0, y1: 0, x2: x0, y2: 0, stroke: C.gold, 'stroke-width': 2, visibility: 'hidden' });
+    const lamTickL = n('line', { id: 'lam-tick-l', x1: 0, y1: 0, x2: 0, y2: 0, stroke: C.gold, 'stroke-width': 2, visibility: 'hidden' });
+    const lamTickR = n('line', { id: 'lam-tick-r', x1: 0, y1: 0, x2: 0, y2: 0, stroke: C.gold, 'stroke-width': 2, visibility: 'hidden' });
+    const lamLabel = text(W / 2, yWave + amp + 38, '', 'middle', C.gold, 'lam-label');
+    const footer = text(W / 2, H - 16, '', 'middle', C.gray, 'footer-label');
+
+    els = { trail, marker, dot, freqLabel, wave, lamLine, lamTickL, lamTickR, lamLabel, footer };
+    paintDynamic(currentFreq);
+  }
+
+  /** 只更新會動的屬性 */
+  function paintDynamic(f) {
+    if (!layout || !els) { buildScene(); return; }
+    const { x0, x1, span, yBar, yWave, amp, lam20 } = layout;
+    const lam = lambdaM(f);
+    let lamPx = Math.max(6, Math.min(span, span * (lam / lam20)));
+    const px = logPos(f, x0, x1);
+    const z = zone(f);
+
+    els.marker.setAttribute('x1', px);
+    els.marker.setAttribute('x2', px);
+    els.dot.setAttribute('cx', px);
+    els.freqLabel.setAttribute('x', px);
+    els.freqLabel.textContent = Math.round(f).toLocaleString() + ' Hz';
+    els.wave.setAttribute('d', wavePath(x0, span, yWave, lamPx, amp));
+
+    if (mode === 'sweep') {
+      const xA = logPos(sweepFrom, x0, x1);
+      const left = Math.min(xA, px);
+      const w = Math.abs(px - xA);
+      els.trail.setAttribute('visibility', 'visible');
+      els.trail.setAttribute('x', left);
+      els.trail.setAttribute('width', Math.max(2, w));
+    } else {
+      els.trail.setAttribute('visibility', 'hidden');
+      els.trail.setAttribute('width', 0);
+    }
+
+    const yLam = yWave + amp + 18;
+    if (lamPx >= 36) {
+      const ax = x0 + 8;
+      const bx = ax + lamPx;
+      if (bx <= x1 - 4) {
+        els.lamLine.setAttribute('visibility', 'visible');
+        els.lamTickL.setAttribute('visibility', 'visible');
+        els.lamTickR.setAttribute('visibility', 'visible');
+        els.lamLine.setAttribute('x1', ax);
+        els.lamLine.setAttribute('x2', bx);
+        els.lamLine.setAttribute('y1', yLam);
+        els.lamLine.setAttribute('y2', yLam);
+        els.lamTickL.setAttribute('x1', ax);
+        els.lamTickL.setAttribute('x2', ax);
+        els.lamTickL.setAttribute('y1', yLam - 6);
+        els.lamTickL.setAttribute('y2', yLam + 6);
+        els.lamTickR.setAttribute('x1', bx);
+        els.lamTickR.setAttribute('x2', bx);
+        els.lamTickR.setAttribute('y1', yLam - 6);
+        els.lamTickR.setAttribute('y2', yLam + 6);
+        els.lamLabel.setAttribute('x', (ax + bx) / 2);
+        els.lamLabel.textContent = '一個波長 λ ≈ ' + formatLambda(lam);
+      } else {
+        els.lamLine.setAttribute('visibility', 'hidden');
+        els.lamTickL.setAttribute('visibility', 'hidden');
+        els.lamTickR.setAttribute('visibility', 'hidden');
+        els.lamLabel.setAttribute('x', W / 2);
+        els.lamLabel.textContent = '波長 λ ≈ ' + formatLambda(lam) + '（愈高頻愈密、愈短）';
+      }
+    } else {
+      els.lamLine.setAttribute('visibility', 'hidden');
+      els.lamTickL.setAttribute('visibility', 'hidden');
+      els.lamTickR.setAttribute('visibility', 'hidden');
+      els.lamLabel.setAttribute('x', W / 2);
+      els.lamLabel.textContent = '波長很短 λ ≈ ' + formatLambda(lam) + '（高頻 → 波長短、指向性較好）';
+    }
+
+    els.footer.textContent = mode === 'sweep'
+      ? '連續掃頻中：頻率↑、波長↓'
+      : '頻率升高時，同一介質中波長變短';
+
+    out('frequency-out', Math.round(f).toLocaleString() + ' Hz');
+    const band = $('band');
+    band.className = 'band ' + z.cls;
+    band.textContent = z.label;
+    out('result', `頻率 ${Math.round(f).toLocaleString()} Hz　｜　波長 λ ≈ ${formatLambda(lam)}　｜　週期 ${(1000 / f).toFixed(f < 100 ? 2 : 3)} ms　｜　v≈340 m/s`);
+  }
+
+  function render(forceRebuild) {
+    const next = measureLayout();
+    const sizeChanged = !layout || next.span !== layout.span || Math.abs(next.yWave - layout.yWave) > 1;
+    if (forceRebuild || sizeChanged || !els) buildScene();
+    else paintDynamic(currentFreq);
   }
 
   function halt(msg = '已停止') {
@@ -229,6 +346,7 @@ html.is-embed input[type=range]{min-height:38px}
     }, 120);
     updateButtons();
     out('status', msg);
+    paintDynamic(currentFreq);
   }
 
   async function ensureAudio() {
@@ -243,7 +361,7 @@ html.is-embed input[type=range]{min-height:38px}
   }
 
   function startOsc(f0) {
-    cleanupId++; // invalidate pending disconnect from previous halt
+    cleanupId++;
     if (osc) {
       try { osc.stop(); } catch (e) {}
       try { osc.disconnect(); } catch (e) {}
@@ -255,8 +373,7 @@ html.is-embed input[type=range]{min-height:38px}
     gain = ac.createGain();
     osc.type = 'sine';
     const f = clampF(f0);
-    const nyq = ac.sampleRate / 2;
-    if (f >= nyq) throw Error('nyquist');
+    if (f >= ac.sampleRate / 2) throw Error('nyquist');
     osc.frequency.setValueAtTime(f, ac.currentTime);
     gain.gain.setValueAtTime(0, ac.currentTime);
     gain.gain.linearRampToValueAtTime(volFor(f), ac.currentTime + 0.05);
@@ -267,18 +384,16 @@ html.is-embed input[type=range]{min-height:38px}
 
   function applyLiveFreq(f) {
     if (!osc || !ac || mode === 'idle') return;
-    const nf = clampF(f);
-    const nyq = ac.sampleRate / 2 - 1;
-    const safe = Math.min(nf, nyq);
+    const safe = Math.min(clampF(f), ac.sampleRate / 2 - 1);
     const now = ac.currentTime;
     osc.frequency.cancelScheduledValues(now);
     osc.frequency.setTargetAtTime(safe, now, 0.01);
     gain.gain.setTargetAtTime(volFor(safe), now, 0.03);
   }
 
-  function setFreqUI(f, { forceDraw = true } = {}) {
+  function setFreqUI(f) {
     syncControls(f);
-    if (forceDraw) draw();
+    paintDynamic(currentFreq);
   }
 
   function tickSweep(ts) {
@@ -290,7 +405,7 @@ html.is-embed input[type=range]{min-height:38px}
     syncControls(f);
     if (ts - lastDrawAt >= DRAW_INTERVAL_MS || t >= 1) {
       lastDrawAt = ts;
-      draw();
+      paintDynamic(f);
       out('status', `連續掃頻中 ${Math.round(f).toLocaleString()} Hz（${Math.round(t * 100)}%）｜λ ≈ ${formatLambda(lambdaM(f))}`);
     }
     if (t >= 1) {
@@ -309,10 +424,8 @@ html.is-embed input[type=range]{min-height:38px}
     try {
       await ensureAudio();
       if (token !== requestId) return;
-      const nyq = ac.sampleRate / 2;
-      const endF = Math.max(from, to);
-      if (endF >= nyq) {
-        out('status', `無法完整掃到終點：取樣率 ${ac.sampleRate} Hz，Nyquist 上限約 ${Math.floor(nyq)} Hz。`);
+      if (Math.max(from, to) >= ac.sampleRate / 2) {
+        out('status', `無法完整掃到終點：取樣率 ${ac.sampleRate} Hz，Nyquist 上限約 ${Math.floor(ac.sampleRate / 2)} Hz。`);
         starting = false;
         return;
       }
@@ -362,90 +475,17 @@ html.is-embed input[type=range]{min-height:38px}
     }
   }
 
-  function draw() {
-    clear();
-    const f = clampF(currentFreq || sliderToFreq(val('frequency')));
-    const lam = lambdaM(f);
-    const x0 = 48, x1 = W - 28;
-    const yBar = H * 0.22, barH = 32;
-    const yWave = H * 0.62;
-    const z = zone(f);
-
-    n('rect', { x: x0, y: yBar - barH / 2, width: x1 - x0, height: barH, rx: 10, fill: '#d9f0e4', stroke: C.soft });
-    if (mode === 'sweep') {
-      const xA = logPos(sweepFrom, x0, x1);
-      const xB = logPos(f, x0, x1);
-      const left = Math.min(xA, xB), w = Math.abs(xB - xA);
-      n('rect', { x: left, y: yBar - barH / 2, width: Math.max(2, w), height: barH, rx: 8, fill: '#9fd0e8', 'fill-opacity': 0.85 });
-    }
-    [20, 100, 1000, 10000, 20000].forEach(mark => {
-      const x = logPos(mark, x0, x1);
-      n('line', { x1: x, y1: yBar - barH / 2 - 5, x2: x, y2: yBar + barH / 2 + 5, stroke: C.gray, 'stroke-width': 1.5 });
-      text(x, yBar + barH / 2 + 20, mark >= 1000 ? (mark / 1000) + 'k' : String(mark), 'middle');
-    });
-    const px = logPos(f, x0, x1);
-    n('line', { x1: px, y1: yBar - 58, x2: px, y2: yBar + 42, stroke: C.red, 'stroke-width': 2.5 });
-    n('circle', { cx: px, cy: yBar, r: 8, fill: C.red, stroke: '#fff', 'stroke-width': 2 });
-    text(px, yBar - 68, Math.round(f).toLocaleString() + ' Hz', 'middle', C.red);
-
-    text(x0, 28, '次聲波 ＜20', 'start', C.blue);
-    text(W / 2, 28, '人耳可聽聲（約）', 'middle', C.green);
-    text(x1, 28, '超聲波 ＞20k', 'end', C.gold);
-
-    text(x0, yWave - 78, '空氣中波長示意（v ≈ 340 m/s）', 'start', C.blue);
-    text(x1, yWave - 78, 'λ = v / f', 'end', C.gold);
-    n('line', { x1: x0, y1: yWave, x2: x1, y2: yWave, stroke: C.soft, 'stroke-width': 1 });
-
-    const lam20 = V_AIR / FMIN;
-    const span = x1 - x0;
-    let lamPx = span * (lam / lam20);
-    lamPx = Math.max(6, Math.min(span, lamPx));
-    const amp = Math.min(42, H * 0.09);
-    // Adapt sample count: denser waves need more points, sparse need fewer
-    const samples = Math.min(360, Math.max(120, Math.ceil(span / Math.max(2, lamPx / 8))));
-    const pts = [];
-    for (let i = 0; i <= samples; i++) {
-      const x = x0 + span * i / samples;
-      const y = yWave - Math.sin(2 * Math.PI * (x - x0) / lamPx) * amp;
-      pts.push((i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1));
-    }
-    n('path', { d: pts.join(' '), fill: 'none', stroke: C.blue, 'stroke-width': 3 });
-
-    if (lamPx >= 36) {
-      const ax = x0 + 8;
-      const bx = ax + lamPx;
-      if (bx <= x1 - 4) {
-        n('line', { x1: ax, y1: yWave + amp + 18, x2: bx, y2: yWave + amp + 18, stroke: C.gold, 'stroke-width': 2 });
-        n('line', { x1: ax, y1: yWave + amp + 12, x2: ax, y2: yWave + amp + 24, stroke: C.gold, 'stroke-width': 2 });
-        n('line', { x1: bx, y1: yWave + amp + 12, x2: bx, y2: yWave + amp + 24, stroke: C.gold, 'stroke-width': 2 });
-        text((ax + bx) / 2, yWave + amp + 38, '一個波長 λ ≈ ' + formatLambda(lam), 'middle', C.gold);
-      } else {
-        text(W / 2, yWave + amp + 34, '波長 λ ≈ ' + formatLambda(lam) + '（愈高頻愈密、愈短）', 'middle', C.gold);
-      }
-    } else {
-      text(W / 2, yWave + amp + 34, '波長很短 λ ≈ ' + formatLambda(lam) + '（高頻 → 波長短、指向性較好）', 'middle', C.gold);
-    }
-
-    text(W / 2, H - 16, mode === 'sweep' ? '連續掃頻中：頻率↑、波長↓' : '頻率升高時，同一介質中波長變短', 'middle', C.gray);
-
-    out('frequency-out', Math.round(f).toLocaleString() + ' Hz');
-    const band = $('band');
-    band.className = 'band ' + z.cls;
-    band.textContent = z.label;
-    out('result', `頻率 ${Math.round(f).toLocaleString()} Hz　｜　波長 λ ≈ ${formatLambda(lam)}　｜　週期 ${(1000 / f).toFixed(f < 100 ? 2 : 3)} ms　｜　v≈340 m/s`);
-  }
-
   $('frequency').addEventListener('input', () => {
     const f = sliderToFreq(val('frequency'));
     syncControls(f);
     if (mode === 'hold') {
       applyLiveFreq(f);
-      draw();
+      paintDynamic(f);
       out('status', `持續發聲 ${Math.round(f).toLocaleString()} Hz｜λ ≈ ${formatLambda(lambdaM(f))}`);
       return;
     }
     if (mode === 'sweep') halt('已停止掃頻');
-    draw();
+    paintDynamic(f);
   });
   $('frequency-number').addEventListener('change', () => {
     const f = Number($('frequency-number').value);
@@ -473,15 +513,15 @@ html.is-embed input[type=range]{min-height:38px}
   $('duration').addEventListener('change', () => {
     if (mode === 'sweep') halt('掃頻時間已變更；請重新開始');
   });
-
   document.addEventListener('visibilitychange', () => {
     if (document.hidden) halt('頁面隱藏，已停止');
   });
 
   updateButtons();
   syncControls(FMIN);
-  new ResizeObserver(draw).observe(svg);
-  draw();
+  buildScene();
+  new ResizeObserver(() => render(true)).observe(svg);
+
   let sent = 0;
   new ResizeObserver(() => {
     const height = Math.ceil(document.querySelector('main').getBoundingClientRect().height);

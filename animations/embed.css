@@ -1,0 +1,155 @@
+/* 講義 iframe 嵌入時共用樣式（各動畫頁 <link href="embed.css">） */
+html.is-embed body {
+  background: #f8fbfd;
+}
+html.is-embed main {
+  padding: 14px 16px 12px;
+  max-width: none;
+}
+html.is-embed h1 {
+  font-size: clamp(20px, 3.8vw, 28px);
+  margin: 6px 0 10px;
+  line-height: 1.35;
+}
+html.is-embed h2 {
+  font-size: clamp(17px, 3vw, 20px);
+}
+html.is-embed small {
+  font-size: 13px;
+}
+html.is-embed p {
+  margin: 8px 0 14px;
+  font-size: 15px;
+  line-height: 1.55;
+}
+html.is-embed main > header + p,
+html.is-embed main > small + h1 + p {
+  margin: 0 0 12px;
+}
+html.is-embed .visual svg,
+html.is-embed svg#scene {
+  min-height: 360px !important;
+  height: 380px !important;
+  max-height: none !important;
+}
+html.is-embed svg {
+  display: block;
+  width: 100%;
+}
+html.is-embed .visual {
+  border-radius: 14px;
+}
+html.is-embed .controls {
+  margin: 14px 0;
+  gap: 12px;
+}
+html.is-embed button,
+html.is-embed select,
+html.is-embed input[type=number] {
+  min-height: 44px;
+  padding: 8px 12px;
+  font-size: 15px;
+}
+html.is-embed .readout,
+html.is-embed .legend,
+html.is-embed .question,
+html.is-embed .control label,
+html.is-embed #status,
+html.is-embed .band {
+  font-size: 14px;
+}
+html.is-embed .readout {
+  padding: 10px 14px;
+  min-height: 48px;
+}
+html.is-embed .note,
+html.is-embed .mass-note {
+  font-size: 13px;
+  line-height: 1.55;
+  margin: 10px 0 0;
+}
+html.is-embed .question {
+  margin-top: 16px;
+  padding: 14px 16px;
+}
+html.is-embed summary {
+  min-height: 44px;
+  padding: 8px 0;
+}
+html.is-embed input[type=range] {
+  min-height: 38px;
+}
+html.is-embed .control {
+  flex: 1 1 200px;
+}
+html.is-embed .key {
+  font-size: 13px;
+}
+
+/* 5-3 加熱曲線：杯子面板 */
+html.is-embed .cup-grid {
+  gap: 14px;
+}
+html.is-embed .cup-panel {
+  padding: 12px 14px;
+}
+html.is-embed .cup-panel svg {
+  height: clamp(240px, 34vh, 300px) !important;
+}
+html.is-embed .ratios strong {
+  font-size: 18px;
+}
+html.is-embed .jump {
+  margin: 10px 0;
+  gap: 10px;
+}
+
+/* 3-1 繩波：略緊湊但仍完整可讀 */
+html.is-embed.wave-particle-page main,
+html.is-embed:has(.stage) main {
+  padding: 12px 14px 10px;
+}
+html.is-embed:has(.stage) h1 {
+  font-size: clamp(18px, 3.5vw, 24px);
+  margin: 2px 0 6px;
+}
+html.is-embed:has(.stage) svg {
+  min-height: 240px;
+  height: 260px;
+  max-height: none;
+}
+html.is-embed:has(.stage) .legend {
+  padding: 8px 12px;
+  font-size: 13px;
+  gap: 10px 14px;
+}
+html.is-embed:has(.stage) .readout {
+  padding: 8px 12px;
+  font-size: 14px;
+}
+html.is-embed:has(.stage) .controls {
+  margin-top: 10px;
+  gap: 10px;
+}
+html.is-embed:has(.stage) button,
+html.is-embed:has(.stage) select {
+  min-height: 40px;
+  padding: 6px 12px;
+  font-size: 14px;
+}
+html.is-embed:has(.stage) .timeline {
+  margin: 8px 0 6px;
+}
+html.is-embed:has(.stage) .hint {
+  padding: 10px 12px;
+  font-size: 14px;
+}
+html.is-embed:has(.stage) .note {
+  font-size: 12px;
+  margin: 8px 0 0;
+  line-height: 1.45;
+}
+html.is-embed:has(.stage) summary {
+  min-height: 36px;
+  padding: 4px 0;
+}
