@@ -66,8 +66,8 @@ html.is-embed input[type=range]{min-height:38px}
 
   <div class="controls">
     <div class="control">
-      <label for="frequency">頻率<output id="frequency-out"></output></label>
-      <input id="frequency" type="range" min="20" max="20000" step="1" value="20">
+      <label for="frequency">頻率（對數滑桿）<output id="frequency-out"></output></label>
+      <input id="frequency" type="range" min="0" max="1000" step="1" value="0" aria-valuetext="20 Hz">
     </div>
     <label>輸入 Hz
       <input id="frequency-number" type="number" min="20" max="20000" step="1" value="20" style="width:120px">
@@ -114,7 +114,7 @@ html.is-embed input[type=range]{min-height:38px}
       <p>聲波可能還在，只是超出人耳可聽範圍，或喇叭／裝置做不出那麼高的頻率。教材把人耳範圍記成大約 20～20000 Hz；個人實際範圍常比這個窄。聽不到高頻，不能說「沒有聲波」。</p>
     </details>
   </div>
-  <p class="note">掃頻預設約 30 秒，採對數連續變化；空氣聲速取約 340 m/s，波長 λ＝v／f。正弦波、低音量。接近 20000 Hz 時可能聽不到，不代表已輸出經校準的超聲波。真正超聲波（＞20000 Hz）本頁不測試。勿用未聽見判定學生聽力。</p>
+  <p class="note">掃頻預設約 30 秒，採對數連續變化；滑桿也是對數刻度，低頻區比較好調。空氣聲速取約 340 m/s，波長 λ＝v／f。正弦波、低音量。接近 20000 Hz 時可能聽不到，不代表已輸出經校準的超聲波。真正超聲波（＞20000 Hz）本頁不測試。勿用未聽見判定學生聽力。</p>
 </main>
 <script>
 (() => {
@@ -123,12 +123,14 @@ html.is-embed input[type=range]{min-height:38px}
   const svg = $('scene');
   const NS = 'http://www.w3.org/2000/svg';
   const C = { blue:'#087fa4', red:'#d52b47', gold:'#a66a0a', green:'#258151', gray:'#92a8b7', soft:'#d7e8ef' };
-  const FMIN = 20, FMAX = 20000, V_AIR = 340;
+  const FMIN = 20, FMAX = 20000, V_AIR = 340, SLIDER_MAX = 1000;
+  const DRAW_INTERVAL_MS = 66; // ~15fps UI during sweep
   let W = 800, H = 400;
   let ac = null, osc = null, gain = null;
   let mode = 'idle'; // idle | sweep | hold
-  let raf = null, requestId = 0, starting = false;
+  let raf = null, requestId = 0, cleanupId = 0, starting = false;
   let sweepStart = 0, sweepDur = 30, sweepFrom = FMIN, sweepTo = FMAX;
+  let lastDrawAt = 0, currentFreq = FMIN;
 
   function n(tag, attrs = {}, text = '') {
     const node = document.createElementNS(NS, tag);
@@ -156,6 +158,13 @@ html.is-embed input[type=range]{min-height:38px}
     const la = Math.log(a), lb = Math.log(b);
     return Math.exp(la + (lb - la) * t);
   }
+  function sliderToFreq(s) {
+    return clampF(logLerp(FMIN, FMAX, Number(s) / SLIDER_MAX));
+  }
+  function freqToSlider(f) {
+    const t = (Math.log(clampF(f)) - Math.log(FMIN)) / (Math.log(FMAX) - Math.log(FMIN));
+    return Math.round(t * SLIDER_MAX);
+  }
   function zone(f) {
     if (f <= 80) return { cls: 'low', label: '靠近次聲波邊界：頻率很低，可能「感覺到」振動多於聽到' };
     if (f < 12000) return { cls: 'mid', label: '可聽聲範圍內（教材約 20～20000 Hz）' };
@@ -181,18 +190,17 @@ html.is-embed input[type=range]{min-height:38px}
     if (m >= 0.01) return (m * 100).toFixed(1) + ' cm';
     return (m * 1000).toFixed(1) + ' mm';
   }
-
-  function showFreq(f, silentStatus) {
+  function syncControls(f) {
     const n = Math.round(clampF(f));
-    $('frequency').value = n;
+    currentFreq = n;
+    $('frequency').value = freqToSlider(n);
+    $('frequency').setAttribute('aria-valuetext', n + ' Hz');
     $('frequency-number').value = n;
-    draw();
-    if (silentStatus) return;
   }
 
   function updateButtons() {
-    $('sweep').textContent = mode === 'sweep' && sweepTo > sweepFrom ? '掃頻中…（點停止）' : '連續掃頻：低 → 高';
-    $('sweep-down').textContent = mode === 'sweep' && sweepTo < sweepFrom ? '掃頻中…（點停止）' : '連續掃頻：高 → 低';
+    $('sweep').textContent = mode === 'sweep' && sweepTo > sweepFrom ? '掃頻中…（再按可停止）' : '連續掃頻：低 → 高';
+    $('sweep-down').textContent = mode === 'sweep' && sweepTo < sweepFrom ? '掃頻中…（再按可停止）' : '連續掃頻：高 → 低';
     $('hold').textContent = mode === 'hold' ? '持續發聲中（可拖滑桿）' : '持續發聲（可拖滑桿）';
   }
 
@@ -201,19 +209,23 @@ html.is-embed input[type=range]{min-height:38px}
     starting = false;
     mode = 'idle';
     if (raf) { cancelAnimationFrame(raf); raf = null; }
+    const token = ++cleanupId;
     try {
       if (gain && ac) {
         const now = ac.currentTime;
         gain.gain.cancelScheduledValues(now);
-        gain.gain.setValueAtTime(gain.gain.value, now);
+        gain.gain.setValueAtTime(Math.max(0, gain.gain.value), now);
         gain.gain.linearRampToValueAtTime(0, now + 0.05);
       }
     } catch (e) {}
     try { if (osc) osc.stop(ac ? ac.currentTime + 0.08 : 0); } catch (e) {}
+    const dyingOsc = osc, dyingGain = gain;
+    osc = null;
+    gain = null;
     setTimeout(() => {
-      try { if (gain) gain.disconnect(); } catch (e) {}
-      try { if (osc) osc.disconnect(); } catch (e) {}
-      osc = null; gain = null;
+      if (token !== cleanupId) return;
+      try { if (dyingGain) dyingGain.disconnect(); } catch (e) {}
+      try { if (dyingOsc) dyingOsc.disconnect(); } catch (e) {}
     }, 120);
     updateButtons();
     out('status', msg);
@@ -226,15 +238,18 @@ html.is-embed input[type=range]{min-height:38px}
       try { ac = new A({ sampleRate: 96000 }); }
       catch (e) { ac = new A(); }
     }
-    await ac.resume();
+    if (ac.state === 'suspended') await ac.resume();
     return ac;
   }
 
   function startOsc(f0) {
+    cleanupId++; // invalidate pending disconnect from previous halt
     if (osc) {
       try { osc.stop(); } catch (e) {}
       try { osc.disconnect(); } catch (e) {}
-      try { gain.disconnect(); } catch (e) {}
+      try { if (gain) gain.disconnect(); } catch (e) {}
+      osc = null;
+      gain = null;
     }
     osc = ac.createOscillator();
     gain = ac.createGain();
@@ -261,23 +276,33 @@ html.is-embed input[type=range]{min-height:38px}
     gain.gain.setTargetAtTime(volFor(safe), now, 0.03);
   }
 
+  function setFreqUI(f, { forceDraw = true } = {}) {
+    syncControls(f);
+    if (forceDraw) draw();
+  }
+
   function tickSweep(ts) {
     if (mode !== 'sweep') return;
     if (!sweepStart) sweepStart = ts;
     const t = Math.min(1, (ts - sweepStart) / (sweepDur * 1000));
     const f = logLerp(sweepFrom, sweepTo, t);
     applyLiveFreq(f);
-    showFreq(f, true);
-    out('status', `連續掃頻中 ${Math.round(f).toLocaleString()} Hz（${Math.round(t * 100)}%）`);
+    syncControls(f);
+    if (ts - lastDrawAt >= DRAW_INTERVAL_MS || t >= 1) {
+      lastDrawAt = ts;
+      draw();
+      out('status', `連續掃頻中 ${Math.round(f).toLocaleString()} Hz（${Math.round(t * 100)}%）｜λ ≈ ${formatLambda(lambdaM(f))}`);
+    }
     if (t >= 1) {
       halt(sweepTo > sweepFrom ? '低→高掃頻完成' : '高→低掃頻完成');
-      showFreq(sweepTo, true);
+      setFreqUI(sweepTo);
       return;
     }
     raf = requestAnimationFrame(tickSweep);
   }
 
   async function beginSweep(from, to) {
+    if (mode === 'sweep') { halt('已停止掃頻'); return; }
     if (mode !== 'idle' || starting) { halt('已停止'); return; }
     starting = true;
     const token = ++requestId;
@@ -285,7 +310,8 @@ html.is-embed input[type=range]{min-height:38px}
       await ensureAudio();
       if (token !== requestId) return;
       const nyq = ac.sampleRate / 2;
-      if (Math.max(from, to) >= nyq) {
+      const endF = Math.max(from, to);
+      if (endF >= nyq) {
         out('status', `無法完整掃到終點：取樣率 ${ac.sampleRate} Hz，Nyquist 上限約 ${Math.floor(nyq)} Hz。`);
         starting = false;
         return;
@@ -294,8 +320,9 @@ html.is-embed input[type=range]{min-height:38px}
       sweepTo = to;
       sweepDur = val('duration') || 30;
       sweepStart = 0;
+      lastDrawAt = 0;
       startOsc(from);
-      showFreq(from, true);
+      setFreqUI(from);
       mode = 'sweep';
       starting = false;
       updateButtons();
@@ -317,13 +344,14 @@ html.is-embed input[type=range]{min-height:38px}
     try {
       await ensureAudio();
       if (token !== requestId) return;
-      const f = clampF(val('frequency'));
+      const f = clampF(currentFreq || sliderToFreq(val('frequency')));
       if (f >= ac.sampleRate / 2) {
         out('status', `無法輸出：取樣率 ${ac.sampleRate} Hz。`);
         starting = false;
         return;
       }
       startOsc(f);
+      setFreqUI(f);
       mode = 'hold';
       starting = false;
       updateButtons();
@@ -336,14 +364,13 @@ html.is-embed input[type=range]{min-height:38px}
 
   function draw() {
     clear();
-    const f = clampF(val('frequency'));
+    const f = clampF(currentFreq || sliderToFreq(val('frequency')));
     const lam = lambdaM(f);
     const x0 = 48, x1 = W - 28;
     const yBar = H * 0.22, barH = 32;
     const yWave = H * 0.62;
     const z = zone(f);
 
-    // frequency range bar
     n('rect', { x: x0, y: yBar - barH / 2, width: x1 - x0, height: barH, rx: 10, fill: '#d9f0e4', stroke: C.soft });
     if (mode === 'sweep') {
       const xA = logPos(sweepFrom, x0, x1);
@@ -365,26 +392,25 @@ html.is-embed input[type=range]{min-height:38px}
     text(W / 2, 28, '人耳可聽聲（約）', 'middle', C.green);
     text(x1, 28, '超聲波 ＞20k', 'end', C.gold);
 
-    // wavelength wave strip
     text(x0, yWave - 78, '空氣中波長示意（v ≈ 340 m/s）', 'start', C.blue);
     text(x1, yWave - 78, 'λ = v / f', 'end', C.gold);
     n('line', { x1: x0, y1: yWave, x2: x1, y2: yWave, stroke: C.soft, 'stroke-width': 1 });
 
     const lam20 = V_AIR / FMIN;
     const span = x1 - x0;
-    // one λ at 20 Hz ≈ full width; higher f → shorter cycles
     let lamPx = span * (lam / lam20);
     lamPx = Math.max(6, Math.min(span, lamPx));
     const amp = Math.min(42, H * 0.09);
+    // Adapt sample count: denser waves need more points, sparse need fewer
+    const samples = Math.min(360, Math.max(120, Math.ceil(span / Math.max(2, lamPx / 8))));
     const pts = [];
-    for (let i = 0; i <= 240; i++) {
-      const x = x0 + span * i / 240;
+    for (let i = 0; i <= samples; i++) {
+      const x = x0 + span * i / samples;
       const y = yWave - Math.sin(2 * Math.PI * (x - x0) / lamPx) * amp;
       pts.push((i ? 'L' : 'M') + x.toFixed(1) + ' ' + y.toFixed(1));
     }
     n('path', { d: pts.join(' '), fill: 'none', stroke: C.blue, 'stroke-width': 3 });
 
-    // mark one wavelength if visible enough
     if (lamPx >= 36) {
       const ax = x0 + 8;
       const bx = ax + lamPx;
@@ -410,12 +436,12 @@ html.is-embed input[type=range]{min-height:38px}
   }
 
   $('frequency').addEventListener('input', () => {
-    const f = clampF(val('frequency'));
-    $('frequency-number').value = Math.round(f);
+    const f = sliderToFreq(val('frequency'));
+    syncControls(f);
     if (mode === 'hold') {
       applyLiveFreq(f);
       draw();
-      out('status', `持續發聲 ${Math.round(f).toLocaleString()} Hz`);
+      out('status', `持續發聲 ${Math.round(f).toLocaleString()} Hz｜λ ≈ ${formatLambda(lambdaM(f))}`);
       return;
     }
     if (mode === 'sweep') halt('已停止掃頻');
@@ -428,14 +454,14 @@ html.is-embed input[type=range]{min-height:38px}
       return;
     }
     if (mode === 'sweep') halt('已停止掃頻');
-    showFreq(f, true);
+    setFreqUI(f);
     if (mode === 'hold') applyLiveFreq(f);
   });
   document.querySelectorAll('.preset-row button').forEach(btn => {
     btn.addEventListener('click', () => {
       const f = Number(btn.dataset.f);
       if (mode === 'sweep') halt('已停止掃頻');
-      showFreq(f, true);
+      setFreqUI(f);
       if (mode === 'hold') applyLiveFreq(f);
     });
   });
@@ -453,6 +479,7 @@ html.is-embed input[type=range]{min-height:38px}
   });
 
   updateButtons();
+  syncControls(FMIN);
   new ResizeObserver(draw).observe(svg);
   draw();
   let sent = 0;
