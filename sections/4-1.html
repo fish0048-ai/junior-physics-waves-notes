@@ -287,86 +287,9 @@
       </ul>
       <p>量建築物高度時，也可對照人和人影：</p>
       <p class="formula">\[\dfrac{\text{建築物高}}{\text{建築物影長}}=\dfrac{\text{物體高}}{\text{物體影長}}\]</p>
-      <section class="ray-analysis">
-        <div class="ex-title"><span class="tag tag-cyan">圖解分析</span> 例：點光源、物體、影子（相似三角形）</div>
-        <ol class="ray-steps">
-          <li>從點光源畫直線擦過物體頂端，再打到紙屏 → 這就是影子的邊界。</li>
-          <li>兩個相似三角形：小的是「光源—物體」，大的是「光源—影子」。</li>
-          <li>例：光源到人 100 cm、人到牆 100 cm（光源到牆 200 cm），人身高 180 cm → 影高 \(=180\times\dfrac{200}{100}=360\,\mathrm{cm}\)。</li>
-        </ol>
-        <figure>
-          <svg class="diagram diagram-lg" viewBox="0 0 480 240" aria-label="點光源形成影子的相似三角形">
-            <rect width="480" height="240" rx="8" fill="#f8fafc"/>
-            <!-- 牆 -->
-            <line x1="420" y1="30" x2="420" y2="210" stroke="#334155" stroke-width="5"/>
-            <text x="448" y="120" text-anchor="middle" font-size="12" fill="#334155" font-weight="700" transform="rotate(90 448 120)">紙屏／牆</text>
-            <!-- 光源 -->
-            <circle cx="60" cy="50" r="14" fill="#fde68a" stroke="#a16207" stroke-width="2"/>
-            <text x="60" y="34" text-anchor="middle" font-size="12" fill="#a16207" font-weight="800">點光源</text>
-            <!-- 人 -->
-            <line x1="200" y1="200" x2="200" y2="110" stroke="#0f172a" stroke-width="4"/>
-            <circle cx="200" cy="98" r="10" fill="#fde68a" stroke="#a16207" stroke-width="1.6"/>
-            <text x="200" y="224" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="800">人 180 cm</text>
-            <!-- 光線 -->
-            <line x1="60" y1="50" x2="420" y2="30" stroke="#ea580c" stroke-width="1.6" stroke-dasharray="4 3"/>
-            <line x1="60" y1="50" x2="200" y2="98" stroke="#ea580c" stroke-width="2.2"/>
-            <line x1="200" y1="98" x2="420" y2="30" stroke="#ea580c" stroke-width="2.2"/>
-            <line x1="60" y1="50" x2="420" y2="200" stroke="#94a3b8" stroke-width="1.4"/>
-            <!-- 影子 -->
-            <line x1="420" y1="30" x2="420" y2="200" stroke="#64748b" stroke-width="10" opacity="0.35"/>
-            <text x="400" y="118" text-anchor="end" font-size="12" fill="#475569" font-weight="800">影高</text>
-            <text x="400" y="134" text-anchor="end" font-size="12" fill="#475569" font-weight="800">360 cm</text>
-            <!-- 距離 -->
-            <line x1="60" y1="208" x2="200" y2="208" stroke="#2563eb" stroke-width="1.5"/>
-            <text x="130" y="202" text-anchor="middle" font-size="11" fill="#1d4ed8" font-weight="700">100 cm</text>
-            <line x1="200" y1="208" x2="420" y2="208" stroke="#15803d" stroke-width="1.5"/>
-            <text x="310" y="202" text-anchor="middle" font-size="11" fill="#15803d" font-weight="700">100 cm</text>
-            <text x="240" y="22" text-anchor="middle" font-size="13" fill="#0f172a" font-weight="800">影子邊界＝擦過頭頂的光線</text>
-          </svg>
-          <p class="caption">光源到牆／光源到人＝影高／身高。人靠近燈 → 相似比變大 → 影子變大；人靠近牆 → 影子變小。</p>
-        </figure>
-      </section>
       <section class="tips">
         <div class="ex-title"><span class="tag tag-cyan">生活連結</span> 為什麼中午影子短、傍晚影子長？</div>
         <p>太陽高掛時，光線比較「從頭頂打下來」，人和影子構成的三角形比較瘦，影長較短。太陽靠近地平線時，光線斜斜打來，影子就被拉長。手影戲要把手靠近燈光，影子才會變大，也是同一套相似三角形。</p>
-      </section>
-      <section class="ray-analysis">
-        <div class="ex-title"><span class="tag tag-cyan">圖解分析</span> 例：太陽高度與影長</div>
-        <ol class="ray-steps">
-          <li>中午：陽光接近鉛直 → 人影三角形「瘦」→ <strong>影短</strong>。</li>
-          <li>傍晚：陽光斜斜打來 → 三角形「扁」→ <strong>影長</strong>。</li>
-          <li>同一個人、同一段陽光，影長隨入射方向改變；和「手影靠近燈」是同一套直進＋相似比。</li>
-        </ol>
-        <div class="two-col">
-          <figure>
-            <svg class="diagram" viewBox="0 0 260 180" aria-label="中午陽光接近鉛直，影子較短">
-              <rect width="260" height="180" rx="8" fill="#fff7ed"/>
-              <line x1="20" y1="150" x2="240" y2="150" stroke="#78716c" stroke-width="3"/>
-              <circle cx="100" cy="28" r="16" fill="#fbbf24"/>
-              <line x1="100" y1="48" x2="100" y2="150" stroke="#ea580c" stroke-width="2"/>
-              <line x1="100" y1="48" x2="150" y2="150" stroke="#ea580c" stroke-width="2"/>
-              <line x1="100" y1="70" x2="100" y2="150" stroke="#0f172a" stroke-width="4"/>
-              <circle cx="100" cy="60" r="8" fill="#fde68a" stroke="#a16207"/>
-              <line x1="100" y1="150" x2="150" y2="150" stroke="#64748b" stroke-width="8" opacity="0.4"/>
-              <text x="130" y="172" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="800">中午：影短</text>
-            </svg>
-            <p class="caption">陽光接近頭頂打下來</p>
-          </figure>
-          <figure>
-            <svg class="diagram" viewBox="0 0 260 180" aria-label="傍晚陽光斜射，影子較長">
-              <rect width="260" height="180" rx="8" fill="#fff7ed"/>
-              <line x1="20" y1="150" x2="240" y2="150" stroke="#78716c" stroke-width="3"/>
-              <circle cx="36" cy="70" r="16" fill="#fbbf24"/>
-              <line x1="52" y1="78" x2="100" y2="150" stroke="#ea580c" stroke-width="2"/>
-              <line x1="52" y1="78" x2="220" y2="150" stroke="#ea580c" stroke-width="2"/>
-              <line x1="100" y1="70" x2="100" y2="150" stroke="#0f172a" stroke-width="4"/>
-              <circle cx="100" cy="60" r="8" fill="#fde68a" stroke="#a16207"/>
-              <line x1="100" y1="150" x2="220" y2="150" stroke="#64748b" stroke-width="8" opacity="0.4"/>
-              <text x="130" y="172" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="800">傍晚：影長</text>
-            </svg>
-            <p class="caption">陽光斜斜打來，影子被拉長</p>
-          </figure>
-        </div>
       </section>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 點光源才好算</div>

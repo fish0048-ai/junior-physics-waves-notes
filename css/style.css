@@ -975,41 +975,6 @@ svg.math-graph text {
   }
 }
 
-/* 光線舉例：圖解分析（步驟＋SVG，讓學生具體化） */
-.ray-analysis {
-  margin: 12px 0 0;
-  padding: 12px 14px 10px;
-  background: linear-gradient(180deg, #f0f9ff, #fff);
-  border: 1px solid #bae6fd;
-  border-radius: 12px;
-}
-.ray-analysis > .ex-title {
-  margin: 0 0 8px;
-}
-.ray-analysis .ray-steps {
-  margin: 0 0 10px;
-  padding-left: 1.35em;
-}
-.ray-analysis .ray-steps li {
-  margin: 4px 0;
-  line-height: 1.5;
-  font-size: 14px;
-}
-.ray-analysis .ray-steps strong {
-  color: #075985;
-}
-.ray-analysis figure {
-  margin: 0;
-}
-.ray-analysis .caption {
-  margin: 4px 0 0;
-  font-size: 13px;
-  color: var(--muted);
-}
-.ray-analysis .two-col {
-  margin-top: 6px;
-}
-
 .ex-box {
   border-radius: 12px;
   padding: 12px 14px 10px;
@@ -2856,7 +2821,7 @@ html.is-immersive .brand > span:last-child {
     border-bottom: 0.8pt solid #166534;
   }
   body[data-page="book"] .cover-id input::placeholder { color: transparent; }
-  .card, .ex-box, .extra, .tips, .wrong-note, .gifted, .teacher, .drill-col, .drill-grid, .split, .two-col, .lab-step, .ray-analysis {
+  .card, .ex-box, .extra, .tips, .wrong-note, .gifted, .teacher, .drill-col, .drill-grid, .split, .two-col, .lab-step {
     break-inside: auto !important;
     page-break-inside: auto !important;
     box-shadow: none !important;
@@ -2914,16 +2879,6 @@ html.is-immersive .brand > span:last-child {
     padding: 3px 6px 2px;
     margin: 2mm 0 0;
     border-radius: 0;
-  }
-  .ray-analysis {
-    padding: 2px 6px;
-    margin: 1.5mm 0 0;
-    border-radius: 0;
-    background: #fff !important;
-  }
-  .ray-analysis .ray-steps li {
-    margin: 1px 0;
-    font-size: 9pt;
   }
   .extra,
   .tips,

@@ -107,42 +107,6 @@
         <div class="ex-title"><span class="tag tag-cyan">讀圖技巧</span> 入射角是跟誰夾的？</div>
         <p>國中最常錯：把「光線和鏡面的夾角」當成入射角。記住：<strong>入射角、反射角都是跟法線夾的角</strong>。法線一定垂直鏡面。所以「和鏡面夾 60°」→ 入射角＝30°。</p>
       </section>
-      <section class="ray-analysis">
-        <div class="ex-title"><span class="tag tag-cyan">圖解分析</span> 例：入射線與鏡面夾 60°</div>
-        <ol class="ray-steps">
-          <li>先畫<strong>法線</strong>（垂直鏡面的虛線）。</li>
-          <li>題目給的是「與鏡面夾 60°」→ 這是光線和鏡面的角，不是入射角。</li>
-          <li>入射角＝90°－60°＝<strong>30°</strong>（跟法線夾）。反射角也是 30°。</li>
-        </ol>
-        <figure>
-          <svg class="diagram" viewBox="0 0 400 230" aria-label="入射線與鏡面夾60度時入射角為30度">
-            <rect width="400" height="230" rx="8" fill="#f8fafc"/>
-            <line x1="40" y1="190" x2="360" y2="190" stroke="#334155" stroke-width="6"/>
-            <text x="200" y="218" text-anchor="middle" font-size="12" fill="#334155" font-weight="700">反射面</text>
-            <line x1="200" y1="190" x2="200" y2="36" stroke="#94a3b8" stroke-dasharray="5 4" stroke-width="2"/>
-            <text x="210" y="50" font-size="12" fill="#64748b" font-weight="700">法線</text>
-            <defs>
-              <marker id="ra60-in" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-                <path d="M0 1.2 L9 5 L0 8.8 z" fill="#ea580c"/>
-              </marker>
-              <marker id="ra60-out" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
-                <path d="M0 1.2 L9 5 L0 8.8 z" fill="#2563eb"/>
-              </marker>
-            </defs>
-            <!-- 入射：與法線 30° → 與鏡面 60° -->
-            <line x1="70" y1="115" x2="200" y2="190" stroke="#ea580c" stroke-width="2.6" marker-end="url(#ra60-in)"/>
-            <line x1="200" y1="190" x2="330" y2="115" stroke="#2563eb" stroke-width="2.6" marker-end="url(#ra60-out)"/>
-            <path d="M200 160 A 30 30 0 0 0 174 175" fill="none" stroke="#c2410c" stroke-width="1.6"/>
-            <text x="148" y="158" font-size="13" fill="#c2410c" font-weight="800">i＝30°</text>
-            <path d="M200 160 A 30 30 0 0 1 226 175" fill="none" stroke="#1d4ed8" stroke-width="1.6"/>
-            <text x="228" y="158" font-size="13" fill="#1d4ed8" font-weight="800">r＝30°</text>
-            <path d="M140 190 A 60 60 0 0 1 118 156" fill="none" stroke="#a16207" stroke-width="1.4" stroke-dasharray="3 3"/>
-            <text x="88" y="188" font-size="12" fill="#a16207" font-weight="700">與鏡面 60°</text>
-            <text x="200" y="28" text-anchor="middle" font-size="13" fill="#0f172a" font-weight="800">入射角跟法線夾，不是跟鏡面夾</text>
-          </svg>
-          <p class="caption">橘色＝入射線；藍色＝反射線。虛弧標「與鏡面 60°」，實弧標入射角／反射角 30°。</p>
-        </figure>
-      </section>
       <section class="wrong-note">
         <div class="ex-title"><span class="tag tag-rose">易錯提醒</span></div>
         <ul class="q">
@@ -286,87 +250,9 @@
           <li>電子鐘 21:51 的鏡像：數字左右對調，且只有 0、1、2、5、8 看起來仍像數字，所以實際時間是 12:15。</li>
         </ul>
       </section>
-      <section class="ray-analysis">
-        <div class="ex-title"><span class="tag tag-cyan">圖解分析</span> 例：人離鏡 3 m，人到像多遠？</div>
-        <ol class="ray-steps">
-          <li>物距 \(p=3\,\mathrm{m}\) → 像在鏡後，像距 \(q=p=3\,\mathrm{m}\)。</li>
-          <li>人到像＝物距＋像距＝\(3+3=6\,\mathrm{m}\)。</li>
-          <li>眼睛看到的是反射線反向延長相交的<strong>虛像</strong>（紙屏放鏡後接不到）。</li>
-        </ol>
-        <figure>
-          <svg class="diagram" viewBox="0 0 480 220" aria-label="平面鏡物距等於像距，人到像等於兩倍物距">
-            <rect width="480" height="220" rx="8" fill="#f8fafc"/>
-            <line x1="240" y1="28" x2="240" y2="200" stroke="#334155" stroke-width="5"/>
-            <text x="248" y="44" font-size="12" fill="#334155" font-weight="700">平面鏡</text>
-            <!-- 人 -->
-            <line x1="90" y1="70" x2="90" y2="170" stroke="#0f172a" stroke-width="3"/>
-            <circle cx="90" cy="58" r="12" fill="#fde68a" stroke="#a16207" stroke-width="2"/>
-            <text x="90" y="198" text-anchor="middle" font-size="13" fill="#0f172a" font-weight="800">人（物）</text>
-            <!-- 像（虛） -->
-            <line x1="390" y1="70" x2="390" y2="170" stroke="#64748b" stroke-width="3" stroke-dasharray="6 4"/>
-            <circle cx="390" cy="58" r="12" fill="none" stroke="#64748b" stroke-width="2" stroke-dasharray="4 3"/>
-            <text x="390" y="198" text-anchor="middle" font-size="13" fill="#64748b" font-weight="800">虛像</text>
-            <!-- 距離標 -->
-            <line x1="90" y1="178" x2="240" y2="178" stroke="#ea580c" stroke-width="1.8"/>
-            <line x1="90" y1="172" x2="90" y2="184" stroke="#ea580c"/>
-            <line x1="240" y1="172" x2="240" y2="184" stroke="#ea580c"/>
-            <text x="165" y="172" text-anchor="middle" font-size="13" fill="#c2410c" font-weight="800">物距 3 m</text>
-            <line x1="240" y1="178" x2="390" y2="178" stroke="#2563eb" stroke-width="1.8"/>
-            <line x1="390" y1="172" x2="390" y2="184" stroke="#2563eb"/>
-            <text x="315" y="172" text-anchor="middle" font-size="13" fill="#1d4ed8" font-weight="800">像距 3 m</text>
-            <line x1="90" y1="40" x2="390" y2="40" stroke="#15803d" stroke-width="1.6"/>
-            <line x1="90" y1="34" x2="90" y2="46" stroke="#15803d"/>
-            <line x1="390" y1="34" x2="390" y2="46" stroke="#15803d"/>
-            <text x="240" y="32" text-anchor="middle" font-size="13" fill="#15803d" font-weight="800">人到像＝6 m</text>
-            <!-- 光線示意 -->
-            <line x1="90" y1="80" x2="240" y2="120" stroke="#ea580c" stroke-width="1.8"/>
-            <line x1="240" y1="120" x2="140" y2="100" stroke="#2563eb" stroke-width="1.8"/>
-            <line x1="240" y1="120" x2="390" y2="80" stroke="#94a3b8" stroke-width="1.4" stroke-dasharray="5 4"/>
-            <text x="160" y="96" font-size="11" fill="#64748b">反向延長</text>
-          </svg>
-          <p class="caption">實線＝真實光線；鏡後虛線＝反射線反向延長。物距＝像距，人到像＝2×物距。</p>
-        </figure>
-      </section>
       <section class="tips">
         <div class="ex-title"><span class="tag tag-cyan">生活連結</span> 全身鏡至少要多高？</div>
         <p>國中常考：平面鏡大約只要身高的<strong>一半</strong>，就能看到全身（頭頂和腳的光線在鏡面中央附近反射進眼睛）。鏡子裂成好幾塊再拼回同一個平面，仍只成<strong>一個</strong>像，因為還是同一面平面鏡。</p>
-      </section>
-      <section class="ray-analysis">
-        <div class="ex-title"><span class="tag tag-cyan">圖解分析</span> 例：身高 \(h\)，全身鏡最短要多高？</div>
-        <ol class="ray-steps">
-          <li>看頭頂：頭頂 → 鏡 → 眼；撞鏡點在頭頂與眼的<strong>中點</strong>。</li>
-          <li>看腳尖：腳 → 鏡 → 眼；撞鏡點在腳與眼的<strong>中點</strong>。</li>
-          <li>兩點之間的鏡長 ≈ 身高的一半 \(h/2\)（離鏡遠近不改最短鏡長）。</li>
-        </ol>
-        <figure>
-          <svg class="diagram" viewBox="0 0 360 300" aria-label="全身鏡最短高度為身高一半的光線圖">
-            <rect width="360" height="300" rx="8" fill="#f8fafc"/>
-            <!-- 人：頭 y=40，眼 y=70，腳 y=260，身高跨度 220 -->
-            <line x1="70" y1="50" x2="70" y2="260" stroke="#0f172a" stroke-width="3.5"/>
-            <circle cx="70" cy="40" r="12" fill="#fde68a" stroke="#a16207" stroke-width="2"/>
-            <circle cx="70" cy="70" r="4" fill="#dc2626"/>
-            <text x="28" y="74" font-size="12" fill="#dc2626" font-weight="700">眼</text>
-            <text x="70" y="286" text-anchor="middle" font-size="13" fill="#0f172a" font-weight="800">人（身高 h）</text>
-            <!-- 鏡子：上緣約 (頭+眼)/2=55，下緣約 (腳+眼)/2=165，長度 110 = h/2 -->
-            <line x1="220" y1="55" x2="220" y2="165" stroke="#087fa4" stroke-width="8" stroke-linecap="round"/>
-            <text x="248" y="116" font-size="13" fill="#075985" font-weight="800">最短鏡長</text>
-            <text x="248" y="134" font-size="13" fill="#075985" font-weight="800">≈ h／2</text>
-            <!-- 頭頂光線 -->
-            <line x1="70" y1="40" x2="220" y2="55" stroke="#ea580c" stroke-width="2"/>
-            <line x1="220" y1="55" x2="70" y2="70" stroke="#2563eb" stroke-width="2"/>
-            <text x="150" y="38" font-size="11" fill="#c2410c" font-weight="700">頭頂→鏡</text>
-            <!-- 腳光線 -->
-            <line x1="70" y1="260" x2="220" y2="165" stroke="#ea580c" stroke-width="2"/>
-            <line x1="220" y1="165" x2="70" y2="70" stroke="#2563eb" stroke-width="2"/>
-            <text x="150" y="230" font-size="11" fill="#c2410c" font-weight="700">腳→鏡</text>
-            <!-- 標尺 -->
-            <line x1="300" y1="55" x2="300" y2="165" stroke="#15803d" stroke-width="1.6"/>
-            <line x1="294" y1="55" x2="306" y2="55" stroke="#15803d"/>
-            <line x1="294" y1="165" x2="306" y2="165" stroke="#15803d"/>
-            <text x="318" y="116" font-size="12" fill="#15803d" font-weight="700">h/2</text>
-          </svg>
-          <p class="caption">橘線＝往鏡走；藍線＝反射進眼。上、下撞鏡點之間就是「剛好夠看全身」的最短鏡面。</p>
-        </figure>
       </section>
       <section class="wrong-note">
         <div class="ex-title"><span class="tag tag-rose">易錯提醒</span></div>
