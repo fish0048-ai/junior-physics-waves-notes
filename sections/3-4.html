@@ -438,7 +438,7 @@
           <li><strong>音色：</strong>不同樂器奏同一個 Do，音調和響度可以相同，但聽起來不一樣，因為除了基頻，還有許多整數倍的<strong>泛音</strong>，組合不同。</li>
           <li><strong>八度：</strong>頻率變成 2 倍，音調升高一個八度。中央 C（262 Hz）到高音 Do（524 Hz）大約就是兩倍。</li>
           <li><strong>拍音：</strong>兩個很接近的頻率疊加，聲音會週期性忽大忽小。調吉他時，就是聽到拍音變慢、最後消失。拍音頻率＝兩頻率之差｜f₁－f₂｜。</li>
-          <li>分貝是對數標尺：大約每增加 10 dB，能量變成約 10 倍。120 dB 遠比 30 dB「大聲很多」，不是只多 4 倍。</li>
+          <li>分貝細節與比較題見<a href="#p2">重點 2 噪音</a>（差 10 dB ≈ 能量 10 倍）。</li>
         </ul>
       </section>
       <section class="gifted">
@@ -561,6 +561,11 @@
       </p>
 
       <h3 class="subh">分貝（聲音強度）</h3>
+      <p>
+        聲音強度常用
+        <input class="blank" data-answer="分貝|dB" style="width:3.6em">
+        （dB）表示。數字愈大，聲音能量通常愈大、聽起來愈響；但分貝是<strong>對數刻度</strong>，不是「多 10 分貝就多一點點」。
+      </p>
       <div class="db-scale">
         <div class="db-item"><strong>30 dB</strong>耳語／鐘聲<br>適於睡眠</div>
         <div class="db-item"><strong>50 dB</strong>洗衣機<br>適於學習</div>
@@ -568,21 +573,156 @@
         <div class="db-item"><strong>90 dB</strong>救護車警笛<br>干擾睡眠與工作效率</div>
         <div class="db-item"><strong>120 dB</strong>飛機起飛<br>疼痛／長期傷害聽力</div>
       </div>
+
+      <section class="tips">
+        <div class="ex-title"><span class="tag tag-cyan">段考必記</span> 分貝差 → 能量差幾倍？三步驟</div>
+        <ol class="q">
+          <li>先算<strong>分貝差</strong>：較大 − 較小。</li>
+          <li>把差<strong>除以 10</strong>，得到次方。</li>
+          <li>能量倍數＝\(10^{\text{（差／10）}}\)。口訣：差 10 → 10 倍；差 20 → 100 倍；差 30 → 1000 倍。</li>
+        </ol>
+        <p class="note">例：70 dB 相對 50 dB → 差 20 → \(10^{2}=100\) 倍。60 dB 相對 30 dB → 差 30 → \(10^{3}=1000\) 倍。</p>
+      </section>
+
+      <table>
+        <thead>
+          <tr><th>分貝差</th><th>能量約為幾倍</th><th>生活對照（約）</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>\(+3\,\mathrm{dB}\)</td>
+            <td>約 2 倍</td>
+            <td>兩台一樣吵的機器同時開</td>
+          </tr>
+          <tr>
+            <td>\(+10\,\mathrm{dB}\)</td>
+            <td>
+              <input class="blank" data-answer="10" style="width:3em">
+              倍
+            </td>
+            <td>70 dB 相對 60 dB</td>
+          </tr>
+          <tr>
+            <td>\(+20\,\mathrm{dB}\)</td>
+            <td>
+              <input class="blank" data-answer="100" style="width:3.5em">
+              倍
+            </td>
+            <td>70 dB 相對 50 dB；90 dB 相對 70 dB</td>
+          </tr>
+          <tr>
+            <td>\(+30\,\mathrm{dB}\)</td>
+            <td>
+              <input class="blank" data-answer="1000" style="width:4em">
+              倍
+            </td>
+            <td>60 dB 相對 30 dB；120 dB 相對 90 dB</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <figure>
+        <svg class="diagram diagram-lg" viewBox="0 0 520 220" aria-label="分貝對數刻度：每多10分貝能量約多10倍">
+          <rect width="520" height="220" rx="8" fill="#fff7ed"/>
+          <text x="260" y="24" text-anchor="middle" font-size="14" fill="#9a3412" font-weight="800">能量比較（以 30 dB 為 1 份）</text>
+          <!-- bars: relative height log-ish visual - use log scale heights for 1, 10, 100, 1000, 1e6, 1e9 -->
+          <!-- 30dB: 1, 40:10, 50:100, 60:1000, 70:1e4 - show selected -->
+          <text x="36" y="48" font-size="12" fill="#57534e" font-weight="700">能量</text>
+          <!-- 30 dB bar height 18 -->
+          <rect x="48" y="160" width="56" height="18" fill="#fdba74"/>
+          <text x="76" y="154" text-anchor="middle" font-size="12" fill="#9a3412" font-weight="800">1</text>
+          <text x="76" y="198" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="700">30</text>
+          <!-- 40 = 10 → h 36 -->
+          <rect x="128" y="142" width="56" height="36" fill="#fb923c"/>
+          <text x="156" y="136" text-anchor="middle" font-size="12" fill="#9a3412" font-weight="800">10</text>
+          <text x="156" y="198" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="700">40</text>
+          <!-- 50 = 100 → h 54 -->
+          <rect x="208" y="124" width="56" height="54" fill="#f97316"/>
+          <text x="236" y="118" text-anchor="middle" font-size="12" fill="#9a3412" font-weight="800">100</text>
+          <text x="236" y="198" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="700">50</text>
+          <!-- 60 = 1000 → h 72 -->
+          <rect x="288" y="106" width="56" height="72" fill="#ea580c"/>
+          <text x="316" y="100" text-anchor="middle" font-size="12" fill="#9a3412" font-weight="800">1000</text>
+          <text x="316" y="198" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="700">60</text>
+          <!-- 70 = 10000 → h 90 -->
+          <rect x="368" y="88" width="56" height="90" fill="#c2410c"/>
+          <text x="396" y="82" text-anchor="middle" font-size="11" fill="#9a3412" font-weight="800">10⁴</text>
+          <text x="396" y="198" text-anchor="middle" font-size="12" fill="#0f172a" font-weight="700">70</text>
+          <text x="260" y="214" text-anchor="middle" font-size="12" fill="#57534e">橫軸：分貝 (dB)　｜　每升高 10 dB，長條能量約 ×10</text>
+        </svg>
+        <p class="caption">圖是示意（高度沒有畫成真正對數座標），重點記：分貝差 10 → 能量約 10 倍，不是只「大聲一點」。</p>
+      </figure>
+
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 國中必記：噪音與分貝</div>
         <ul class="q">
           <li><strong>噪音</strong>：使人感到不舒服、不想聽的聲音（不一定要「很大聲」才算）。</li>
-          <li>段考常記：約 \(30\,\mathrm{dB}\) 耳語適於睡眠、\(70\,\mathrm{dB}\) 大聲談話開始干擾、\(120\,\mathrm{dB}\) 飛機起飛／疼痛附近。</li>
+          <li>段考常記生活刻度：約 \(30\,\mathrm{dB}\) 耳語適於睡眠、\(50\,\mathrm{dB}\) 適於學習、\(70\,\mathrm{dB}\) 大聲談話開始干擾、\(90\,\mathrm{dB}\) 警笛干擾睡眠／工作、\(120\,\mathrm{dB}\) 飛機起飛／疼痛附近。</li>
+          <li>聽力保護粗記：長期曝露約 \(85\,\mathrm{dB}\) 以上就要小心；演唱會、耳機開很大聲，短時間也可能傷聽力。</li>
           <li>雙層隔音窗中間接近<strong>真空</strong>：聲波缺介質，較難傳入室內；光是電磁波，仍看得過外面。</li>
         </ul>
       </section>
+
+      <section class="wrong-note">
+        <div class="ex-title"><span class="tag tag-rose">易錯提醒</span> 分貝題最常踩的坑</div>
+        <ul class="q">
+          <li>把分貝差當成「幾倍」：差 20 不是 20 倍，是 \(10^{2}=100\) 倍。</li>
+          <li>以為兩台機器同時開，分貝會變成兩倍（例如 70→140）：錯。能量約 ×2，分貝大約只多 <strong>3 dB</strong>。</li>
+          <li>以為 120 dB 只比 30 dB「大 4 倍」：差 90 → \(10^{9}\) 倍，差超多。</li>
+        </ul>
+      </section>
+
       <section class="gifted">
         <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 分貝是對數，不是加減</div>
         <ul class="q">
           <li>人耳對響度的感覺接近對數：能量變成 10 倍，大約才多 10 dB；能量變成 100 倍，大約多 20 dB。所以 80 dB 不是比 70 dB「多一點點」，能量大約是 10 倍。</li>
+          <li>公式（資優／電工常考）：強度比 \(\approx 10^{(\Delta L/10)}\)，其中 \(\Delta L\) 是分貝差。聲壓比則大約用 \(10^{(\Delta L/20)}\)（國中段考多半只考「能量／強度」那條）。</li>
           <li>兩台一樣吵的機器同時開，能量約加一倍，分貝大約只多 3 dB（不是變成兩倍分貝）。</li>
           <li>隔音窗中間抽成接近真空，是因為聲波需要介質；電磁波（光）仍穿得過，所以還是看得到外面。</li>
         </ul>
+      </section>
+
+      <section class="video-card no-print">
+        <div class="ex-title"><span class="tag tag-cyan">影片補充</span> 分貝差怎麼換成「幾倍」？</div>
+        <p class="video-lead">用考古題練三步驟：算差 → 除以 10 → 放進 \(10^{\ldots}\)。對照上面表格一起看。</p>
+        <div class="video-stage">
+          <div class="video-embed">
+            <iframe
+              src="https://www.youtube.com/embed/E7EUPeKuHNk"
+              title="分貝題秒殺：差除以10再當次方"
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              allowfullscreen
+              loading="lazy"
+              referrerpolicy="strict-origin-when-cross-origin"></iframe>
+          </div>
+          <aside class="video-qr" aria-label="手機掃碼觀看">
+            <img src="../img/videos/qr-E7EUPeKuHNk.png" width="112" height="112" alt="掃描開啟：分貝計算影片">
+            <span>手機掃碼觀看</span>
+            <a href="https://www.youtube.com/watch?v=E7EUPeKuHNk" target="_blank" rel="noopener">YouTube</a>
+          </aside>
+        </div>
+        <p class="caption">來源：橘子大叔　｜　台電考古題：70 對 50、60 對 30 等</p>
+      </section>
+
+      <section class="ex-box skill">
+        <div class="ex-title"><span class="tag tag-blue">小試身手</span> 分貝比較</div>
+        <p>1. 70 dB 的聲音強度約為 50 dB 的
+          <input class="blank" data-answer="100" style="width:3.5em">
+          倍。
+        </p>
+        <p>2. 60 dB 的聲音強度約為 30 dB 的
+          <input class="blank" data-answer="1000" style="width:4em">
+          倍。
+        </p>
+        <p>3. 分貝從 80 升到 90，能量大約變成原來的
+          <input class="blank" data-answer="10" style="width:3em">
+          倍。
+        </p>
+        <p>4. 兩台 70 dB 的機器同時開，總分貝大約變成
+          （A）140　（B）100　（C）73　（D）77
+          → <input class="blank" data-answer="C|(C)|73" style="width:3em">
+          。
+        </p>
       </section>
 
       <h3 class="subh">防制方法</h3>
@@ -617,15 +757,19 @@
         <p>2. 噪音的聲音強度單位為
           <input class="blank" data-answer="分貝|dB" style="width:3.6em">。
         </p>
-        <p>3. 長期下來，下列何者較<strong>不會</strong>對生理及心理產生不良影響？
+        <p>3. 90 dB 相對 70 dB，聲音強度大約是
+          <input class="blank" data-answer="100" style="width:3.5em">
+          倍。
+        </p>
+        <p>4. 長期下來，下列何者較<strong>不會</strong>對生理及心理產生不良影響？
           （A）大型造勢晚會的加油聲　（B）鄉村的蟲鳴聲　（C）抗議活動的汽笛聲　（D）婚喪喜慶的鞭炮聲
           → <input class="blank" data-answer="B|(B)" style="width:2.8em">
         </p>
-        <p>4. 噪音會干擾生活，下列何者<strong>並非</strong>噪音所造成？
+        <p>5. 噪音會干擾生活，下列何者<strong>並非</strong>噪音所造成？
           （A）影響學習　（B）干擾談話　（C）降低工作效率　（D）改善聽力
           → <input class="blank" data-answer="D|(D)" style="width:2.8em">
         </p>
-        <p>5. 具備下列何種性質的聲音最可能成為噪音？
+        <p>6. 具備下列何種性質的聲音最可能成為噪音？
           （A）音調高　（B）響度大　（C）聲速快　（D）音色美
           → <input class="blank" data-answer="B|(B)" style="width:2.8em">
         </p>
@@ -653,6 +797,8 @@
           <tr><td>吹管／敲管</td><td>吹：振氣柱（氣柱長→音調低）；敲：振水柱（水柱長→音調低）</td></tr>
           <tr><td>共振</td><td>固有頻率相同才會；共鳴箱開口相對效果較好</td></tr>
           <tr><td>噪音</td><td>令人不適的聲音；強度單位分貝</td></tr>
+          <tr><td>分貝比較</td><td>差 10 → 能量約 10 倍；差 20 → 100 倍；差 30 → 1000 倍</td></tr>
+          <tr><td>兩聲源同開</td><td>能量約 ×2，分貝約 +3（不是變成兩倍分貝）</td></tr>
           <tr><td>隔音窗</td><td>雙層玻璃中間真空</td></tr>
         </tbody>
       </table>
@@ -666,7 +812,7 @@
           <p>把「好聽／難聽」變成可觀察的波動量</p>
         </div>
       </div>
-      <p>樂音三要素：<strong>音調</strong>看頻率，<strong>響度</strong>看振幅，<strong>音色</strong>看波形。噪音波形不規則，常用分貝描述音量大小。防制噪音可從減少音源、阻隔傳播、保護耳朵三方面著手。</p>
+      <p>樂音三要素：<strong>音調</strong>看頻率，<strong>響度</strong>看振幅，<strong>音色</strong>看波形。噪音波形不規則，常用<strong>分貝</strong>描述音量：差 10 dB 約能量 10 倍。防制噪音可從減少音源、阻隔傳播、保護耳朵三方面著手。</p>
       <p class="inquiry-next">第 3 章問完「波傳什麼、聲音怎麼走」。下一章換成光：<a href="../ch4.html">光是彎著走，還是直直走？</a>　先用下面練習檢驗你的主張。</p>
     </article>
 
@@ -675,7 +821,7 @@
         <div class="badge">練</div>
         <div>
           <h2>綜合練習</h2>
-          <p>基本題 5 題　＋　進階題 5 題</p>
+          <p>基本題 5 題　＋　進階題 6 題</p>
         </div>
       </div>
       <p class="inquiry-ask"><strong>檢驗主張：</strong>做題時對照本節問題——音調、響度、音色各對應波動的哪個量？</p>
@@ -718,7 +864,13 @@
             <input class="blank" data-answer="響度大" style="width:4.2em">
             ，不是音調高或聲速快。
           </p>
-          <p>5. 隔音窗常用雙層玻璃，中間為
+          <p>5. 70 dB 相對 50 dB，聲音強度約
+            <input class="blank" data-answer="100" style="width:3.5em">
+            倍；兩台同吵機器同時開，分貝約多
+            <input class="blank" data-answer="3" style="width:2.4em">
+            （不是變兩倍）。
+          </p>
+          <p>6. 隔音窗常用雙層玻璃，中間為
             <input class="blank" data-answer="真空" style="width:3.6em">
             ，因為真空不能傳聲。
           </p>
