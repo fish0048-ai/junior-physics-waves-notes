@@ -60,7 +60,8 @@
   }
 
   function renderAll() {
-    const qs = data.questions.slice(0, 20);
+    const limit = Number(data.questionCount) > 0 ? Number(data.questionCount) : 20;
+    const qs = data.questions.slice(0, limit);
     listHost.innerHTML = qs.map(renderQuestion).join("");
     keyHost.innerHTML = qs.map(renderKeyRow).join("");
     const countEl = document.getElementById("recap-count");

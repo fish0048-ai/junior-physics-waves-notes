@@ -39,7 +39,7 @@ window.APP_CONFIG = {
     file: "recap-midterm.html",
     nav: "期中考總複習",
     title: "期中考總複習",
-    summary: "緒論～第 3 章　深度講義＋固定 20 題"
+    summary: "緒論～第 3 章　逐節深度講義＋固定 30 題"
   },
   sections: [
     {
