@@ -27,7 +27,8 @@ window.JPWN_BOOK_MANIFEST = {
         { id: "3-2", title: "聲波的產生與傳播", file: "sections/3-2.html" },
         { id: "3-3", title: "聲波的反射與超聲波", file: "sections/3-3.html" },
         { id: "3-4", title: "多變的聲音", file: "sections/3-4.html" },
-        { id: "recap-3", title: "章節總複習", file: "recap-ch3.html" }
+        { id: "recap-3", title: "章節總複習", file: "recap-ch3.html" },
+        { id: "midterm", title: "期中考總複習", file: "recap-midterm.html" }
       ]
     },
     {

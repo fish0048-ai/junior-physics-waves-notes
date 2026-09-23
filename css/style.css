@@ -1498,6 +1498,18 @@ details.is-exam-nav > a { margin-left: 18px; }
   padding: 2px 8px;
 }
 
+.section-card.is-midterm {
+  border-color: #fbbf24;
+  background: linear-gradient(135deg, #fffbeb 0%, #fff 55%);
+}
+.section-card.is-midterm:hover { border-color: #f59e0b; }
+.section-card.is-midterm small {
+  color: #d97706;
+  font-weight: 700;
+}
+.section-card.is-midterm strong { color: #b45309; }
+.section-card.is-midterm h2 { color: #92400e; }
+
 .section-card.is-recap {
   border-color: #a78bfa;
   background: linear-gradient(135deg, #faf5ff 0%, #fff 55%);

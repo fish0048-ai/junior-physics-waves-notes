@@ -295,6 +295,7 @@
     const sec = currentSection();
     const review = cfg.review;
     const recap = cfg.recap;
+    const midterm = cfg.midterm;
     const brandText = page === "cover"
       ? `${cfg.chapter?.grade || "八年級理化"}　講義封面`
       : page === "practice-home"
@@ -303,6 +304,8 @@
       ? `${cfg.chapter?.grade || "八年級理化"}　第 ${cfg.chapter?.id || ""} 章練習`
       : page === "review"
       ? `${cfg.chapter?.grade || "八年級理化"}　${review?.title || "章末評量"}`
+      : page === "recap" && currentId === "midterm"
+      ? `${cfg.chapter?.grade || "八年級理化"}　${midterm?.title || "期中考總複習"}`
       : page === "recap"
       ? `${cfg.chapter?.grade || "八年級理化"}　${recap?.title || "章節總複習"}`
       : page === "book"
@@ -378,8 +381,10 @@
 
     const reviewHref = review ? appendPracticeMode(url(review.file)) : "";
     const recapHref = recap ? appendPracticeMode(url(recap.file)) : "";
+    const midtermHref = midterm ? appendPracticeMode(url(midterm.file)) : "";
     const reviewLink = page === "cover" ? "" : (review ? `<a href="${reviewHref}" class="${page === "review" ? "is-on" : ""}">${review.nav || "章末評量"}</a>` : "");
-    const recapLink = page === "cover" ? "" : (recap ? `<a href="${recapHref}" class="${page === "recap" ? "is-on" : ""}">${recap.nav || "章節總複習"}</a>` : "");
+    const recapLink = page === "cover" ? "" : (recap ? `<a href="${recapHref}" class="${page === "recap" && currentId !== "midterm" ? "is-on" : ""}">${recap.nav || "章節總複習"}</a>` : "");
+    const midtermLink = page === "cover" ? "" : (midterm ? `<a href="${midtermHref}" class="${page === "recap" && currentId === "midterm" ? "is-on" : ""}">${midterm.nav || "期中考總複習"}</a>` : "");
 
     const examNav = examLinks ? `
       <details class="section-nav is-exam-nav no-print" ${siteMode === "practice" ? "open" : ""} aria-label="段考前練習">
@@ -398,6 +403,7 @@
         <a href="${chapterHomeHref}" class="${page === "home" || page === "practice-chapter" ? "is-on" : ""}">${siteMode === "practice" ? "本章練習" : "目錄"}</a>
         ${sectionLinks}
         ${recapLink}
+        ${midtermLink}
         ${reviewLink}
       </details>
       ${examNav}
@@ -580,6 +586,15 @@
         <h2>${cfg.recap.title}</h2>
         <p>${cfg.recap.summary || ""}</p>
       </a>
+    ` : "") + (cfg.midterm ? `
+      <a class="section-card is-midterm" href="${appendPracticeMode(url(cfg.midterm.file))}">
+        <div class="section-card-top">
+          <strong>期中考</strong>
+          <small>緒～第3章</small>
+        </div>
+        <h2>${cfg.midterm.title}</h2>
+        <p>${cfg.midterm.summary || ""}</p>
+      </a>
     ` : "") + (cfg.review ? `
       <a class="section-card is-exam" href="${appendPracticeMode(url(cfg.review.file))}">
         <div class="section-card-top">
@@ -625,6 +640,15 @@
         </div>
         <h2>${cfg.recap.title}</h2>
         <p>${cfg.recap.summary || ""}</p>
+      </a>
+    ` : "") + (cfg.midterm ? `
+      <a class="section-card is-midterm" href="${url(cfg.midterm.file)}">
+        <div class="section-card-top">
+          <strong>期中考</strong>
+          <small>緒～第3章</small>
+        </div>
+        <h2>${cfg.midterm.title}</h2>
+        <p>${cfg.midterm.summary || ""}</p>
       </a>
     ` : "") + (cfg.review ? `
       <a class="section-card is-exam" href="${appendPracticeMode(url(cfg.review.file))}">

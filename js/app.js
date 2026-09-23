@@ -457,6 +457,8 @@
       ? "講義"
       : pageType === "home"
       ? "目錄"
+      : pageType === "recap" && (document.body.dataset.section || "") === "midterm"
+      ? "期中考總複習"
       : pageType === "recap"
       ? "章節總複習"
       : pageType === "exam" || pageType === "review"

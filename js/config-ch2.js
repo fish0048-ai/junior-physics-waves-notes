@@ -34,6 +34,13 @@ window.APP_CONFIG = {
     title: "第 2 章總複習",
     summary: "深度複習講義　＋　固定 20 題練習"
   },
+  midterm: {
+    id: "midterm",
+    file: "recap-midterm.html",
+    nav: "期中考總複習",
+    title: "期中考總複習",
+    summary: "緒論～第 3 章　深度講義＋固定 20 題"
+  },
   sections: [
     {
       id: "2-1",
