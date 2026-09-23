@@ -388,6 +388,16 @@
   }
 
   function check() {
+    const recapBtn = document.getElementById("recap-check");
+    if (recapBtn) {
+      recapBtn.click();
+      return;
+    }
+    const examBtn = document.getElementById("exam-check");
+    if (examBtn) {
+      examBtn.click();
+      return;
+    }
     if ($$("input.blank").length) {
       let ok = 0;
       let total = 0;
@@ -447,6 +457,8 @@
       ? "講義"
       : pageType === "home"
       ? "目錄"
+      : pageType === "recap"
+      ? "章節總複習"
       : pageType === "exam" || pageType === "review"
       ? "段考練習"
       : "講義";

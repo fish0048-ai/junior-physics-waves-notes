@@ -27,6 +27,13 @@ window.APP_CONFIG = {
     title: "第 6 章複習評量",
     summary: "題庫 120 題，抽出 40 題　四選一"
   },
+  recap: {
+    id: "ch-6",
+    file: "recap-ch6.html",
+    nav: "章節總複習",
+    title: "第 6 章總複習",
+    summary: "深度複習講義　＋　固定 20 題練習"
+  },
   sections: [
     {
       id: "6-1",

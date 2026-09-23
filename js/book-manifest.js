@@ -7,7 +7,8 @@ window.JPWN_BOOK_MANIFEST = {
       files: [
         { id: "1-0", title: "進入實驗室與科學方法", file: "sections/1-0.html" },
         { id: "1-1", title: "長度與體積的測量", file: "sections/1-1.html" },
-        { id: "1-2", title: "質量與密度的測量", file: "sections/1-2.html" }
+        { id: "1-2", title: "質量與密度的測量", file: "sections/1-2.html" },
+        { id: "recap-1", title: "章節總複習", file: "recap-ch1.html" }
       ]
     },
     {
@@ -15,7 +16,8 @@ window.JPWN_BOOK_MANIFEST = {
       files: [
         { id: "2-1", title: "認識物質", file: "sections/2-1.html" },
         { id: "2-2", title: "水溶液", file: "sections/2-2.html" },
-        { id: "2-3", title: "空氣的組成", file: "sections/2-3.html" }
+        { id: "2-3", title: "空氣的組成", file: "sections/2-3.html" },
+        { id: "recap-2", title: "章節總複習", file: "recap-ch2.html" }
       ]
     },
     {
@@ -24,7 +26,8 @@ window.JPWN_BOOK_MANIFEST = {
         { id: "3-1", title: "波的傳播", file: "sections/3-1.html" },
         { id: "3-2", title: "聲波的產生與傳播", file: "sections/3-2.html" },
         { id: "3-3", title: "聲波的反射與超聲波", file: "sections/3-3.html" },
-        { id: "3-4", title: "多變的聲音", file: "sections/3-4.html" }
+        { id: "3-4", title: "多變的聲音", file: "sections/3-4.html" },
+        { id: "recap-3", title: "章節總複習", file: "recap-ch3.html" }
       ]
     },
     {
@@ -34,7 +37,8 @@ window.JPWN_BOOK_MANIFEST = {
         { id: "4-2", title: "光的反射與面鏡", file: "sections/4-2.html" },
         { id: "4-3", title: "光的折射與透鏡", file: "sections/4-3.html" },
         { id: "4-4", title: "光學儀器", file: "sections/4-4.html" },
-        { id: "4-5", title: "光與顏色", file: "sections/4-5.html" }
+        { id: "4-5", title: "光與顏色", file: "sections/4-5.html" },
+        { id: "recap-4", title: "章節總複習", file: "recap-ch4.html" }
       ]
     },
     {
@@ -43,7 +47,8 @@ window.JPWN_BOOK_MANIFEST = {
         { id: "5-1", title: "溫度與溫度計", file: "sections/5-1.html" },
         { id: "5-2", title: "熱量與比熱", file: "sections/5-2.html" },
         { id: "5-3", title: "熱對物質的影響", file: "sections/5-3.html" },
-        { id: "5-4", title: "熱的傳播方式", file: "sections/5-4.html" }
+        { id: "5-4", title: "熱的傳播方式", file: "sections/5-4.html" },
+        { id: "recap-5", title: "章節總複習", file: "recap-ch5.html" }
       ]
     },
     {
@@ -52,7 +57,8 @@ window.JPWN_BOOK_MANIFEST = {
         { id: "6-1", title: "元素的探索", file: "sections/6-1.html" },
         { id: "6-2", title: "元素週期表", file: "sections/6-2.html" },
         { id: "6-3", title: "化合物與原子概念的發展", file: "sections/6-3.html" },
-        { id: "6-4", title: "分子與化學式", file: "sections/6-4.html" }
+        { id: "6-4", title: "分子與化學式", file: "sections/6-4.html" },
+        { id: "recap-6", title: "章節總複習", file: "recap-ch6.html" }
       ]
     }
   ],

@@ -49,7 +49,7 @@
         return q;
       }
       const saved = localStorage.getItem(LS_MODE);
-      if ((page === "exam" || page === "review") && (saved === "practice" || saved === "lecture")) return saved;
+      if ((page === "exam" || page === "review" || page === "recap") && (saved === "practice" || saved === "lecture")) return saved;
     } catch (err) { /* ignore */ }
     return "lecture";
   }
@@ -294,6 +294,7 @@
     if (!host) return;
     const sec = currentSection();
     const review = cfg.review;
+    const recap = cfg.recap;
     const brandText = page === "cover"
       ? `${cfg.chapter?.grade || "八年級理化"}　講義封面`
       : page === "practice-home"
@@ -302,6 +303,8 @@
       ? `${cfg.chapter?.grade || "八年級理化"}　第 ${cfg.chapter?.id || ""} 章練習`
       : page === "review"
       ? `${cfg.chapter?.grade || "八年級理化"}　${review?.title || "章末評量"}`
+      : page === "recap"
+      ? `${cfg.chapter?.grade || "八年級理化"}　${recap?.title || "章節總複習"}`
       : page === "book"
       ? `${cfg.chapter?.grade || "八年級理化"}　整本講義`
       : page === "exam" && sec
@@ -309,7 +312,7 @@
       : sec
       ? `${cfg.chapter?.grade || "八年級理化"}　${sec.id} ${sec.title}`
       : `${cfg.chapter?.grade || "八年級理化"}　${thisChapterNav()}`;
-    const checkBtn = (page === "review" || page === "exam")
+    const checkBtn = (page === "review" || page === "exam" || page === "recap")
       ? `<button class="btn btn-ghost" id="btn-check" type="button">檢查作答</button>`
       : "";
     const bookLink = (page === "book" || siteMode === "practice")
@@ -326,6 +329,11 @@
          <button class="btn btn-ghost" id="btn-answers-all" type="button" title="一次揭開本頁全部挖空與參考主張">全頁答案</button>
          <button class="btn btn-orange" id="btn-pdf" type="button">下載整本 PDF</button>
          <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>`
+      : page === "recap"
+      ? `${checkBtn}
+         <button class="btn btn-orange" id="btn-pdf" type="button">下載 PDF</button>
+         <button class="btn btn-ghost" id="btn-pdf-key" type="button">下載含答案 PDF</button>
+         ${bookLink}`
       : (page === "section" || page === "review" || page === "exam")
       ? `<button class="btn btn-green" id="btn-answers" type="button" title="只揭目前這張重點卡／主張卡的答案">顯示本卡答案</button>
          <button class="btn btn-ghost" id="btn-answers-all" type="button" title="一次揭開本頁全部挖空與參考主張">全頁答案</button>
@@ -369,7 +377,9 @@
         `).join("");
 
     const reviewHref = review ? appendPracticeMode(url(review.file)) : "";
+    const recapHref = recap ? appendPracticeMode(url(recap.file)) : "";
     const reviewLink = page === "cover" ? "" : (review ? `<a href="${reviewHref}" class="${page === "review" ? "is-on" : ""}">${review.nav || "章末評量"}</a>` : "");
+    const recapLink = page === "cover" ? "" : (recap ? `<a href="${recapHref}" class="${page === "recap" ? "is-on" : ""}">${recap.nav || "章節總複習"}</a>` : "");
 
     const examNav = examLinks ? `
       <details class="section-nav is-exam-nav no-print" ${siteMode === "practice" ? "open" : ""} aria-label="段考前練習">
@@ -387,6 +397,7 @@
         <summary class="section-nav-summary">${siteMode === "practice" ? "練習目錄" : thisChapterNav()}</summary>
         <a href="${chapterHomeHref}" class="${page === "home" || page === "practice-chapter" ? "is-on" : ""}">${siteMode === "practice" ? "本章練習" : "目錄"}</a>
         ${sectionLinks}
+        ${recapLink}
         ${reviewLink}
       </details>
       ${examNav}
@@ -560,7 +571,16 @@
         <h2>${s.title}</h2>
         <p>${s.summary || "四選一　段考程度"}</p>
       </a>
-    `).join("") + (cfg.review ? `
+    `).join("") + (cfg.recap ? `
+      <a class="section-card is-recap" href="${appendPracticeMode(url(cfg.recap.file))}">
+        <div class="section-card-top">
+          <strong>總複習</strong>
+          <small>深度講義</small>
+        </div>
+        <h2>${cfg.recap.title}</h2>
+        <p>${cfg.recap.summary || ""}</p>
+      </a>
+    ` : "") + (cfg.review ? `
       <a class="section-card is-exam" href="${appendPracticeMode(url(cfg.review.file))}">
         <div class="section-card-top">
           <strong>章末</strong>
@@ -597,11 +617,20 @@
         <h2>${s.title}</h2>
         <p>四選一　較難段考程度</p>
       </a>
-    `).join("") + (cfg.review ? `
+    `).join("") + (cfg.recap ? `
+      <a class="section-card is-recap" href="${url(cfg.recap.file)}">
+        <div class="section-card-top">
+          <strong>總複習</strong>
+          <small>深度講義</small>
+        </div>
+        <h2>${cfg.recap.title}</h2>
+        <p>${cfg.recap.summary || ""}</p>
+      </a>
+    ` : "") + (cfg.review ? `
       <a class="section-card is-exam" href="${appendPracticeMode(url(cfg.review.file))}">
         <div class="section-card-top">
           <strong>章末</strong>
-          <small>全章複習</small>
+          <small>評量練習</small>
         </div>
         <h2>${cfg.review.title}</h2>
         <p>${cfg.review.summary || ""}</p>

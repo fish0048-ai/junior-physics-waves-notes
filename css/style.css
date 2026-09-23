@@ -1498,6 +1498,18 @@ details.is-exam-nav > a { margin-left: 18px; }
   padding: 2px 8px;
 }
 
+.section-card.is-recap {
+  border-color: #a78bfa;
+  background: linear-gradient(135deg, #faf5ff 0%, #fff 55%);
+}
+.section-card.is-recap:hover { border-color: #8b5cf6; }
+.section-card.is-recap small {
+  color: #7c3aed;
+  font-weight: 700;
+}
+.section-card.is-recap strong { color: #6d28d9; }
+.section-card.is-recap h2 { color: #5b21b6; }
+
 .section-card.is-exam {
   grid-column: 1 / -1;
   background: linear-gradient(120deg, #fff7ed, #fff);
@@ -1983,8 +1995,54 @@ details.is-exam-nav > a { margin-left: 18px; }
   color: var(--muted);
 }
 
+/* 章節總複習 */
+.recap-sheet .recap-sec {
+  display: inline-block;
+  font-size: 0.78em;
+  font-weight: 600;
+  color: var(--muted);
+  margin-right: 0.35em;
+}
+.recap-key-section {
+  display: none;
+  margin-top: 24px;
+  border-top: 2px solid var(--line);
+  padding-top: 16px;
+}
+body.recap-key-visible .recap-key-section,
+body.is-printing .recap-key-section {
+  display: block;
+}
+.recap-key-row {
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+}
+.recap-key-row:last-child { border-bottom: none; }
+.recap-key-head {
+  font-size: 0.95rem;
+  margin-bottom: 4px;
+}
+.recap-ans {
+  display: inline-block;
+  min-width: 1.4em;
+  text-align: center;
+  font-weight: 800;
+  color: var(--green);
+}
+.recap-key-explain {
+  font-size: 0.92rem;
+  color: var(--ink-soft);
+  line-height: 1.55;
+}
+.recap-sheet #recap-list {
+  display: grid;
+  gap: 10px;
+}
+.recap-sheet .recap-q .exam-choice input { margin-right: 6px; }
+
 @media (min-width: 720px) {
-  .exam-sheet .exam-choices {
+  .exam-sheet .exam-choices,
+  .recap-sheet .exam-choices {
     grid-template-columns: 1fr 1fr;
   }
 }
@@ -3177,6 +3235,63 @@ html.is-immersive .brand > span:last-child {
     margin: 2px 0 0;
     border-radius: 0;
   }
+
+  .recap-sheet .hero {
+    background: none !important;
+    color: #111 !important;
+    box-shadow: none;
+    padding: 0 0 2px;
+    margin: 0 0 3px;
+    border-bottom: 0.5pt solid #333;
+    border-radius: 0;
+  }
+  .recap-sheet .hero h1 { font-size: 12pt; margin: 0; color: #111 !important; }
+  .recap-sheet .hero .kicker,
+  .recap-sheet .hero p { display: none; }
+  .recap-sheet .card { padding: 0; margin: 0 0 3mm; border: none; }
+  .recap-sheet .section-head { margin: 0 0 3px; padding-bottom: 2px; }
+  .recap-sheet .section-head h2 { font-size: 11pt; }
+  .recap-sheet .section-head p { font-size: 8pt; }
+  .recap-sheet .badge { display: none; }
+  .recap-sheet #recap-list {
+    column-count: 2;
+    column-gap: 5mm;
+    column-rule: 0.3pt solid #ccc;
+  }
+  .recap-sheet .recap-q {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 2px 3px 3px;
+    margin: 0 0 2.2mm;
+    border: 0.3pt solid #bbb;
+    background: #fff !important;
+  }
+  .recap-sheet .recap-q .exam-stem { font-size: 9pt; line-height: 1.22; }
+  .recap-sheet .recap-q .exam-choice { font-size: 8pt; border: none !important; }
+  .recap-sheet .recap-q .exam-choice input { display: none !important; }
+  .recap-sheet .recap-key-section {
+    display: block !important;
+    page-break-before: always;
+    break-before: page;
+    border-top: 0.5pt solid #333;
+    padding-top: 3mm;
+    margin-top: 4mm;
+  }
+  .recap-sheet .recap-key-row {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    padding: 1.5mm 0;
+    border-bottom: 0.3pt solid #ddd;
+    font-size: 8.5pt;
+  }
+  .recap-sheet .recap-key-explain { font-size: 8pt; line-height: 1.25; }
+  .recap-sheet .extra,
+  .recap-sheet .gifted,
+  .recap-sheet .tips,
+  .recap-sheet .wrong-note { font-size: 8.5pt; padding: 2mm 3mm; margin: 1.5mm 0; }
+  .recap-sheet .formula { font-size: 9pt; margin: 1.5mm 0; }
+  .recap-sheet .overview { font-size: 8.5pt; }
+
   /* 緊湊頁邊；頁碼用 @bottom-center（支援的引擎會逐張遞增） */
   @page {
     size: A4;
