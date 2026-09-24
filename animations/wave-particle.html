@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>波向右傳，質點上下振動｜3-1</title>
+<title>æ³¢å??³å³ï¼è³ªé»ä?ä¸æ¯?ï?3-1</title>
 <style>
 *{box-sizing:border-box}
 html,body{margin:0;background:#f6f8fa;color:#182e42;font-family:system-ui,-apple-system,"Noto Sans TC","Microsoft JhengHei",sans-serif;line-height:1.45}
@@ -52,19 +52,19 @@ summary{cursor:pointer;min-height:28px;padding:4px 0;font-weight:600}
 <script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script>
 <main id="wave-app">
 <header>
-  <small>3-1 波的傳播 · 互動觀察</small>
-  <h1>波往右走，紅點去哪裡？</h1>
-  <p>先盯住紅點，再追蹤金色圓環標記的波峰。</p>
+  <small>3-1 æ³¢ç??³æ­ Â· äºå?è§å¯?/small>
+  <h1>æ³¢å??³èµ°ï¼ç?é»å»?ªè£¡ï¼?/h1>
+  <p>?ç¯ä½ç?é»ï??è¿½è¹¤é??²å??°æ?è¨ç?æ³¢å³°??/p>
 </header>
-<section class="stage" aria-label="繩波觀察區">
+<section class="stage" aria-label="ç¹©æ³¢è§å¯å?">
   <div class="legend">
-    <span><i class="line"></i>繩上的波形</span>
-    <span><i class="dot"></i>紅點：繩上的同一質點</span>
-    <span><i class="ring"></i>圓環：追蹤波峰</span>
+    <span><i class="line"></i>ç¹©ä??æ³¢å½?/span>
+    <span><i class="dot"></i>ç´é?ï¼ç¹©ä¸ç??ä?è³ªé?</span>
+    <span><i class="ring"></i>?ç°ï¼è¿½è¹¤æ³¢å³?/span>
   </div>
   <svg id="scene" role="img" aria-labelledby="scene-title scene-desc">
-    <title id="scene-title">向右傳播的繩波</title>
-    <desc id="scene-desc">藍色波形與金色波峰向右移動；紅色質點的水平位置固定，只上下振動。虛線標記紅點所在的固定水平位置。</desc>
+    <title id="scene-title">?å³?³æ­?ç¹©æ³?/title>
+    <desc id="scene-desc">?è²æ³¢å½¢?é??²æ³¢å³°å??³ç§»?ï?ç´è²è³ªé??æ°´å¹³ä?ç½®åºå®ï??ªä?ä¸æ¯?ãè?ç·æ?è¨ç?é»æ??¨ç??ºå?æ°´å¹³ä½ç½®??/desc>
     <defs>
       <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
         <path d="M0 0L10 5L0 10Z" fill="#087fa4"/>
@@ -73,37 +73,37 @@ summary{cursor:pointer;min-height:28px;padding:4px 0;font-weight:600}
     <g id="drawing"></g>
   </svg>
   <div class="readout">
-    <span>紅點水平位置：<strong>固定不變</strong></span>
-    <span id="motion">紅點：向上</span>
-    <span id="clock">經過 0.00 T</span>
+    <span>ç´é?æ°´å¹³ä½ç½®ï¼?strong>?ºå?ä¸è?</strong></span>
+    <span id="motion">ç´é?ï¼å?ä¸?/span>
+    <span id="clock">ç¶é? 0.00 T</span>
   </div>
 </section>
 <div class="controls">
-  <button id="play" class="primary" type="button">播放</button>
-  <button id="step" type="button">前進 ¼ 週期</button>
-  <button id="reset" type="button">重設</button>
-  <label for="speed">播放速度
+  <button id="play" class="primary" type="button">?­æ¾</button>
+  <button id="step" type="button">?é?Â¼ ?±æ?</button>
+  <button id="reset" type="button">?è¨­</button>
+  <label for="speed">?­æ¾?åº¦
     <select id="speed">
-      <option value="0.25">¼ 倍慢速</option>
-      <option value="0.5">½ 倍慢速</option>
-      <option value="1" selected>正常速度</option>
+      <option value="0.25">Â¼ ?æ¢??/option>
+      <option value="0.5">Â½ ?æ¢??/option>
+      <option value="1" selected>æ­?¸¸?åº¦</option>
     </select>
   </label>
-  <span id="state" role="status" aria-live="polite">已暫停，可拖動時間</span>
+  <span id="state" role="status" aria-live="polite">å·²æ«?ï??¯æ??æ???/span>
 </div>
 <div class="timeline">
-  <label for="time"><span>拖動時間觀察</span><span>0 → 2 週期</span></label>
-  <input id="time" type="range" min="0" max="2" step="0.005" value="0" aria-label="經過時間，單位為週期">
+  <label for="time"><span>?å??é?è§å¯?/span><span>0 ??2 ?±æ?</span></label>
+  <input id="time" type="range" min="0" max="2" step="0.005" value="0" aria-label="ç¶é??é?ï¼å®ä½çº?±æ?">
 </div>
 <div class="hint">
-  <p><b>觀察任務：</b>前進一個週期後，紅點是否回到原位？同一個波峰又往哪裡去了？</p>
+  <p><b>è§å¯ä»»?ï?</b>?é²ä??é±æ?å¾ï?ç´é??¯å¦?å°?ä?ï¼å?ä¸?æ³¢å³°å?å¾?ªè£¡?»ä?ï¼?/p>
   <details>
-    <summary>看觀察結論</summary>
-    <p>紅點上下振動一次後回到原位；同一個波峰向右移動一個波長。<b>波的傳播方向向右，介質振動方向上下，兩者垂直，因此這是橫波。</b></p>
-    <p class="answer">在這個理想繩波模型中，波傳遞能量，繩上的質點不隨波向右搬移。</p>
+    <summary>?è?å¯ç?è«?/summary>
+    <p>ç´é?ä¸ä??¯å?ä¸æ¬¡å??å°?ä?ï¼å?ä¸?æ³¢å³°å??³ç§»?ä??æ³¢?·ã?b>æ³¢ç??³æ­?¹å??å³ï¼ä?è³ªæ¯?æ¹?ä?ä¸ï??©èå??´ï?? æ­¤?æ¯æ©«æ³¢??/b></p>
+    <p class="answer">?¨éåç??³ç¹©æ³¢æ¨¡?ä¸­ï¼æ³¢?³é??½é?ï¼ç¹©ä¸ç?è³ªé?ä¸é¨æ³¢å??³æ¬ç§»ã?/p>
   </details>
 </div>
-<p class="note">理想化繩波示意，忽略阻尼與端點反射。金色圓環標記波形的波峰，不是同一顆粒子。T 表示一次完整振動所需的時間；播放速度只調整觀看快慢。播放至 2T 會自動暫停。</p>
+<p class="note">?æ³?ç¹©æ³¢ç¤º?ï?å¿½ç¥?»å°¼?ç«¯é»å?å°ãé??²å??°æ?è¨æ³¢å½¢ç?æ³¢å³°ï¼ä??¯å?ä¸é¡ç?å­ãT è¡¨ç¤ºä¸æ¬¡å??´æ¯?æ???æ??ï??­æ¾?åº¦?ªèª¿?´è??å¿«?¢ãæ­?¾è³ 2T ?èª?æ«?ã?/p>
 </main>
 <script>
 (() => {
@@ -140,7 +140,7 @@ summary{cursor:pointer;min-height:28px;padding:4px 0;font-weight:600}
     el('line', { x1: left, y1: cy, x2: right, y2: cy, stroke: '#a7b9c6', 'stroke-dasharray': '5 5' });
     el('line', { x1: x0, y1: cy - amp - 16, x2: x0, y2: cy + amp + 16, stroke: '#df9ca8', 'stroke-dasharray': '4 4' });
     el('line', { x1: left + 8, y1: 22, x2: right - 8, y2: 22, stroke: '#087fa4', 'stroke-width': 2, 'marker-end': 'url(#arrow)' });
-    el('text', { x: w / 2, y: 14, 'text-anchor': 'middle' }, '波的傳播方向 →');
+    el('text', { x: w / 2, y: 14, 'text-anchor': 'middle' }, 'æ³¢ç??³æ­?¹å? ??);
     let d = '';
     for (let x = left; x <= right; x += 2) d += (d ? 'L' : 'M') + x.toFixed(2) + ' ' + y(x).toFixed(2) + ' ';
     d += 'L' + right + ' ' + y(right);
@@ -152,19 +152,19 @@ summary{cursor:pointer;min-height:28px;padding:4px 0;font-weight:600}
     const peakX = x0 + lambda * (phase - 0.25);
     el('circle', { cx: peakX, cy: cy - amp, r: 7.5, fill: '#fff8e7', stroke: '#bb760c', 'stroke-width': 2.2 });
     el('circle', { cx: x0, cy: y(x0), r: 7, fill: '#d52b47', stroke: 'white', 'stroke-width': 2 });
-    el('text', { x: x0, y: Math.min(h - 6, cy + amp + 28), 'text-anchor': 'middle' }, '固定水平位置');
+    el('text', { x: x0, y: Math.min(h - 6, cy + amp + 28), 'text-anchor': 'middle' }, '?ºå?æ°´å¹³ä½ç½®');
     $('motion').textContent = Math.abs(Math.cos(tau * phase)) < 0.0001
-      ? '紅點：轉折點（瞬間靜止）'
-      : (Math.cos(tau * phase) > 0 ? '紅點：向上 ↑' : '紅點：向下 ↓');
-    $('clock').textContent = `經過 ${phase.toFixed(2)} T`;
+      ? 'ç´é?ï¼è??é?ï¼ç¬?é?æ­¢ï?'
+      : (Math.cos(tau * phase) > 0 ? 'ç´é?ï¼å?ä¸??? : 'ç´é?ï¼å?ä¸???);
+    $('clock').textContent = `ç¶é? ${phase.toFixed(2)} T`;
     slider.value = phase;
-    slider.setAttribute('aria-valuetext', `${phase.toFixed(2)} 個週期`);
+    slider.setAttribute('aria-valuetext', `${phase.toFixed(2)} ?é±æ?`);
   }
 
-  function stop(message = '已暫停，可拖動時間') {
+  function stop(message = 'å·²æ«?ï??¯æ??æ???) {
     running = false;
     last = null;
-    play.textContent = phase >= 2 ? '重新播放' : '播放';
+    play.textContent = phase >= 2 ? '?æ°?­æ¾' : '?­æ¾';
     $('state').textContent = message;
   }
 
@@ -173,24 +173,24 @@ summary{cursor:pointer;min-height:28px;padding:4px 0;font-weight:600}
     if (phase >= 2) phase = 0;
     running = true;
     last = null;
-    play.textContent = '暫停';
-    $('state').textContent = '播放中';
+    play.textContent = '?«å?';
+    $('state').textContent = '?­æ¾ä¸?;
     draw();
   });
   $('step').addEventListener('click', () => {
     phase = Math.min(2, phase + 0.25);
-    stop(phase >= 2 ? '已到 2T；可重設或重新播放' : '已前進 ¼ 週期');
+    stop(phase >= 2 ? 'å·²å° 2Tï¼å¯?è¨­?é??°æ­?? : 'å·²å???Â¼ ?±æ?');
     draw();
   });
-  $('reset').addEventListener('click', () => { phase = 0; stop('已重設至 0T'); draw(); });
+  $('reset').addEventListener('click', () => { phase = 0; stop('å·²é?è¨­è³ 0T'); draw(); });
   slider.addEventListener('input', () => { phase = Number(slider.value); stop(); draw(); });
-  document.addEventListener('visibilitychange', () => { if (document.hidden) stop('頁面暫時隱藏，已暫停'); });
+  document.addEventListener('visibilitychange', () => { if (document.hidden) stop('?é¢?«æ??±è?ï¼å·²?«å?'); });
 
   function tick(now) {
     if (running) {
       if (last !== null) phase = Math.min(2, phase + Math.min((now - last) / 1000, 0.1) * Number($('speed').value) / 4);
       last = now;
-      if (phase >= 2) stop('已完成 2 個週期；紅點回到起始位置');
+      if (phase >= 2) stop('å·²å???2 ?é±æ?ï¼ç?é»å??°èµ·å§ä?ç½?);
       draw();
     }
     requestAnimationFrame(tick);
@@ -218,5 +218,6 @@ summary{cursor:pointer;min-height:28px;padding:4px 0;font-weight:600}
   reportHeight();
 })();
 </script>
+<script src="embed-resize.js"></script>
 </body>
 </html>

@@ -123,6 +123,12 @@ p:last-child { margin-bottom: 0; }
 html.is-proj .wrap {
   zoom: var(--proj-scale);
 }
+/* 投影縮放時，嵌入頁維持 1:1 版面，避免 iframe 內容被 zoom 擠壓 */
+html.is-proj .physics-animation-embed,
+html.is-proj .wave-particle-embed,
+html.is-proj .video-card {
+  zoom: calc(1 / var(--proj-scale, 1));
+}
 
 .btn {
   appearance: none;
@@ -618,7 +624,7 @@ figure {
   line-height: 1.55;
 }
 
-/* 互動動畫 iframe：完整呈現，高度由 postMessage 自動調整 */
+/* 互動動畫 iframe：完整呈現，高度由 postMessage／父頁量測自動調整 */
 .wave-particle-embed,
 .physics-animation-embed {
   margin: 12px 0 16px;
@@ -627,6 +633,24 @@ figure {
   border-radius: 12px;
   background: #f8fbfd;
   overflow: visible;
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+/* split／two-col 內的嵌入區塊改全寬堆疊，避免窄欄擠壓 iframe */
+.split:has(.physics-animation-embed, .wave-particle-embed),
+.two-col:has(.physics-animation-embed, .wave-particle-embed) {
+  grid-template-columns: 1fr;
+}
+.split > .physics-animation-embed,
+.split > .wave-particle-embed,
+.two-col > .physics-animation-embed,
+.two-col > .wave-particle-embed,
+.split > div:has(.physics-animation-embed, .wave-particle-embed) {
+  grid-column: 1 / -1;
+  width: 100%;
+  max-width: none;
 }
 .live-lab-embed {
   border-color: #fcd34d;
@@ -654,16 +678,23 @@ figure {
 }
 .wave-particle-frame,
 .physics-animation-frame,
-iframe.physics-animation {
+iframe.physics-animation,
+iframe[data-physics-animation] {
   display: block;
   width: 100%;
   max-width: 100%;
-  min-height: 520px;
-  height: 720px;
+  min-width: 0;
+  min-height: min(480px, 72vh);
+  height: min(680px, 80vh);
   border: 0;
   border-radius: 12px;
   background: #f6f8fa;
-  overflow: visible;
+  overflow: hidden;
+  vertical-align: top;
+}
+.physics-animation-embed iframe,
+.wave-particle-embed iframe {
+  margin: 0;
 }
 .wave-open-link,
 .physics-animation-open-link {
@@ -697,7 +728,9 @@ iframe.physics-animation {
 .video-embed {
   position: relative;
   width: 100%;
+  min-width: 0;
   aspect-ratio: 16 / 9;
+  min-height: 180px;
   border-radius: 10px;
   overflow: hidden;
   background: #0f172a;

@@ -2,18 +2,73 @@
   const $ = (sel, root = document) => root.querySelector(sel);
   const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
 
-  /* 互動動畫 iframe 自動高度（同源 postMessage） */
+  /* 互動動畫 iframe 自動高度（同源 postMessage + 父頁量測） */
+  function physicsAnimationFrames() {
+    return $$("iframe[data-physics-animation], #wave-particle-frame");
+  }
+
+  function applyPhysicsAnimationHeight(frame, height) {
+    if (!frame || !Number.isFinite(height) || height < 280 || height > 5000) return;
+    const h = Math.ceil(height + 6);
+    frame.style.height = h + "px";
+    frame.style.minHeight = Math.min(h, 480) + "px";
+  }
+
+  function measurePhysicsAnimationFrame(frame) {
+    if (!frame) return;
+    try {
+      const doc = frame.contentDocument;
+      if (!doc) return;
+      const root = doc.querySelector("main") || doc.documentElement || doc.body;
+      const height = Math.ceil(
+        Math.max(
+          root.scrollHeight || 0,
+          root.getBoundingClientRect().height || 0,
+          doc.body ? doc.body.scrollHeight : 0
+        )
+      );
+      applyPhysicsAnimationHeight(frame, height);
+    } catch (err) {
+      /* 跨域 iframe 略過 */
+    }
+  }
+
   function resizePhysicsAnimation(event) {
     if (event.origin !== location.origin) return;
-    const frames = $$("iframe[data-physics-animation], #wave-particle-frame");
+    const frames = physicsAnimationFrames();
     const frame = frames.find((f) => f.contentWindow === event.source);
     const data = event.data;
     if (!frame || !data) return;
     if (!["physics-animation:resize", "wave-particle:resize"].includes(data.type)) return;
-    if (!Number.isFinite(data.height) || data.height < 400 || data.height > 5000) return;
-    frame.style.height = Math.ceil(data.height) + "px";
+    applyPhysicsAnimationHeight(frame, data.height);
   }
   window.addEventListener("message", resizePhysicsAnimation);
+
+  function initPhysicsAnimationFrames() {
+    const frames = physicsAnimationFrames();
+    frames.forEach((frame) => {
+      frame.addEventListener("load", () => {
+        measurePhysicsAnimationFrame(frame);
+        window.setTimeout(() => measurePhysicsAnimationFrame(frame), 180);
+        window.setTimeout(() => measurePhysicsAnimationFrame(frame), 900);
+        window.setTimeout(() => {
+          try {
+            frame.contentWindow?.postMessage({ type: "physics-animation:request-resize" }, location.origin);
+          } catch (err) {
+            /* ignore */
+          }
+        }, 220);
+      });
+    });
+    let resizeTimer = 0;
+    window.addEventListener("resize", () => {
+      window.clearTimeout(resizeTimer);
+      resizeTimer = window.setTimeout(() => {
+        frames.forEach((frame) => measurePhysicsAnimationFrame(frame));
+      }, 160);
+    });
+  }
+  initPhysicsAnimationFrames();
 
   function freezeBlanks() {
     $$("input.blank").forEach((input) => {

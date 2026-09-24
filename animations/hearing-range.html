@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>人耳聽覺範圍測試｜20～20000 Hz</title>
+<title>äººè³è½è¦ºç??æ¸¬è©¦ï?20ï½?0000 Hz</title>
 <style>
 *{box-sizing:border-box}
 body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}
@@ -44,28 +44,28 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
 <body>
 <script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script>
 <main>
-  <small>國中理化 · 3-3 超聲波</small>
-  <h1>人耳聽覺範圍測試</h1>
-  <p>聽頻率從低到高<strong>連續變化</strong>（20→20000 Hz），同時看波長怎麼變短。能聽見屬於可聽聲；超過 20000 Hz 才叫超聲波。</p>
+  <small>?ä¸­?å? Â· 3-3 è¶è²æ³?/small>
+  <h1>äººè³è½è¦ºç??æ¸¬è©?/h1>
+  <p>?½é »?å?ä½å°é«?strong>???è®å?</strong>ï¼?0??0000 Hzï¼ï??æ??æ³¢?·æéº¼è®ç­?è½?½è?å±¬æ¼?¯è½?²ï?è¶é? 20000 Hz ?å«è¶è²æ³¢ã?/p>
 
   <div class="controls">
     <div class="control">
-      <label for="frequency">頻率（對數滑桿）<output id="frequency-out"></output></label>
+      <label for="frequency">?»ç?ï¼å??¸æ?æ¡¿ï?<output id="frequency-out"></output></label>
       <input id="frequency" type="range" min="0" max="1000" step="1" value="0" aria-valuetext="20 Hz">
     </div>
-    <label>輸入 Hz
+    <label>è¼¸å¥ Hz
       <input id="frequency-number" type="number" min="20" max="20000" step="1" value="20" style="width:120px">
     </label>
-    <label>掃頻時間
+    <label>?é »?é?
       <select id="duration">
-        <option value="12">約 12 秒</option>
-        <option value="20">約 20 秒</option>
-        <option value="30" selected>約 30 秒</option>
+        <option value="12">ç´?12 ç§?/option>
+        <option value="20">ç´?20 ç§?/option>
+        <option value="30" selected>ç´?30 ç§?/option>
       </select>
     </label>
   </div>
 
-  <div class="controls preset-row" aria-label="快速跳到頻率">
+  <div class="controls preset-row" aria-label="å¿«éè·³?°é »??>
     <button type="button" data-f="20">20</button>
     <button type="button" data-f="100">100</button>
     <button type="button" data-f="440">440</button>
@@ -78,27 +78,27 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
   </div>
 
   <div class="visual">
-    <svg id="scene" role="img" aria-label="人耳聽覺範圍示意：20 到 20000 赫茲"></svg>
-    <div class="band mid" id="band">可聽聲範圍內</div>
+    <svg id="scene" role="img" aria-label="äººè³è½è¦ºç??ç¤º?ï?20 ??20000 èµ«è²"></svg>
+    <div class="band mid" id="band">?¯è½?²ç??å§</div>
     <div class="readout" id="result"></div>
   </div>
 
   <div class="controls">
-    <button type="button" id="sweep" class="primary">連續掃頻：低 → 高</button>
-    <button type="button" id="sweep-down" class="secondary">連續掃頻：高 → 低</button>
-    <button type="button" id="hold">持續發聲（可拖滑桿）</button>
-    <button type="button" id="stop">停止</button>
-    <span role="status" aria-live="polite" id="status">音量請調低；需按按鈕才會發聲</span>
+    <button type="button" id="sweep" class="primary">????é »ï¼ä? ??é«?/button>
+    <button type="button" id="sweep-down" class="secondary">????é »ï¼é? ??ä½?/button>
+    <button type="button" id="hold">?ç??¼è²ï¼å¯?æ?æ¡¿ï?</button>
+    <button type="button" id="stop">?æ­¢</button>
+    <span role="status" aria-live="polite" id="status">?³é?è«èª¿ä½ï???æ??æ??ç¼??/span>
   </div>
 
   <div class="question">
-    <b>先想一想：</b>掃到後面突然「沒聲音」了，是聲波消失了，還是你的耳朵／喇叭聽不到了？
+    <b>?æ³ä¸?³ï?</b>?å°å¾é¢çªç¶?æ??²é³?ä?ï¼æ¯?²æ³¢æ¶å¤±äºï??æ¯ä½ ç??³æµï¼å??­è½ä¸å°äºï?
     <details>
-      <summary>查看解釋</summary>
-      <p>聲波可能還在，只是超出人耳可聽範圍，或喇叭／裝置做不出那麼高的頻率。教材把人耳範圍記成大約 20～20000 Hz；個人實際範圍常比這個窄。聽不到高頻，不能說「沒有聲波」。</p>
+      <summary>?¥ç?è§??</summary>
+      <p>?²æ³¢?¯è½?å¨ï¼åª?¯è??ºäºº?³å¯?½ç??ï??å??­ï?è£ç½®?ä??ºé£éº¼é??é »?ãæ??æ?äººè³ç??è??å¤§ç´?20ï½?0000 Hzï¼åäººå¯¦é?ç¯å?å¸¸æ??åç??è½ä¸å°é«é »ï¼ä??½èªª?æ??è²æ³¢ãã?/p>
     </details>
   </div>
-  <p class="note">掃頻預設約 30 秒，採對數連續變化；滑桿也是對數刻度。空氣聲速取約 340 m/s，波長 λ＝v／f。正弦波、低音量。接近 20000 Hz 時可能聽不到，不代表已輸出經校準的超聲波。真正超聲波（＞20000 Hz）本頁不測試。勿用未聽見判定學生聽力。</p>
+  <p class="note">?é »?è¨­ç´?30 ç§ï??¡å??¸é??è®å?ï¼æ?æ¡¿ä??¯å??¸å»åº¦ãç©ºæ°?²?å?ç´?340 m/sï¼æ³¢??Î»ï¼vï¼f?æ­£å¼¦æ³¢?ä??³é??æ¥è¿?20000 Hz ?å¯?½è½ä¸å°ï¼ä?ä»?¡¨å·²è¼¸?ºç??¡æ??è??²æ³¢?ç?æ­???²æ³¢ï¼ï?20000 Hzï¼æ¬?ä?æ¸¬è©¦?å¿?¨æª?½è??¤å?å­¸ç??½å???/p>
 </main>
 <script>
 (() => {
@@ -146,11 +146,11 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
     return Math.round(t * SLIDER_MAX);
   }
   function zone(f) {
-    if (f <= 80) return { cls: 'low', label: '靠近次聲波邊界：頻率很低，可能「感覺到」振動多於聽到' };
-    if (f < 12000) return { cls: 'mid', label: '可聽聲範圍內（教材約 20～20000 Hz）' };
-    if (f < 18000) return { cls: 'high', label: '高頻可聽區：有些人聽得到，有些人已經聽不清楚' };
-    if (f < 20000) return { cls: 'edge', label: '接近超聲波邊界：多數人聽不到；仍屬可聽聲上限附近' };
-    return { cls: 'edge', label: '到達 20000 Hz：教材上的超聲波起點；本頁不送出超過此頻率' };
+    if (f <= 80) return { cls: 'low', label: '? è?æ¬¡è²æ³¢é??ï??»ç?å¾ä?ï¼å¯?½ãæ?è¦ºå°?æ¯?å??¼è½?? };
+    if (f < 12000) return { cls: 'mid', label: '?¯è½?²ç??å§ï¼æ??ç? 20ï½?0000 Hzï¼? };
+    if (f < 18000) return { cls: 'high', label: 'é«é »?¯è½?ï¼æ?äºäºº?½å??°ï??ä?äººå·²ç¶è½ä¸æ?æ¥? };
+    if (f < 20000) return { cls: 'edge', label: '?¥è?è¶è²æ³¢é??ï?å¤æ¸äººè½ä¸å°ï¼ä?å±¬å¯?½è²ä¸é??è?' };
+    return { cls: 'edge', label: '?°é? 20000 Hzï¼æ??ä??è??²æ³¢èµ·é?ï¼æ¬?ä??åºè¶é?æ­¤é »?? };
   }
   function logPos(f, x0, x1) {
     const a = Math.log10(FMIN), b = Math.log10(FMAX);
@@ -186,9 +186,9 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
     return pts.join(' ');
   }
   function updateButtons() {
-    $('sweep').textContent = mode === 'sweep' && sweepTo > sweepFrom ? '掃頻中…（再按可停止）' : '連續掃頻：低 → 高';
-    $('sweep-down').textContent = mode === 'sweep' && sweepTo < sweepFrom ? '掃頻中…（再按可停止）' : '連續掃頻：高 → 低';
-    $('hold').textContent = mode === 'hold' ? '持續發聲中（可拖滑桿）' : '持續發聲（可拖滑桿）';
+    $('sweep').textContent = mode === 'sweep' && sweepTo > sweepFrom ? '?é »ä¸­â¦ï??æ??¯å?æ­¢ï?' : '????é »ï¼ä? ??é«?;
+    $('sweep-down').textContent = mode === 'sweep' && sweepTo < sweepFrom ? '?é »ä¸­â¦ï??æ??¯å?æ­¢ï?' : '????é »ï¼é? ??ä½?;
+    $('hold').textContent = mode === 'hold' ? '?ç??¼è²ä¸­ï??¯æ?æ»æ¡¿ï¼? : '?ç??¼è²ï¼å¯?æ?æ¡¿ï?';
   }
 
   function measureLayout() {
@@ -201,7 +201,7 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
     return { x0, x1, span: x1 - x0, yBar, barH, yWave, amp, lam20: V_AIR / FMIN };
   }
 
-  /** 完整重建靜態骨架 + 可變節點（尺寸變或首次） */
+  /** å®æ´?å»º?æ?éª¨æ¶ + ?¯è?ç¯é»ï?å°ºå¯¸è®æ?é¦æ¬¡ï¼?*/
   function buildScene() {
     layout = measureLayout();
     svg.setAttribute('viewBox', `0 0 ${W} ${H}`);
@@ -217,11 +217,11 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
       text(x, yBar + barH / 2 + 20, mark >= 1000 ? (mark / 1000) + 'k' : String(mark), 'middle');
     });
 
-    text(x0, 28, '次聲波 ＜20', 'start', C.blue);
-    text(W / 2, 28, '人耳可聽聲（約）', 'middle', C.green);
-    text(x1, 28, '超聲波 ＞20k', 'end', C.gold);
-    text(x0, yWave - 78, '空氣中波長示意（v ≈ 340 m/s）', 'start', C.blue);
-    text(x1, yWave - 78, 'λ = v / f', 'end', C.gold);
+    text(x0, 28, 'æ¬¡è²æ³?ï¼?0', 'start', C.blue);
+    text(W / 2, 28, 'äººè³å¯?½è²ï¼ç?ï¼?, 'middle', C.green);
+    text(x1, 28, 'è¶è²æ³?ï¼?0k', 'end', C.gold);
+    text(x0, yWave - 78, 'ç©ºæ°£ä¸­æ³¢?·ç¤º?ï?v ??340 m/sï¼?, 'start', C.blue);
+    text(x1, yWave - 78, 'Î» = v / f', 'end', C.gold);
     n('line', { x1: x0, y1: yWave, x2: x1, y2: yWave, stroke: C.soft, 'stroke-width': 1 });
 
     const marker = n('line', { id: 'freq-marker', x1: x0, y1: yBar - 58, x2: x0, y2: yBar + 42, stroke: C.red, 'stroke-width': 2.5 });
@@ -238,7 +238,7 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
     paintDynamic(currentFreq);
   }
 
-  /** 只更新會動的屬性 */
+  /** ?ªæ´?°æ??ç?å±¬æ?*/
   function paintDynamic(f) {
     if (!layout || !els) { buildScene(); return; }
     const { x0, x1, span, yBar, yWave, amp, lam20 } = layout;
@@ -287,31 +287,31 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
         els.lamTickR.setAttribute('y1', yLam - 6);
         els.lamTickR.setAttribute('y2', yLam + 6);
         els.lamLabel.setAttribute('x', (ax + bx) / 2);
-        els.lamLabel.textContent = '一個波長 λ ≈ ' + formatLambda(lam);
+        els.lamLabel.textContent = 'ä¸?æ³¢??Î» ??' + formatLambda(lam);
       } else {
         els.lamLine.setAttribute('visibility', 'hidden');
         els.lamTickL.setAttribute('visibility', 'hidden');
         els.lamTickR.setAttribute('visibility', 'hidden');
         els.lamLabel.setAttribute('x', W / 2);
-        els.lamLabel.textContent = '波長 λ ≈ ' + formatLambda(lam) + '（愈高頻愈密、愈短）';
+        els.lamLabel.textContent = 'æ³¢é· Î» ??' + formatLambda(lam) + 'ï¼æ?é«é »?å??æ??­ï?';
       }
     } else {
       els.lamLine.setAttribute('visibility', 'hidden');
       els.lamTickL.setAttribute('visibility', 'hidden');
       els.lamTickR.setAttribute('visibility', 'hidden');
       els.lamLabel.setAttribute('x', W / 2);
-      els.lamLabel.textContent = '波長很短 λ ≈ ' + formatLambda(lam) + '（高頻 → 波長短、指向性較好）';
+      els.lamLabel.textContent = 'æ³¢é·å¾ç­ Î» ??' + formatLambda(lam) + 'ï¼é?????æ³¢é·?­ãæ??æ§è?å¥½ï?';
     }
 
     els.footer.textContent = mode === 'sweep'
-      ? '連續掃頻中：頻率↑、波長↓'
-      : '頻率升高時，同一介質中波長變短';
+      ? '????é »ä¸­ï??»ç??ãæ³¢?·â?'
+      : '?»ç??é??ï??ä?ä»è³ªä¸­æ³¢?·è???;
 
     out('frequency-out', Math.round(f).toLocaleString() + ' Hz');
     const band = $('band');
     band.className = 'band ' + z.cls;
     band.textContent = z.label;
-    out('result', `頻率 ${Math.round(f).toLocaleString()} Hz　｜　波長 λ ≈ ${formatLambda(lam)}　｜　週期 ${(1000 / f).toFixed(f < 100 ? 2 : 3)} ms　｜　v≈340 m/s`);
+    out('result', `?»ç? ${Math.round(f).toLocaleString()} Hz?ï½ãæ³¢é· Î» ??${formatLambda(lam)}?ï½ã?±æ? ${(1000 / f).toFixed(f < 100 ? 2 : 3)} ms?ï½ãv??40 m/s`);
   }
 
   function render(forceRebuild) {
@@ -321,7 +321,7 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
     else paintDynamic(currentFreq);
   }
 
-  function halt(msg = '已停止') {
+  function halt(msg = 'å·²å?æ­?) {
     requestId++;
     starting = false;
     mode = 'idle';
@@ -406,10 +406,10 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
     if (ts - lastDrawAt >= DRAW_INTERVAL_MS || t >= 1) {
       lastDrawAt = ts;
       paintDynamic(f);
-      out('status', `連續掃頻中 ${Math.round(f).toLocaleString()} Hz（${Math.round(t * 100)}%）｜λ ≈ ${formatLambda(lambdaM(f))}`);
+      out('status', `????é »ä¸?${Math.round(f).toLocaleString()} Hzï¼?{Math.round(t * 100)}%ï¼ï?Î» ??${formatLambda(lambdaM(f))}`);
     }
     if (t >= 1) {
-      halt(sweepTo > sweepFrom ? '低→高掃頻完成' : '高→低掃頻完成');
+      halt(sweepTo > sweepFrom ? 'ä½â?é«æ??»å??? : 'é«â?ä½æ??»å???);
       setFreqUI(sweepTo);
       return;
     }
@@ -417,15 +417,15 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
   }
 
   async function beginSweep(from, to) {
-    if (mode === 'sweep') { halt('已停止掃頻'); return; }
-    if (mode !== 'idle' || starting) { halt('已停止'); return; }
+    if (mode === 'sweep') { halt('å·²å?æ­¢æ???); return; }
+    if (mode !== 'idle' || starting) { halt('å·²å?æ­?); return; }
     starting = true;
     const token = ++requestId;
     try {
       await ensureAudio();
       if (token !== requestId) return;
       if (Math.max(from, to) >= ac.sampleRate / 2) {
-        out('status', `無法完整掃到終點：取樣率 ${ac.sampleRate} Hz，Nyquist 上限約 ${Math.floor(ac.sampleRate / 2)} Hz。`);
+        out('status', `?¡æ?å®æ´?å°çµé?ï¼å?æ¨?? ${ac.sampleRate} Hzï¼Nyquist ä¸é?ç´?${Math.floor(ac.sampleRate / 2)} Hz?`);
         starting = false;
         return;
       }
@@ -439,19 +439,19 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
       mode = 'sweep';
       starting = false;
       updateButtons();
-      out('status', from < to ? '連續掃頻：低 → 高' : '連續掃頻：高 → 低');
+      out('status', from < to ? '????é »ï¼ä? ??é«? : '????é »ï¼é? ??ä½?);
       raf = requestAnimationFrame(tickSweep);
     } catch (e) {
       starting = false;
       halt(e.message === 'nyquist'
-        ? '取樣率不足以輸出此頻率'
-        : '此瀏覽器未能啟用音訊；仍可調整頻率觀察區間');
+        ? '?æ¨£?ä?è¶³ä»¥è¼¸åºæ­¤é »??
+        : 'æ­¤çè¦½?¨æª?½å??¨é³è¨ï?ä»å¯èª¿æ´?»ç?è§å¯å???);
     }
   }
 
   async function beginHold() {
-    if (mode === 'hold') { halt('已停止持續發聲'); return; }
-    if (mode !== 'idle' || starting) { halt('已停止'); return; }
+    if (mode === 'hold') { halt('å·²å?æ­¢æ?çºç¼??); return; }
+    if (mode !== 'idle' || starting) { halt('å·²å?æ­?); return; }
     starting = true;
     const token = ++requestId;
     try {
@@ -459,7 +459,7 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
       if (token !== requestId) return;
       const f = clampF(currentFreq || sliderToFreq(val('frequency')));
       if (f >= ac.sampleRate / 2) {
-        out('status', `無法輸出：取樣率 ${ac.sampleRate} Hz。`);
+        out('status', `?¡æ?è¼¸åºï¼å?æ¨?? ${ac.sampleRate} Hz?`);
         starting = false;
         return;
       }
@@ -468,10 +468,10 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
       mode = 'hold';
       starting = false;
       updateButtons();
-      out('status', '持續發聲中：拖動滑桿可連續改變音高');
+      out('status', '?ç??¼è²ä¸­ï??å?æ»æ¡¿?¯é???¹è??³é?');
     } catch (e) {
       starting = false;
-      halt('此瀏覽器未能啟用音訊');
+      halt('æ­¤çè¦½?¨æª?½å??¨é³è¨?);
     }
   }
 
@@ -481,26 +481,26 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
     if (mode === 'hold') {
       applyLiveFreq(f);
       paintDynamic(f);
-      out('status', `持續發聲 ${Math.round(f).toLocaleString()} Hz｜λ ≈ ${formatLambda(lambdaM(f))}`);
+      out('status', `?ç??¼è² ${Math.round(f).toLocaleString()} Hzï½Î???${formatLambda(lambdaM(f))}`);
       return;
     }
-    if (mode === 'sweep') halt('已停止掃頻');
+    if (mode === 'sweep') halt('å·²å?æ­¢æ???);
     paintDynamic(f);
   });
   $('frequency-number').addEventListener('change', () => {
     const f = Number($('frequency-number').value);
     if (!Number.isFinite(f) || f < FMIN || f > FMAX) {
-      out('status', '請輸入 20～20000 的頻率');
+      out('status', 'è«è¼¸??20ï½?0000 ?é »??);
       return;
     }
-    if (mode === 'sweep') halt('已停止掃頻');
+    if (mode === 'sweep') halt('å·²å?æ­¢æ???);
     setFreqUI(f);
     if (mode === 'hold') applyLiveFreq(f);
   });
   document.querySelectorAll('.preset-row button').forEach(btn => {
     btn.addEventListener('click', () => {
       const f = Number(btn.dataset.f);
-      if (mode === 'sweep') halt('已停止掃頻');
+      if (mode === 'sweep') halt('å·²å?æ­¢æ???);
       setFreqUI(f);
       if (mode === 'hold') applyLiveFreq(f);
     });
@@ -509,12 +509,12 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
   $('sweep').addEventListener('click', () => beginSweep(FMIN, FMAX));
   $('sweep-down').addEventListener('click', () => beginSweep(FMAX, FMIN));
   $('hold').addEventListener('click', () => beginHold());
-  $('stop').addEventListener('click', () => halt('已停止'));
+  $('stop').addEventListener('click', () => halt('å·²å?æ­?));
   $('duration').addEventListener('change', () => {
-    if (mode === 'sweep') halt('掃頻時間已變更；請重新開始');
+    if (mode === 'sweep') halt('?é »?é?å·²è??´ï?è«é??°é?å§?);
   });
   document.addEventListener('visibilitychange', () => {
-    if (document.hidden) halt('頁面隱藏，已停止');
+    if (document.hidden) halt('?é¢?±è?ï¼å·²?æ­¢');
   });
 
   updateButtons();
@@ -535,5 +535,6 @@ summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}
   }).observe(document.body);
 })();
 </script>
+<script src="embed-resize.js"></script>
 </body>
 </html>

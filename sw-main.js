@@ -23,6 +23,7 @@ const PRECACHE = [
   "js/live/audio-analyzer.js",
   "js/live/echo-timer.js",
   "animations/embed.css",
+  "animations/embed-resize.js",
   "animations/wave-particle.html",
   "animations/echo-distance.html",
   "animations/echo-timer.html",

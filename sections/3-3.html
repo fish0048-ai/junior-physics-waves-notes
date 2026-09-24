@@ -203,51 +203,52 @@
         </svg>
         <div>
           <p>船艦利用聲波反射探測水深、魚群或潛艇。先用下方動畫觀察「來回一趟」，再看公式。</p>
-          <section class="physics-animation-embed no-print" aria-label="回聲往返路程">
-            <div class="ex-title"><span class="tag tag-cyan">互動觀察</span> 聲音走一趟，還是來回？</div>
-            <p class="physics-animation-lead">調整距離與介質，觀察訊號出發、反射、返回。公式前先確認總路程是 2d。</p>
-            <iframe id="anim-echo-distance"
-              class="physics-animation physics-animation-frame"
-              data-physics-animation
-              src="../animations/echo-distance.html"
-              title="聲音走一趟，還是來回？"
-              width="100%" height="720" loading="lazy"
-              referrerpolicy="same-origin"></iframe>
-            <p class="physics-animation-open-link"><a href="../animations/echo-distance.html" target="_blank" rel="noopener">另開視窗操作動畫</a></p>
-          </section>
-          <section class="physics-animation-embed live-lab-embed no-print" aria-label="回聲計時實測">
-            <div class="ex-title"><span class="tag tag-cyan">Live 實驗</span> 用麥克風測回聲時間</div>
-            <p class="physics-animation-lead inquiry-ask"><strong>探究：</strong>對牆壁拍手後，Δt 是「來回」還是「單程」？為什麼公式要除以 2？</p>
-            <iframe id="anim-echo-timer"
-              class="physics-animation physics-animation-frame"
-              data-physics-animation
-              src="../animations/echo-timer.html"
-              title="回聲計時實測"
-              width="100%" height="620" loading="lazy"
-              referrerpolicy="same-origin"></iframe>
-            <p class="physics-animation-open-link"><a href="../animations/echo-timer.html" target="_blank" rel="noopener">另開視窗操作 Live 實驗</a></p>
-          </section>
-          <section class="extra">
-            <div class="ex-title"><span class="tag tag-purple">觀念補充</span> Live 回聲測距步驟</div>
-            <ol class="q">
-              <li>選空氣 340 m/s（或海水 1500 m/s），站在距牆約 3～8 m 處。</li>
-              <li>按「開始測量」→ 校準時保持安靜 → 對牆<strong>拍手一次</strong>。</li>
-              <li>讀 Δt 與 d，與上方動畫模型對照：來回路程＝2d。</li>
-              <li>雜訊大或太近會失敗；這是教學示範，不是船用聲納。</li>
-            </ol>
-          </section>
-          <section class="gifted">
-            <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 偵測原理與誤差</div>
-            <ul class="q">
-              <li>程式用聲音能量突增（onset）抓「原音」與「回聲」兩次峰值，門檻依環境雜訊自動調整。</li>
-              <li>若牆面太軟、角度太斜，反射弱 → 可能逾時；聲納船則用脈衝＋精準計時器。</li>
-              <li>溫度會改變空氣聲速（約 340 m/s 是 15℃ 近似）；資優可查 v≈331+0.6T 修正。</li>
-            </ul>
-          </section>
-          <div class="formula">\[h=\dfrac{1}{2}vt\]</div>
-          <p>單位：距離 m、速率 m/s、時間 s。來回一次，所以要除以 2。</p>
         </div>
       </div>
+
+      <section class="physics-animation-embed no-print" aria-label="回聲往返路程">
+        <div class="ex-title"><span class="tag tag-cyan">互動觀察</span> 聲音走一趟，還是來回？</div>
+        <p class="physics-animation-lead">調整距離與介質，觀察訊號出發、反射、返回。公式前先確認總路程是 2d。</p>
+        <iframe id="anim-echo-distance"
+          class="physics-animation physics-animation-frame"
+          data-physics-animation
+          src="../animations/echo-distance.html"
+          title="聲音走一趟，還是來回？"
+          width="100%" height="680" loading="lazy"
+          referrerpolicy="same-origin"></iframe>
+        <p class="physics-animation-open-link"><a href="../animations/echo-distance.html" target="_blank" rel="noopener">另開視窗操作動畫</a></p>
+      </section>
+      <section class="physics-animation-embed live-lab-embed no-print" aria-label="回聲計時實測">
+        <div class="ex-title"><span class="tag tag-cyan">Live 實驗</span> 用麥克風測回聲時間</div>
+        <p class="physics-animation-lead inquiry-ask"><strong>探究：</strong>對牆壁拍手後，Δt 是「來回」還是「單程」？為什麼公式要除以 2？</p>
+        <iframe id="anim-echo-timer"
+          class="physics-animation physics-animation-frame"
+          data-physics-animation
+          src="../animations/echo-timer.html"
+          title="回聲計時實測"
+          width="100%" height="680" loading="lazy"
+          referrerpolicy="same-origin"></iframe>
+        <p class="physics-animation-open-link"><a href="../animations/echo-timer.html" target="_blank" rel="noopener">另開視窗操作 Live 實驗</a></p>
+      </section>
+      <section class="extra">
+        <div class="ex-title"><span class="tag tag-purple">觀念補充</span> Live 回聲測距步驟</div>
+        <ol class="q">
+          <li>選空氣 340 m/s（或海水 1500 m/s），站在距牆約 3～8 m 處。</li>
+          <li>按「開始測量」→ 校準時保持安靜 → 對牆<strong>拍手一次</strong>。</li>
+          <li>讀 Δt 與 d，與上方動畫模型對照：來回路程＝2d。</li>
+          <li>雜訊大或太近會失敗；這是教學示範，不是船用聲納。</li>
+        </ol>
+      </section>
+      <section class="gifted">
+        <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 偵測原理與誤差</div>
+        <ul class="q">
+          <li>程式用聲音能量突增（onset）抓「原音」與「回聲」兩次峰值，門檻依環境雜訊自動調整。</li>
+          <li>若牆面太軟、角度太斜，反射弱 → 可能逾時；聲納船則用脈衝＋精準計時器。</li>
+          <li>溫度會改變空氣聲速（約 340 m/s 是 15℃ 近似）；資優可查 v≈331+0.6T 修正。</li>
+        </ul>
+      </section>
+      <div class="formula">\[h=\dfrac{1}{2}vt\]</div>
+      <p>單位：距離 m、速率 m/s、時間 s。來回一次，所以要除以 2。</p>
 
       <section class="ex-box think">
         <div class="ex-title"><span class="tag tag-orange">辨正思考</span></div>
