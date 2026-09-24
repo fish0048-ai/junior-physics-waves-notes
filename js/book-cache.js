@@ -49,14 +49,6 @@
   }
 
   async function clearBroken() {
-    if (navigator.serviceWorker) {
-      try {
-        const regs = await navigator.serviceWorker.getRegistrations();
-        await Promise.all(regs.map((reg) => reg.unregister()));
-      } catch (err) {
-        /* ignore */
-      }
-    }
     if (window.caches) {
       try {
         const keys = await caches.keys();

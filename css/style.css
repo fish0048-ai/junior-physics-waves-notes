@@ -628,6 +628,23 @@ figure {
   background: #f8fbfd;
   overflow: visible;
 }
+.live-lab-embed {
+  border-color: #fcd34d;
+  background: linear-gradient(180deg, #fffbeb 0%, #f8fbfd 100%);
+}
+.offline-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 32px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: #fef3c7;
+  color: #92400e;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid #fcd34d;
+}
+.offline-badge[hidden] { display: none !important; }
 .wave-particle-lead,
 .physics-animation-lead {
   margin: 0 0 10px;

@@ -1,0 +1,173 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>麥克風即時頻率儀</title>
+  <style>
+*{box-sizing:border-box}body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}main{max-width:1050px;margin:auto;padding:24px}small{color:#547082}h1{font-size:clamp(23px,4vw,31px);line-height:1.4;margin:6px 0 8px}p{margin:8px 0 16px}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;align-items:center}button{font:inherit;min-height:44px;padding:8px 16px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white;cursor:pointer}button.primary{background:#076b87;color:white;border-color:#076b87}button:disabled{opacity:.5;cursor:default}button:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}.visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden;padding:12px 14px 14px}.canvas-row{display:grid;gap:12px}canvas{display:block;width:100%;border-radius:10px;background:#f8fbfd}#wave-canvas{height:140px}#spec-canvas{height:120px}.readout{padding:12px 16px;background:#edf5f8;border-radius:10px;margin-top:12px;font-variant-numeric:tabular-nums;min-height:52px}.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px}.metric{padding:10px 12px;background:#fff;border:1px solid #dbe7ed;border-radius:10px}.metric strong{display:block;font-size:22px;color:#076b87}.metric span{font-size:13px;color:#547082}#status{color:#496579;font-size:14px}.question{margin-top:18px;padding:16px;background:#eaf3f7;border-left:4px solid #087fa4;border-radius:7px}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}details p{margin:6px 0}.note{font-size:13px;color:#526c7d;line-height:1.55}.tag-live{display:inline-block;padding:2px 8px;border-radius:6px;background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;margin-left:6px}@media(max-width:480px){main{padding:14px}}
+  </style>
+  <link rel="stylesheet" href="embed.css">
+</head>
+<body>
+<script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script>
+<main>
+  <small>國中理化 · 3-4 樂音三要素 · Live</small>
+  <h1>麥克風即時頻率儀<span class="tag-live">裝置感測</span></h1>
+  <p>對麥克風敲音叉、哼歌或說話，觀察波形與估計的主頻（Hz）。與上方「數位試聽」不同：這裡量測的是<strong>環境中的真實聲音</strong>。</p>
+  <div class="controls">
+    <button type="button" id="toggle" class="primary">允許麥克風並開始</button>
+    <button type="button" id="stop" disabled>停止</button>
+    <span role="status" aria-live="polite" id="status">尚未開始</span>
+  </div>
+  <div class="visual">
+    <div class="canvas-row">
+      <canvas id="wave-canvas" role="img" aria-label="即時聲波圖"></canvas>
+      <canvas id="spec-canvas" role="img" aria-label="頻譜圖"></canvas>
+    </div>
+    <div class="metric-grid">
+      <div class="metric"><strong id="hz-out">—</strong><span>主頻估計（Hz）</span></div>
+      <div class="metric"><strong id="rms-out">—</strong><span>相對強度（非分貝）</span></div>
+      <div class="metric"><strong id="pitch-hint">—</strong><span>音調高低提示</span></div>
+    </div>
+    <div class="readout" id="result">按「允許麥克風並開始」後，對裝置發聲。</div>
+  </div>
+  <div class="question">
+    <b>先想一想：</b>把音叉換成較短的音叉，預測 Hz 會變高還是變低？為什麼？
+    <details><summary>查看提示</summary><p>較短的振動體通常振動較快 → 頻率較高 → 音調較高。用 Hz 數字對照課本「音調看頻率」。</p></details>
+  </div>
+  <p class="note">需 HTTPS 或 localhost，並允許麥克風。主頻演算法適合穩定、接近單音的聲音；複雜噪音可能顯示「—」。此工具<strong>不是</strong>檢定用分貝計，相對強度僅供比較。教室請用正常音量，勿對麥克風大喊。</p>
+</main>
+<script src="../js/live/audio-analyzer.js"></script>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const waveCanvas = $("wave-canvas");
+  const specCanvas = $("spec-canvas");
+  const waveCtx = waveCanvas.getContext("2d");
+  const specCtx = specCanvas.getContext("2d");
+  let analyzer = null;
+  let raf = 0;
+
+  function resizeCanvas(canvas, ctx) {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { w: rect.width, h: rect.height };
+  }
+
+  function pitchHint(hz) {
+    if (hz == null) return "—";
+    if (hz < 200) return "偏低";
+    if (hz < 500) return "中等";
+    if (hz < 2000) return "偏高";
+    return "很高";
+  }
+
+  function drawWave(waveform, rms) {
+    const { w, h } = resizeCanvas(waveCanvas, waveCtx);
+    waveCtx.clearRect(0, 0, w, h);
+    waveCtx.fillStyle = "#f8fbfd";
+    waveCtx.fillRect(0, 0, w, h);
+    waveCtx.strokeStyle = "#087fa4";
+    waveCtx.lineWidth = 2;
+    waveCtx.beginPath();
+    const mid = h / 2;
+    const amp = Math.min(h * 0.42, 8 + rms * 900);
+    for (let i = 0; i < waveform.length; i++) {
+      const x = (i / (waveform.length - 1)) * w;
+      const y = mid - waveform[i] * amp;
+      if (i === 0) waveCtx.moveTo(x, y);
+      else waveCtx.lineTo(x, y);
+    }
+    waveCtx.stroke();
+    waveCtx.strokeStyle = "#cbd5e1";
+    waveCtx.beginPath();
+    waveCtx.moveTo(0, mid);
+    waveCtx.lineTo(w, mid);
+    waveCtx.stroke();
+  }
+
+  function drawSpec(spectrum) {
+    const { w, h } = resizeCanvas(specCanvas, specCtx);
+    specCtx.clearRect(0, 0, w, h);
+    specCtx.fillStyle = "#f8fbfd";
+    specCtx.fillRect(0, 0, w, h);
+    const barW = w / spectrum.length;
+    for (let i = 0; i < spectrum.length; i++) {
+      const v = spectrum[i] / 255;
+      const bh = v * h;
+      specCtx.fillStyle = "#38bdf8";
+      specCtx.fillRect(i * barW, h - bh, Math.max(1, barW - 0.5), bh);
+    }
+  }
+
+  function loop() {
+    if (!analyzer || !analyzer.running) return;
+    const data = analyzer.read();
+    drawWave(data.waveform, data.rms);
+    drawSpec(data.spectrum);
+    const hz = data.peakHz;
+    $("hz-out").textContent = hz != null ? Math.round(hz).toLocaleString() : "—";
+    $("rms-out").textContent = data.rms > 0 ? (data.rms * 100).toFixed(1) : "—";
+    $("pitch-hint").textContent = pitchHint(hz);
+    $("result").textContent = hz != null
+      ? `偵測到約 ${Math.round(hz)} Hz。取樣率 ${data.sampleRate} Hz。`
+      : "有聲音輸入，但主頻不穩定（試敲音叉或哼穩定單音）。";
+    raf = requestAnimationFrame(loop);
+  }
+
+  function halt() {
+    if (raf) cancelAnimationFrame(raf);
+    raf = 0;
+    if (analyzer) {
+      analyzer.destroy();
+      analyzer = null;
+    }
+    $("toggle").disabled = false;
+    $("toggle").textContent = "允許麥克風並開始";
+    $("stop").disabled = true;
+    $("status").textContent = "已停止";
+  }
+
+  $("toggle").addEventListener("click", async () => {
+    if (analyzer) {
+      halt();
+      return;
+    }
+    try {
+      analyzer = window.JPWNLiveAudio.create();
+      await analyzer.start();
+      $("toggle").textContent = "重新開始";
+      $("stop").disabled = false;
+      $("status").textContent = "收音中…";
+      loop();
+    } catch (err) {
+      halt();
+      $("status").textContent = err && err.message ? err.message : "無法啟用麥克風";
+    }
+  });
+
+  $("stop").addEventListener("click", halt);
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden) halt();
+  });
+
+  let sent = 0;
+  new ResizeObserver(() => {
+    const height = Math.ceil(document.querySelector("main").getBoundingClientRect().height);
+    if (height !== sent && window.parent !== window) {
+      sent = height;
+      window.parent.postMessage(
+        { type: "physics-animation:resize", height },
+        location.origin === "null" ? "*" : location.origin
+      );
+    }
+  }).observe(document.body);
+})();
+</script>
+</body>
+</html>

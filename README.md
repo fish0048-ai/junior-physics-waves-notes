@@ -53,3 +53,19 @@ vercel.json                  Vercel 設定
 2. 只要練習：開 `practice.html`。  
 3. 上課講義：開 `cover.html` 或各章目錄。  
 4. 挖空點一下可顯示答案；頂欄可「本卡答案／全頁答案」。
+
+## 離線使用（PWA）
+
+1. 用 Chrome／Edge 開正式站，瀏覽過第 3 章小節（讓 Service Worker 快取資源）。  
+2. 瀏覽器選單 → **加到主畫面**（或「安裝應用程式」）。  
+3. 飛航模式仍可開啟已快取的 **第 3 章講義**、Live 實驗（麥克風需本機權限）。  
+4. 頂欄顯示「離線」時，代表目前無網路；平板筆記（IndexedDB）離線仍可寫，有網路時再同步 Gist。
+
+## Live 實驗（Web 感測）
+
+| 小節 | 工具 | 說明 |
+|------|------|------|
+| 3-3 | `animations/echo-timer.html` | 麥克風測回聲 Δt → 算 d＝vΔt÷2 |
+| 3-4 | `animations/audio-lab.html` | 麥克風即時頻率／波形 |
+
+需 HTTPS（Vercel 已符合）並允許麥克風；列印 PDF 時 Live 區會隱藏。

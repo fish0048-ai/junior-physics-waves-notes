@@ -1,0 +1,19 @@
+{
+  "name": "國中八年級理化講義",
+  "short_name": "理化講義",
+  "description": "探究式挖空講義：第 1～6 章、實驗專區、段考與總複習",
+  "start_url": "./cover.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#fffefb",
+  "theme_color": "#fffefb",
+  "lang": "zh-Hant",
+  "icons": [
+    {
+      "src": "icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

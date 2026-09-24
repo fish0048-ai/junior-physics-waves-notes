@@ -422,6 +422,7 @@
           <span>${brandText}</span>
         </a>
         <div class="toolbar-actions">
+          <span id="offline-badge" class="offline-badge" hidden aria-live="polite" title="目前離線，已快取內容仍可使用">離線</span>
           ${modeToggle}
           ${immersiveBtn}
           ${fontScale}
@@ -696,12 +697,40 @@
     applyPageNumbers();
   }
 
+  function ensureManifestLink() {
+    if (document.querySelector('link[rel="manifest"]')) return;
+    const link = document.createElement("link");
+    link.rel = "manifest";
+    link.href = url("manifest.webmanifest");
+    document.head.appendChild(link);
+  }
+
+  function setupPwa() {
+    ensureManifestLink();
+    if (document.querySelector("script[data-jpwn-pwa]")) return;
+    const s = document.createElement("script");
+    s.src = url("js/pwa/register-sw.js");
+    s.setAttribute("data-jpwn-pwa", "1");
+    s.defer = true;
+    document.body.appendChild(s);
+
+    function paintOnline() {
+      const badge = document.getElementById("offline-badge");
+      if (!badge) return;
+      badge.hidden = navigator.onLine;
+    }
+    window.addEventListener("online", paintOnline);
+    window.addEventListener("offline", paintOnline);
+    paintOnline();
+  }
+
   renderHeader();
   renderHomeCards();
   renderPracticeHubCards();
   setupImmersive();
   setupPageNumbers();
   setupPrintFolios();
+  setupPwa();
   setupBookPrefetch();
 
   if (!document.querySelector("script[data-class-ink], script[data-jpwn-cloud]")) {
