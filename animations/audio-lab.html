@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>麥克風即時頻率儀</title>
   <style>
-*{box-sizing:border-box}body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}main{max-width:1050px;margin:auto;padding:24px}small{color:#547082}h1{font-size:clamp(23px,4vw,31px);line-height:1.4;margin:6px 0 8px}p{margin:8px 0 16px}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;align-items:center}button{font:inherit;min-height:44px;padding:8px 16px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white;cursor:pointer}button.primary{background:#076b87;color:white;border-color:#076b87}button:disabled{opacity:.5;cursor:default}button:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}.visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden;padding:12px 14px 14px}.canvas-row{display:grid;gap:12px}canvas{display:block;width:100%;border-radius:10px;background:#f8fbfd}#wave-canvas{height:140px}#spec-canvas{height:120px}.readout{padding:12px 16px;background:#edf5f8;border-radius:10px;margin-top:12px;font-variant-numeric:tabular-nums;min-height:52px}.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:10px}.metric{padding:10px 12px;background:#fff;border:1px solid #dbe7ed;border-radius:10px}.metric strong{display:block;font-size:22px;color:#076b87}.metric span{font-size:13px;color:#547082}#status{color:#496579;font-size:14px}.question{margin-top:18px;padding:16px;background:#eaf3f7;border-left:4px solid #087fa4;border-radius:7px}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}details p{margin:6px 0}.note{font-size:13px;color:#526c7d;line-height:1.55}.tag-live{display:inline-block;padding:2px 8px;border-radius:6px;background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;margin-left:6px}@media(max-width:480px){main{padding:14px}}
+*{box-sizing:border-box}body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}main{max-width:1050px;margin:auto;padding:24px}small{color:#547082}h1{font-size:clamp(23px,4vw,31px);line-height:1.4;margin:6px 0 8px}p{margin:8px 0 16px}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;align-items:center}button{font:inherit;min-height:44px;padding:8px 16px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white;cursor:pointer}button.primary{background:#076b87;color:white;border-color:#076b87}button.secondary{background:#e0f2fe;border-color:#7dd3fc;color:#0c4a6e}button:disabled{opacity:.5;cursor:default}button:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}.visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden;padding:12px 14px 14px}.canvas-row{display:grid;gap:12px}canvas{display:block;width:100%;border-radius:10px;background:#f8fbfd}#wave-canvas{height:140px}#spec-canvas{height:120px}.readout{padding:12px 16px;background:#edf5f8;border-radius:10px;margin-top:12px;font-variant-numeric:tabular-nums;min-height:52px}.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:10px}.metric{padding:10px 12px;background:#fff;border:1px solid #dbe7ed;border-radius:10px}.metric strong{display:block;font-size:22px;color:#076b87}.metric span{font-size:13px;color:#547082}.cal-box{margin-top:14px;padding:12px 14px;border-radius:12px;background:#fffbeb;border:1px solid #fcd34d}.cal-box h2{font-size:16px;margin:0 0 8px;color:#92400e}#status{color:#496579;font-size:14px}.question{margin-top:18px;padding:16px;background:#eaf3f7;border-left:4px solid #087fa4;border-radius:7px}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}details p{margin:6px 0}.note{font-size:13px;color:#526c7d;line-height:1.55}.tag-live{display:inline-block;padding:2px 8px;border-radius:6px;background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;margin-left:6px}@media(max-width:480px){main{padding:14px}}
   </style>
   <link rel="stylesheet" href="embed.css">
 </head>
@@ -14,7 +14,7 @@
 <main>
   <small>國中理化 · 3-4 樂音三要素 · Live</small>
   <h1>麥克風即時頻率儀<span class="tag-live">裝置感測</span></h1>
-  <p>對麥克風敲音叉、哼歌或說話，觀察波形與估計的主頻（Hz）。與上方「數位試聽」不同：這裡量測的是<strong>環境中的真實聲音</strong>。</p>
+  <p>對麥克風敲音叉或播放穩定單音，觀察波形與主頻（Hz）。建議先<strong>用 440 Hz 校準</strong>，再量其他音源；仍為教學示範，不是檢定儀器。</p>
   <div class="controls">
     <button type="button" id="toggle" class="primary">允許麥克風並開始</button>
     <button type="button" id="stop" disabled>停止</button>
@@ -26,17 +26,28 @@
       <canvas id="spec-canvas" role="img" aria-label="頻譜圖"></canvas>
     </div>
     <div class="metric-grid">
-      <div class="metric"><strong id="hz-out">—</strong><span>主頻估計（Hz）</span></div>
-      <div class="metric"><strong id="rms-out">—</strong><span>相對強度（非分貝）</span></div>
-      <div class="metric"><strong id="pitch-hint">—</strong><span>音調高低提示</span></div>
+      <div class="metric"><strong id="hz-out">—</strong><span>校準後主頻（Hz）</span></div>
+      <div class="metric"><strong id="hz-raw-out">—</strong><span>原始讀數（Hz）</span></div>
+      <div class="metric"><strong id="conf-out">—</strong><span>可信度</span></div>
+      <div class="metric"><strong id="rms-out">—</strong><span>相對強度</span></div>
     </div>
-    <div class="readout" id="result">按「允許麥克風並開始」後，對裝置發聲。</div>
+    <div class="cal-box">
+      <h2>440 Hz 一鍵校準（建議先做）</h2>
+      <p style="margin:0 0 10px;font-size:14px">平板／筆電<strong>喇叭</strong>播放 440 Hz，麥克風在 20～40 cm 處收音；或敲 A4 音叉靠近麥克風。</p>
+      <div class="controls" style="margin:0">
+        <button type="button" id="play-cal" class="secondary" disabled>播放 440 Hz（2 秒）</button>
+        <button type="button" id="run-cal" class="secondary" disabled>取樣並校準</button>
+        <button type="button" id="clear-cal" disabled>清除校準</button>
+      </div>
+      <p id="cal-status" class="note" style="margin:10px 0 0">校準係數：尚未設定</p>
+    </div>
+    <div class="readout" id="result">按「允許麥克風並開始」後，先校準再量測音叉。</div>
   </div>
   <div class="question">
-    <b>先想一想：</b>把音叉換成較短的音叉，預測 Hz 會變高還是變低？為什麼？
-    <details><summary>查看提示</summary><p>較短的振動體通常振動較快 → 頻率較高 → 音調較高。用 Hz 數字對照課本「音調看頻率」。</p></details>
+    <b>先想一想：</b>440 Hz 校準後，換敲較高音叉，Hz 應變高還是變低？
+    <details><summary>查看提示</summary><p>較短、較緊的振動體頻率較高。校準只是修正裝置誤差，不會改變「音調看頻率」的物理關係。</p></details>
   </div>
-  <p class="note">需 HTTPS 或 localhost，並允許麥克風。主頻演算法適合穩定、接近單音的聲音；複雜噪音可能顯示「—」。此工具<strong>不是</strong>檢定用分貝計，相對強度僅供比較。教室請用正常音量，勿對麥克風大喊。</p>
+  <p class="note">FFT＋自相關估計主頻，並以中位數平滑。複雜噪音或泛音過多時可信度會下降。教室請用正常音量；勿對麥克風大喊。</p>
 </main>
 <script src="../js/live/audio-analyzer.js"></script>
 <script>
@@ -59,12 +70,16 @@
     return { w: rect.width, h: rect.height };
   }
 
-  function pitchHint(hz) {
-    if (hz == null) return "—";
-    if (hz < 200) return "偏低";
-    if (hz < 500) return "中等";
-    if (hz < 2000) return "偏高";
-    return "很高";
+  function paintCalStatus() {
+    if (!analyzer) {
+      $("cal-status").textContent = "校準係數：尚未設定";
+      return;
+    }
+    const c = analyzer.getCalibration();
+    $("cal-status").textContent =
+      Math.abs(c.scale - 1) < 0.002
+        ? "校準係數：1.000（預設）"
+        : "校準係數：× " + c.scale.toFixed(4) + "（已套用）";
   }
 
   function drawWave(waveform, rms) {
@@ -84,14 +99,9 @@
       else waveCtx.lineTo(x, y);
     }
     waveCtx.stroke();
-    waveCtx.strokeStyle = "#cbd5e1";
-    waveCtx.beginPath();
-    waveCtx.moveTo(0, mid);
-    waveCtx.lineTo(w, mid);
-    waveCtx.stroke();
   }
 
-  function drawSpec(spectrum) {
+  function drawSpec(spectrum, peakHz, sampleRate, fftSize) {
     const { w, h } = resizeCanvas(specCanvas, specCtx);
     specCtx.clearRect(0, 0, w, h);
     specCtx.fillStyle = "#f8fbfd";
@@ -99,9 +109,17 @@
     const barW = w / spectrum.length;
     for (let i = 0; i < spectrum.length; i++) {
       const v = spectrum[i] / 255;
-      const bh = v * h;
       specCtx.fillStyle = "#38bdf8";
-      specCtx.fillRect(i * barW, h - bh, Math.max(1, barW - 0.5), bh);
+      specCtx.fillRect(i * barW, h - v * h, Math.max(1, barW - 0.5), v * h);
+    }
+    if (peakHz != null && sampleRate > 0 && fftSize > 0) {
+      const x = (peakHz * fftSize / sampleRate / spectrum.length) * w;
+      specCtx.strokeStyle = "#dc2626";
+      specCtx.lineWidth = 2;
+      specCtx.beginPath();
+      specCtx.moveTo(x, 0);
+      specCtx.lineTo(x, h);
+      specCtx.stroke();
     }
   }
 
@@ -109,15 +127,27 @@
     if (!analyzer || !analyzer.running) return;
     const data = analyzer.read();
     drawWave(data.waveform, data.rms);
-    drawSpec(data.spectrum);
+    drawSpec(data.spectrum, data.peakHzRaw, data.sampleRate, 4096);
     const hz = data.peakHz;
+    const raw = data.peakHzRaw;
     $("hz-out").textContent = hz != null ? Math.round(hz).toLocaleString() : "—";
+    $("hz-raw-out").textContent = raw != null ? Math.round(raw).toLocaleString() : "—";
+    $("conf-out").textContent =
+      raw != null ? Math.round(data.confidence * 100) + " %" : "—";
     $("rms-out").textContent = data.rms > 0 ? (data.rms * 100).toFixed(1) : "—";
-    $("pitch-hint").textContent = pitchHint(hz);
-    $("result").textContent = hz != null
-      ? `偵測到約 ${Math.round(hz)} Hz。取樣率 ${data.sampleRate} Hz。`
-      : "有聲音輸入，但主頻不穩定（試敲音叉或哼穩定單音）。";
+    $("result").textContent =
+      hz != null && data.confidence >= 0.25
+        ? `校準後約 ${Math.round(hz)} Hz（原始 ${Math.round(raw)} Hz，可信度 ${Math.round(data.confidence * 100)} %）。`
+        : raw != null
+          ? "有聲音，但主頻不穩定；請用穩定單音（音叉／440 Hz 校準音）並靠近麥克風。"
+          : "等待穩定聲音輸入…";
     raf = requestAnimationFrame(loop);
+  }
+
+  function setCalButtons(on) {
+    $("play-cal").disabled = !on;
+    $("run-cal").disabled = !on;
+    $("clear-cal").disabled = !on;
   }
 
   function halt() {
@@ -130,6 +160,7 @@
     $("toggle").disabled = false;
     $("toggle").textContent = "允許麥克風並開始";
     $("stop").disabled = true;
+    setCalButtons(false);
     $("status").textContent = "已停止";
   }
 
@@ -139,11 +170,13 @@
       return;
     }
     try {
-      analyzer = window.JPWNLiveAudio.create();
+      analyzer = window.JPWNLiveAudio.create({ fftSize: 4096, smoothing: 0.55 });
       await analyzer.start();
+      paintCalStatus();
       $("toggle").textContent = "重新開始";
       $("stop").disabled = false;
-      $("status").textContent = "收音中…";
+      setCalButtons(true);
+      $("status").textContent = "收音中；建議先播放 440 Hz 並校準";
       loop();
     } catch (err) {
       halt();
@@ -152,6 +185,43 @@
   });
 
   $("stop").addEventListener("click", halt);
+
+  $("play-cal").addEventListener("click", async () => {
+    if (!analyzer) return;
+    try {
+      $("status").textContent = "播放 440 Hz 校準音…";
+      await analyzer.playTone(440, 2, 0.08);
+      $("status").textContent = "已播放；可立即按「取樣並校準」";
+    } catch (err) {
+      $("status").textContent = "無法播放校準音";
+    }
+  });
+
+  $("run-cal").addEventListener("click", async () => {
+    if (!analyzer) return;
+    $("status").textContent = "校準取樣中（2 秒）…";
+    await analyzer.playTone(440, 2, 0.08);
+    const samples = [];
+    const t0 = performance.now();
+    while (performance.now() - t0 < 2200) {
+      const d = analyzer.read();
+      if (d.peakHzRaw != null && d.confidence > 0.2) samples.push(d.peakHzRaw);
+      await new Promise((r) => setTimeout(r, 80));
+    }
+    const res = analyzer.calibrateWithReference(440, samples);
+    paintCalStatus();
+    $("status").textContent = res.ok
+      ? `校準完成：量到約 ${Math.round(res.measured)} Hz → 修正為 440 Hz`
+      : res.message || "校準失敗";
+  });
+
+  $("clear-cal").addEventListener("click", () => {
+    if (!analyzer) return;
+    analyzer.saveCalibration(1, 0);
+    paintCalStatus();
+    $("status").textContent = "已清除校準，恢復原始讀數";
+  });
+
   document.addEventListener("visibilitychange", () => {
     if (document.hidden) halt();
   });

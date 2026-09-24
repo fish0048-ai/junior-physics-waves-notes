@@ -219,8 +219,8 @@
         <p class="physics-animation-open-link"><a href="../animations/echo-distance.html" target="_blank" rel="noopener">另開視窗操作動畫</a></p>
       </section>
       <section class="physics-animation-embed live-lab-embed no-print" aria-label="回聲計時實測">
-        <div class="ex-title"><span class="tag tag-cyan">Live 實驗</span> 用麥克風測回聲時間</div>
-        <p class="physics-animation-lead inquiry-ask"><strong>探究：</strong>對牆壁拍手後，Δt 是「來回」還是「單程」？為什麼公式要除以 2？</p>
+        <div class="ex-title"><span class="tag tag-cyan">Live 實驗</span> 喇叭脈衝測回聲</div>
+        <p class="physics-animation-lead inquiry-ask"><strong>探究：</strong>裝置喇叭發出「嗶」聲後，Δt 量到的是來回還是單程？為什麼公式要除以 2？</p>
         <iframe id="anim-echo-timer"
           class="physics-animation physics-animation-frame"
           data-physics-animation
@@ -233,17 +233,17 @@
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> Live 回聲測距步驟</div>
         <ol class="q">
-          <li>選空氣 340 m/s（或海水 1500 m/s），站在距牆約 3～8 m 處。</li>
-          <li>按「開始測量」→ 校準時保持安靜 → 對牆<strong>拍手一次</strong>。</li>
+          <li>選空氣 340 m/s（或海水 1500 m/s）；平板<strong>喇叭朝向牆壁</strong>，距離約 3～8 m，音量中等。</li>
+          <li>按「開始測量」→ 校準雜訊 → 裝置<strong>自動由喇叭</strong>發短音 → 麥克風等回聲（不需拍手）。</li>
           <li>讀 Δt 與 d，與上方動畫模型對照：來回路程＝2d。</li>
-          <li>雜訊大或太近會失敗；這是教學示範，不是船用聲納。</li>
+          <li>雜訊大、牆面太軟或太近會失敗；這是教學示範，不是船用聲納。</li>
         </ol>
       </section>
       <section class="gifted">
         <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 偵測原理與誤差</div>
         <ul class="q">
-          <li>程式用聲音能量突增（onset）抓「原音」與「回聲」兩次峰值，門檻依環境雜訊自動調整。</li>
-          <li>若牆面太軟、角度太斜，反射弱 → 可能逾時；聲納船則用脈衝＋精準計時器。</li>
+          <li>程式由喇叭發 2000 Hz 短脈衝，略過直達聲後抓第一個回波能量峰；門檻依雜訊自動調整。</li>
+          <li>真實聲納也是「發脈衝—等回波」，比拍手起始時間更明確；牆面太軟或角度太斜仍可能逾時。</li>
           <li>溫度會改變空氣聲速（約 340 m/s 是 15℃ 近似）；資優可查 v≈331+0.6T 修正。</li>
         </ul>
       </section>

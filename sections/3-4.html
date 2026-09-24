@@ -243,25 +243,25 @@
           data-physics-animation
           src="../animations/audio-lab.html"
           title="麥克風即時頻率儀"
-          width="100%" height="680" loading="lazy"
+          width="100%" height="820" loading="lazy"
           referrerpolicy="same-origin"></iframe>
         <p class="physics-animation-open-link"><a href="../animations/audio-lab.html" target="_blank" rel="noopener">另開視窗操作 Live 實驗</a></p>
       </section>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> Live 實驗操作步驟</div>
         <ol class="q">
-          <li>按「允許麥克風並開始」，平板／筆電需 HTTPS 或 localhost。</li>
-          <li>先敲<strong>低音</strong>音叉，記下 Hz；再敲<strong>高音</strong>音叉，比較數字大小。</li>
-          <li>同一音叉，小聲敲與大聲敲：Hz 應相近，相對強度會變——對應「音調看頻率、響度看振幅」。</li>
+          <li>按「允許麥克風並開始」（需 HTTPS 或 localhost）。</li>
+          <li>先按「播放 440 Hz」→「取樣並校準」，讓讀數對準標準音高。</li>
+          <li>再敲<strong>低／高</strong>音叉各一次，比較校準後 Hz；小聲／大聲敲同一音叉，Hz 應相近、強度會變。</li>
           <li>列印 PDF 時此區會隱藏；上課請在螢幕操作，或掃「另開視窗」連結。</li>
         </ol>
       </section>
       <section class="gifted">
         <div class="ex-title"><span class="tag tag-gifted">資優補充</span> 頻譜與基頻</div>
         <ul class="q">
-          <li>下方頻譜圖顯示各頻率成分的<strong>相對強度</strong>；主頻估計找的是基頻（最低的主要週期）。</li>
-          <li>樂器除基頻外還有泛音，所以波形複雜；單音叉較接近正弦波，Hz 較穩定。</li>
-          <li>FFT 把時間訊號拆成頻率成分；教室示範夠用，精密量測仍要用實驗室儀器。</li>
+          <li>程式以 FFT（拋物線內插）＋自相關估計基頻，並用中位數平滑；紅線標示目前主頻位置。</li>
+          <li>440 Hz 校準是把裝置讀數對到已知標準音，修正麥克風／取樣誤差，不是改動物理頻率。</li>
+          <li>樂器泛音多時可信度會降；精密量測仍要用實驗室儀器。</li>
         </ul>
       </section>
 

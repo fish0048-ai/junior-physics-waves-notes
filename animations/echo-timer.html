@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>回聲計時實測</title>
+  <title>回聲計時實測（喇叭脈衝）</title>
   <style>
 *{box-sizing:border-box}body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}main{max-width:1050px;margin:auto;padding:24px}small{color:#547082}h1{font-size:clamp(23px,4vw,31px);line-height:1.4;margin:6px 0 8px}p{margin:8px 0 16px}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;align-items:center}label{font-size:15px;display:flex;align-items:center;gap:8px}select,button,input[type=number]{font:inherit;min-height:44px;padding:8px 12px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white}button{cursor:pointer}button.primary{background:#076b87;color:white;border-color:#076b87}button:disabled{opacity:.5;cursor:default}button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}.visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden;padding:16px}.formula-box{padding:14px 16px;background:#edf5f8;border-radius:10px;font-size:18px;text-align:center;margin-bottom:12px;font-variant-numeric:tabular-nums}.readout{padding:12px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;min-height:72px;font-variant-numeric:tabular-nums}.steps{display:grid;gap:8px;margin-top:12px}.step{padding:10px 12px;border-radius:8px;background:#f8fafc;border:1px solid #e2e8f0;font-size:14px}.step.is-on{background:#ecfdf5;border-color:#6ee7b7;font-weight:600}#status{color:#496579;font-size:14px}.question{margin-top:18px;padding:16px;background:#eaf3f7;border-left:4px solid #087fa4;border-radius:7px}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}details p{margin:6px 0}.note{font-size:13px;color:#526c7d;line-height:1.55}.tag-live{display:inline-block;padding:2px 8px;border-radius:6px;background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;margin-left:6px}@media(max-width:480px){main{padding:14px}}
   </style>
@@ -13,8 +13,8 @@
 <script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script>
 <main>
   <small>國中理化 · 3-3 回聲 · Live</small>
-  <h1>回聲計時實測<span class="tag-live">裝置感測</span></h1>
-  <p>對牆壁拍手，用麥克風偵測「原音」與「回聲」的時間差，再算單程距離。上方動畫是模型；這裡用<strong>真實環境</strong>量測。</p>
+  <h1>回聲計時實測<span class="tag-live">喇叭脈衝</span></h1>
+  <p>由<strong>裝置喇叭</strong>發出短促「嗶」聲（2000 Hz），麥克風接收牆壁回聲，量測往返時間 Δt。比拍手穩定，較接近聲納脈衝原理。</p>
   <div class="controls">
     <label>介質
       <select id="medium">
@@ -33,19 +33,18 @@
     <div class="formula-box">d ＝ v × Δt ÷ 2</div>
     <div class="readout" id="result">Δt ＝ —　｜　單程距離 d ＝ — m</div>
     <div class="steps" id="steps">
-      <div class="step" data-step="calibrating">① 校準雜訊（約 0.5 秒，保持安靜）</div>
-      <div class="step" data-step="armed">② 對牆壁拍手一次</div>
-      <div class="step" data-step="waiting">③ 等待回聲被偵測</div>
-      <div class="step" data-step="done">④ 讀取 Δt 與距離</div>
+      <div class="step" data-step="calibrating">① 校準雜訊（約 0.4 秒，保持安靜）</div>
+      <div class="step" data-step="pinging">② 喇叭發出短音「嗶—」（2000 Hz）</div>
+      <div class="step" data-step="listening">③ 麥克風等待回聲（略過直達聲）</div>
+      <div class="step" data-step="done">④ 讀取 Δt 與距離 d</div>
     </div>
   </div>
   <div class="question">
-    <b>先想一想：</b>若 Δt 變成 2 倍，牆壁距離是 2 倍還是 4 倍？
-    <details><summary>查看解釋</summary><p>公式 d＝vΔt÷2 中，d 與 Δt 成正比。Δt 變 2 倍 → d 也約 2 倍（同一介質、v 不變）。</p></details>
+    <b>先想一想：</b>為什麼用喇叭固定頻率脈衝，比拍手適合做回聲實驗？
+    <details><summary>查看解釋</summary><p>拍手時間與頻寬不固定，容易誤判；喇叭脈衝起始時間明確，較像聲納的「發射—等待回波」流程（教學示範仍受環境雜訊影響）。</p></details>
   </div>
-  <p class="note">需在較安靜、有明顯反射面的空間操作；雜訊或太近會誤判。偵測門檻依環境自動調整，結果為<strong>教學示範</strong>，不是精密聲納。空氣 340 m/s 為近似值。</p>
+  <p class="note">操作：平板<strong>喇叭朝向牆壁</strong>，距離約 3～8 m，音量調至中等；按一次「開始測量」即自動發聲並聽回聲。結果為教學示範，不是精密聲納。</p>
 </main>
-<script src="../js/live/audio-analyzer.js"></script>
 <script src="../js/live/echo-timer.js"></script>
 <script>
 (() => {
@@ -61,9 +60,12 @@
 
   function paintSteps(phase) {
     document.querySelectorAll(".step").forEach((el) => {
-      el.classList.toggle("is-on", el.dataset.step === phase || (phase === "waiting" && el.dataset.step === "armed"));
+      const step = el.dataset.step;
+      const on =
+        step === phase ||
+        (phase === "listening" && (step === "pinging" || step === "listening"));
+      el.classList.toggle("is-on", on);
     });
-    if (phase === "done") document.querySelector('[data-step="done"]')?.classList.add("is-on");
   }
 
   function onUpdate(data) {
@@ -73,16 +75,14 @@
     const d = data.distance;
     if (dt != null && d != null) {
       $("result").textContent =
-        `Δt ＝ ${dt.toFixed(3)} s ｜ v ＝ ${data.speed} m/s ｜ 單程距離 d ＝ ${d.toFixed(1)} m`;
+        `Δt ＝ ${dt.toFixed(3)} s ｜ v ＝ ${data.speed} m/s ｜ 單程距離 d ＝ ${d.toFixed(1)} m（脈衝 ${data.pingHz} Hz）`;
     } else if (data.phase === "timeout") {
-      $("result").textContent = "未偵測到清楚回聲；請靠近牆壁、減少雜訊後重試。";
+      $("result").textContent = "未偵測到清楚回聲；請喇叭朝向牆壁、調大音量或靠近反射面。";
     }
   }
 
   function ensureTimer() {
-    if (!timer) {
-      timer = new window.JPWNEchoTimer({ speed: speed(), onUpdate });
-    }
+    if (!timer) timer = new window.JPWNEchoTimer({ speed: speed(), onUpdate });
     timer.setSpeed(speed());
     return timer;
   }
@@ -92,7 +92,7 @@
       await ensureTimer().start();
       $("start").disabled = true;
     } catch (err) {
-      $("status").textContent = err && err.message ? err.message : "無法啟用麥克風";
+      $("status").textContent = err && err.message ? err.message : "無法啟用音訊";
     }
   });
 
