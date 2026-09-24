@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>共振掃頻實驗</title>
+  <style>
+*{box-sizing:border-box}body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}main{max-width:1050px;margin:auto;padding:24px}small{color:#547082}h1{font-size:clamp(23px,4vw,31px);line-height:1.4;margin:6px 0 8px}p{margin:8px 0 16px}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;align-items:center}button{font:inherit;min-height:44px;padding:8px 16px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white;cursor:pointer}button.primary{background:#076b87;color:white;border-color:#076b87}button.secondary{background:#ede9fe;border-color:#c4b5fd;color:#5b21b6}button:disabled{opacity:.5;cursor:default}button:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}.visual{background:white;border:1px solid #dbe7ed;border-radius:16px;padding:12px 14px 14px}canvas{display:block;width:100%;height:200px;border-radius:10px;background:#f8fbfd}.metric-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:10px;margin-top:12px}.metric{padding:10px 12px;background:#fff;border:1px solid #dbe7ed;border-radius:10px}.metric strong{display:block;font-size:20px;color:#076b87}.metric span{font-size:13px;color:#547082}.metric.is-resonance{background:#ecfdf5;border-color:#6ee7b7}.metric.is-resonance strong{color:#047857}.readout{padding:12px 16px;background:#edf5f8;border-radius:10px;margin-top:12px;font-variant-numeric:tabular-nums;min-height:52px}.control{width:100%;max-width:420px}.control label{display:flex;justify-content:space-between;font-size:15px;margin-bottom:6px}input[type=range]{width:100%;min-height:38px;accent-color:#7c3aed}#status{color:#496579;font-size:14px}.kit{padding:12px 14px;border-radius:12px;background:#f5f3ff;border:1px solid #ddd6fe;font-size:14px;margin:0 0 12px}.question{margin-top:18px;padding:16px;background:#eaf3f7;border-left:4px solid #087fa4;border-radius:7px}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}details p{margin:6px 0}.note{font-size:13px;color:#526c7d;line-height:1.55}.tag-live{display:inline-block;padding:2px 8px;border-radius:6px;background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;margin-left:6px}@media(max-width:480px){main{padding:14px}}
+  </style>
+  <link rel="stylesheet" href="embed.css">
+</head>
+<body>
+<script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script>
+<main>
+  <small>國中理化 · 3-4 共振／共鳴 · Live</small>
+  <h1>共振掃頻實驗<span class="tag-live">喇叭＋麥克風</span></h1>
+  <p>用<strong>喇叭</strong>發不同頻率的聲音（受迫振動），<strong>麥克風</strong>量空瓶／紙杯的回應。當驅動頻率接近容器<strong>固有頻率</strong>，響應會突然變大——就是共振。</p>
+  <p class="kit"><strong>材料：</strong>空瓶、紙杯或空罐（口徑 5～8 cm 佳）。平板喇叭朝向瓶口，距離 5～15 cm；掃頻時勿移動瓶子。</p>
+  <div class="controls">
+    <button type="button" id="start" class="primary">允許麥克風並開始</button>
+    <button type="button" id="sweep" class="secondary" disabled>自動掃頻（280～1400 Hz）</button>
+    <button type="button" id="stop" disabled>停止</button>
+    <span role="status" aria-live="polite" id="status">尚未開始</span>
+  </div>
+  <div class="visual">
+    <canvas id="profile" role="img" aria-label="頻率對響應曲線"></canvas>
+    <div class="metric-grid">
+      <div class="metric" id="peak-metric"><strong id="peak-hz">—</strong><span>估計固有頻率（Hz）</span></div>
+      <div class="metric" id="drive-metric"><strong id="drive-hz">—</strong><span>目前驅動頻率（Hz）</span></div>
+      <div class="metric" id="resp-metric"><strong id="resp-rms">—</strong><span>麥克風響應（相對）</span></div>
+      <div class="metric" id="res-metric"><strong id="res-flag">—</strong><span>是否接近共振</span></div>
+    </div>
+    <div class="control" style="margin-top:14px">
+      <label for="manual-hz">手動試聽 <output id="manual-out">440 Hz</output></label>
+      <input id="manual-hz" type="range" min="280" max="1400" step="5" value="440" disabled>
+    </div>
+    <div class="controls" style="margin:10px 0 0">
+      <button type="button" id="play-manual" class="secondary" disabled>播放此頻率（約 0.2 秒）</button>
+      <button type="button" id="stop-tone" disabled>停止試聽</button>
+    </div>
+    <div class="readout" id="result">開始後按「自動掃頻」，找出響應最高的頻率，再用手動滑桿對照。</div>
+  </div>
+  <div class="question">
+    <b>先想一想：</b>若驅動頻率離固有頻率很遠，空瓶還會大幅振動嗎？
+    <details><summary>查看提示</summary><p>受迫振動在「頻率對上」時振幅最大；偏離愈多，能量耦合愈弱，聽起來／量到的響應就愈小。</p></details>
+  </div>
+  <p class="note">掃頻為教學示範：不同瓶子峰值不同；瓶內加水會改變固有頻率。不是精密量測儀器。教室請用中等音量。</p>
+</main>
+<script src="../js/live/audio-analyzer.js"></script>
+<script src="../js/live/resonance-lab.js"></script>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const canvas = $("profile");
+  const ctx = canvas.getContext("2d");
+  let lab = null;
+
+  function resizeCanvas() {
+    const rect = canvas.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.max(1, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(1, Math.floor(rect.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    return { w: rect.width, h: rect.height };
+  }
+
+  function drawProfile(profile, peakHz) {
+    const { w, h } = resizeCanvas();
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "#f8fbfd";
+    ctx.fillRect(0, 0, w, h);
+    if (!profile.length) {
+      ctx.fillStyle = "#64748b";
+      ctx.font = "14px system-ui, 'Microsoft JhengHei', sans-serif";
+      ctx.fillText("完成掃頻後，這裡會顯示「頻率—響應」曲線", 16, h / 2);
+      return;
+    }
+    const pad = { l: 42, r: 12, t: 16, b: 28 };
+    const iw = w - pad.l - pad.r;
+    const ih = h - pad.t - pad.b;
+    const maxR = Math.max(...profile.map((p) => p.rms), 0.001);
+    const minHz = profile[0].hz;
+    const maxHz = profile[profile.length - 1].hz;
+    ctx.strokeStyle = "#cbd5e1";
+    ctx.beginPath();
+    ctx.moveTo(pad.l, pad.t);
+    ctx.lineTo(pad.l, pad.t + ih);
+    ctx.lineTo(pad.l + iw, pad.t + ih);
+    ctx.stroke();
+    ctx.beginPath();
+    ctx.strokeStyle = "#7c3aed";
+    ctx.lineWidth = 2;
+    profile.forEach((p, i) => {
+      const x = pad.l + ((p.hz - minHz) / (maxHz - minHz || 1)) * iw;
+      const y = pad.t + ih - (p.rms / maxR) * ih;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+    if (peakHz != null) {
+      const px = pad.l + ((peakHz - minHz) / (maxHz - minHz || 1)) * iw;
+      ctx.strokeStyle = "#dc2626";
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.moveTo(px, pad.t);
+      ctx.lineTo(px, pad.t + ih);
+      ctx.stroke();
+      ctx.setLineDash([]);
+    }
+    ctx.fillStyle = "#475569";
+    ctx.font = "12px system-ui, 'Microsoft JhengHei', sans-serif";
+    ctx.fillText("Hz", w - 28, h - 8);
+    ctx.fillText("響應", 8, pad.t + 10);
+  }
+
+  function setLabButtons(on) {
+    $("sweep").disabled = !on;
+    $("stop").disabled = !on;
+    $("manual-hz").disabled = !on;
+    $("play-manual").disabled = !on;
+    $("stop-tone").disabled = !on;
+  }
+
+  function onUpdate(data) {
+    if (data.message) $("status").textContent = data.message;
+    if (data.profile) drawProfile(data.profile, data.peakHz);
+    if (data.peakHz != null) $("peak-hz").textContent = Math.round(data.peakHz).toLocaleString();
+    if (data.driveHz != null) $("drive-hz").textContent = Math.round(data.driveHz).toLocaleString();
+    if (data.responseRms != null) $("resp-rms").textContent = (data.responseRms * 100).toFixed(1);
+    if (data.nearResonance != null) {
+      $("res-flag").textContent = data.nearResonance ? "是" : "否";
+      $("res-metric").classList.toggle("is-resonance", !!data.nearResonance);
+    } else if (data.peakHz != null && data.phase === "done") {
+      $("res-flag").textContent = "待試";
+      $("res-metric").classList.remove("is-resonance");
+    }
+    if (data.phase === "done" && data.peakHz != null) {
+      $("result").textContent =
+        `峰值約 ${Math.round(data.peakHz)} Hz。把滑桿移到這附近再「播放此頻率」，比較響應是否明顯變大。`;
+      $("manual-hz").value = String(Math.round(data.peakHz));
+      $("manual-out").textContent = Math.round(data.peakHz) + " Hz";
+    }
+  }
+
+  $("start").addEventListener("click", async () => {
+    if (lab) {
+      lab.destroy();
+      lab = null;
+      setLabButtons(false);
+      $("start").textContent = "允許麥克風並開始";
+      drawProfile([], null);
+      return;
+    }
+    try {
+      lab = new window.JPWNResonanceLab({ onUpdate });
+      await lab.start();
+      setLabButtons(true);
+      $("start").textContent = "重新開始";
+      drawProfile([], null);
+    } catch (err) {
+      $("status").textContent = err && err.message ? err.message : "無法啟用音訊";
+    }
+  });
+
+  $("sweep").addEventListener("click", () => {
+    if (!lab) return;
+    lab.sweep({ minHz: 280, maxHz: 1400, step: 25, holdMs: 180 });
+  });
+
+  $("stop").addEventListener("click", () => {
+    if (!lab) return;
+    lab.cancelSweep();
+    lab.destroy();
+    lab = null;
+    setLabButtons(false);
+    $("start").textContent = "允許麥克風並開始";
+  });
+
+  $("manual-hz").addEventListener("input", () => {
+    $("manual-out").textContent = $("manual-hz").value + " Hz";
+  });
+
+  $("play-manual").addEventListener("click", async () => {
+    if (!lab) return;
+    await lab.playAt(Number($("manual-hz").value));
+  });
+
+  $("stop-tone").addEventListener("click", () => {
+    if (lab) lab.stopTone();
+  });
+
+  document.addEventListener("visibilitychange", () => {
+    if (document.hidden && lab) {
+      lab.destroy();
+      lab = null;
+      setLabButtons(false);
+      $("start").textContent = "允許麥克風並開始";
+    }
+  });
+
+  drawProfile([], null);
+
+  let sent = 0;
+  new ResizeObserver(() => {
+    const height = Math.ceil(document.querySelector("main").getBoundingClientRect().height);
+    if (height !== sent && window.parent !== window) {
+      sent = height;
+      window.parent.postMessage(
+        { type: "physics-animation:resize", height },
+        location.origin === "null" ? "*" : location.origin
+      );
+    }
+  }).observe(document.body);
+})();
+</script>
+<script src="embed-resize.js"></script>
+</body>
+</html>

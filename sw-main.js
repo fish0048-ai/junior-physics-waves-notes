@@ -1,5 +1,5 @@
 /* 國中理化講義站 PWA — 離線快取（Phase 1：第 3 章核心） */
-const CACHE_VERSION = "jpwn-pwa-v1";
+const CACHE_VERSION = "jpwn-pwa-v2";
 
 const PRECACHE = [
   "cover.html",
@@ -22,6 +22,7 @@ const PRECACHE = [
   "js/book-manifest.js",
   "js/live/audio-analyzer.js",
   "js/live/echo-timer.js",
+  "js/live/resonance-lab.js",
   "animations/embed.css",
   "animations/embed-resize.js",
   "animations/wave-particle.html",
@@ -30,6 +31,7 @@ const PRECACHE = [
   "animations/hearing-range.html",
   "animations/sound-properties.html",
   "animations/audio-lab.html",
+  "animations/resonance-lab.html",
   "manifest.webmanifest"
 ];
 
