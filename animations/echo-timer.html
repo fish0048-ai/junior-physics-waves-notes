@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>?è²è¨æ?å¯¦æ¸¬</title>
+  <title>回聲計時實測</title>
   <style>
 *{box-sizing:border-box}body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}main{max-width:1050px;margin:auto;padding:24px}small{color:#547082}h1{font-size:clamp(23px,4vw,31px);line-height:1.4;margin:6px 0 8px}p{margin:8px 0 16px}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;align-items:center}label{font-size:15px;display:flex;align-items:center;gap:8px}select,button,input[type=number]{font:inherit;min-height:44px;padding:8px 12px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white}button{cursor:pointer}button.primary{background:#076b87;color:white;border-color:#076b87}button:disabled{opacity:.5;cursor:default}button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}.visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden;padding:16px}.formula-box{padding:14px 16px;background:#edf5f8;border-radius:10px;font-size:18px;text-align:center;margin-bottom:12px;font-variant-numeric:tabular-nums}.readout{padding:12px 16px;background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;min-height:72px;font-variant-numeric:tabular-nums}.steps{display:grid;gap:8px;margin-top:12px}.step{padding:10px 12px;border-radius:8px;background:#f8fafc;border:1px solid #e2e8f0;font-size:14px}.step.is-on{background:#ecfdf5;border-color:#6ee7b7;font-weight:600}#status{color:#496579;font-size:14px}.question{margin-top:18px;padding:16px;background:#eaf3f7;border-left:4px solid #087fa4;border-radius:7px}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}details p{margin:6px 0}.note{font-size:13px;color:#526c7d;line-height:1.55}.tag-live{display:inline-block;padding:2px 8px;border-radius:6px;background:#fef3c7;color:#92400e;font-size:12px;font-weight:700;margin-left:6px}@media(max-width:480px){main{padding:14px}}
   </style>
@@ -12,37 +12,38 @@
 <body>
 <script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script>
 <main>
-  <small>?ä¸­?å? Â· 3-3 ?è² Â· Live</small>
-  <h1>?è²è¨æ?å¯¦æ¸¬<span class="tag-live">è£ç½®?æ¸¬</span></h1>
-  <p>å°ç?å£æ??ï??¨éº¥?é¢¨?µæ¸¬?å??³ãè??å??²ãç??é?å·®ï??ç??®ç?è·é¢?ä??¹å??«æ¯æ¨¡å?ï¼éè£¡??strong>?å¯¦?°å?</strong>?æ¸¬??/p>
+  <small>國中理化 · 3-3 回聲 · Live</small>
+  <h1>回聲計時實測<span class="tag-live">裝置感測</span></h1>
+  <p>對牆壁拍手，用麥克風偵測「原音」與「回聲」的時間差，再算單程距離。上方動畫是模型；這裡用<strong>真實環境</strong>量測。</p>
   <div class="controls">
-    <label>ä»è³ª
+    <label>介質
       <select id="medium">
-        <option value="340">ç©ºæ°£ 340 m/s</option>
-        <option value="1500">æµ·æ°´ 1500 m/s</option>
+        <option value="340">空氣 340 m/s</option>
+        <option value="1500">海水 1500 m/s</option>
       </select>
     </label>
-    <label>?ªè? vï¼m/sï¼?      <input id="speed-custom" type="number" min="200" max="2000" step="1" placeholder="?¸å¡«" style="width:96px">
+    <label>自訂 v（m/s）
+      <input id="speed-custom" type="number" min="200" max="2000" step="1" placeholder="選填" style="width:96px">
     </label>
-    <button type="button" id="start" class="primary">?å?æ¸¬é?</button>
-    <button type="button" id="reset">?è¨­</button>
-    <span role="status" aria-live="polite" id="status">å°æª?å?</span>
+    <button type="button" id="start" class="primary">開始測量</button>
+    <button type="button" id="reset">重設</button>
+    <span role="status" aria-live="polite" id="status">尚未開始</span>
   </div>
   <div class="visual">
-    <div class="formula-box">d ï¼?v ? ?t Ã· 2</div>
-    <div class="readout" id="result">?t ï¼??ãï½ã?®ç?è·é¢ d ï¼???m</div>
+    <div class="formula-box">d ＝ v × Δt ÷ 2</div>
+    <div class="readout" id="result">Δt ＝ —　｜　單程距離 d ＝ — m</div>
     <div class="steps" id="steps">
-      <div class="step" data-step="calibrating">???¡æ??è?ï¼ç? 0.5 ç§ï?ä¿æ?å®é?ï¼?/div>
-      <div class="step" data-step="armed">??å°ç?å£æ??ä?æ¬?/div>
-      <div class="step" data-step="waiting">??ç­å??è²è¢«åµæ¸?/div>
-      <div class="step" data-step="done">??è®???t ?è???/div>
+      <div class="step" data-step="calibrating">① 校準雜訊（約 0.5 秒，保持安靜）</div>
+      <div class="step" data-step="armed">② 對牆壁拍手一次</div>
+      <div class="step" data-step="waiting">③ 等待回聲被偵測</div>
+      <div class="step" data-step="done">④ 讀取 Δt 與距離</div>
     </div>
   </div>
   <div class="question">
-    <b>?æ³ä¸?³ï?</b>???t è®æ? 2 ?ï??å?è·é¢??2 ?é???4 ?ï?
-    <details><summary>?¥ç?è§??</summary><p>?¬å? dï¼v?tÃ·2 ä¸­ï?d ???t ?æ­£æ¯ãÎt è®?2 ????d ä¹ç? 2 ?ï??ä?ä»è³ª?v ä¸è?ï¼ã?/p></details>
+    <b>先想一想：</b>若 Δt 變成 2 倍，牆壁距離是 2 倍還是 4 倍？
+    <details><summary>查看解釋</summary><p>公式 d＝vΔt÷2 中，d 與 Δt 成正比。Δt 變 2 倍 → d 也約 2 倍（同一介質、v 不變）。</p></details>
   </div>
-  <p class="note">??¨è?å®é??æ??é¡¯?å??¢ç?ç©ºé??ä?ï¼é?è¨æ?å¤ªè??èª¤?¤ãåµæ¸¬é?æª»ä??°å??ªå?èª¿æ´ï¼ç??çº<strong>?å­¸ç¤ºç?</strong>ï¼ä??¯ç²¾å¯è²ç´ãç©ºæ°?340 m/s ?ºè?ä¼¼å¼ã?/p>
+  <p class="note">需在較安靜、有明顯反射面的空間操作；雜訊或太近會誤判。偵測門檻依環境自動調整，結果為<strong>教學示範</strong>，不是精密聲納。空氣 340 m/s 為近似值。</p>
 </main>
 <script src="../js/live/audio-analyzer.js"></script>
 <script src="../js/live/echo-timer.js"></script>
@@ -72,9 +73,9 @@
     const d = data.distance;
     if (dt != null && d != null) {
       $("result").textContent =
-        `?t ï¼?${dt.toFixed(3)} s ï½?v ï¼?${data.speed} m/s ï½??®ç?è·é¢ d ï¼?${d.toFixed(1)} m`;
+        `Δt ＝ ${dt.toFixed(3)} s ｜ v ＝ ${data.speed} m/s ｜ 單程距離 d ＝ ${d.toFixed(1)} m`;
     } else if (data.phase === "timeout") {
-      $("result").textContent = "?ªåµæ¸¬å°æ¸æ??è²ï¼è?? è??å??æ?å°é?è¨å??è©¦??;
+      $("result").textContent = "未偵測到清楚回聲；請靠近牆壁、減少雜訊後重試。";
     }
   }
 
@@ -91,15 +92,15 @@
       await ensureTimer().start();
       $("start").disabled = true;
     } catch (err) {
-      $("status").textContent = err && err.message ? err.message : "?¡æ??ç¨éº¥å?é¢?;
+      $("status").textContent = err && err.message ? err.message : "無法啟用麥克風";
     }
   });
 
   $("reset").addEventListener("click", () => {
     if (timer) timer.reset();
     $("start").disabled = false;
-    $("result").textContent = "?t ï¼??ãï½ã?®ç?è·é¢ d ï¼???m";
-    $("status").textContent = "å·²é?è¨?;
+    $("result").textContent = "Δt ＝ —　｜　單程距離 d ＝ — m";
+    $("status").textContent = "已重設";
     paintSteps("idle");
   });
 
