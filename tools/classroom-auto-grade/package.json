@@ -1,0 +1,23 @@
+{
+  "name": "classroom-auto-grade",
+  "version": "1.0.0",
+  "private": true,
+  "description": "本機紙本作業自動批改：讀取 Classroom 下載的學生照片，對答案後匯出 CSV／HTML 報表（不接 Classroom API）",
+  "type": "module",
+  "bin": {
+    "classroom-auto-grade": "./bin/grade.js"
+  },
+  "scripts": {
+    "grade": "node bin/grade.js",
+    "test": "node --test test/*.test.js",
+    "demo": "node bin/grade.js --input fixtures/submissions --answers fixtures/answer-keys/sample.json --out reports --provider mock"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "adm-zip": "^0.5.16",
+    "dotenv": "^16.4.7"
+  }
+}

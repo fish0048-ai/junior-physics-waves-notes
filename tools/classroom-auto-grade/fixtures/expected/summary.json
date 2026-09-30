@@ -1,0 +1,8 @@
+{
+  "title": "樣例預期結果（mock provider）",
+  "students": [
+    { "label": "01-王小明", "score": 10, "maxScore": 10, "wrong": [], "unreadable": [] },
+    { "label": "02-李小華", "score": 5, "maxScore": 10, "wrong": ["2", "3"], "unreadable": [] },
+    { "label": "03-張模糊", "score": 5, "maxScore": 10, "wrong": [], "unreadable": ["1", "3"] }
+  ]
+}

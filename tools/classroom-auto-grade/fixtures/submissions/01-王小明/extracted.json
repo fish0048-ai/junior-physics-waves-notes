@@ -1,0 +1,8 @@
+{
+  "answers": [
+    { "id": "1", "raw": "A", "status": "ok" },
+    { "id": "2", "raw": "B", "status": "ok" },
+    { "id": "3", "raw": "D=M/V", "status": "ok" },
+    { "id": "4", "raw": "1", "status": "ok" }
+  ]
+}

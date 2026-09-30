@@ -1,0 +1,8 @@
+{
+  "answers": [
+    { "id": "1", "raw": null, "status": "unreadable" },
+    { "id": "2", "raw": "B", "status": "ok" },
+    { "id": "3", "raw": null, "status": "unreadable" },
+    { "id": "4", "raw": "1毫升", "status": "ok" }
+  ]
+}
