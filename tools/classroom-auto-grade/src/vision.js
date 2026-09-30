@@ -1,11 +1,7 @@
 import fs from "node:fs/promises";
 import path from "node:path";
 import { GoogleGenerativeAI } from "@google/generative-ai";
-
-/**
- * @typedef {{ id: string, raw: string|null, status: "ok"|"unreadable"|"missing" }} ExtractedAnswer
- * @typedef {{ answers: ExtractedAnswer[], provider: string, model?: string, notes?: string }} ExtractionResult
- */
+import { buildStudentReport } from "./check.js";
 
 const MIME = {
   ".jpg": "image/jpeg",
@@ -22,74 +18,50 @@ function mimeFor(filePath) {
   return MIME[path.extname(filePath).toLowerCase()] || "image/jpeg";
 }
 
+const CHECK_PROMPT = `你是國中理化紙本作業檢查助手。老師**不要**對標準答案、也不要判斷學生答對或答錯。
+你的唯一任務：從照片判斷學生是否**自行批改與訂正**。
+
+判準（務必遵守）：
+1. 有批改（hasMarked）：對的題目有打勾，或整面有一個大勾；錯的有劃掉並補上正確答案（這些痕跡算批改）。
+2. 有訂正（hasCorrected）：錯題上有**另外顏色**的筆跡（與原作答明顯不同色，例如紅筆訂正藍筆原答）。
+3. 看不清：照片模糊、裁切嚴重、反光、過暗／過曝導致無法判斷 → readable=false。此時不要猜測已完成；hasMarked／hasCorrected 一律 false。
+
+注意：
+- 不要核對答案對錯，不要計分。
+- 只有勾、沒有異色訂正筆跡 → hasMarked=true, hasCorrected=false。
+- 完全沒有勾、劃掉、補答案、異色筆跡 → 兩者皆 false。
+- evidence 用一句簡短繁體中文說明你看見什麼（例如：「可見紅筆勾與異色訂正字」「僅見鉛筆大勾無異色訂正」「畫面反光無法辨識筆跡」）。
+
+只輸出 JSON 物件：
+{"readable":true,"hasMarked":true,"hasCorrected":true,"evidence":"……"}
+`;
+
 /**
- * 讀取同目錄的 mock 抽答案檔（測試／無 API key）。
- * 優先：studentDir/extracted.json；其次：與第一張圖同名的 .extracted.json
+ * mock：讀 studentDir/check.json 或與第一張圖同名的 .check.json
  * @param {import("./ingest.js").StudentSubmission} student
- * @param {{ id: string }[]} items
- * @returns {Promise<ExtractionResult|null>}
  */
-async function tryLoadMockExtraction(student, items) {
-  const candidates = [
-    path.join(student.sourceDir, "extracted.json"),
-  ];
+async function tryLoadMockCheck(student) {
+  const candidates = [path.join(student.sourceDir, "check.json")];
   if (student.images[0]) {
     const base = student.images[0].replace(/\.[^.]+$/, "");
-    candidates.push(`${base}.extracted.json`);
+    candidates.push(`${base}.check.json`);
   }
-
   for (const file of candidates) {
     try {
-      const raw = await fs.readFile(file, "utf8");
-      const data = JSON.parse(raw);
-      const map = new Map();
-      for (const a of data.answers || []) {
-        map.set(String(a.id), a);
-      }
-      const answers = items.map((item) => {
-        const hit = map.get(item.id);
-        if (!hit) {
-          return { id: item.id, raw: null, status: "missing" };
-        }
-        const status = hit.status === "unreadable" || hit.status === "missing" || hit.status === "ok"
-          ? hit.status
-          : hit.raw == null || String(hit.raw).trim() === ""
-            ? "unreadable"
-            : "ok";
-        return {
-          id: item.id,
-          raw: hit.raw == null ? null : String(hit.raw),
-          status,
-        };
-      });
+      const data = JSON.parse(await fs.readFile(file, "utf8"));
       return {
-        answers,
+        readable: data.readable === true,
+        hasMarked: data.hasMarked === true,
+        hasCorrected: data.hasCorrected === true,
+        evidence: typeof data.evidence === "string" ? data.evidence : "",
         provider: "mock",
         notes: `from ${path.basename(file)}`,
       };
     } catch {
-      // try next
+      // next
     }
   }
   return null;
-}
-
-function buildPrompt(items) {
-  const list = items
-    .map((it) => `- id=${it.id} type=${it.type}${it.prompt ? ` prompt=${JSON.stringify(it.prompt)}` : ""}`)
-    .join("\n");
-  return `你是國中理化紙本作業辨識助手。請只從照片讀取學生填寫／圈選的答案，不要解題。
-
-題目清單：
-${list}
-
-規則：
-1. 每題回傳 id、raw（辨識到的作答文字）、status。
-2. status 只能是 ok 或 unreadable。看不清、被遮住、空白、無法判斷時用 unreadable，raw 設 null。
-3. 選擇題 raw 盡量回傳 A/B/C/D（或甲乙丙丁原樣亦可）。
-4. 填充題 raw 回傳學生寫下的文字，保留數字與單位若有寫。
-5. 只輸出 JSON 物件，格式：{"answers":[{"id":"1","raw":"A","status":"ok"}, ...]}
-6. 必須涵蓋清單中每一題 id。`;
 }
 
 function parseModelJson(text) {
@@ -98,23 +70,21 @@ function parseModelJson(text) {
   const body = fence ? fence[1].trim() : trimmed;
   const start = body.indexOf("{");
   const end = body.lastIndexOf("}");
-  if (start < 0 || end < start) {
-    throw new Error("模型未回傳 JSON 物件");
-  }
+  if (start < 0 || end < start) throw new Error("模型未回傳 JSON 物件");
   return JSON.parse(body.slice(start, end + 1));
 }
 
 /**
- * 使用 Gemini 多模態從照片抽答案。
  * @param {import("./ingest.js").StudentSubmission} student
- * @param {import("./answer-key.js").AnswerItem[]} items
  * @param {{ apiKey: string, model: string }} opts
- * @returns {Promise<ExtractionResult>}
  */
-async function extractWithGemini(student, items, opts) {
+async function checkWithGemini(student, opts) {
   if (!student.images.length) {
     return {
-      answers: items.map((it) => ({ id: it.id, raw: null, status: "unreadable" })),
+      readable: false,
+      hasMarked: false,
+      hasCorrected: false,
+      evidence: "沒有可讀取的照片檔",
       provider: "gemini",
       model: opts.model,
       notes: "no images",
@@ -140,64 +110,63 @@ async function extractWithGemini(student, items, opts) {
       },
     });
   }
-  parts.push({ text: buildPrompt(items) });
+  parts.push({ text: CHECK_PROMPT });
 
   const result = await model.generateContent({ contents: [{ role: "user", parts }] });
-  const text = result.response.text();
-  const parsed = parseModelJson(text);
-  const map = new Map();
-  for (const a of parsed.answers || []) {
-    map.set(String(a.id), a);
-  }
-
-  const answers = items.map((item) => {
-    const hit = map.get(item.id);
-    if (!hit) return { id: item.id, raw: null, status: "missing" };
-    let status = hit.status === "unreadable" ? "unreadable" : "ok";
-    let raw = hit.raw == null ? null : String(hit.raw).trim();
-    if (!raw) {
-      status = "unreadable";
-      raw = null;
-    }
-    if (status === "unreadable") raw = null;
-    return { id: item.id, raw, status };
-  });
-
-  return { answers, provider: "gemini", model: opts.model };
+  const parsed = parseModelJson(result.response.text());
+  const readable = parsed.readable === true;
+  return {
+    readable,
+    hasMarked: readable && parsed.hasMarked === true,
+    hasCorrected: readable && parsed.hasCorrected === true,
+    evidence: typeof parsed.evidence === "string" ? parsed.evidence : "",
+    provider: "gemini",
+    model: opts.model,
+  };
 }
 
 /**
  * @param {import("./ingest.js").StudentSubmission} student
- * @param {import("./answer-key.js").AnswerItem[]} items
- * @param {{ provider: "gemini"|"mock"|"auto", apiKey?: string, model?: string }} opts
- * @returns {Promise<ExtractionResult>}
+ * @param {{ provider?: "gemini"|"mock"|"auto", apiKey?: string, model?: string }} opts
+ * @returns {Promise<import("./check.js").StudentCheckReport>}
  */
-export async function extractAnswers(student, items, opts) {
+export async function checkSubmission(student, opts = {}) {
   const provider = opts.provider || "auto";
+  /** @type {import("./check.js").VisionCheckResult | null} */
+  let raw = null;
 
   if (provider === "mock") {
-    const mock = await tryLoadMockExtraction(student, items);
-    if (!mock) {
+    raw = await tryLoadMockCheck(student);
+    if (!raw) {
       throw new Error(
-        `provider=mock 但找不到 extracted.json：${student.sourceDir}（請放 fixtures 抽答案檔或改用 gemini）`
+        `provider=mock 但找不到 check.json：${student.sourceDir}`
       );
     }
-    return mock;
+  } else if (provider === "auto") {
+    raw = await tryLoadMockCheck(student);
+    if (!raw) {
+      if (!opts.apiKey) {
+        throw new Error(
+          "缺少 GEMINI_API_KEY。請在 tools/classroom-auto-grade/.env 設定，或使用 --provider mock 搭配 check.json"
+        );
+      }
+      raw = await checkWithGemini(student, {
+        apiKey: opts.apiKey,
+        model: opts.model || "gemini-2.0-flash",
+      });
+    }
+  } else {
+    if (!opts.apiKey) {
+      throw new Error("缺少 GEMINI_API_KEY（--provider gemini）");
+    }
+    raw = await checkWithGemini(student, {
+      apiKey: opts.apiKey,
+      model: opts.model || "gemini-2.0-flash",
+    });
   }
 
-  if (provider === "auto") {
-    const mock = await tryLoadMockExtraction(student, items);
-    if (mock) return mock;
-  }
-
-  if (!opts.apiKey) {
-    throw new Error(
-      "缺少 GEMINI_API_KEY。請在 tools/classroom-auto-grade/.env 設定，或使用 --provider mock 搭配 extracted.json"
-    );
-  }
-
-  return extractWithGemini(student, items, {
-    apiKey: opts.apiKey,
-    model: opts.model || "gemini-2.0-flash",
-  });
+  return buildStudentReport(student, raw);
 }
+
+// 供測試直接呼叫
+export { tryLoadMockCheck, CHECK_PROMPT };

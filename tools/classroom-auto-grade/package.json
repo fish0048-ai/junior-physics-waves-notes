@@ -1,16 +1,17 @@
 {
   "name": "classroom-auto-grade",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "private": true,
-  "description": "本機紙本作業自動批改：讀取 Classroom 下載的學生照片，對答案後匯出 CSV／HTML 報表（不接 Classroom API）",
+  "description": "本機檢查學生紙本是否自行批改與訂正（不對答案、不計分；不接 Classroom API）",
   "type": "module",
   "bin": {
     "classroom-auto-grade": "./bin/grade.js"
   },
   "scripts": {
+    "check": "node bin/grade.js",
     "grade": "node bin/grade.js",
     "test": "node --test test/*.test.js",
-    "demo": "node bin/grade.js --input fixtures/submissions --answers fixtures/answer-keys/sample.json --out reports --provider mock"
+    "demo": "node bin/grade.js --input fixtures/submissions --out reports --provider mock --title 樣例：自行批改訂正檢查"
   },
   "engines": {
     "node": ">=18"

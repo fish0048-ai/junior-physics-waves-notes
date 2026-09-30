@@ -1,17 +1,31 @@
-# 本機紙本作業自動批改
+# 本機作業「自行批改／訂正」檢查
 
-學校 Workspace 信箱不能自建 OAuth、也不能白名單，因此**不接** Google Classroom／Drive API。  
-學生仍在 Classroom 繳交紙本照片；老師下載到本機後，用本工具對答案，產出分數與錯題報表，方便貼給學生自行批改與訂正。
+學校 Workspace 信箱不能自建 OAuth／白名單 → **不接** Google Classroom／Drive API。  
+老師從 Classroom 下載學生紙本照片後，用本工具檢查是否**自行批改與訂正**。
+
+**本工具不對標準答案、不幫學生確認對錯、不計分。**
+
+## 已定判準
+
+| 項目 | 條件 |
+|------|------|
+| 有批改 `hasMarked` | 對的打勾（或整面一個大勾）；錯的劃掉並補上正確答案 |
+| 有訂正 `hasCorrected` | 錯題有**另外顏色**的筆跡 |
+| 看不清 | 模糊／裁切／反光 → 狀態「看不清」，**不要猜成完成** |
+
+整體狀態：
+
+- **完成**：可判斷，且有批改＋有異色訂正  
+- **未完成**：可判斷，但缺批改或缺異色訂正（例如只有勾、完全沒改）  
+- **看不清**：無法判斷  
 
 ## 流程
 
-1. 學生紙本拍照 → 繳交 Classroom  
-2. 老師下載該次作業附件（資料夾或 ZIP）  
-3. 依下方規則整理檔名／子資料夾  
-4. 準備標準答案 JSON  
-5. 本機執行批改 → 得到 CSV／HTML  
-6. 把個別錯題清單貼到 Classroom 私人留言或公告  
-7. 學生訂正再繳 → 重新下載後再跑一次即可  
+1. 學生紙本自行批改訂正後拍照 → 繳交 Classroom  
+2. 老師下載該次附件（資料夾或 ZIP）  
+3. 依檔名規則整理  
+4. 本機執行檢查 → CSV／HTML  
+5. 未完成／看不清者提醒再繳；重新下載後重跑即可  
 
 ## 安裝
 
@@ -19,149 +33,93 @@
 cd tools/classroom-auto-grade
 npm install
 cp .env.example .env
-# 編輯 .env，填入 GEMINI_API_KEY（向 https://aistudio.google.com/apikey 申請）
+# 真實照片辨識時填入 GEMINI_API_KEY（https://aistudio.google.com/apikey）
 ```
 
-`.env` 已列入 gitignore，**禁止**把真實 API key commit 進倉庫。
+`.env` 已 gitignore，禁止提交金鑰。
 
 ## 檔名／子資料夾規則
 
-建議：**每位學生一個子資料夾**，資料夾名含座號與姓名。
+建議每位學生一個子資料夾：
 
-| 形式 | 範例 | 解析結果 |
-|------|------|----------|
-| `座號-姓名` | `01-王小明` | 座號 01、姓名 王小明 |
-| `座號_姓名` | `12_李小華` | 座號 12、姓名 李小華 |
-| `姓名-座號` | `王小明-01` | 同上 |
-| 僅座號 | `07` | 座號 07 |
-| 僅姓名 | `陳大同` | 姓名 陳大同 |
+| 形式 | 範例 |
+|------|------|
+| `座號-姓名` | `01-王小明` |
+| `座號_姓名` | `12_李小華` |
+| `姓名-座號` | `王小明-01` |
+| 僅座號／僅姓名 | `07`、`陳大同` |
 
-子資料夾內放該生所有頁面照片（`.jpg`／`.png`／`.webp` 等）。多頁會一併送給辨識。
-
-若根目錄**沒有**子資料夾、直接放圖片，則「一檔一生」，檔名同樣依上表解析（例如 `03-張模糊.jpg`）。
-
-Classroom 下載的 ZIP 可直接當 `--input`；工具會解壓後套用相同規則。
-
-## 答案檔 JSON
-
-見 `fixtures/answer-keys/sample.json`：
-
-```json
-{
-  "title": "作業名稱",
-  "items": [
-    {
-      "id": "1",
-      "type": "choice",
-      "answer": "A",
-      "aliases": ["甲", "1"],
-      "points": 2,
-      "prompt": "可選：題幹摘要，幫助模型對題"
-    },
-    {
-      "id": "3",
-      "type": "fill",
-      "answer": "D=M/V",
-      "aliases": ["D＝M／V", "密度=質量/體積"],
-      "points": 3
-    }
-  ]
-}
-```
-
-- `type`：`choice`（選擇）或 `fill`（填充）  
-- `answer`：標準答案  
-- `aliases`：同義寫法（全形符號、甲乙丙丁、單位寫法等）  
-- `points`：配分，預設 1  
-- 看不清的作答會標 `unreadable`，**不計分**（報表另欄列出，請學生重拍再繳）
+子資料夾內放該生照片（`.jpg`／`.png`／`.webp` 等）。也可根目錄直接放圖片（一檔一生）。ZIP 可直接當 `--input`。
 
 ## 執行
 
 ```bash
-# 真實照片＋Gemini
-npm run grade -- --input /path/to/下載資料夾或.zip \
-  --answers ./fixtures/answer-keys/sample.json \
-  --out ./reports
-
-# 合成樣張（不需 API key；讀各生 extracted.json）
+# 合成樣張（不需 API key；讀各生 check.json）
 npm run demo
-# 等同：
-node bin/grade.js \
-  --input fixtures/submissions \
-  --answers fixtures/answer-keys/sample.json \
-  --out reports \
-  --provider mock
+
+# 真實照片＋Gemini
+npm run check -- --input /path/to/下載資料夾或.zip --out ./reports --title "3-2 作業訂正"
+
+# 等同
+node bin/grade.js -i /path/to/photos -o ./reports -p gemini
 ```
 
 ### `--provider`
 
 | 值 | 說明 |
 |----|------|
-| `auto`（預設） | 學生資料夾若有 `extracted.json` 則用 mock；否則呼叫 Gemini |
-| `mock` | 只讀 `extracted.json`，適合無 key／單元驗證 |
-| `gemini` | 強制呼叫 Gemini（需 `GEMINI_API_KEY`） |
+| `auto`（預設） | 有 `check.json` 用 mock，否則 Gemini |
+| `mock` | 只讀 `check.json` |
+| `gemini` | 強制 Gemini（需 `GEMINI_API_KEY`） |
 
-環境變數：
+環境變數：`GEMINI_API_KEY`、`GEMINI_MODEL`（可選，預設 `gemini-2.0-flash`）。
 
-- `GEMINI_API_KEY`（必填，除非 mock）  
-- `GEMINI_MODEL`（可選，預設 `gemini-2.0-flash`）
+> 舊版 `--answers` 已移除；若誤用會提示錯誤。
 
-## 報表
+## 報表欄位
 
-輸出目錄會產生：
+- 座號、姓名、標籤  
+- **有批改**、**有訂正**  
+- **狀態**（完成／未完成／看不清）  
+- **依據**（簡短中文）  
 
-- `grade-report-<時間>.csv`／`.html`／`.json`  
-- `latest.csv`／`latest.html`／`latest.json`（覆寫成最新一次）
+輸出：`check-report-<時間>.{csv,html,json}` 與 `latest.*`。
 
-HTML 含：
-
-1. **全班總表**：座號、姓名、分數、錯題、讀不到  
-2. **個別錯題清單**：方便複製貼到 Classroom 私人留言，請學生自行批改與訂正  
-
-## 訂正再繳後重跑
-
-1. 學生依錯題清單訂正紙本並重新拍照繳交  
-2. 老師再下載該次附件，覆蓋或另開資料夾  
-3. 用同一份答案 JSON 再執行同一指令  
-4. 比對新報表分數是否提升；仍 `unreadable` 者請再提醒重拍  
+HTML 含全班總表與個別說明，方便貼 Classroom 私人留言。
 
 ## 樣例與測試
 
-`fixtures/submissions/` 含三位合成情境（搭配 `extracted.json`，不需真實 API）：
+`fixtures/submissions/`：
 
-| 資料夾 | 預期 |
-|--------|------|
-| `01-王小明` | 全對 10/10 |
-| `02-李小華` | 第 2、3 題錯 → 5/10 |
-| `03-張模糊` | 第 1、3 題讀不到 → 5/10 |
+| 資料夾 | 情境 | 預期狀態 |
+|--------|------|----------|
+| `01-王小明` | 有批改有訂正 | 完成 |
+| `02-李小華` | 只有勾、無異色訂正 | 未完成 |
+| `03-陳大同` | 完全沒改 | 未完成 |
+| `04-張模糊` | 模糊反光 | 看不清 |
 
 ```bash
 npm test
 npm run demo
 ```
 
-若要對**真實照片**驗證 Gemini，請自備 1～2 位學生樣張、填好 `.env` 後：
-
-```bash
-node bin/grade.js -i /path/to/photos -a fixtures/answer-keys/sample.json -o reports -p gemini
-```
-
 ## 限制
 
 - 不做 Classroom／Drive API、不自動回寫成績  
-- 僅選擇／填充（有標準答案）；開放作答、計算過程、畫圖不自動給分  
-- 辨識品質受照片清晰度、光線、裁切影響；模糊會標 `unreadable`  
-- 需本機網路與有效 Gemini API key（mock／測試除外）  
+- **不對答案、不計分**  
+- 辨識受照片品質影響；看不清會標出供抽查  
+- 真實照片需 Gemini API key（mock／測試除外）  
 
-## 目錄結構
+## 目錄
 
 ```
 tools/classroom-auto-grade/
-  bin/grade.js          # CLI 入口
-  src/                  # 讀取、辨識、計分、報表
-  fixtures/             # 答案樣例＋合成繳交
-  test/                 # 單元／整合測試（mock）
-  reports/              # 本機輸出（gitignore）
-  .env.example
+  bin/grade.js       # CLI
+  src/check.js       # 狀態推導
+  src/vision.js      # Gemini／mock 檢查
+  src/ingest.js      # 資料夾／ZIP
+  src/report.js      # CSV／HTML
+  fixtures/          # 四種合成情境
+  test/
   README.md
 ```
