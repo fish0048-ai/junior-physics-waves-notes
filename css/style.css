@@ -1362,11 +1362,26 @@ svg.math-graph text {
   min-width: 0;
   box-sizing: border-box;
 }
-.lab-sheet-tight .sheet-members td:nth-child(2) { width: 3.2em; }
-.lab-sheet-tight .sheet-members td:nth-child(3) { width: 5em; }
-.lab-sheet-tight .sheet-members td:nth-child(4) { width: auto; }
+.lab-sheet-tight .sheet-members .sheet-col-task { width: 18%; }
+.lab-sheet-tight .sheet-members .sheet-col-seat { width: 2.2em; }
+.lab-sheet-tight .sheet-members .sheet-col-name { width: 3.6em; }
+.lab-sheet-tight .sheet-members .sheet-field-seat {
+  min-width: 0;
+  width: 100%;
+  max-width: 2.4em;
+  text-align: center;
+}
 .lab-sheet-tight .sheet-members .sheet-field-task {
-  min-width: 8em;
+  min-width: 0;
+  width: 100%;
+}
+.lab-sheet-tight .sheet-members .sheet-field-name {
+  min-width: 0;
+  width: 100%;
+}
+.lab-sheet-tight .sheet-members thead th:not(:empty) {
+  font-size: 10px;
+  padding: 1px 2px;
 }
 .lab-sheet-tight .sheet-top-note {
   margin: 0 0 4px;
