@@ -1240,6 +1240,175 @@ svg.math-graph text {
   margin: 0;
   min-height: 2.6em;
 }
+
+/* 1-2 實驗學習單：緊湊版（目標 A4／B4 雙面約 2 頁） */
+.lab-sheet-tight .sheet-top {
+  margin-bottom: 8px;
+}
+.lab-sheet-tight .sheet-top .hero {
+  padding-bottom: 4px;
+  margin-bottom: 4px;
+}
+.lab-sheet-tight .sheet-top .sheet-meta-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 12px;
+  align-items: baseline;
+  margin: 0 0 4px;
+  font-size: 14px;
+}
+.lab-sheet-tight .sheet-top-note {
+  margin: 0 0 4px;
+  font-size: 13px;
+}
+.lab-sheet-tight .card {
+  padding: 10px 12px;
+  margin-bottom: 8px;
+}
+.lab-sheet-tight .section-head {
+  margin-bottom: 4px;
+}
+.lab-sheet-tight .section-head h2 {
+  font-size: 1.05rem;
+}
+.lab-sheet-tight .section-head p {
+  font-size: 12px;
+  margin: 0;
+}
+.lab-sheet-tight .sheet-compact-note {
+  margin: 0 0 4px;
+  font-size: 13px;
+  line-height: 1.35;
+}
+.lab-sheet-tight .lab-record,
+.lab-sheet-tight .lab-step,
+.lab-sheet-tight .note {
+  margin: 2px 0;
+  font-size: 13px;
+  line-height: 1.35;
+}
+.lab-sheet-tight .sheet-steps-inline {
+  margin: 4px 0 0;
+  padding-left: 1.2em;
+}
+.lab-sheet-tight .sheet-steps-inline .lab-step {
+  margin-bottom: 2px;
+  list-style: decimal;
+}
+.lab-sheet-tight .sheet-steps-inline .lab-step::marker {
+  font-weight: 700;
+}
+.lab-sheet-tight .sheet-graph-tips {
+  columns: 2;
+  column-gap: 12px;
+  margin: 4px 0 0;
+  padding: 0;
+  list-style: none;
+}
+.lab-sheet-tight .sheet-graph-tips label {
+  font-size: 12px;
+  line-height: 1.3;
+}
+.lab-sheet-tight .sheet-graph-tips li {
+  break-inside: avoid;
+  margin: 2px 0;
+}
+.lab-sheet-tight .sheet-b-row {
+  display: grid;
+  grid-template-columns: 1fr min(38%, 140px);
+  gap: 8px;
+  align-items: start;
+}
+.lab-sheet-tight .sheet-b-photos {
+  margin: 0;
+}
+.lab-sheet-tight .sheet-b-photos figure {
+  margin: 0 0 4px;
+}
+.lab-sheet-tight .sheet-b-photos img {
+  max-height: 72px;
+  width: 100%;
+  object-fit: cover;
+  border-radius: 4px;
+}
+.lab-sheet-tight .sheet-b-photos figcaption {
+  font-size: 10px;
+  text-align: center;
+  margin: 0;
+}
+.lab-sheet-tight .sheet-metal-pick {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2px 8px;
+  list-style: none;
+  padding: 0;
+  margin: 4px 0;
+  font-size: 12px;
+}
+.lab-sheet-tight .sheet-metal-pick label {
+  display: flex;
+  gap: 4px;
+  align-items: center;
+}
+.lab-sheet-tight .sheet-inline-rec {
+  line-height: 1.5;
+}
+.lab-sheet-tight .sheet-c-row {
+  display: grid;
+  grid-template-columns: min(28%, 100px) 1fr;
+  gap: 8px;
+  align-items: start;
+}
+.lab-sheet-tight .sheet-c-fig {
+  margin: 0;
+}
+.lab-sheet-tight .sheet-c-fig .diagram {
+  max-height: 130px;
+  width: 100%;
+}
+.lab-sheet-tight .sheet-c-fig .caption {
+  display: none;
+}
+.lab-sheet-tight .sheet-score-line {
+  font-size: 12px;
+}
+.lab-sheet-tight .sheet-mcq-compact .sheet-mcq-options li {
+  margin: 3px 0;
+}
+.lab-sheet-tight .sheet-write-stem { min-height: 2.4em; }
+.lab-sheet-tight .sheet-write-explain { min-height: 3.6em; }
+.lab-sheet-tight .sheet-done {
+  margin-top: 6px;
+  padding: 8px 10px;
+  border: 1px solid #d6d3d1;
+  border-radius: 8px;
+  background: #fafaf9;
+}
+.lab-sheet-tight .sheet-done-title {
+  margin: 0 0 4px;
+  font-size: 13px;
+  font-weight: 700;
+}
+.lab-sheet-tight .sheet-done-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2px 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 12px;
+}
+.lab-sheet-tight .sheet-done-grid label {
+  margin: 0;
+}
+@media (max-width: 640px) {
+  .lab-sheet-tight .sheet-b-row,
+  .lab-sheet-tight .sheet-c-row {
+    grid-template-columns: 1fr;
+  }
+  .lab-sheet-tight .sheet-graph-tips { columns: 1; }
+}
+
 .card > .section-head + .inquiry-ask {
   margin-top: -4px;
 }
@@ -3486,10 +3655,108 @@ html.is-immersive .brand > span:last-child {
   }
   .lab-sheet .sheet-write-inline { min-height: 6mm; }
 
+  /* 1-2 緊湊學習單列印（A4／B4 雙面約 2 頁） */
+  .lab-sheet-tight .wrap { max-width: none; }
+  .lab-sheet-tight .sheet-top {
+    margin: 0 0 2mm;
+    padding-bottom: 1.5mm;
+    border-bottom: 0.5pt solid #444;
+  }
+  .lab-sheet-tight .sheet-top .hero {
+    border: none;
+    margin: 0;
+    padding: 0;
+    display: inline;
+  }
+  .lab-sheet-tight .sheet-top .hero .kicker,
+  .lab-sheet-tight .sheet-top .hero h1 {
+    display: inline;
+    font-size: 10pt;
+  }
+  .lab-sheet-tight .sheet-top .hero .kicker::after { content: "｜"; }
+  .lab-sheet-tight .sheet-top .sheet-meta-row {
+    display: inline;
+    font-size: 9pt;
+    margin: 0;
+  }
+  .lab-sheet-tight .sheet-top-note {
+    margin: 1mm 0 0;
+    font-size: 7.5pt;
+    line-height: 1.25;
+  }
+  .lab-sheet-tight .card {
+    margin: 0 0 2mm;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
+  .lab-sheet-tight .section-head {
+    margin: 0 0 1mm;
+    border-bottom: 0.3pt solid #aaa;
+    padding-bottom: 0.5mm;
+  }
+  .lab-sheet-tight .section-head h2 { font-size: 9.5pt; margin: 0; }
+  .lab-sheet-tight .section-head p { display: none; }
+  .lab-sheet-tight .sheet-compact-note,
+  .lab-sheet-tight .lab-record,
+  .lab-sheet-tight .lab-step,
+  .lab-sheet-tight .note {
+    font-size: 8pt;
+    line-height: 1.28;
+    margin: 0.5mm 0;
+  }
+  .lab-sheet-tight .sheet-steps-inline { margin: 0; padding-left: 4mm; }
+  .lab-sheet-tight .sheet-steps-inline .lab-step {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 0.5mm;
+  }
+  .lab-sheet-tight .sheet-graph-tips {
+    columns: 2;
+    column-gap: 3mm;
+    margin: 1mm 0 0;
+  }
+  .lab-sheet-tight .sheet-graph-tips label { font-size: 7.5pt; gap: 2px; }
+  .lab-sheet-tight .sheet-graph-tips li { margin: 0.3mm 0; }
+  .lab-sheet-tight .sheet-b-row {
+    grid-template-columns: 1fr 32mm;
+    gap: 2mm;
+  }
+  .lab-sheet-tight .sheet-b-photos img { max-height: 22mm; }
+  .lab-sheet-tight .sheet-b-photos figcaption { font-size: 6.5pt; }
+  .lab-sheet-tight .sheet-metal-pick {
+    font-size: 7.5pt;
+    gap: 0 2mm;
+    margin: 1mm 0;
+  }
+  .lab-sheet-tight .sheet-c-row {
+    grid-template-columns: 24mm 1fr;
+    gap: 2mm;
+  }
+  .lab-sheet-tight .sheet-c-fig .diagram { max-height: 32mm; }
+  .lab-sheet-tight .sheet-score-line { font-size: 7.5pt; }
+  .lab-sheet-tight .sheet-mcq .lab-record { font-size: 8pt; }
+  .lab-sheet-tight .sheet-write-stem { min-height: 7mm; }
+  .lab-sheet-tight .sheet-write-explain { min-height: 12mm; }
+  .lab-sheet-tight .sheet-write-inline { min-height: 4.5mm; }
+  .lab-sheet-tight .sheet-mcq-compact li { margin: 0.5mm 0; }
+  .lab-sheet-tight .sheet-done {
+    margin: 2mm 0 0;
+    padding: 1.5mm 2mm;
+    border: 0.5pt solid #888;
+    background: none;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .lab-sheet-tight .sheet-done-title { font-size: 8pt; margin: 0 0 1mm; }
+  .lab-sheet-tight .sheet-done-grid { font-size: 7.5pt; gap: 0 3mm; }
+  .lab-sheet-tight .sheet-checklist label { margin: 0; }
+  .lab-sheet-tight .lab-step { break-inside: auto; page-break-inside: auto; }
+  .lab-sheet-tight #p-c { break-before: auto; }
+
   /* 緊湊頁邊；頁碼用 @bottom-center（支援的引擎會逐張遞增） */
   @page {
     size: A4;
-    margin: 8mm 8mm 11mm;
+    margin: 6mm 7mm 9mm;
     @bottom-center {
       content: "— " counter(page) " —";
       font-family: "Noto Sans TC", "Microsoft JhengHei", sans-serif;
