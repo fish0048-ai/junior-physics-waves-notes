@@ -185,31 +185,32 @@
         </div>
       </div>
       <p class="note sheet-compact-note"><strong>選做、額外加分。</strong>依本節實驗（含上皿天平秤空量筒、排水法、密度、淨水過濾等）自出<strong>四選一單選題</strong>，附答案與詳解。下方留白夠寬，可直接手寫。</p>
-      <div class="sheet-mcq sheet-mcq-wide">
+      <div class="sheet-mcq sheet-mcq-wide sheet-mcq-fill">
         <p class="lab-record"><strong>題幹</strong></p>
-        <textarea class="sheet-write sheet-write-wide sheet-write-stem" rows="4" aria-label="自編題幹"></textarea>
+        <textarea class="sheet-write sheet-write-wide sheet-write-stem" rows="3" aria-label="自編題幹"></textarea>
         <ol class="q sheet-mcq-options sheet-mcq-wide-list" type="A">
           <li><span class="sheet-mcq-label">(A)</span><textarea class="sheet-write sheet-write-wide sheet-write-opt" rows="2" aria-label="選項 A"></textarea></li>
           <li><span class="sheet-mcq-label">(B)</span><textarea class="sheet-write sheet-write-wide sheet-write-opt" rows="2" aria-label="選項 B"></textarea></li>
           <li><span class="sheet-mcq-label">(C)</span><textarea class="sheet-write sheet-write-wide sheet-write-opt" rows="2" aria-label="選項 C"></textarea></li>
           <li><span class="sheet-mcq-label">(D)</span><textarea class="sheet-write sheet-write-wide sheet-write-opt" rows="2" aria-label="選項 D"></textarea></li>
         </ol>
-        <p class="lab-record">正確答案（A／B／C／D）：<input type="text" class="sheet-field sheet-field-sm" aria-label="正確答案" maxlength="1" autocomplete="off"></p>
-        <p class="lab-record"><strong>詳解</strong>（為何正確、其他選項錯在哪）</p>
-        <textarea class="sheet-write sheet-write-wide sheet-write-explain" rows="5" aria-label="詳解"></textarea>
+        <p class="lab-record sheet-answer-line">正確答案（A／B／C／D）：<input type="text" class="sheet-field sheet-field-sm" aria-label="正確答案" maxlength="1" autocomplete="off"></p>
+        <div class="sheet-explain-grow">
+          <p class="lab-record"><strong>詳解</strong>（為何正確、其他選項錯在哪；下方留白可續寫）</p>
+          <textarea class="sheet-write sheet-write-wide sheet-write-explain" rows="8" aria-label="詳解"></textarea>
+        </div>
       </div>
-    </article>
-
-    <footer class="sheet-done">
-      <p class="sheet-done-title">完成確認（勾選後交）</p>
-      <ul class="q sheet-checklist sheet-done-grid">
-        <li><label><input type="checkbox"> 甲　活動紀錄本數據與 m–V 圖</label></li>
-        <li><label><input type="checkbox"> 乙　活動紀錄本金屬塊與推測</label></li>
-        <li><label><input type="checkbox"> 丙　淨水器與計分</label></li>
-        <li><label><input type="checkbox"> 思　額外加分：出題＋詳解（選做）</label></li>
-      </ul>
+      <footer class="sheet-done sheet-done-inline">
+        <p class="sheet-done-title">完成確認（勾選後交）</p>
+        <ul class="q sheet-checklist sheet-done-grid">
+          <li><label><input type="checkbox"> 甲　活動紀錄本數據與 m–V 圖</label></li>
+          <li><label><input type="checkbox"> 乙　活動紀錄本金屬塊與推測</label></li>
+          <li><label><input type="checkbox"> 丙　淨水器與計分</label></li>
+          <li><label><input type="checkbox"> 思　額外加分：出題＋詳解（選做）</label></li>
+        </ul>
+      </footer>
       <p class="lab-back no-print"><a href="1-2.html">講義</a>　<a href="lab-1-2.html">實驗專區</a></p>
-    </footer>
+    </article>
   </div>
   <div class="toast" id="toast"></div>
   <script src="../js/config-lab.js"></script>

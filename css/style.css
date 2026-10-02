@@ -1462,8 +1462,33 @@ svg.math-graph text {
   min-height: 3.2em;
   margin: 0;
 }
-.lab-sheet-tight .sheet-write-stem { min-height: 5.5em; }
-.lab-sheet-tight .sheet-write-explain { min-height: 7em; }
+.lab-sheet-tight .sheet-write-stem { min-height: 4.5em; }
+.lab-sheet-tight .sheet-write-explain { min-height: 12em; }
+.lab-sheet-tight #p-d.sheet-extra {
+  display: flex;
+  flex-direction: column;
+}
+.lab-sheet-tight .sheet-mcq-fill {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 320px;
+}
+.lab-sheet-tight .sheet-explain-grow {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-height: 180px;
+}
+.lab-sheet-tight .sheet-explain-grow .sheet-write-explain {
+  flex: 1;
+  min-height: 160px;
+  margin-bottom: 0;
+}
+.lab-sheet-tight .sheet-done-inline {
+  margin-top: 8px;
+  flex-shrink: 0;
+}
 .lab-sheet-tight .sheet-done {
   margin-top: 6px;
   padding: 8px 10px;
@@ -3847,18 +3872,42 @@ html.is-immersive .brand > span:last-child {
   .lab-sheet-tight .sheet-mcq .lab-record { font-size: 8pt; }
   .lab-sheet-tight .sheet-mcq-wide-list li { margin: 1mm 0; }
   .lab-sheet-tight .sheet-mcq-wide-list .sheet-mcq-label { padding-top: 1.5mm; }
-  .lab-sheet-tight .sheet-write-stem { min-height: 18mm; }
-  .lab-sheet-tight .sheet-write-opt { min-height: 10mm; }
-  .lab-sheet-tight .sheet-write-explain { min-height: 22mm; }
+  .lab-sheet-tight .sheet-write-stem { min-height: 16mm; }
+  .lab-sheet-tight .sheet-write-opt { min-height: 9mm; }
   .lab-sheet-tight .sheet-write-inline { min-height: 4.5mm; }
   .lab-sheet-tight .sheet-mcq-compact li { margin: 0.5mm 0; }
-  .lab-sheet-tight .sheet-done {
+  .lab-sheet-tight #p-d.sheet-extra {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    display: flex;
+    flex-direction: column;
+  }
+  .lab-sheet-tight .sheet-mcq-fill {
+    flex: 1 1 auto;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+  }
+  .lab-sheet-tight .sheet-explain-grow {
+    flex: 1 1 auto;
+    display: flex;
+    flex-direction: column;
+    min-height: 118mm;
+  }
+  .lab-sheet-tight .sheet-explain-grow .sheet-write-explain {
+    flex: 1 1 auto;
+    min-height: 112mm;
+  }
+  .lab-sheet-tight .sheet-answer-line { margin-bottom: 1mm; }
+  .lab-sheet-tight .sheet-done,
+  .lab-sheet-tight .sheet-done-inline {
     margin: 2mm 0 0;
     padding: 1.5mm 2mm;
     border: 0.5pt solid #888;
     background: none;
     break-inside: avoid;
     page-break-inside: avoid;
+    flex-shrink: 0;
   }
   .lab-sheet-tight .sheet-done-title { font-size: 8pt; margin: 0 0 1mm; }
   .lab-sheet-tight .sheet-done-grid { font-size: 7.5pt; gap: 0 3mm; }
