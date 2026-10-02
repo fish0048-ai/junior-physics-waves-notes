@@ -1205,6 +1205,41 @@ svg.math-graph text {
 .lab-sheet .sheet-checklist { list-style: none; padding: 0; }
 .lab-sheet .sheet-checklist label { display: flex; gap: 8px; align-items: flex-start; margin: 6px 0; }
 .lab-sheet table input.sheet-num { width: 100%; max-width: 4.5em; }
+.lab-sheet .sheet-write {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 4px 0 10px;
+  padding: 8px 10px;
+  font: inherit;
+  line-height: 1.45;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  resize: vertical;
+}
+.lab-sheet .sheet-mcq-options {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 10px;
+}
+.lab-sheet .sheet-mcq-options li {
+  display: flex;
+  gap: 8px;
+  align-items: flex-start;
+  margin: 8px 0;
+}
+.lab-sheet .sheet-mcq-label {
+  flex: 0 0 auto;
+  font-weight: 700;
+  line-height: 1.6;
+  padding-top: 6px;
+}
+.lab-sheet .sheet-write-inline {
+  flex: 1;
+  margin: 0;
+  min-height: 2.6em;
+}
 .card > .section-head + .inquiry-ask {
   margin-top: -4px;
 }
@@ -3442,6 +3477,14 @@ html.is-immersive .brand > span:last-child {
     min-width: 4em;
   }
   .lab-sheet .lab-kit input[type="checkbox"] { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+  .lab-sheet .sheet-write {
+    border: 0.5pt solid #78716c;
+    background: transparent;
+    min-height: 8mm;
+    padding: 2mm 3mm;
+    font-size: 9pt;
+  }
+  .lab-sheet .sheet-write-inline { min-height: 6mm; }
 
   /* 緊湊頁邊；頁碼用 @bottom-center（支援的引擎會逐張遞增） */
   @page {
