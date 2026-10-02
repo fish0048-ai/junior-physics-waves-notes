@@ -1336,19 +1336,22 @@ svg.math-graph text {
   text-align: center;
   margin: 0;
 }
-.lab-sheet-tight .sheet-metal-pick {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 2px 8px;
-  list-style: none;
-  padding: 0;
+.lab-sheet-tight .sheet-metal-ref {
+  width: 100%;
+  max-width: 360px;
   margin: 4px 0;
   font-size: 12px;
+  border-collapse: collapse;
 }
-.lab-sheet-tight .sheet-metal-pick label {
-  display: flex;
-  gap: 4px;
-  align-items: center;
+.lab-sheet-tight .sheet-metal-ref th,
+.lab-sheet-tight .sheet-metal-ref td {
+  border: 1px solid #cbd5e1;
+  padding: 2px 6px;
+  text-align: center;
+}
+.lab-sheet-tight .sheet-metal-ref th {
+  background: #f1f5f9;
+  font-weight: 600;
 }
 .lab-sheet-tight .sheet-inline-rec {
   line-height: 1.5;
@@ -3723,10 +3726,15 @@ html.is-immersive .brand > span:last-child {
   }
   .lab-sheet-tight .sheet-b-photos img { max-height: 22mm; }
   .lab-sheet-tight .sheet-b-photos figcaption { font-size: 6.5pt; }
-  .lab-sheet-tight .sheet-metal-pick {
+  .lab-sheet-tight .sheet-metal-ref {
     font-size: 7.5pt;
-    gap: 0 2mm;
     margin: 1mm 0;
+    max-width: none;
+  }
+  .lab-sheet-tight .sheet-metal-ref th,
+  .lab-sheet-tight .sheet-metal-ref td {
+    border: 0.3pt solid #888;
+    padding: 0.5mm 1.5mm;
   }
   .lab-sheet-tight .sheet-c-row {
     grid-template-columns: 24mm 1fr;

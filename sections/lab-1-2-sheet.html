@@ -70,18 +70,19 @@
       </div>
       <div class="sheet-b-row">
         <div class="sheet-b-main">
-          <p class="note sheet-compact-note">金屬塊<strong>不一定是</strong>鋁／鐵／銅；量筒<strong>禁止</strong>裝金屬塊。</p>
-          <p class="lab-record sheet-inline-rec">① <em>M</em>＝<input type="text" class="sheet-num" aria-label="金屬塊質量" autocomplete="off"> g　② 大燒杯排水接溢水　③ 移液到量筒，<em>V</em>＝<input type="text" class="sheet-num" aria-label="金屬塊體積" autocomplete="off"> mL　④ <em>M</em>÷<em>V</em>＝<input type="text" class="sheet-num" aria-label="密度" autocomplete="off"> g/cm³</p>
-          <p class="lab-record">推測（可複選或勾以上皆非）：</p>
-          <ul class="q sheet-metal-pick">
-            <li><label><input type="checkbox" aria-label="推測鋁"> 鋁 2.70</label></li>
-            <li><label><input type="checkbox" aria-label="推測鋅"> 鋅 7.14</label></li>
-            <li><label><input type="checkbox" aria-label="推測鐵"> 鐵 7.87</label></li>
-            <li><label><input type="checkbox" aria-label="推測銅"> 銅 8.96</label></li>
-            <li><label><input type="checkbox" aria-label="推測鉛"> 鉛 11.3</label></li>
-            <li><label><input type="checkbox" aria-label="以上皆非"> 以上皆非</label></li>
-          </ul>
-          <p class="lab-record">以上皆非理由：<input type="text" class="sheet-field sheet-field-wide" aria-label="以上皆非理由" autocomplete="off"></p>
+          <p class="note sheet-compact-note">金屬塊<strong>不一定是</strong>鋁／鐵／銅；量筒<strong>禁止</strong>裝金屬塊。<strong>質量、體積、密度與推測結果</strong>填在<strong>活動紀錄本</strong>。</p>
+          <ol class="lab-steps sheet-flow sheet-steps-inline">
+            <li class="lab-step"><strong>1</strong> 秤金屬塊質量 <em>M</em></li>
+            <li class="lab-step"><strong>2</strong> 大燒杯裝滿水，放入金屬塊，小燒杯接溢水</li>
+            <li class="lab-step"><strong>3</strong> 溢水移注量筒，讀 <em>V</em>（平視凹液面）</li>
+            <li class="lab-step"><strong>4</strong> 算 <em>M</em>÷<em>V</em>，對照下表推測；不符可填「以上皆非」→ 填活動紀錄本</li>
+          </ol>
+          <p class="lab-record">參考密度（g/cm³，僅供對照）：</p>
+          <table class="sheet-metal-ref">
+            <thead><tr><th>鋁</th><th>鋅</th><th>鐵</th><th>銅</th><th>鉛</th></tr></thead>
+            <tbody><tr><td>2.70</td><td>7.14</td><td>7.87</td><td>8.96</td><td>11.3</td></tr></tbody>
+          </table>
+          <p class="note sheet-compact-note">找<strong>最接近</strong>者；表中皆不符合則填「以上皆非」並簡述理由（活動紀錄本）。</p>
         </div>
         <div class="gear-photos gear-photos-pair sheet-b-photos">
           <figure>
@@ -161,7 +162,7 @@
       <p class="sheet-done-title">完成確認（勾選後交）</p>
       <ul class="q sheet-checklist sheet-done-grid">
         <li><label><input type="checkbox"> 甲　活動紀錄本數據與 m–V 圖</label></li>
-        <li><label><input type="checkbox"> 乙　金屬塊與密度推測</label></li>
+        <li><label><input type="checkbox"> 乙　活動紀錄本金屬塊與推測</label></li>
         <li><label><input type="checkbox"> 丙　淨水器與計分</label></li>
         <li><label><input type="checkbox"> 思　出題＋詳解</label></li>
       </ul>
