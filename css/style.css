@@ -1242,6 +1242,71 @@ svg.math-graph text {
 }
 
 /* 1-2 實驗學習單：緊湊版（目標 A4／B4 雙面約 2 頁） */
+.lab-sheet-tight {
+  color: #1c1917;
+}
+.lab-sheet-tight .card,
+.lab-sheet-tight .sheet-top {
+  color: #1c1917;
+}
+.lab-sheet-tight .note,
+.lab-sheet-tight .sheet-compact-note,
+.lab-sheet-tight .sheet-top-note,
+.lab-sheet-tight .sheet-ref-label,
+.lab-sheet-tight .sheet-balance-tips,
+.lab-sheet-tight .lab-step,
+.lab-sheet-tight .sheet-checklist label {
+  color: #44403c;
+}
+.lab-sheet-tight .sheet-ref-label {
+  margin: 4px 0 2px;
+  font-size: 13px;
+  font-weight: 700;
+  color: #1c1917;
+}
+/* 學習單內表格不沿用講義 th 白字綠底 */
+.lab-sheet-tight .sheet-metal-ref th,
+.lab-sheet-tight .sheet-metal-ref td,
+.lab-sheet-tight .sheet-members th,
+.lab-sheet-tight .sheet-members td {
+  color: #1c1917 !important;
+  -webkit-text-fill-color: #1c1917 !important;
+}
+.lab-sheet-tight .sheet-metal-ref th {
+  background: #e2e8f0 !important;
+  font-weight: 700;
+}
+.lab-sheet-tight .sheet-metal-ref td {
+  background: #fff !important;
+}
+.lab-sheet-tight .sheet-members thead th {
+  background: #f5f5f4 !important;
+  font-weight: 600;
+}
+.lab-sheet-tight .sheet-members tbody th[scope="row"] {
+  background: #fafaf9 !important;
+}
+.lab-sheet-tight .sheet-metal-ref tr:nth-child(even) td,
+.lab-sheet-tight .sheet-members tr:nth-child(even) td {
+  background: #fff !important;
+}
+.lab-sheet-tight .lab-record {
+  background: #f8fafc;
+  border-left: 3px solid #2563eb;
+  color: #1e3a8a;
+  padding: 4px 8px;
+  font-weight: 600;
+}
+.lab-sheet-tight .lab-caution {
+  background: #fff7ed;
+  border-left: 3px solid #ea580c;
+  color: #9a3412;
+}
+.lab-sheet-tight .sheet-extra-tag {
+  background: #ecfeff !important;
+  color: #0e7490 !important;
+  border: 1px solid #67e8f9;
+}
 .lab-sheet-tight .sheet-top {
   margin-bottom: 8px;
 }
@@ -1393,10 +1458,12 @@ svg.math-graph text {
   border: 1px solid #cbd5e1;
   padding: 2px 6px;
   text-align: center;
+  color: #1c1917;
+  background: #fff;
 }
 .lab-sheet-tight .sheet-metal-ref th {
-  background: #f1f5f9;
-  font-weight: 600;
+  background: #e2e8f0;
+  font-weight: 700;
 }
 .lab-sheet-tight .sheet-inline-rec {
   line-height: 1.5;
@@ -3851,15 +3918,44 @@ html.is-immersive .brand > span:last-child {
   }
   .lab-sheet-tight .sheet-b-photos img { max-height: 22mm; }
   .lab-sheet-tight .sheet-b-photos figcaption { font-size: 6.5pt; }
+  .lab-sheet-tight,
+  .lab-sheet-tight .card,
+  .lab-sheet-tight .note,
+  .lab-sheet-tight .sheet-compact-note,
+  .lab-sheet-tight .sheet-ref-label,
+  .lab-sheet-tight .lab-step,
+  .lab-sheet-tight .sheet-checklist label {
+    color: #111 !important;
+    -webkit-text-fill-color: #111 !important;
+  }
   .lab-sheet-tight .sheet-metal-ref {
     font-size: 7.5pt;
     margin: 1mm 0;
     max-width: none;
   }
   .lab-sheet-tight .sheet-metal-ref th,
-  .lab-sheet-tight .sheet-metal-ref td {
+  .lab-sheet-tight .sheet-metal-ref td,
+  .lab-sheet-tight .sheet-members th,
+  .lab-sheet-tight .sheet-members td {
     border: 0.3pt solid #888;
     padding: 0.5mm 1.5mm;
+    color: #111 !important;
+    -webkit-text-fill-color: #111 !important;
+    background: #fff !important;
+  }
+  .lab-sheet-tight .sheet-metal-ref th,
+  .lab-sheet-tight .sheet-members thead th {
+    background: #eee !important;
+    font-weight: 700;
+  }
+  .lab-sheet-tight .lab-record {
+    background: #f5f5f5 !important;
+    color: #1e3a8a !important;
+    border-left: 0.5pt solid #2563eb;
+  }
+  .lab-sheet-tight .sheet-extra-tag {
+    color: #0e7490 !important;
+    background: #ecfeff !important;
   }
   .lab-sheet-tight .sheet-c-row {
     grid-template-columns: 24mm 1fr;
