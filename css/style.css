@@ -1257,6 +1257,51 @@ svg.math-graph text {
   margin: 0 0 4px;
   font-size: 14px;
 }
+.lab-sheet-tight .sheet-meta-hint {
+  font-size: 12px;
+  color: #78716c;
+}
+.lab-sheet-tight .sheet-members {
+  width: 100%;
+  margin: 0 0 6px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.lab-sheet-tight .sheet-members caption {
+  caption-side: top;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  margin-bottom: 2px;
+  color: #44403c;
+}
+.lab-sheet-tight .sheet-members th,
+.lab-sheet-tight .sheet-members td {
+  border: 1px solid #e7e5e4;
+  padding: 2px 4px;
+  vertical-align: middle;
+}
+.lab-sheet-tight .sheet-members thead th {
+  background: #f5f5f4;
+  font-weight: 600;
+  font-size: 11px;
+}
+.lab-sheet-tight .sheet-members tbody th[scope="row"] {
+  width: 1.4em;
+  text-align: center;
+  background: #fafaf9;
+  font-weight: 700;
+}
+.lab-sheet-tight .sheet-members .sheet-field {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+.lab-sheet-tight .sheet-members td:nth-child(3),
+.lab-sheet-tight .sheet-members td:nth-child(6),
+.lab-sheet-tight .sheet-members td:nth-child(9) {
+  min-width: 4.5em;
+}
 .lab-sheet-tight .sheet-top-note {
   margin: 0 0 4px;
   font-size: 13px;
@@ -3717,9 +3762,25 @@ html.is-immersive .brand > span:last-child {
   }
   .lab-sheet-tight .sheet-top .hero .kicker::after { content: "｜"; }
   .lab-sheet-tight .sheet-top .sheet-meta-row {
-    display: inline;
+    display: block;
     font-size: 9pt;
-    margin: 0;
+    margin: 0 0 1mm;
+  }
+  .lab-sheet-tight .sheet-meta-hint { font-size: 7.5pt; }
+  .lab-sheet-tight .sheet-members {
+    font-size: 8pt;
+    margin: 0 0 1.5mm;
+  }
+  .lab-sheet-tight .sheet-members caption { font-size: 7.5pt; margin-bottom: 0.5mm; }
+  .lab-sheet-tight .sheet-members th,
+  .lab-sheet-tight .sheet-members td {
+    border: 0.3pt solid #888;
+    padding: 0.5mm 1mm;
+  }
+  .lab-sheet-tight .sheet-members thead th { font-size: 7pt; }
+  .lab-sheet-tight .sheet-members .sheet-field {
+    border-bottom: 0.5pt solid #444;
+    font-size: 8pt;
   }
   .lab-sheet-tight .sheet-top-note {
     margin: 1mm 0 0;
