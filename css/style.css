@@ -1362,10 +1362,11 @@ svg.math-graph text {
   min-width: 0;
   box-sizing: border-box;
 }
-.lab-sheet-tight .sheet-members td:nth-child(3),
-.lab-sheet-tight .sheet-members td:nth-child(6),
-.lab-sheet-tight .sheet-members td:nth-child(9) {
-  min-width: 4.5em;
+.lab-sheet-tight .sheet-members td:nth-child(2) { width: 3.2em; }
+.lab-sheet-tight .sheet-members td:nth-child(3) { width: 5em; }
+.lab-sheet-tight .sheet-members td:nth-child(4) { width: auto; }
+.lab-sheet-tight .sheet-members .sheet-field-task {
+  min-width: 8em;
 }
 .lab-sheet-tight .sheet-top-note {
   margin: 0 0 4px;
