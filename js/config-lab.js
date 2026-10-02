@@ -28,7 +28,7 @@ window.APP_CONFIG = {
       file: "sections/lab-1-2.html",
       ready: true,
       ask: "同樣一杯，水和酒精的質量會一樣嗎？未知金屬塊要怎麼認？",
-      summary: "天平、量筒、密度比值、質量－體積圖"
+      summary: "天平、量筒、水 m–V 圖、金屬塊、淨水器（酒精本課略）"
     },
     {
       id: "2-1",
