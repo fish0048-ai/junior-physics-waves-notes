@@ -4029,10 +4029,13 @@ html.is-immersive .brand > span:last-child {
   .lab-sheet-tight .sheet-write-inline { min-height: 4.5mm; }
   .lab-sheet-tight .sheet-mcq-compact li { margin: 0.5mm 0; }
   .lab-sheet-tight #p-d {
+    break-before: page;
+    page-break-before: always;
     break-inside: avoid;
     page-break-inside: avoid;
     display: flex;
     flex-direction: column;
+    margin: 0;
   }
   .lab-sheet-tight .sheet-summary-fill {
     flex: 1 1 auto;
@@ -4040,14 +4043,22 @@ html.is-immersive .brand > span:last-child {
     flex-direction: column;
     min-height: 0;
   }
-  .lab-sheet-tight .sheet-summary-guide {
-    padding-left: 4mm;
-    margin: 1mm 0 2mm;
+  .lab-sheet-tight #p-d .sheet-summary-guide {
+    columns: 2;
+    column-gap: 3mm;
+    padding-left: 3mm;
+    margin: 0.5mm 0 1mm;
   }
-  .lab-sheet-tight .sheet-prompt-line {
-    margin: 1.2mm 0;
-    font-size: 8pt;
-    line-height: 1.35;
+  .lab-sheet-tight #p-d .sheet-prompt-line {
+    margin: 0.7mm 0;
+    font-size: 7.5pt;
+    line-height: 1.28;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .lab-sheet-tight #p-d .sheet-prompt-free {
+    column-span: all;
+    margin-top: 0.5mm;
   }
   .lab-sheet-tight .sheet-prompt-line .sheet-field {
     border-bottom: 0.5pt solid #444;
@@ -4057,23 +4068,30 @@ html.is-immersive .brand > span:last-child {
   .lab-sheet-tight .sheet-prompt-line .sheet-field-sm { min-width: 8mm; }
   .lab-sheet-tight .sheet-prompt-line .sheet-field-md { min-width: 14mm; }
   .lab-sheet-tight .sheet-prompt-line .sheet-field-lg { min-width: 22mm; }
-  .lab-sheet-tight .sheet-write-summary-short {
-    min-height: 22mm;
-    margin-top: 1mm;
-    padding: 1.5mm 2mm;
+  .lab-sheet-tight #p-d .sheet-write-summary-short {
+    min-height: 14mm;
+    margin-top: 0.5mm;
+    padding: 1mm 1.5mm;
     border: 0.5pt solid #888;
-    font-size: 8pt;
+    font-size: 7.5pt;
   }
   .lab-sheet-tight .sheet-extra-block {
-    margin-top: 2mm;
-    padding-top: 1.5mm;
+    margin-top: 1.5mm;
+    padding-top: 1mm;
     border-top: 0.5pt solid #aaa;
-    break-before: page;
-    page-break-before: always;
+    break-before: auto;
+    page-break-before: auto;
   }
-  .lab-sheet-tight .sheet-extra-head { font-size: 9pt; margin: 0 0 1mm; }
-  .lab-sheet-tight #p-d .sheet-explain-grow { min-height: 55mm; }
-  .lab-sheet-tight #p-d .sheet-explain-grow .sheet-write-explain { min-height: 50mm; }
+  .lab-sheet-tight #p-d .sheet-extra-block .sheet-compact-note {
+    font-size: 7pt;
+    margin: 0.3mm 0 0.8mm;
+  }
+  .lab-sheet-tight .sheet-extra-head { font-size: 8.5pt; margin: 0 0 0.5mm; }
+  .lab-sheet-tight #p-d .sheet-write-stem { min-height: 11mm; }
+  .lab-sheet-tight #p-d .sheet-write-opt { min-height: 7mm; }
+  .lab-sheet-tight #p-d .sheet-mcq-wide-list li { margin: 0.4mm 0; }
+  .lab-sheet-tight #p-d .sheet-explain-grow { min-height: 26mm; }
+  .lab-sheet-tight #p-d .sheet-explain-grow .sheet-write-explain { min-height: 22mm; }
   .lab-sheet-tight .sheet-done,
   .lab-sheet-tight .sheet-done-inline {
     margin: 2mm 0 0;
