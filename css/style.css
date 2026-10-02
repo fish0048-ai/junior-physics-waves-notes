@@ -1551,22 +1551,34 @@ svg.math-graph text {
   display: flex;
   flex-direction: column;
 }
-.lab-sheet-tight .sheet-summary-hints {
-  margin: 2px 0 6px;
-  padding-left: 1.2em;
-  font-size: 12px;
-  color: #57534e;
-}
 .lab-sheet-tight .sheet-summary-fill {
   flex: 1;
   display: flex;
   flex-direction: column;
-  min-height: 280px;
+  min-height: 0;
 }
-.lab-sheet-tight .sheet-write-summary {
+.lab-sheet-tight .sheet-summary-guide {
+  list-style: decimal;
+  padding-left: 1.35em;
+  margin: 4px 0 8px;
+}
+.lab-sheet-tight .sheet-prompt-line {
+  margin: 7px 0;
+  line-height: 1.55;
+  font-size: 13px;
+}
+.lab-sheet-tight .sheet-prompt-line .sheet-field {
+  vertical-align: baseline;
+  margin: 0 2px;
+}
+.lab-sheet-tight .sheet-prompt-line .sheet-field-sm { min-width: 3.2em; }
+.lab-sheet-tight .sheet-prompt-line .sheet-field-md { min-width: 5.5em; }
+.lab-sheet-tight .sheet-prompt-line .sheet-field-lg { min-width: 9em; }
+.lab-sheet-tight .sheet-prompt-free { margin-top: 10px; }
+.lab-sheet-tight .sheet-write-summary-short {
   flex: 1;
-  min-height: 240px;
-  margin-bottom: 0;
+  min-height: 5.5em;
+  margin: 4px 0 0;
 }
 .lab-sheet-tight .sheet-done-inline {
   margin-top: 8px;
@@ -3994,19 +4006,35 @@ html.is-immersive .brand > span:last-child {
     display: flex;
     flex-direction: column;
   }
-  .lab-sheet-tight .sheet-summary-hints {
-    font-size: 7.5pt;
-    margin: 0.5mm 0 1mm;
-  }
   .lab-sheet-tight .sheet-summary-fill {
     flex: 1 1 auto;
     display: flex;
     flex-direction: column;
-    min-height: 130mm;
+    min-height: 0;
   }
-  .lab-sheet-tight .sheet-write-summary {
-    flex: 1 1 auto;
-    min-height: 125mm;
+  .lab-sheet-tight .sheet-summary-guide {
+    padding-left: 4mm;
+    margin: 1mm 0 2mm;
+  }
+  .lab-sheet-tight .sheet-prompt-line {
+    margin: 1.2mm 0;
+    font-size: 8pt;
+    line-height: 1.35;
+  }
+  .lab-sheet-tight .sheet-prompt-line .sheet-field {
+    border-bottom: 0.5pt solid #444;
+    font-size: 8pt;
+    padding: 0 0.5mm;
+  }
+  .lab-sheet-tight .sheet-prompt-line .sheet-field-sm { min-width: 8mm; }
+  .lab-sheet-tight .sheet-prompt-line .sheet-field-md { min-width: 14mm; }
+  .lab-sheet-tight .sheet-prompt-line .sheet-field-lg { min-width: 22mm; }
+  .lab-sheet-tight .sheet-write-summary-short {
+    min-height: 22mm;
+    margin-top: 1mm;
+    padding: 1.5mm 2mm;
+    border: 0.5pt solid #888;
+    font-size: 8pt;
   }
   .lab-sheet-tight .sheet-done,
   .lab-sheet-tight .sheet-done-inline {
