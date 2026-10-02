@@ -84,10 +84,10 @@
             </tr>
             <tr>
               <td>5</td>
-              <td class="lab-kit-name">溢水杯、小燒杯（接溢出水）各 1</td>
-              <td><input type="checkbox" data-kit="s-h5b" aria-label="溢水杯 到齊"></td>
-              <td><input type="checkbox" data-kit="s-g5b" aria-label="溢水杯 完好足量"></td>
-              <td><input type="text" class="lab-kit-note" aria-label="溢水杯 備註" autocomplete="off"></td>
+              <td class="lab-kit-name">大燒杯、小燒杯（接溢出水）、鑷子 各 1</td>
+              <td><input type="checkbox" data-kit="s-h5b" aria-label="大燒杯組 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g5b" aria-label="大燒杯組 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="大燒杯組 備註" autocomplete="off"></td>
             </tr>
             <tr>
               <td>6</td>
@@ -172,33 +172,49 @@
         <div class="badge">乙</div>
         <div>
           <h2>推測未知金屬塊</h2>
-          <p>溢水杯排水；量筒只量體積</p>
+          <p>大燒杯排水 → 移液 → 量筒量體積</p>
         </div>
       </div>
+      <div class="gear-photos gear-photos-pair">
+        <figure>
+          <img src="../img/1-2/displace-beaker-cylinder.jpg" alt="大燒杯與量筒：大燒杯用來操作排水，量筒只用來量體積" loading="lazy" width="800" height="1067">
+          <figcaption>大燒杯操作、量筒量測</figcaption>
+        </figure>
+        <figure>
+          <img src="../img/1-2/displace-cylinder-read.jpg" alt="量筒平視凹液面讀體積" loading="lazy" width="720" height="960">
+          <figcaption>移液後平視凹液面</figcaption>
+        </figure>
+      </div>
+      <p class="note">照片：Wikimedia Commons（CC BY-SA 4.0）。詳細步驟見<a href="lab-1-2.html#p3">實驗專區</a>。</p>
+      <p class="note"><strong>提醒：</strong>老師給的金屬塊<strong>不一定是鋁、鐵或銅</strong>，算出密度後找參考表最接近者即可。</p>
       <ol class="lab-steps sheet-flow">
         <li class="lab-step">
           <h3 class="subh">步驟 1　秤金屬塊質量</h3>
           <p class="lab-record">金屬塊質量 <em>M</em>＝<input type="text" class="sheet-num" aria-label="金屬塊質量" autocomplete="off"> g</p>
         </li>
         <li class="lab-step">
-          <h3 class="subh">步驟 2　溢水杯排水（不在量筒操作）</h3>
-          <p>溢水杯加水至溢水口；小燒杯接在下方。用鑷子把金屬塊緩緩放入溢水杯，溢出水全部接在小燒杯。</p>
+          <h3 class="subh">步驟 2　大燒杯排水（不在量筒操作）</h3>
+          <p>大燒杯加水至杯口；小燒杯接在旁邊。用鑷子把金屬塊緩緩放入大燒杯，溢出水全部接在小燒杯。</p>
           <p class="lab-caution">量筒<strong>禁止</strong>裝金屬塊或當操作容器。</p>
         </li>
         <li class="lab-step">
-          <h3 class="subh">步驟 3　用量筒量溢出水</h3>
-          <p>溢出水倒入量筒，平視凹液面讀體積。溢出水體積＝金屬塊體積。</p>
+          <h3 class="subh">步驟 3　移液到量筒</h3>
+          <p>把小燒杯中的溢出水<strong>移注</strong>到量筒，平視凹液面讀體積。溢出水體積＝金屬塊體積。</p>
           <p class="lab-record">溢出水體積（＝金屬塊 <em>V</em>）＝<input type="text" class="sheet-num" aria-label="金屬塊體積" autocomplete="off"> mL（cm³）</p>
         </li>
         <li class="lab-step">
-          <h3 class="subh">步驟 4　算比值並推測</h3>
+          <h3 class="subh">步驟 4　算比值並對照</h3>
           <p>質量 ÷ 體積＝<input type="text" class="sheet-num" aria-label="質量除以體積" autocomplete="off"> g/cm³</p>
+          <p class="lab-record">最接近的參考金屬：<input type="text" class="sheet-field sheet-field-wide" aria-label="最接近的參考金屬" placeholder="如鋅、鉛、合金…" autocomplete="off"></p>
           <table>
-            <thead><tr><th>金屬</th><th>密度（g/cm³）</th><th>我的推測</th></tr></thead>
+            <caption>參考密度（僅供對照）</caption>
+            <thead><tr><th>金屬</th><th>密度（g/cm³）</th></tr></thead>
             <tbody>
-              <tr><td>鋁</td><td>2.70</td><td><input type="checkbox" aria-label="推測為鋁"></td></tr>
-              <tr><td>鐵</td><td>7.87</td><td><input type="checkbox" aria-label="推測為鐵"></td></tr>
-              <tr><td>銅</td><td>8.96</td><td><input type="checkbox" aria-label="推測為銅"></td></tr>
+              <tr><td>鋁</td><td>2.70</td></tr>
+              <tr><td>鋅</td><td>7.14</td></tr>
+              <tr><td>鐵</td><td>7.87</td></tr>
+              <tr><td>銅</td><td>8.96</td></tr>
+              <tr><td>鉛</td><td>11.3</td></tr>
             </tbody>
           </table>
         </li>
@@ -275,7 +291,7 @@
       </div>
       <ul class="q sheet-checklist">
         <li><label><input type="checkbox"> 甲　水的數據表與 m–V 圖已完成</label></li>
-        <li><label><input type="checkbox"> 乙　金屬塊質量、體積、比值已算並勾選推測</label></li>
+        <li><label><input type="checkbox"> 乙　金屬塊質量、體積、密度已算並寫最接近參考金屬</label></li>
         <li><label><input type="checkbox"> 丙　淨水器已組裝、過濾，並完成前後比較</label></li>
       </ul>
       <p class="lab-back no-print"><strong>回講義：</strong><a href="1-2.html">1-2 質量與密度的測量</a>　｜　<strong>投影逐步：</strong><a href="lab-1-2.html">實驗專區 1-2</a></p>
