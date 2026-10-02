@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#fffefb">
+  <title>國中八年級理化｜1-2 實驗學習單</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+<body data-root=".." data-page="section" data-section="1-2-sheet">
+  <div id="site-header"></div>
+  <div class="wrap workbook lab-sheet" id="top">
+    <section class="hero">
+      <span class="kicker">國中八年級　理化　實驗學習單</span>
+      <h1>1-2　質量與體積的測量　實驗流程</h1>
+      <p>跟著步驟做：甲　量液體 → 乙　金屬塊 → 丙　自製淨水器。上課投影版見<a href="lab-1-2.html">實驗專區 1-2</a>。</p>
+    </section>
+
+    <article class="card sheet-meta">
+      <p class="sheet-meta-row">
+        班級 <input type="text" class="sheet-field" aria-label="班級" autocomplete="off">
+        座號 <input type="text" class="sheet-field sheet-field-sm" aria-label="座號" autocomplete="off">
+        姓名 <input type="text" class="sheet-field" aria-label="姓名" autocomplete="off">
+        組別 <input type="text" class="sheet-field sheet-field-sm" aria-label="組別" autocomplete="off">
+        日期 <input type="text" class="sheet-field" aria-label="日期" autocomplete="off">
+      </p>
+      <p class="note no-print">本學習單只寫<strong>實驗流程與紀錄</strong>；觀念與討論回<a href="1-2.html">1-2 講義</a>對照。</p>
+    </article>
+
+    <article class="card" id="kit">
+      <div class="section-head">
+        <div class="badge">0</div>
+        <div>
+          <h2>動手前　材料核對</h2>
+          <p>到齊再開始；缺件先舉手</p>
+        </div>
+      </div>
+      <div class="lab-kit-wrap">
+        <table class="lab-kit">
+          <caption>實驗材料核對表（每組）</caption>
+          <thead>
+            <tr>
+              <th scope="col">項次</th>
+              <th scope="col">材料</th>
+              <th scope="col">到齊</th>
+              <th scope="col">完好／足量</th>
+              <th scope="col">備註</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td class="lab-kit-name">上皿天平（或電子天平）</td>
+              <td><input type="checkbox" data-kit="s-h1" aria-label="天平 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g1" aria-label="天平 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="天平 備註" placeholder="缺／破" autocomplete="off"></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td class="lab-kit-name">量筒 50 mL、100 mL 各 1</td>
+              <td><input type="checkbox" data-kit="s-h2" aria-label="量筒 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g2" aria-label="量筒 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="量筒 備註" autocomplete="off"></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td class="lab-kit-name">水 50 mL、酒精（99%）50 mL</td>
+              <td><input type="checkbox" data-kit="s-h3" aria-label="水酒精 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g3" aria-label="水酒精 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="水酒精 備註" autocomplete="off"></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td class="lab-kit-name">未知金屬塊 1 個</td>
+              <td><input type="checkbox" data-kit="s-h4" aria-label="金屬塊 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g4" aria-label="金屬塊 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="金屬塊 備註" autocomplete="off"></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td class="lab-kit-name">1.25 L 或 2 L 空寶特瓶 1 個、剪刀</td>
+              <td><input type="checkbox" data-kit="s-h5" aria-label="寶特瓶 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g5" aria-label="寶特瓶 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="寶特瓶 備註" autocomplete="off"></td>
+            </tr>
+            <tr>
+              <td>6</td>
+              <td class="lab-kit-name">棉花、活性碳、細砂、小石子（各一小包）</td>
+              <td><input type="checkbox" data-kit="s-h6" aria-label="濾材 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g6" aria-label="濾材 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="濾材 備註" autocomplete="off"></td>
+            </tr>
+            <tr>
+              <td>7</td>
+              <td class="lab-kit-name">混濁水（泥土＋水）、透明杯 2 個</td>
+              <td><input type="checkbox" data-kit="s-h7" aria-label="混濁水 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g7" aria-label="混濁水 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="混濁水 備註" autocomplete="off"></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </article>
+
+    <article class="card" id="p-a">
+      <div class="section-head">
+        <div class="badge">甲</div>
+        <div>
+          <h2>探討液體的質量與體積</h2>
+          <p>空筒 → 加水 → 加酒精 → 畫圖</p>
+        </div>
+      </div>
+      <ol class="lab-steps sheet-flow">
+        <li class="lab-step">
+          <h3 class="subh">步驟 1　秤空量筒</h3>
+          <p>天平歸零後，秤 50 mL 空量筒的質量。</p>
+          <p class="lab-record">空量筒質量 <em>M</em><sub>筒</sub>＝<input type="text" class="sheet-num" aria-label="空量筒質量" autocomplete="off"> g</p>
+        </li>
+        <li class="lab-step">
+          <h3 class="subh">步驟 2　量水並秤總質量</h3>
+          <p>依序注入 10.0、20.0、30.0、40.0、50.0 mL 的水；每次讀量筒要<strong>平視凹液面最低處</strong>，再秤「水＋量筒」總質量。</p>
+          <table>
+            <thead>
+              <tr><th>水體積（mL）</th><th>10.0</th><th>20.0</th><th>30.0</th><th>40.0</th><th>50.0</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>筒＋水（g）</td>
+                <td><input type="text" class="sheet-num" aria-label="水10mL總質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="水20mL總質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="水30mL總質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="水40mL總質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="水50mL總質量" autocomplete="off"></td>
+              </tr>
+              <tr>
+                <td>水的質量（g）</td>
+                <td><input type="text" class="sheet-num" aria-label="水10mL質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="水20mL質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="水30mL質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="水40mL質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="水50mL質量" autocomplete="off"></td>
+              </tr>
+            </tbody>
+          </table>
+        </li>
+        <li class="lab-step">
+          <h3 class="subh">步驟 3　換酒精重做</h3>
+          <p>換乾淨量筒（或倒乾淨），同樣量 10～50 mL 酒精，秤總質量，再減空筒得酒精質量。</p>
+          <table>
+            <thead>
+              <tr><th>酒精體積（mL）</th><th>10.0</th><th>20.0</th><th>30.0</th><th>40.0</th><th>50.0</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>筒＋酒精（g）</td>
+                <td><input type="text" class="sheet-num" aria-label="酒精10mL總質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="酒精20mL總質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="酒精30mL總質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="酒精40mL總質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="酒精50mL總質量" autocomplete="off"></td>
+              </tr>
+              <tr>
+                <td>酒精質量（g）</td>
+                <td><input type="text" class="sheet-num" aria-label="酒精10mL質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="酒精20mL質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="酒精30mL質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="酒精40mL質量" autocomplete="off"></td>
+                <td><input type="text" class="sheet-num" aria-label="酒精50mL質量" autocomplete="off"></td>
+              </tr>
+            </tbody>
+          </table>
+        </li>
+        <li class="lab-step">
+          <h3 class="subh">步驟 4　畫質量－體積關係圖</h3>
+          <p>橫軸體積、縱軸質量；水和酒精畫在同一張圖上。</p>
+          <div class="sheet-graph-box" aria-label="質量對體積作圖區">
+            <p class="sheet-graph-hint">在此作圖（兩條過原點的直線）</p>
+          </div>
+          <p class="lab-record">水的直線較陡／較平？<input type="text" class="sheet-field" aria-label="水酒精斜率比較" autocomplete="off"></p>
+        </li>
+      </ol>
+    </article>
+
+    <article class="card" id="p-b">
+      <div class="section-head">
+        <div class="badge">乙</div>
+        <div>
+          <h2>推測未知金屬塊</h2>
+          <p>先秤質量，再排水法量體積</p>
+        </div>
+      </div>
+      <ol class="lab-steps sheet-flow">
+        <li class="lab-step">
+          <h3 class="subh">步驟 1　秤金屬塊質量</h3>
+          <p class="lab-record">金屬塊質量 <em>M</em>＝<input type="text" class="sheet-num" aria-label="金屬塊質量" autocomplete="off"> g</p>
+        </li>
+        <li class="lab-step">
+          <h3 class="subh">步驟 2　排水法量體積</h3>
+          <p>量筒裝適量水，讀放入前體積 <em>V</em><sub>1</sub>；傾斜量筒，讓金屬塊<strong>緩緩滑入</strong>（不要直直丟），讀放入後 <em>V</em><sub>2</sub>。</p>
+          <p class="lab-caution">金屬塊直直丟入可能打破量筒。</p>
+          <p class="lab-record">
+            <em>V</em><sub>1</sub>＝<input type="text" class="sheet-num" aria-label="放入前體積" autocomplete="off"> mL；
+            <em>V</em><sub>2</sub>＝<input type="text" class="sheet-num" aria-label="放入後體積" autocomplete="off"> mL；
+            金屬塊體積 <em>V</em>＝<input type="text" class="sheet-num" aria-label="金屬塊體積" autocomplete="off"> cm³
+          </p>
+        </li>
+        <li class="lab-step">
+          <h3 class="subh">步驟 3　算比值並對照</h3>
+          <p>質量 ÷ 體積＝<input type="text" class="sheet-num" aria-label="質量除以體積" autocomplete="off"> g/cm³</p>
+          <table>
+            <thead><tr><th>金屬</th><th>密度（g/cm³）</th><th>我的推測</th></tr></thead>
+            <tbody>
+              <tr><td>鋁</td><td>2.70</td><td><input type="checkbox" aria-label="推測為鋁"></td></tr>
+              <tr><td>鐵</td><td>7.87</td><td><input type="checkbox" aria-label="推測為鐵"></td></tr>
+              <tr><td>銅</td><td>8.96</td><td><input type="checkbox" aria-label="推測為銅"></td></tr>
+            </tbody>
+          </table>
+        </li>
+      </ol>
+    </article>
+
+    <article class="card" id="p-c">
+      <div class="section-head">
+        <div class="badge">丙</div>
+        <div>
+          <h2>自製淨水器</h2>
+          <p>分層過濾混濁水，並比較過濾前後</p>
+        </div>
+      </div>
+      <figure>
+        <svg class="diagram" viewBox="0 0 220 280" aria-label="自製淨水器示意：寶特瓶上半部倒扣，內有石子、細砂、活性碳、棉花，下方集水">
+          <rect width="220" height="280" rx="8" fill="#ecfdf5"/>
+          <path d="M70 36 L 150 36 L 158 72 L 62 72 Z" fill="#dbeafe" stroke="#1d4ed8" stroke-width="1.5"/>
+          <text x="110" y="58" text-anchor="middle" font-size="11" fill="#1e3a8a">倒入混濁水</text>
+          <rect x="78" y="74" width="64" height="14" fill="#78716c"/><text x="110" y="85" text-anchor="middle" font-size="9" fill="#fff">小石子</text>
+          <rect x="78" y="90" width="64" height="14" fill="#d6d3d1"/><text x="110" y="101" text-anchor="middle" font-size="9" fill="#444">細砂</text>
+          <rect x="78" y="106" width="64" height="14" fill="#292524"/><text x="110" y="117" text-anchor="middle" font-size="9" fill="#fff">活性碳</text>
+          <rect x="78" y="122" width="64" height="10" fill="#fef3c7"/><text x="110" y="130" text-anchor="middle" font-size="8" fill="#92400e">棉花</text>
+          <path d="M62 132 Q 110 148 158 132 L 150 200 Q 110 212 70 200 Z" fill="none" stroke="#166534" stroke-width="2"/>
+          <path d="M78 200 L 142 200 L 134 248 L 86 248 Z" fill="#bae6fd" stroke="#0369a1" stroke-width="1.5"/>
+          <text x="110" y="228" text-anchor="middle" font-size="11" fill="#0c4a6e">集水杯（瓶身下半部）</text>
+          <path d="M110 132 L 110 198" stroke="#0369a1" stroke-width="1.2" stroke-dasharray="3 2"/>
+        </svg>
+        <p class="caption">水由上往下依序經過各層；最後的濾液不是飲用水，僅供教學觀察</p>
+      </figure>
+      <ol class="lab-steps sheet-flow">
+        <li class="lab-step">
+          <h3 class="subh">步驟 1　裁切並組裝</h3>
+          <p>寶特瓶約 1/3 高度切開：<strong>上半部倒扣</strong>在下半部上緣，當漏斗。瓶口先塞一層棉花（防止砂漏）。</p>
+          <p class="lab-record">依序填入（由<strong>上</strong>到<strong>下</strong>，水先碰到的在上）：</p>
+          <ol class="q sheet-layer-list">
+            <li>小石子</li>
+            <li>細砂</li>
+            <li>活性碳</li>
+            <li>瓶口再補棉花固定</li>
+          </ol>
+          <p class="lab-check">每層填完輕拍外壁，讓材料緊實、不要留大空隙。</p>
+        </li>
+        <li class="lab-step">
+          <h3 class="subh">步驟 2　過濾混濁水</h3>
+          <p>將混濁水<strong>慢慢</strong>倒入漏斗，下方透明杯接住濾液。不要一次倒太滿，以免沖散濾材。</p>
+          <p class="lab-record">原水外觀：<input type="text" class="sheet-field" aria-label="原水外觀" autocomplete="off"></p>
+          <p class="lab-record">濾液外觀：<input type="text" class="sheet-field" aria-label="濾液外觀" autocomplete="off"></p>
+          <p class="lab-record">哪一層攔到最多泥土？<input type="text" class="sheet-field" aria-label="攔截泥土的層" autocomplete="off"></p>
+        </li>
+        <li class="lab-step">
+          <h3 class="subh">步驟 3　連結本節：同體積比質量</h3>
+          <p>各取 50.0 mL 原水與濾液（用同一支量筒），分別秤總質量（可連同小杯一起秤，兩次都用同一杯子）。</p>
+          <p class="lab-record">50 mL 原水＋杯＝<input type="text" class="sheet-num" aria-label="原水加杯質量" autocomplete="off"> g</p>
+          <p class="lab-record">50 mL 濾液＋杯＝<input type="text" class="sheet-num" aria-label="濾液加杯質量" autocomplete="off"> g</p>
+          <p class="lab-record">哪一個比較重？為什麼？<input type="text" class="sheet-field sheet-field-wide" aria-label="原水濾液質量比較原因" autocomplete="off"></p>
+        </li>
+        <li class="lab-step">
+          <h3 class="subh">步驟 4　整理（一句話）</h3>
+          <p>過濾去掉懸浮顆粒；若同體積質量改變，表示<strong>單位體積所含的物質多寡</strong>（和密度概念有關）。</p>
+          <p class="lab-record">我觀察到：<input type="text" class="sheet-field sheet-field-wide" aria-label="淨水器觀察一句話" autocomplete="off"></p>
+          <p class="lab-caution">課堂濾液<strong>不可飲用</strong>；活性碳與砂材僅供示範。</p>
+        </li>
+      </ol>
+    </article>
+
+    <article class="card sheet-done">
+      <div class="section-head">
+        <div class="badge memo">完</div>
+        <div>
+          <h2>實驗完成確認</h2>
+          <p>三項都做完再交</p>
+        </div>
+      </div>
+      <ul class="q sheet-checklist">
+        <li><label><input type="checkbox"> 甲　水和酒精的數據表與 m–V 圖已完成</label></li>
+        <li><label><input type="checkbox"> 乙　金屬塊質量、體積、比值已算並勾選推測</label></li>
+        <li><label><input type="checkbox"> 丙　淨水器已組裝、過濾，並完成前後比較</label></li>
+      </ul>
+      <p class="lab-back no-print"><strong>回講義：</strong><a href="1-2.html">1-2 質量與密度的測量</a>　｜　<strong>投影逐步：</strong><a href="lab-1-2.html">實驗專區 1-2</a></p>
+    </article>
+
+    <p class="footer">
+      1-2 實驗學習單　質量與體積的測量＋自製淨水器<br>
+    </p>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script src="../js/config-lab.js"></script>
+  <script src="../js/layout.js"></script>
+  <script src="../js/app.js"></script>
+</body>
+</html>

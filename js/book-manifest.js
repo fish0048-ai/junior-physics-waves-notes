@@ -67,6 +67,7 @@ window.JPWN_BOOK_MANIFEST = {
     title: "實驗專區",
     files: [
       { id: "lab-1-2", title: "質量與體積的關係", file: "sections/lab-1-2.html" },
+      { id: "lab-1-2-sheet", title: "1-2 實驗學習單", file: "sections/lab-1-2-sheet.html" },
       { id: "lab-2-1", title: "混合物的分離", file: "sections/lab-2-1.html" },
       { id: "lab-2-3", title: "氧氣的製備及性質", file: "sections/lab-2-3.html" },
       { id: "lab-4-3", title: "透鏡的成像觀察", file: "sections/lab-4-3.html" },
