@@ -84,23 +84,30 @@
             </tr>
             <tr>
               <td>5</td>
-              <td class="lab-kit-name">1.25 L 或 2 L 空寶特瓶 1 個、剪刀</td>
-              <td><input type="checkbox" data-kit="s-h5" aria-label="寶特瓶 到齊"></td>
-              <td><input type="checkbox" data-kit="s-g5" aria-label="寶特瓶 完好足量"></td>
-              <td><input type="text" class="lab-kit-note" aria-label="寶特瓶 備註" autocomplete="off"></td>
+              <td class="lab-kit-name">溢水杯、小燒杯（接溢出水）各 1</td>
+              <td><input type="checkbox" data-kit="s-h5b" aria-label="溢水杯 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g5b" aria-label="溢水杯 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="溢水杯 備註" autocomplete="off"></td>
             </tr>
             <tr>
               <td>6</td>
-              <td class="lab-kit-name">棉花、活性碳、細砂、小石子（各一小包）</td>
-              <td><input type="checkbox" data-kit="s-h6" aria-label="濾材 到齊"></td>
-              <td><input type="checkbox" data-kit="s-g6" aria-label="濾材 完好足量"></td>
-              <td><input type="text" class="lab-kit-note" aria-label="濾材 備註" autocomplete="off"></td>
+              <td class="lab-kit-name">1.25 L 或 2 L 空寶特瓶 1 個、剪刀</td>
+              <td><input type="checkbox" data-kit="s-h6" aria-label="寶特瓶 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g6" aria-label="寶特瓶 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="寶特瓶 備註" autocomplete="off"></td>
             </tr>
             <tr>
               <td>7</td>
+              <td class="lab-kit-name">棉花、活性碳、細砂、小石子（各一小包）</td>
+              <td><input type="checkbox" data-kit="s-h7" aria-label="濾材 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g7" aria-label="濾材 完好足量"></td>
+              <td><input type="text" class="lab-kit-note" aria-label="濾材 備註" autocomplete="off"></td>
+            </tr>
+            <tr>
+              <td>8</td>
               <td class="lab-kit-name">混濁水（泥土＋水）、透明杯 2 個</td>
-              <td><input type="checkbox" data-kit="s-h7" aria-label="混濁水 到齊"></td>
-              <td><input type="checkbox" data-kit="s-g7" aria-label="混濁水 完好足量"></td>
+              <td><input type="checkbox" data-kit="s-h8" aria-label="混濁水 到齊"></td>
+              <td><input type="checkbox" data-kit="s-g8" aria-label="混濁水 完好足量"></td>
               <td><input type="text" class="lab-kit-note" aria-label="混濁水 備註" autocomplete="off"></td>
             </tr>
           </tbody>
@@ -165,7 +172,7 @@
         <div class="badge">乙</div>
         <div>
           <h2>推測未知金屬塊</h2>
-          <p>先秤質量，再排水法量體積</p>
+          <p>溢水杯排水；量筒只量體積</p>
         </div>
       </div>
       <ol class="lab-steps sheet-flow">
@@ -174,17 +181,17 @@
           <p class="lab-record">金屬塊質量 <em>M</em>＝<input type="text" class="sheet-num" aria-label="金屬塊質量" autocomplete="off"> g</p>
         </li>
         <li class="lab-step">
-          <h3 class="subh">步驟 2　排水法量體積</h3>
-          <p>量筒裝適量水，讀放入前體積 <em>V</em><sub>1</sub>；傾斜量筒，讓金屬塊<strong>緩緩滑入</strong>（不要直直丟），讀放入後 <em>V</em><sub>2</sub>。</p>
-          <p class="lab-caution">金屬塊直直丟入可能打破量筒。</p>
-          <p class="lab-record">
-            <em>V</em><sub>1</sub>＝<input type="text" class="sheet-num" aria-label="放入前體積" autocomplete="off"> mL；
-            <em>V</em><sub>2</sub>＝<input type="text" class="sheet-num" aria-label="放入後體積" autocomplete="off"> mL；
-            金屬塊體積 <em>V</em>＝<input type="text" class="sheet-num" aria-label="金屬塊體積" autocomplete="off"> cm³
-          </p>
+          <h3 class="subh">步驟 2　溢水杯排水（不在量筒操作）</h3>
+          <p>溢水杯加水至溢水口；小燒杯接在下方。用鑷子把金屬塊緩緩放入溢水杯，溢出水全部接在小燒杯。</p>
+          <p class="lab-caution">量筒<strong>禁止</strong>裝金屬塊或當操作容器。</p>
         </li>
         <li class="lab-step">
-          <h3 class="subh">步驟 3　算比值並對照</h3>
+          <h3 class="subh">步驟 3　用量筒量溢出水</h3>
+          <p>溢出水倒入量筒，平視凹液面讀體積。溢出水體積＝金屬塊體積。</p>
+          <p class="lab-record">溢出水體積（＝金屬塊 <em>V</em>）＝<input type="text" class="sheet-num" aria-label="金屬塊體積" autocomplete="off"> mL（cm³）</p>
+        </li>
+        <li class="lab-step">
+          <h3 class="subh">步驟 4　算比值並推測</h3>
           <p>質量 ÷ 體積＝<input type="text" class="sheet-num" aria-label="質量除以體積" autocomplete="off"> g/cm³</p>
           <table>
             <thead><tr><th>金屬</th><th>密度（g/cm³）</th><th>我的推測</th></tr></thead>
