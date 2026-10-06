@@ -120,6 +120,22 @@ html.is-embed .key {
   font-size: 13px;
 }
 
+/* 4-1 針孔成像：投影用大圖＋紙屏特寫 */
+html.is-embed.pinhole-page svg#scene {
+  min-height: clamp(320px, 48vw, 520px) !important;
+  aspect-ratio: 16 / 9;
+}
+html.is-embed.pinhole-page .visual-wrap {
+  grid-template-columns: 1fr min(200px, 26vw);
+}
+html.is-embed.pinhole-page .readout {
+  font-size: 15px;
+}
+html.is-embed.pinhole-page .presets button {
+  min-height: 40px;
+  font-size: 14px;
+}
+
 /* 5-3 加熱曲線：杯子面板 */
 html.is-embed .cup-grid {
   gap: 14px;

@@ -1,22 +1,369 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>小孔怎麼把影像倒過來？</title><style>
-*{box-sizing:border-box}body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}main{max-width:1050px;margin:auto;padding:24px}small{color:#547082}h1{font-size:clamp(23px,4vw,31px);line-height:1.4;margin:6px 0 8px}p{margin:8px 0 16px}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;align-items:center}.control{flex:1 1 190px;max-width:340px}.control label{display:flex;justify-content:space-between;gap:10px;font-size:15px}.control output{font-variant-numeric:tabular-nums;font-weight:600}input[type=range]{width:100%;min-height:38px;accent-color:#087fa4}select,button{font:inherit;min-height:44px;padding:8px 12px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white}select{max-width:100%}button{cursor:pointer}button.primary{background:#076b87;color:white;border-color:#076b87}button:disabled{opacity:.5;cursor:default}button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}.visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden}svg{display:block;width:100%;height:390px}svg text{font:14px system-ui,"Microsoft JhengHei",sans-serif;fill:#29495e}.readout{padding:12px 16px;background:#edf5f8;min-height:52px;font-variant-numeric:tabular-nums}.note{font-size:13px;color:#526c7d}.question{margin-top:18px;padding:16px;background:#eaf3f7;border-left:4px solid #087fa4;border-radius:7px}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}details p{margin:6px 0}#status{color:#496579;font-size:14px}.legend{font-size:14px;margin:12px 0}.key{display:inline-block;padding:2px 8px;border-radius:6px;background:#e6f1f5;margin:2px}.panel{display:flex;gap:12px;flex-wrap:wrap}.panel>div{flex:1 1 200px}a{color:#075f7d}@media(max-width:480px){main{padding:14px}.controls{gap:10px}.control{flex-basis:140px}svg{height:430px}.readout{font-size:14px}}
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>小孔怎麼把影像倒過來？</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: #f6f8fa;
+      color: #193247;
+      font: 16px/1.65 system-ui, "Microsoft JhengHei", sans-serif;
+    }
+    main { max-width: 1100px; margin: auto; padding: 24px; }
+    small { color: #547082; }
+    h1 { font-size: clamp(23px, 4vw, 31px); line-height: 1.4; margin: 6px 0 8px; }
+    p { margin: 8px 0 16px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0; align-items: center; }
+    .control { flex: 1 1 200px; max-width: 360px; }
+    .control label { display: flex; justify-content: space-between; gap: 10px; font-size: 15px; }
+    .control output { font-variant-numeric: tabular-nums; font-weight: 600; }
+    input[type=range] { width: 100%; min-height: 44px; accent-color: #087fa4; }
+    button {
+      font: inherit; min-height: 44px; padding: 8px 14px;
+      border: 1px solid #afc4d0; border-radius: 8px; color: #193247; background: white; cursor: pointer;
+    }
+    button.primary { background: #076b87; color: white; border-color: #076b87; }
+    button:focus-visible, input:focus-visible, summary:focus-visible {
+      outline: 3px solid #e5a12a; outline-offset: 3px;
+    }
+    .presets { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+    .visual-wrap {
+      display: grid;
+      grid-template-columns: 1fr min(220px, 28vw);
+      gap: 12px;
+      align-items: stretch;
+    }
+    .visual { background: white; border: 1px solid #dbe7ed; border-radius: 16px; overflow: hidden; }
+    svg { display: block; width: 100%; height: 520px; touch-action: none; }
+    svg text { font: 600 15px system-ui, "Microsoft JhengHei", sans-serif; fill: #29495e; }
+    .screen-preview {
+      background: #fff; border: 2px solid #cbd5e1; border-radius: 16px; padding: 12px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 200px;
+    }
+    .screen-preview h2 { font-size: 14px; margin: 0 0 8px; color: #64748b; font-weight: 700; }
+    .screen-preview svg { width: 100%; height: auto; min-height: 160px; max-height: 420px; }
+    .readout {
+      padding: 14px 18px; background: #edf5f8; min-height: 56px;
+      font-variant-numeric: tabular-nums; font-size: 16px; font-weight: 600; line-height: 1.45;
+    }
+    .readout-sub { display: block; font-size: 13px; font-weight: 500; color: #496579; margin-top: 4px; }
+    .note { font-size: 13px; color: #526c7d; }
+    .question {
+      margin-top: 18px; padding: 16px; background: #eaf3f7;
+      border-left: 4px solid #087fa4; border-radius: 7px;
+    }
+    summary { cursor: pointer; min-height: 44px; padding: 8px 0; font-weight: 600; }
+    details p { margin: 6px 0; }
+    #status { color: #496579; font-size: 14px; }
+    .legend { font-size: 14px; margin: 8px 0 12px; }
+    .key { display: inline-block; padding: 2px 8px; border-radius: 6px; background: #e6f1f5; margin: 2px; }
+    .drag-hint { font-size: 13px; color: #0e7490; margin: 0 0 10px; }
+    @media (max-width: 760px) {
+      .visual-wrap { grid-template-columns: 1fr; }
+      .screen-preview { min-height: 140px; }
+      svg { height: 440px; }
+    }
+  </style>
+  <link rel="stylesheet" href="embed.css">
+</head>
+<body>
+<script>if (window.parent !== window) document.documentElement.classList.add("is-embed");</script>
+<script>document.documentElement.classList.add("pinhole-page");</script>
+<main>
+  <small>國中理化 · 4-1 針孔成像</small>
+  <h1>小孔怎麼把影像倒過來？</h1>
+  <p>調<strong>物距</strong>、<strong>屏距</strong>，或直接<strong>拖動針孔隔板</strong>。右側「紙屏特寫」放大倒像，方便投影。</p>
+  <p class="legend">
+    <span class="key" style="background:#fee2e2;color:#b91c1c">↑ 頂端光線</span>
+    <span class="key" style="background:#dbeafe;color:#1d4ed8">↓ 底端光線</span>
+    <span class="key">針孔可拖移</span>
+  </p>
+  <div class="presets">
+    <button type="button" class="primary" id="preset-big">像變大（物近、屏遠）</button>
+    <button type="button" id="preset-small">像變小（物遠、屏近）</button>
+    <button type="button" id="preset-reset">重設</button>
+  </div>
+  <div class="controls">
+    <div class="control">
+      <label for="object">物距（燭火→針孔）<output id="object-out"></output></label>
+      <input id="object" type="range" min="40" max="140" step="5" value="80">
+    </div>
+    <div class="control">
+      <label for="screen">屏距（針孔→紙屏）<output id="screen-out"></output></label>
+      <input id="screen" type="range" min="40" max="200" step="5" value="120">
+    </div>
+  </div>
+  <p class="drag-hint">投影時可<strong>用手指拖動</strong>圖中的針孔隔板（改變物距；屏距維持不變）。</p>
+  <div class="visual-wrap">
+    <div class="visual">
+      <svg id="scene" role="img" aria-label="針孔成像：可拖動針孔、追蹤光線"></svg>
+      <div class="readout" id="result"></div>
+    </div>
+    <aside class="screen-preview" aria-label="紙屏特寫">
+      <h2>紙屏特寫（倒立像）</h2>
+      <svg id="screen-zoom" role="img" aria-label="紙屏上的倒立像放大"></svg>
+    </aside>
+  </div>
+  <div class="controls">
+    <span role="status" aria-live="polite" id="status">可調整條件觀察</span>
+  </div>
+  <div class="question">
+    <b>先想一想：</b>針孔往紙屏方向移動，倒像會變大還是變小？
+    <details>
+      <summary>查看解釋</summary>
+      <p>光沿直線穿過小孔。物體上方的光到達紙屏下方，下方的光到達紙屏上方，因此成<strong>倒立實像</strong>。像高／物高＝屏距／物距。針孔移近物體（物距變小）或紙屏移遠（屏距變大），像都會變大。</p>
+    </details>
+  </div>
+  <p class="note">理想小孔模型；物高固定 20 cm。此模式比較位置與大小，未模擬孔徑繞射。不同顏色代表追蹤頂、底兩點光線。</p>
+</main>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const svg = $("scene");
+  const screenSvg = $("screen-zoom");
+  const NS = "http://www.w3.org/2000/svg";
+  const C = { blue: "#1d4ed8", red: "#dc2626", gold: "#b45309", gray: "#94a3b8", hole: "#475569", flame: "#f97316" };
+  const OBJ_H_CM = 20;
+  let W = 900;
+  let H = 520;
+  let dragging = false;
 
-</style><link rel="stylesheet" href="embed.css"></head><body><script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script><main><small>國中理化 · 4-1 針孔成像</small><h1>小孔怎麼把影像倒過來？</h1><p>拖動物距與屏距，追蹤物體頂端、底端的光線。</p><div class="controls"><div class="control"><label for="object">物距<output id="object-out"></output></label><input id="object" type="range" min="60" max="180" step="10" value="120"></div><div class="control"><label for="screen">屏距<output id="screen-out"></output></label><input id="screen" type="range" min="30" max="120" step="10" value="60"></div></div><div class="visual"><svg id="scene" role="img" aria-label="小孔怎麼把影像倒過來？的互動示意"></svg><div class="readout" id="result"></div></div><div class="controls"><span role="status" aria-live="polite" id="status">可調整條件觀察</span></div><div class="question"><b>先想一想：</b>把紙屏往後移，倒像會變大還是變小？<details><summary>查看解釋</summary><p>光沿直線穿過小孔。物體上方的光到達紙屏下方，下方的光到達紙屏上方，因此成倒立實像。像高／物高＝屏距／物距。</p></details></div><p class="note">理想小孔及幾何光學模型；物高固定 20 cm。此模式只比較位置與大小，未模擬孔徑、亮度、繞射或模糊。不同顏色代表追蹤不同物點，不代表物體只有兩條光線。</p></main><script>
-(()=>{'use strict';const $=id=>document.getElementById(id),svg=$('scene'),NS='http://www.w3.org/2000/svg';let W=800,H=390,frame=null,last=null,running=false;const C={blue:'#087fa4',red:'#d52b47',gold:'#a66a0a',green:'#258151',gray:'#92a8b7'};
-function n(tag,attrs={},text=''){const node=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>node.setAttribute(k,v));if(text!==undefined)node.textContent=text;svg.append(node);return node}
-function clear(){W=Math.max(260,svg.clientWidth);H=svg.clientHeight||390;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.replaceChildren()}
-function line(x1,y1,x2,y2,color=C.blue,dash=false,width=2){return n('line',{x1,y1,x2,y2,stroke:color,'stroke-width':width,...(dash?{'stroke-dasharray':'5 5'}:{})})}
-function text(x,y,t,anchor='middle',color){return n('text',{x,y,'text-anchor':anchor,...(color?{style:'fill:'+color}:{})},t)}
-function circle(x,y,r,color,fill=color){return n('circle',{cx:x,cy:y,r,stroke:color,fill,'stroke-width':2})}
-function rect(x,y,w,h,fill,stroke='none'){return n('rect',{x,y,width:Math.max(0,w),height:Math.max(0,h),rx:4,fill,stroke})}
-function path(points,color=C.blue,dash=false,width=2){return n('path',{d:points.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' '),fill:'none',stroke:color,'stroke-width':width,...(dash?{'stroke-dasharray':'5 5'}:{})})}
-function arrow(x1,y1,x2,y2,color=C.blue,dash=false){line(x1,y1,x2,y2,color,dash);const a=Math.atan2(y2-y1,x2-x1),l=8;return path([[x2-l*Math.cos(a-.45),y2-l*Math.sin(a-.45)],[x2,y2],[x2-l*Math.cos(a+.45),y2-l*Math.sin(a+.45)]],color)}
-function val(id){return Number($(id).value)}function out(id,v){$(id).textContent=v}function bind(ids,fn){ids.forEach(id=>$(id).addEventListener('input',()=>{stop();fn();draw()}))}
-function stop(msg='已暫停'){running=false;last=null;if($('play'))$('play').textContent='播放';out('status',msg)}
-function playback(update){$('play').addEventListener('click',()=>{if(running){stop();return}running=true;last=null;$('play').textContent='暫停';out('status','播放中')});function tick(t){if(running){if(last!==null)update(Math.min(.1,(t-last)/1000));last=t;draw()}frame=requestAnimationFrame(tick)}frame=requestAnimationFrame(tick)}
-document.addEventListener('visibilitychange',()=>{if(document.hidden)stop('頁面隱藏，已暫停')});
+  function n(tag, attrs = {}, text = "") {
+    const node = document.createElementNS(NS, tag);
+    Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+    if (text !== undefined) node.textContent = text;
+    svg.append(node);
+    return node;
+  }
 
-function draw(){clear();const p=val('object'),q=val('screen'),scale=(W-60)/320,cx=30+190*scale,cy=H*.5,ox=cx-p*scale,sx=cx+q*scale,oh=32,ih=oh*q/p;line(20,cy,W-20,cy,C.gray,true);line(cx,60,cx,cy-5,C.gray,false,5);line(cx,cy+5,cx,H-65,C.gray,false,5);line(sx,cy-80,sx,cy+80,C.gray,false,4);arrow(ox,cy+oh/2,ox,cy-oh/2,C.blue);arrow(sx,cy-ih/2,sx,cy+ih/2,C.red);path([[ox,cy-oh/2],[cx,cy],[sx,cy+ih/2]],C.red);path([[ox,cy+oh/2],[cx,cy],[sx,cy-ih/2]],C.blue);text(ox,cy-55,'物體');text(cx,45,'小孔');text(sx,H-40,'紙屏');out('object-out',p+' cm');out('screen-out',q+' cm');out('result',`屏距÷物距＝${(q/p).toFixed(2)} ｜ 像高 ${(20*q/p).toFixed(1)} cm ｜ 倒立實像`)}bind(['object','screen'],()=>{});
+  function nZoom(tag, attrs = {}, text = "") {
+    const node = document.createElementNS(NS, tag);
+    Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+    if (text !== undefined) node.textContent = text;
+    screenSvg.append(node);
+    return node;
+  }
 
-new ResizeObserver(draw).observe(svg);draw();let sent=0;new ResizeObserver(()=>{const height=Math.ceil(document.querySelector('main').getBoundingClientRect().height);if(height!==sent&&window.parent!==window){sent=height;window.parent.postMessage({type:'physics-animation:resize',height},location.origin==='null'?'*':location.origin)}}).observe(document.body);
-})();</script><script src="embed-resize.js"></script></body></html>
+  function pathEl(parent, points, color, dash = false, width = 3) {
+    const d = points.map((p, i) => (i ? "L" : "M") + p.join(" ")).join(" ");
+    const node = document.createElementNS(NS, "path");
+    node.setAttribute("d", d);
+    node.setAttribute("fill", "none");
+    node.setAttribute("stroke", color);
+    node.setAttribute("stroke-width", String(width));
+    node.setAttribute("stroke-linecap", "round");
+    node.setAttribute("stroke-linejoin", "round");
+    if (dash) node.setAttribute("stroke-dasharray", "8 6");
+    parent.append(node);
+    return node;
+  }
+
+  function arrow(parent, x1, y1, x2, y2, color, dash = false, width = 3) {
+    pathEl(parent, [[x1, y1], [x2, y2]], color, dash, width);
+    const a = Math.atan2(y2 - y1, x2 - x1);
+    const l = 12;
+    pathEl(parent, [
+      [x2 - l * Math.cos(a - 0.42), y2 - l * Math.sin(a - 0.42)],
+      [x2, y2],
+      [x2 - l * Math.cos(a + 0.42), y2 - l * Math.sin(a + 0.42)]
+    ], color, false, width);
+  }
+
+  function val(id) { return Number($(id).value); }
+  function out(id, v) { $(id).textContent = v; }
+
+  function drawArrowObject(parent, x, cy, h, inverted) {
+    const g = document.createElementNS(NS, "g");
+    parent.append(g);
+    const half = h / 2;
+    const top = inverted ? cy + half : cy - half;
+    const bot = inverted ? cy - half : cy + half;
+    const shaftW = Math.max(8, h * 0.14);
+    const headW = Math.max(16, h * 0.32);
+    const headL = Math.max(14, h * 0.28);
+    const color = inverted ? "#c2410c" : C.gold;
+    const fill = inverted ? "#fed7aa" : "#fef3c7";
+
+    const body = document.createElementNS(NS, "rect");
+    body.setAttribute("x", String(x - shaftW / 2));
+    body.setAttribute("y", String(Math.min(top, bot) + headL));
+    body.setAttribute("width", String(shaftW));
+    body.setAttribute("height", String(Math.max(8, h - headL)));
+    body.setAttribute("rx", "3");
+    body.setAttribute("fill", fill);
+    body.setAttribute("stroke", color);
+    body.setAttribute("stroke-width", "2");
+    g.append(body);
+
+    const tipY = top;
+    const baseY = inverted ? top - headL : top + headL;
+    const poly = document.createElementNS(NS, "polygon");
+    poly.setAttribute("points", `${x},${tipY} ${x - headW / 2},${baseY} ${x + headW / 2},${baseY}`);
+    poly.setAttribute("fill", fill);
+    poly.setAttribute("stroke", color);
+    poly.setAttribute("stroke-width", "2");
+    g.append(poly);
+
+    if (!inverted) {
+      const flame = document.createElementNS(NS, "ellipse");
+      flame.setAttribute("cx", String(x));
+      flame.setAttribute("cy", String(bot + 10));
+      flame.setAttribute("rx", String(Math.max(6, h * 0.12)));
+      flame.setAttribute("ry", String(Math.max(8, h * 0.16)));
+      flame.setAttribute("fill", C.flame);
+      flame.setAttribute("opacity", "0.9");
+      g.append(flame);
+    }
+  }
+
+  function drawScreenZoom(ihPx, mag, imgH) {
+    const zw = 180;
+    const zh = 220;
+    screenSvg.setAttribute("viewBox", `0 0 ${zw} ${zh}`);
+    screenSvg.replaceChildren();
+    nZoom("rect", { x: 8, y: 8, width: zw - 16, height: zh - 16, rx: 10, fill: "#fffbeb", stroke: "#d97706", "stroke-width": 2 });
+    nZoom("text", { x: zw / 2, y: 28, "text-anchor": "middle", "font-size": 13, fill: "#92400e" }, "紙屏上的像");
+    const scale = Math.min((zh - 70) / Math.max(ihPx, 40), (zw - 40) / 36) * 1.15;
+    drawArrowObject(screenSvg, zw / 2, zh / 2 + 8, Math.max(48, ihPx * scale), true);
+    nZoom("text", { x: zw / 2, y: zh - 14, "text-anchor": "middle", "font-size": 12, fill: "#64748b" }, `像高 ${imgH} cm　×${mag}`);
+  }
+
+  function draw() {
+    W = Math.max(320, svg.clientWidth || 900);
+    H = svg.clientHeight || 520;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.replaceChildren();
+
+    const u = val("object");
+    const v = val("screen");
+    const cy = H * 0.52;
+    const marginL = 56;
+    const marginR = 56;
+    const ppm = (W - marginL - marginR) / (u + v);
+    const ox = marginL;
+    const holeX = ox + u * ppm;
+    const sx = holeX + v * ppm;
+    const ohPx = Math.min(H * 0.42, Math.max(56, OBJ_H_CM * ppm * 0.55));
+    const ihPx = ohPx * (v / u);
+    const topY = cy - ohPx / 2;
+    const botY = cy + ohPx / 2;
+    const imgTopY = cy + ihPx / 2;
+    const imgBotY = cy - ihPx / 2;
+
+    n("line", { x1: 16, y1: cy, x2: W - 16, y2: cy, stroke: C.gray, "stroke-width": 1.5, "stroke-dasharray": "6 5", opacity: 0.7 });
+
+    const board = n("g", { id: "hole-board", cursor: "ew-resize", "data-hole": "1" });
+    n("line", { x1: holeX, y1: 36, x2: holeX, y2: H - 72, stroke: C.hole, "stroke-width": 7, "stroke-linecap": "round" });
+    n("rect", { x: holeX - 14, y: cy - 18, width: 28, height: 36, rx: 4, fill: "#f8fafc", stroke: C.hole, "stroke-width": 2 });
+    n("circle", { cx: holeX, cy, r: 5, fill: "#fff", stroke: C.hole, "stroke-width": 2 });
+    const hit = document.createElementNS(NS, "rect");
+    hit.setAttribute("x", String(holeX - 28));
+    hit.setAttribute("y", "24");
+    hit.setAttribute("width", "56");
+    hit.setAttribute("height", String(H - 48));
+    hit.setAttribute("fill", "transparent");
+    board.append(hit);
+
+    n("line", {
+      x1: sx, y1: cy - Math.max(ihPx, ohPx) * 0.65 - 24,
+      x2: sx, y2: cy + Math.max(ihPx, ohPx) * 0.65 + 24,
+      stroke: C.gray, "stroke-width": 5, "stroke-linecap": "round"
+    });
+    n("rect", { x: sx - 3, y: imgBotY - 8, width: 6, height: ihPx + 16, rx: 2, fill: "#fef3c7", stroke: "#f59e0b", "stroke-width": 1.5, opacity: 0.85 });
+
+    drawArrowObject(svg, ox, cy, ohPx, false);
+    drawArrowObject(svg, sx, cy, ihPx, true);
+
+    arrow(svg, ox, topY, holeX, cy, C.red, false, 3.5);
+    arrow(svg, holeX, cy, sx, imgTopY, C.red, false, 3.5);
+    arrow(svg, ox, botY, holeX, cy, C.blue, false, 3.5);
+    arrow(svg, holeX, cy, sx, imgBotY, C.blue, false, 3.5);
+
+    n("text", { x: ox, y: topY - 22, "text-anchor": "middle", "font-size": 16 }, "物體 ↑");
+    n("text", { x: holeX, y: 24, "text-anchor": "middle", "font-size": 16, fill: C.hole }, "針孔（可拖）");
+    n("text", { x: sx, y: H - 28, "text-anchor": "middle", "font-size": 16 }, "紙屏");
+    n("text", { x: (ox + holeX) / 2, y: cy + 28, "text-anchor": "middle", "font-size": 13, fill: "#64748b" }, `物距 ${u} cm`);
+    n("text", { x: (holeX + sx) / 2, y: cy + 28, "text-anchor": "middle", "font-size": 13, fill: "#64748b" }, `屏距 ${v} cm`);
+
+    const mag = (v / u).toFixed(2);
+    const imgH = (OBJ_H_CM * v / u).toFixed(1);
+    out("object-out", u + " cm");
+    out("screen-out", v + " cm");
+    $("result").innerHTML =
+      `放大率 屏距÷物距＝${mag} ｜ 像高 ${imgH} cm（物高 ${OBJ_H_CM} cm）` +
+      `<span class="readout-sub">${mag >= 1 ? "倒立放大實像" : "倒立縮小實像"}　上下顛倒、左右相反</span>`;
+
+    drawScreenZoom(ihPx, mag, imgH);
+  }
+
+  function setObjectDist(u) {
+    u = Math.round(Math.max(40, Math.min(140, u)) / 5) * 5;
+    $("object").value = String(u);
+    draw();
+  }
+
+  function pointerToObjectDist(clientX) {
+    const u = val("object");
+    const v = val("screen");
+    const marginL = 56;
+    const marginR = 56;
+    const ppm = (W - marginL - marginR) / (u + v);
+    const rect = svg.getBoundingClientRect();
+    const x = ((clientX - rect.left) / rect.width) * W;
+    setObjectDist((x - marginL) / ppm);
+  }
+
+  svg.addEventListener("pointerdown", (e) => {
+    if (!e.target.closest("[data-hole]")) return;
+    dragging = true;
+    svg.setPointerCapture(e.pointerId);
+    out("status", "拖動針孔中…");
+  });
+  svg.addEventListener("pointermove", (e) => {
+    if (!dragging) return;
+    pointerToObjectDist(e.clientX);
+  });
+  svg.addEventListener("pointerup", () => {
+    if (!dragging) return;
+    dragging = false;
+    out("status", "已更新物距；觀察像的大小");
+  });
+  svg.addEventListener("pointercancel", () => { dragging = false; });
+
+  ["object", "screen"].forEach((id) => {
+    $(id).addEventListener("input", () => {
+      out("status", "可調整條件觀察");
+      draw();
+    });
+  });
+
+  $("preset-big").addEventListener("click", () => {
+    $("object").value = "50";
+    $("screen").value = "160";
+    draw();
+    out("status", "物距小、屏距大 → 像放大");
+  });
+  $("preset-small").addEventListener("click", () => {
+    $("object").value = "130";
+    $("screen").value = "50";
+    draw();
+    out("status", "物距大、屏距小 → 像縮小");
+  });
+  $("preset-reset").addEventListener("click", () => {
+    $("object").value = "80";
+    $("screen").value = "120";
+    draw();
+    out("status", "已重設");
+  });
+
+  new ResizeObserver(draw).observe(svg);
+  draw();
+})();
+</script>
+<script src="embed-resize.js"></script>
+</body>
+</html>
