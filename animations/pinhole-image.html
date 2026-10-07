@@ -121,7 +121,7 @@
       <p>光沿直線穿過小孔。物體上方的光到達紙屏下方，因此成<strong>倒立實像</strong>；F 左右不對稱，所以像也<strong>左右相反</strong>。針孔往上移，通過該孔的光線整體偏上，像就會在紙屏上<strong>往下</strong>移。每個針孔都是一組獨立光路，所以孔越多、像就越多。</p>
     </details>
   </div>
-  <p class="note">理想小孔模型；物高固定 20 cm。未模擬孔徑繞射。針孔最多 5 個。</p>
+  <p class="note">理想小孔模型；物高固定 20 cm。針孔愈多，通過的光愈分散，每個像愈淡（未模擬孔徑繞射）。針孔最多 5 個。</p>
 </main>
 <script>
 (() => {
@@ -323,7 +323,12 @@
     parent.append(hit);
   }
 
-  function pathEl(parent, points, color, width = 2.5) {
+  /** 針孔越多，光越分散，每個像越淡（亮度約 ∝ 1／孔數） */
+  function imageOpacityPerHole() {
+    return Math.max(0.2, 1 / holes.length);
+  }
+
+  function pathEl(parent, points, color, width = 2.5, opacity = 1) {
     const d = points.map((p, i) => (i ? "L" : "M") + p.join(" ")).join(" ");
     const node = document.createElementNS(NS, "path");
     node.setAttribute("d", d);
@@ -331,10 +336,11 @@
     node.setAttribute("stroke", color);
     node.setAttribute("stroke-width", String(width));
     node.setAttribute("stroke-linecap", "round");
+    node.setAttribute("opacity", String(opacity));
     parent.append(node);
   }
 
-  function drawLetterF(parent, cx, cy, hPx, inverted) {
+  function drawLetterF(parent, cx, cy, hPx, inverted, opacity = 1) {
     const g = document.createElementNS(NS, "g");
     const s = hPx / F_H;
     const tx = cx - (F_W / 2) * s;
@@ -344,6 +350,7 @@
     } else {
       g.setAttribute("transform", `translate(${tx} ${ty}) scale(${s})`);
     }
+    g.setAttribute("opacity", String(opacity));
     const path = document.createElementNS(NS, "path");
     path.setAttribute("d", F_PATH);
     path.setAttribute("fill", inverted ? C.red : C.blue);
@@ -366,12 +373,15 @@
     const previewScale = (zh - 28) / (vertSpan * layout.ppm);
     const ihP = layout.ihPx * previewScale;
     n("line", screenSvg, { x1: rodX, y1: 14, x2: rodX, y2: zh - 14, stroke: C.gray, "stroke-width": 4, "stroke-linecap": "round" });
+    const imgAlpha = imageOpacityPerHole();
     holes.forEach((hole) => {
       const imgY = axisY + hole.yCm * (1 + layout.v / layout.u) * layout.ppm * previewScale;
-      drawLetterF(screenSvg, rodX, imgY, ihP, true);
+      drawLetterF(screenSvg, rodX, imgY, ihP, true, imgAlpha);
     });
     n("text", screenSvg, { x: zw / 2, y: zh - 6, "text-anchor": "middle", "font-size": 11, fill: "#64748b" },
-      holes.length > 1 ? `${holes.length} 個倒立像（上下顛倒、左右相反）` : "倒立像（上下顛倒、左右相反）");
+      holes.length > 1
+        ? `${holes.length} 個倒立像（孔越多，每個像越淡）`
+        : "倒立像（上下顛倒、左右相反）");
   }
 
   function draw() {
@@ -401,11 +411,12 @@
     n("line", board, { x1: holeX, y1: rodTop, x2: holeX, y2: rodBot, stroke: C.hole, "stroke-width": 8, "stroke-linecap": "round" });
     addDragHit(board, holeX, rodTop, 48, rodBot - rodTop, "hole", { cursor: "ew-resize" });
 
+    const imgAlpha = imageOpacityPerHole();
     const holeColors = ["#fde68a", "#fcd34d", "#fbbf24", "#f59e0b", "#d97706"];
     holes.forEach((hole, i) => {
       const hi = holeInfo(layout, hole);
-      pathEl(svg, [[ox, topY], [holeX, hi.holeYPx], [sx, hi.imgTopY]], "#ea580c", 2);
-      pathEl(svg, [[ox, botY], [holeX, hi.holeYPx], [sx, hi.imgBotY]], "#2563eb", 2);
+      pathEl(svg, [[ox, topY], [holeX, hi.holeYPx], [sx, hi.imgTopY]], "#ea580c", 2, imgAlpha);
+      pathEl(svg, [[ox, botY], [holeX, hi.holeYPx], [sx, hi.imgBotY]], "#2563eb", 2, imgAlpha);
       const holeG = n("g", board, { cursor: "ns-resize" });
       n("circle", holeG, {
         cx: holeX, cy: hi.holeYPx, r: 7,
@@ -420,7 +431,7 @@
 
     holes.forEach((hole) => {
       const hi = holeInfo(layout, hole);
-      drawLetterF(screenGroup, sx, hi.imgCenterY, ihPx, true);
+      drawLetterF(screenGroup, sx, hi.imgCenterY, ihPx, true, imgAlpha);
     });
 
     n("text", svg, { x: ox, y: Math.max(16, topY - 10), "text-anchor": "middle", "font-size": 14 }, "物體 F（可左右拖）");
@@ -435,7 +446,9 @@
     out("screen-out", v + " cm");
     const magLabel = mag >= 1 ? "倒立放大實像" : "倒立縮小實像";
     const scaleNote = sceneScaled ? "　（整圖等比縮放以完整顯示）" : "";
-    const holeNote = holes.length > 1 ? `　${holes.length} 個針孔 → ${holes.length} 個像` : "";
+    const holeNote = holes.length > 1
+      ? `　${holes.length} 個針孔 → ${holes.length} 個像（每像亮度約 1/${holes.length}）`
+      : "";
     $("result").innerHTML =
       `放大率 屏距÷物距＝${mag} ｜ 像高 ${imgH} cm（物高 ${OBJ_H_CM} cm）` +
       `<span class="readout-sub">${magLabel}　F 字像上下顛倒、左右相反${holeNote}${scaleNote}</span>`;
