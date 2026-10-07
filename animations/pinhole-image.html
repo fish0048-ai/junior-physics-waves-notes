@@ -62,6 +62,7 @@
     .legend { font-size: 14px; margin: 8px 0 12px; }
     .key { display: inline-block; padding: 2px 8px; border-radius: 6px; background: #e6f1f5; margin: 2px; }
     .drag-hint { font-size: 13px; color: #0e7490; margin: 0 0 10px; }
+    #ray-pulses { pointer-events: none; }
     @media (max-width: 760px) {
       svg#scene { height: 440px; }
     }
@@ -79,6 +80,7 @@
     <span class="key" style="background:#dbeafe;color:#1d4ed8">物體 F</span>
     <span class="key" style="background:#fee2e2;color:#b91c1c">倒立像</span>
     <span class="key">針孔可上下移</span>
+    <span class="key" style="background:#fef08a;color:#854d0e">● 光點沿直線前進</span>
   </p>
   <div class="presets">
     <button type="button" class="primary" id="preset-big">像變大（物近、屏遠）</button>
@@ -98,6 +100,7 @@
   <div class="hole-controls">
     <button type="button" id="add-hole">＋ 增加針孔</button>
     <button type="button" id="remove-hole">－ 減少針孔</button>
+    <button type="button" class="primary" id="toggle-ray-anim">暫停光線動畫</button>
     <span id="hole-count">目前 1 個針孔</span>
   </div>
   <p class="drag-hint">左右拖：物體、針孔隔板、紙屏（拖哪個，另兩者水平位置不動）。<strong>上下拖針孔上的圓點</strong>，該孔的像會跟著在紙屏上移動。</p>
@@ -118,7 +121,7 @@
     <b>先想一想：</b>針孔往上移，紙屏上的像會往哪個方向移動？為什麼多個針孔會出現多個像？
     <details>
       <summary>查看解釋</summary>
-      <p>光沿直線穿過小孔。物體上方的光到達紙屏下方，因此成<strong>倒立實像</strong>；F 左右不對稱，所以像也<strong>左右相反</strong>。針孔往上移，通過該孔的光線整體偏上，像就會在紙屏上<strong>往下</strong>移。每個針孔都是一組獨立光路，所以孔越多、像就越多。</p>
+      <p>光沿<strong>直線</strong>前進（可看光點動畫）。物體上方的光穿過小孔後到達紙屏下方，因此成<strong>倒立實像</strong>；F 左右不對稱，所以像也<strong>左右相反</strong>。針孔往上移，通過該孔的光線整體偏上，像就會在紙屏上<strong>往下</strong>移。每個針孔都是一組獨立光路，所以孔越多、像就越多。</p>
     </details>
   </div>
   <p class="note">理想小孔模型；物高固定 20 cm。針孔愈多，通過的光愈分散，每個像愈淡（未模擬孔徑繞射）。針孔最多 5 個。</p>
@@ -155,6 +158,13 @@
   /** @type {{ id: number, yCm: number }[]} 針孔相對光軸的垂直偏移（cm，上為負） */
   let holes = [{ id: 0, yCm: 0 }];
   let nextHoleId = 1;
+  const RAY_ANIM_MS = 2800;
+  let rayAnimPlaying = true;
+  let rayAnimRaf = null;
+  /** @type {{ points: number[][], color: string, opacity: number }[]} */
+  let rayPaths = [];
+  /** @type {{ glow: SVGCircleElement, core: SVGCircleElement, rayIdx: number, phaseOffset: number }[]} */
+  let rayPulseNodes = [];
 
   function round5(n) { return Math.round(n / 5) * 5; }
 
@@ -361,6 +371,117 @@
     return { w: F_W * s, h: hPx };
   }
 
+  function pointOnPolyline(points, t) {
+    let total = 0;
+    const segLen = [];
+    for (let i = 0; i < points.length - 1; i++) {
+      const len = Math.hypot(points[i + 1][0] - points[i][0], points[i + 1][1] - points[i][1]);
+      segLen.push(len);
+      total += len;
+    }
+    if (total <= 0) return points[0].slice();
+    let dist = (((t % 1) + 1) % 1) * total;
+    for (let i = 0; i < segLen.length; i++) {
+      if (dist <= segLen[i] || i === segLen.length - 1) {
+        const u = segLen[i] > 0 ? dist / segLen[i] : 0;
+        return [
+          points[i][0] + u * (points[i + 1][0] - points[i][0]),
+          points[i][1] + u * (points[i + 1][1] - points[i][1])
+        ];
+      }
+      dist -= segLen[i];
+    }
+    return points[points.length - 1].slice();
+  }
+
+  function buildRayPaths(layout, ox, topY, botY, holeX, sx) {
+    const imgAlpha = imageOpacityPerHole();
+    const paths = [];
+    holes.forEach((hole) => {
+      const hi = holeInfo(layout, hole);
+      paths.push({
+        points: [[ox, topY], [holeX, hi.holeYPx], [sx, hi.imgTopY]],
+        color: "#ea580c",
+        opacity: imgAlpha
+      });
+      paths.push({
+        points: [[ox, botY], [holeX, hi.holeYPx], [sx, hi.imgBotY]],
+        color: "#2563eb",
+        opacity: imgAlpha
+      });
+    });
+    return paths;
+  }
+
+  function mountRayPulses() {
+    rayPulseNodes = [];
+    if (!rayAnimPlaying || rayPaths.length === 0) return;
+    const g = n("g", svg, { id: "ray-pulses", "pointer-events": "none" });
+    const coreR = Math.max(3.5, 5.4 - holes.length * 0.35);
+    rayPaths.forEach((path, ri) => {
+      [0, 0.45].forEach((phaseOffset) => {
+        const glow = n("circle", g, {
+          r: coreR + 5,
+          fill: path.color,
+          opacity: String(path.opacity * 0.28)
+        });
+        const core = n("circle", g, {
+          r: coreR,
+          fill: path.color,
+          opacity: String(Math.min(1, path.opacity + 0.2)),
+          stroke: "#fff",
+          "stroke-width": 1.2
+        });
+        rayPulseNodes.push({ glow, core, rayIdx: ri, phaseOffset });
+      });
+    });
+  }
+
+  function updateRayPulses(phase) {
+    if (!rayAnimPlaying || rayPulseNodes.length === 0) return;
+    const tNorm = phase !== undefined
+      ? phase
+      : (performance.now() % RAY_ANIM_MS) / RAY_ANIM_MS;
+    rayPulseNodes.forEach((p) => {
+      const path = rayPaths[p.rayIdx];
+      if (!path) return;
+      const [x, y] = pointOnPolyline(path.points, (tNorm + p.phaseOffset) % 1);
+      p.core.setAttribute("cx", String(x));
+      p.core.setAttribute("cy", String(y));
+      p.glow.setAttribute("cx", String(x));
+      p.glow.setAttribute("cy", String(y));
+    });
+  }
+
+  function rayAnimLoop() {
+    rayAnimRaf = null;
+    if (!rayAnimPlaying) return;
+    updateRayPulses();
+    rayAnimRaf = requestAnimationFrame(rayAnimLoop);
+  }
+
+  function startRayAnim() {
+    if (rayAnimRaf || !rayAnimPlaying) return;
+    rayAnimRaf = requestAnimationFrame(rayAnimLoop);
+  }
+
+  function stopRayAnim() {
+    if (rayAnimRaf) {
+      cancelAnimationFrame(rayAnimRaf);
+      rayAnimRaf = null;
+    }
+  }
+
+  function setRayAnimPlaying(on) {
+    rayAnimPlaying = on;
+    const btn = $("toggle-ray-anim");
+    btn.textContent = on ? "暫停光線動畫" : "播放光線動畫";
+    btn.classList.toggle("primary", on);
+    scheduleDraw();
+    if (on) startRayAnim();
+    else stopRayAnim();
+  }
+
   function drawScreenPreview(layout) {
     const zw = Math.max(320, screenSvg.clientWidth || 900);
     const zh = 160;
@@ -455,6 +576,13 @@
 
     drawScreenPreview(layout);
     updateHoleCountLabel();
+
+    rayPaths = buildRayPaths(layout, ox, topY, botY, holeX, sx);
+    mountRayPulses();
+    if (rayAnimPlaying) {
+      updateRayPulses();
+      startRayAnim();
+    }
   }
 
   function scheduleDraw() {
@@ -581,6 +709,11 @@
     holes.pop();
     out("status", `已減至 ${holes.length} 個針孔`);
     scheduleDraw();
+  });
+
+  $("toggle-ray-anim").addEventListener("click", () => {
+    setRayAnimPlaying(!rayAnimPlaying);
+    out("status", rayAnimPlaying ? "光線動畫播放中：觀察光從物體→針孔→紙屏" : "光線動畫已暫停");
   });
 
   ["object", "screen"].forEach((id) => {
