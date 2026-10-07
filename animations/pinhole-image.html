@@ -81,6 +81,7 @@
     <span class="key" style="background:#fee2e2;color:#b91c1c">倒立像</span>
     <span class="key">針孔可上下移</span>
     <span class="key" style="background:#fef08a;color:#854d0e">● 光點沿直線前進</span>
+    <span class="key" style="background:#e2e8f0;color:#475569">- - 被隔板擋住</span>
   </p>
   <div class="presets">
     <button type="button" class="primary" id="preset-big">像變大（物近、屏遠）</button>
@@ -101,6 +102,7 @@
     <button type="button" id="add-hole">＋ 增加針孔</button>
     <button type="button" id="remove-hole">－ 減少針孔</button>
     <button type="button" class="primary" id="toggle-ray-anim">暫停光線動畫</button>
+    <button type="button" id="toggle-many-rays">顯示許多光線（含被擋）</button>
     <span id="hole-count">目前 1 個針孔</span>
   </div>
   <p class="drag-hint">左右拖：物體、針孔隔板、紙屏（拖哪個，另兩者水平位置不動）。<strong>上下拖針孔上的圓點</strong>，該孔的像會跟著在紙屏上移動。</p>
@@ -121,7 +123,7 @@
     <b>先想一想：</b>針孔往上移，紙屏上的像會往哪個方向移動？為什麼多個針孔會出現多個像？
     <details>
       <summary>查看解釋</summary>
-      <p>光沿<strong>直線</strong>前進（可看光點動畫）。物體上方的光穿過小孔後到達紙屏下方，因此成<strong>倒立實像</strong>；F 左右不對稱，所以像也<strong>左右相反</strong>。針孔往上移，通過該孔的光線整體偏上，像就會在紙屏上<strong>往下</strong>移。每個針孔都是一組獨立光路，所以孔越多、像就越多。</p>
+      <p>光沿<strong>直線</strong>前進（可看光點動畫）。物體各處都會發光，但<strong>隔板擋住大部分光線</strong>，只有穿過針孔的才能到紙屏（按「顯示許多光線」可看到被擋住的虛線）。物體上方的光到達紙屏下方，因此成<strong>倒立實像</strong>；F 左右不對稱，所以像也<strong>左右相反</strong>。</p>
     </details>
   </div>
   <p class="note">理想小孔模型；物高固定 20 cm。針孔愈多，通過的光愈分散，每個像愈淡（未模擬孔徑繞射）。針孔最多 5 個。</p>
@@ -159,7 +161,9 @@
   let holes = [{ id: 0, yCm: 0 }];
   let nextHoleId = 1;
   const RAY_ANIM_MS = 2800;
+  const MANY_RAY_SAMPLES = 17;
   let rayAnimPlaying = true;
+  let manyRays = false;
   let rayAnimRaf = null;
   /** @type {{ points: number[][], color: string, opacity: number }[]} */
   let rayPaths = [];
@@ -338,7 +342,7 @@
     return Math.max(0.2, 1 / holes.length);
   }
 
-  function pathEl(parent, points, color, width = 2.5, opacity = 1) {
+  function pathEl(parent, points, color, width = 2.5, opacity = 1, dashed = false) {
     const d = points.map((p, i) => (i ? "L" : "M") + p.join(" ")).join(" ");
     const node = document.createElementNS(NS, "path");
     node.setAttribute("d", d);
@@ -347,7 +351,50 @@
     node.setAttribute("stroke-width", String(width));
     node.setAttribute("stroke-linecap", "round");
     node.setAttribute("opacity", String(opacity));
+    if (dashed) node.setAttribute("stroke-dasharray", "5 6");
     parent.append(node);
+  }
+
+  function rayColorAtT(t) {
+    if (t <= 0.5) return "#ea580c";
+    return "#2563eb";
+  }
+
+  function drawBlockedMark(parent, x, y) {
+    const s = 4;
+    pathEl(parent, [[x - s, y - s], [x + s, y + s]], "#64748b", 1.4, 0.55);
+    pathEl(parent, [[x + s, y - s], [x - s, y + s]], "#64748b", 1.4, 0.55);
+  }
+
+  function drawSceneRays(parent, layout, ox, topY, botY, holeX, sx, u, v) {
+    const imgAlpha = imageOpacityPerHole();
+    if (!manyRays) {
+      holes.forEach((hole) => {
+        const hi = holeInfo(layout, hole);
+        pathEl(parent, [[ox, topY], [holeX, hi.holeYPx], [sx, hi.imgTopY]], "#ea580c", 2.5, imgAlpha);
+        pathEl(parent, [[ox, botY], [holeX, hi.holeYPx], [sx, hi.imgBotY]], "#2563eb", 2.5, imgAlpha);
+      });
+      return;
+    }
+    holes.forEach((hole) => {
+      const hi = holeInfo(layout, hole);
+      for (let i = 0; i < MANY_RAY_SAMPLES; i++) {
+        const t = i / (MANY_RAY_SAMPLES - 1);
+        const yObj = topY + t * (botY - topY);
+        const yImg = mapImageY(yObj, hi.holeYPx, v, u);
+        if (Math.abs(yObj - hi.holeYPx) > 2.5) {
+          pathEl(parent, [[ox, yObj], [holeX, yObj]], "#94a3b8", 1.1, imgAlpha * 0.42, true);
+          drawBlockedMark(parent, holeX, yObj);
+        }
+        pathEl(
+          parent,
+          [[ox, yObj], [holeX, hi.holeYPx], [sx, yImg]],
+          rayColorAtT(t),
+          1.4,
+          imgAlpha * 0.62
+        );
+      }
+    });
   }
 
   function drawLetterF(parent, cx, cy, hPx, inverted, opacity = 1) {
@@ -396,19 +443,37 @@
 
   function buildRayPaths(layout, ox, topY, botY, holeX, sx) {
     const imgAlpha = imageOpacityPerHole();
+    const { u, v } = layout;
     const paths = [];
+    if (!manyRays) {
+      holes.forEach((hole) => {
+        const hi = holeInfo(layout, hole);
+        paths.push({
+          points: [[ox, topY], [holeX, hi.holeYPx], [sx, hi.imgTopY]],
+          color: "#ea580c",
+          opacity: imgAlpha
+        });
+        paths.push({
+          points: [[ox, botY], [holeX, hi.holeYPx], [sx, hi.imgBotY]],
+          color: "#2563eb",
+          opacity: imgAlpha
+        });
+      });
+      return paths;
+    }
     holes.forEach((hole) => {
       const hi = holeInfo(layout, hole);
-      paths.push({
-        points: [[ox, topY], [holeX, hi.holeYPx], [sx, hi.imgTopY]],
-        color: "#ea580c",
-        opacity: imgAlpha
-      });
-      paths.push({
-        points: [[ox, botY], [holeX, hi.holeYPx], [sx, hi.imgBotY]],
-        color: "#2563eb",
-        opacity: imgAlpha
-      });
+      for (let i = 0; i < MANY_RAY_SAMPLES; i++) {
+        if (i % 2 !== 0) continue;
+        const t = i / (MANY_RAY_SAMPLES - 1);
+        const yObj = topY + t * (botY - topY);
+        const yImg = mapImageY(yObj, hi.holeYPx, v, u);
+        paths.push({
+          points: [[ox, yObj], [holeX, hi.holeYPx], [sx, yImg]],
+          color: rayColorAtT(t),
+          opacity: imgAlpha * 0.75
+        });
+      }
     });
     return paths;
   }
@@ -524,6 +589,9 @@
     n("rect", svg, { x: 0, y: 0, width: W, height: H, fill: "#fafcff" });
     n("line", svg, { x1: 16, y1: cy, x2: W - 16, y2: cy, stroke: C.gray, "stroke-width": 1.5, "stroke-dasharray": "6 5", opacity: 0.6 });
 
+    const rayGroup = n("g", svg, { id: "rays", "pointer-events": "none" });
+    drawSceneRays(rayGroup, layout, ox, topY, botY, holeX, sx, u, v);
+
     const objGroup = n("g", svg, { cursor: "ew-resize" });
     drawLetterF(objGroup, ox, cy, ohPx, false);
     addDragHit(objGroup, ox, rodTop, Math.max(56, ohPx * 0.6 + 24), rodBot - rodTop, "object");
@@ -532,12 +600,9 @@
     n("line", board, { x1: holeX, y1: rodTop, x2: holeX, y2: rodBot, stroke: C.hole, "stroke-width": 8, "stroke-linecap": "round" });
     addDragHit(board, holeX, rodTop, 48, rodBot - rodTop, "hole", { cursor: "ew-resize" });
 
-    const imgAlpha = imageOpacityPerHole();
     const holeColors = ["#fde68a", "#fcd34d", "#fbbf24", "#f59e0b", "#d97706"];
     holes.forEach((hole, i) => {
       const hi = holeInfo(layout, hole);
-      pathEl(svg, [[ox, topY], [holeX, hi.holeYPx], [sx, hi.imgTopY]], "#ea580c", 2, imgAlpha);
-      pathEl(svg, [[ox, botY], [holeX, hi.holeYPx], [sx, hi.imgBotY]], "#2563eb", 2, imgAlpha);
       const holeG = n("g", board, { cursor: "ns-resize" });
       n("circle", holeG, {
         cx: holeX, cy: hi.holeYPx, r: 7,
@@ -570,9 +635,10 @@
     const holeNote = holes.length > 1
       ? `　${holes.length} 個針孔 → ${holes.length} 個像（每像亮度約 1/${holes.length}）`
       : "";
+    const rayNote = manyRays ? "　虛線＝被隔板擋住，實線＝穿過針孔" : "";
     $("result").innerHTML =
       `放大率 屏距÷物距＝${mag} ｜ 像高 ${imgH} cm（物高 ${OBJ_H_CM} cm）` +
-      `<span class="readout-sub">${magLabel}　F 字像上下顛倒、左右相反${holeNote}${scaleNote}</span>`;
+      `<span class="readout-sub">${magLabel}　F 字像上下顛倒、左右相反${holeNote}${rayNote}${scaleNote}</span>`;
 
     drawScreenPreview(layout);
     updateHoleCountLabel();
@@ -714,6 +780,17 @@
   $("toggle-ray-anim").addEventListener("click", () => {
     setRayAnimPlaying(!rayAnimPlaying);
     out("status", rayAnimPlaying ? "光線動畫播放中：觀察光從物體→針孔→紙屏" : "光線動畫已暫停");
+  });
+
+  $("toggle-many-rays").addEventListener("click", () => {
+    manyRays = !manyRays;
+    const btn = $("toggle-many-rays");
+    btn.textContent = manyRays ? "只示範兩條光線" : "顯示許多光線（含被擋）";
+    btn.classList.toggle("primary", manyRays);
+    scheduleDraw();
+    out("status", manyRays
+      ? "已顯示多條光線：虛線在隔板被擋住，只有穿過針孔的實線能到紙屏"
+      : "已切換為兩條示範光線（頂、底）");
   });
 
   ["object", "screen"].forEach((id) => {
