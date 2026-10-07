@@ -175,20 +175,22 @@
         <figure>
           <svg class="diagram" viewBox="0 0 420 200" aria-label="針孔成像上下顛倒左右相反">
             <rect width="420" height="200" rx="8" fill="#fff7ed"/>
-            <text x="70" y="24" text-anchor="middle" font-size="13" fill="#c2410c" font-weight="700">物體 F</text>
+            <text x="54" y="24" text-anchor="middle" font-size="13" fill="#c2410c" font-weight="700">物體 F</text>
             <path d="M40 48 h28 v72 h-12 v-48 h-16 z" fill="#1d4ed8"/>
             <rect x="198" y="20" width="8" height="160" fill="#78716c"/>
-            <circle cx="202" cy="100" r="5" fill="#fde68a" stroke="#a16207"/>
             <text x="202" y="188" text-anchor="middle" font-size="12" fill="#57534e" font-weight="700">小孔</text>
-            <rect x="360" y="28" width="8" height="144" fill="#e7e5e4"/>
-            <g transform="translate(392 152) rotate(180)">
-              <path d="M0 0 h28 v72 h-12 v-48 h-16 z" fill="#b91c1c"/>
+            <rect x="356" y="28" width="8" height="144" fill="#e7e5e4"/>
+            <!-- 物頂→像底、物底→像頂：整段直線穿小孔，端點對齊 F 角點 -->
+            <line x1="68" y1="48" x2="364" y2="163" stroke="#ea580c" stroke-width="2" stroke-linecap="round"/>
+            <line x1="68" y1="120" x2="364" y2="76" stroke="#ea580c" stroke-width="2" stroke-linecap="round"/>
+            <circle cx="202" cy="100" r="5" fill="#fde68a" stroke="#a16207" stroke-width="1.5"/>
+            <!-- 像高＝物高×屏距÷物距；上下顛倒、左右相反 -->
+            <g transform="translate(330 76) scale(1.208)">
+              <g transform="translate(28 72) rotate(180)">
+                <path d="M0 0 h28 v72 h-12 v-48 h-16 z" fill="#b91c1c"/>
+              </g>
             </g>
-            <line x1="68" y1="48" x2="202" y2="100" stroke="#ea580c" stroke-width="1.4"/>
-            <line x1="68" y1="120" x2="202" y2="100" stroke="#ea580c" stroke-width="1.4"/>
-            <line x1="202" y1="100" x2="364" y2="48" stroke="#ea580c" stroke-width="1.4"/>
-            <line x1="202" y1="100" x2="364" y2="152" stroke="#ea580c" stroke-width="1.4"/>
-            <text x="368" y="24" font-size="13" fill="#b91c1c" font-weight="700">倒立的像</text>
+            <text x="348" y="24" text-anchor="middle" font-size="13" fill="#b91c1c" font-weight="700">倒立的像</text>
           </svg>
           <p class="caption">字母 F 經小孔後，在紙屏上會上下顛倒、左右相反</p>
         </figure>
