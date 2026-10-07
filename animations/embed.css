@@ -122,11 +122,16 @@ html.is-embed .key {
 
 /* 4-1 針孔成像：投影用大圖＋紙屏特寫 */
 html.is-embed.pinhole-page svg#scene {
-  min-height: clamp(320px, 48vw, 520px) !important;
+  min-height: clamp(300px, 42vw, 480px) !important;
   aspect-ratio: 16 / 9;
 }
 html.is-embed.pinhole-page .visual-wrap {
-  grid-template-columns: 1fr min(200px, 26vw);
+  flex-direction: column;
+}
+html.is-embed.pinhole-page .screen-preview svg#screen-zoom {
+  min-height: 100px !important;
+  max-height: 180px !important;
+  aspect-ratio: auto;
 }
 html.is-embed.pinhole-page .readout {
   font-size: 15px;
