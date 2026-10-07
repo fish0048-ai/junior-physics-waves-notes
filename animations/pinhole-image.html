@@ -75,11 +75,11 @@
 <main>
   <small>國中理化 · 4-1 針孔成像</small>
   <h1>小孔怎麼把影像倒過來？</h1>
-  <p>調<strong>物距</strong>、<strong>屏距</strong>，或直接<strong>拖動針孔隔板</strong>。右側「紙屏特寫」放大倒像，方便投影。</p>
+  <p>調<strong>物距</strong>、<strong>屏距</strong>，或直接<strong>拖動物體／針孔／紙屏</strong>。右側「紙屏特寫」放大倒像，方便投影。</p>
   <p class="legend">
     <span class="key" style="background:#fee2e2;color:#b91c1c">↑ 頂端光線</span>
     <span class="key" style="background:#dbeafe;color:#1d4ed8">↓ 底端光線</span>
-    <span class="key">針孔可拖移</span>
+    <span class="key">三者皆可拖移</span>
   </p>
   <div class="presets">
     <button type="button" class="primary" id="preset-big">像變大（物近、屏遠）</button>
@@ -96,7 +96,7 @@
       <input id="screen" type="range" min="40" max="200" step="5" value="120">
     </div>
   </div>
-  <p class="drag-hint">投影時可<strong>用手指拖動</strong>圖中的針孔隔板（改變物距；屏距維持不變）。</p>
+  <p class="drag-hint">投影時可<strong>用手指拖動</strong>圖中的物體、針孔隔板或紙屏（拖哪個，另外兩個位置不動）。</p>
   <div class="visual-wrap">
     <div class="visual">
       <svg id="scene" role="img" aria-label="針孔成像：可拖動針孔、追蹤光線"></svg>
@@ -128,9 +128,64 @@
   const NS = "http://www.w3.org/2000/svg";
   const C = { blue: "#1d4ed8", red: "#dc2626", gold: "#b45309", gray: "#94a3b8", hole: "#475569", flame: "#f97316" };
   const OBJ_H_CM = 20;
+  const MIN_U = 40;
+  const MAX_U = 140;
+  const MIN_V = 40;
+  const MAX_V = 200;
+  const MARGIN_L = 56;
+  const MARGIN_R = 56;
   let W = 900;
   let H = 520;
   let dragging = false;
+  let drag = null;
+  /** 光具座位置（cm）：o 物體、h 針孔、s 紙屏 */
+  let bench = { o: 0, h: 80, s: 200 };
+
+  function round5(n) { return Math.round(n / 5) * 5; }
+
+  function syncBenchFromSliders() {
+    const u = val("object");
+    const v = val("screen");
+    bench = { o: 0, h: u, s: u + v };
+  }
+
+  function applyBenchLimits() {
+    bench.o = Math.max(0, bench.o);
+    let u = round5(bench.h - bench.o);
+    let v = round5(bench.s - bench.h);
+    u = Math.max(MIN_U, Math.min(MAX_U, u));
+    v = Math.max(MIN_V, Math.min(MAX_V, v));
+    bench.h = bench.o + u;
+    bench.s = bench.h + v;
+    $("object").value = String(u);
+    $("screen").value = String(v);
+  }
+
+  function benchPpm() {
+    const span = Math.max(MIN_U + MIN_V, bench.s - bench.o);
+    return (W - MARGIN_L - MARGIN_R) / span;
+  }
+
+  function benchPixels(ppm) {
+    const p = ppm || benchPpm();
+    return {
+      ox: MARGIN_L + bench.o * p,
+      holeX: MARGIN_L + bench.h * p,
+      sx: MARGIN_L + bench.s * p,
+      ppm: p
+    };
+  }
+
+  function addDragHit(parent, x, y, w, h, kind) {
+    const hit = document.createElementNS(NS, "rect");
+    hit.setAttribute("x", String(x - w / 2));
+    hit.setAttribute("y", String(y));
+    hit.setAttribute("width", String(w));
+    hit.setAttribute("height", String(h));
+    hit.setAttribute("fill", "transparent");
+    hit.setAttribute("data-drag", kind);
+    parent.append(hit);
+  }
 
   function n(tag, attrs = {}, text = "") {
     const node = document.createElementNS(NS, tag);
@@ -238,15 +293,10 @@
     svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
     svg.replaceChildren();
 
-    const u = val("object");
-    const v = val("screen");
+    const u = bench.h - bench.o;
+    const v = bench.s - bench.h;
     const cy = H * 0.52;
-    const marginL = 56;
-    const marginR = 56;
-    const ppm = (W - marginL - marginR) / (u + v);
-    const ox = marginL;
-    const holeX = ox + u * ppm;
-    const sx = holeX + v * ppm;
+    const { ox, holeX, sx, ppm } = benchPixels();
     const ohPx = Math.min(H * 0.42, Math.max(56, OBJ_H_CM * ppm * 0.55));
     const ihPx = ohPx * (v / u);
     const topY = cy - ohPx / 2;
@@ -256,36 +306,35 @@
 
     n("line", { x1: 16, y1: cy, x2: W - 16, y2: cy, stroke: C.gray, "stroke-width": 1.5, "stroke-dasharray": "6 5", opacity: 0.7 });
 
-    const board = n("g", { id: "hole-board", cursor: "ew-resize", "data-hole": "1" });
+    const objGroup = n("g", { cursor: "ew-resize" });
+    drawArrowObject(objGroup, ox, cy, ohPx, false);
+    addDragHit(objGroup, ox, 24, 72, H - 48, "object");
+    objGroup.setAttribute("data-drag-root", "object");
+
+    const board = n("g", { id: "hole-board", cursor: "ew-resize" });
     n("line", { x1: holeX, y1: 36, x2: holeX, y2: H - 72, stroke: C.hole, "stroke-width": 7, "stroke-linecap": "round" });
     n("rect", { x: holeX - 14, y: cy - 18, width: 28, height: 36, rx: 4, fill: "#f8fafc", stroke: C.hole, "stroke-width": 2 });
     n("circle", { cx: holeX, cy, r: 5, fill: "#fff", stroke: C.hole, "stroke-width": 2 });
-    const hit = document.createElementNS(NS, "rect");
-    hit.setAttribute("x", String(holeX - 28));
-    hit.setAttribute("y", "24");
-    hit.setAttribute("width", "56");
-    hit.setAttribute("height", String(H - 48));
-    hit.setAttribute("fill", "transparent");
-    board.append(hit);
+    addDragHit(board, holeX, 24, 56, H - 48, "hole");
 
+    const screenGroup = n("g", { cursor: "ew-resize" });
     n("line", {
       x1: sx, y1: cy - Math.max(ihPx, ohPx) * 0.65 - 24,
       x2: sx, y2: cy + Math.max(ihPx, ohPx) * 0.65 + 24,
       stroke: C.gray, "stroke-width": 5, "stroke-linecap": "round"
     });
     n("rect", { x: sx - 3, y: imgBotY - 8, width: 6, height: ihPx + 16, rx: 2, fill: "#fef3c7", stroke: "#f59e0b", "stroke-width": 1.5, opacity: 0.85 });
-
-    drawArrowObject(svg, ox, cy, ohPx, false);
-    drawArrowObject(svg, sx, cy, ihPx, true);
+    drawArrowObject(screenGroup, sx, cy, ihPx, true);
+    addDragHit(screenGroup, sx, 24, 64, H - 48, "screen");
 
     arrow(svg, ox, topY, holeX, cy, C.red, false, 3.5);
     arrow(svg, holeX, cy, sx, imgTopY, C.red, false, 3.5);
     arrow(svg, ox, botY, holeX, cy, C.blue, false, 3.5);
     arrow(svg, holeX, cy, sx, imgBotY, C.blue, false, 3.5);
 
-    n("text", { x: ox, y: topY - 22, "text-anchor": "middle", "font-size": 16 }, "物體 ↑");
+    n("text", { x: ox, y: topY - 22, "text-anchor": "middle", "font-size": 16 }, "物體 ↑（可拖）");
     n("text", { x: holeX, y: 24, "text-anchor": "middle", "font-size": 16, fill: C.hole }, "針孔（可拖）");
-    n("text", { x: sx, y: H - 28, "text-anchor": "middle", "font-size": 16 }, "紙屏");
+    n("text", { x: sx, y: H - 28, "text-anchor": "middle", "font-size": 16 }, "紙屏（可拖）");
     n("text", { x: (ox + holeX) / 2, y: cy + 28, "text-anchor": "middle", "font-size": 13, fill: "#64748b" }, `物距 ${u} cm`);
     n("text", { x: (holeX + sx) / 2, y: cy + 28, "text-anchor": "middle", "font-size": 13, fill: "#64748b" }, `屏距 ${v} cm`);
 
@@ -300,42 +349,76 @@
     drawScreenZoom(ihPx, mag, imgH);
   }
 
-  function setObjectDist(u) {
-    u = Math.round(Math.max(40, Math.min(140, u)) / 5) * 5;
-    $("object").value = String(u);
+  function clientToSvgX(clientX) {
+    const rect = svg.getBoundingClientRect();
+    return ((clientX - rect.left) / rect.width) * W;
+  }
+
+  function handleDragMove(clientX) {
+    if (!drag) return;
+    const x = clientToSvgX(clientX);
+    const ppm = drag.ppm;
+    const b0 = drag.bench0;
+    if (drag.kind === "object") {
+      const newO = b0.o + (x - drag.ox0) / ppm;
+      bench = {
+        o: Math.max(0, Math.min(b0.h - MIN_U, newO)),
+        h: b0.h,
+        s: b0.s
+      };
+    } else if (drag.kind === "hole") {
+      const newH = (x - MARGIN_L) / ppm;
+      bench = {
+        o: b0.o,
+        h: Math.max(b0.o + MIN_U, Math.min(b0.s - MIN_V, newH)),
+        s: b0.s
+      };
+    } else if (drag.kind === "screen") {
+      const newS = (x - MARGIN_L) / ppm;
+      bench = {
+        o: b0.o,
+        h: b0.h,
+        s: Math.max(b0.h + MIN_V, Math.min(b0.h + MAX_V, newS))
+      };
+    }
+    applyBenchLimits();
     draw();
   }
 
-  function pointerToObjectDist(clientX) {
-    const u = val("object");
-    const v = val("screen");
-    const marginL = 56;
-    const marginR = 56;
-    const ppm = (W - marginL - marginR) / (u + v);
-    const rect = svg.getBoundingClientRect();
-    const x = ((clientX - rect.left) / rect.width) * W;
-    setObjectDist((x - marginL) / ppm);
-  }
-
   svg.addEventListener("pointerdown", (e) => {
-    if (!e.target.closest("[data-hole]")) return;
+    const kind = e.target.closest("[data-drag]")?.dataset.drag;
+    if (!kind) return;
+    e.preventDefault();
     dragging = true;
     svg.setPointerCapture(e.pointerId);
-    out("status", "拖動針孔中…");
+    const px = benchPixels();
+    drag = {
+      kind,
+      bench0: { ...bench },
+      ppm: px.ppm,
+      ox0: px.ox
+    };
+    const label = { object: "物體", hole: "針孔", screen: "紙屏" };
+    out("status", `拖動${label[kind]}中…（另兩者位置不動）`);
   });
   svg.addEventListener("pointermove", (e) => {
     if (!dragging) return;
-    pointerToObjectDist(e.clientX);
+    handleDragMove(e.clientX);
   });
   svg.addEventListener("pointerup", () => {
     if (!dragging) return;
     dragging = false;
-    out("status", "已更新物距；觀察像的大小");
+    drag = null;
+    out("status", "已更新物距／屏距；觀察像的大小");
   });
-  svg.addEventListener("pointercancel", () => { dragging = false; });
+  svg.addEventListener("pointercancel", () => {
+    dragging = false;
+    drag = null;
+  });
 
   ["object", "screen"].forEach((id) => {
     $(id).addEventListener("input", () => {
+      syncBenchFromSliders();
       out("status", "可調整條件觀察");
       draw();
     });
@@ -344,22 +427,26 @@
   $("preset-big").addEventListener("click", () => {
     $("object").value = "50";
     $("screen").value = "160";
+    syncBenchFromSliders();
     draw();
     out("status", "物距小、屏距大 → 像放大");
   });
   $("preset-small").addEventListener("click", () => {
     $("object").value = "130";
     $("screen").value = "50";
+    syncBenchFromSliders();
     draw();
     out("status", "物距大、屏距小 → 像縮小");
   });
   $("preset-reset").addEventListener("click", () => {
     $("object").value = "80";
     $("screen").value = "120";
+    syncBenchFromSliders();
     draw();
     out("status", "已重設");
   });
 
+  syncBenchFromSliders();
   new ResizeObserver(draw).observe(svg);
   draw();
 })();
