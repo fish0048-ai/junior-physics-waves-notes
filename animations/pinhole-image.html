@@ -165,6 +165,29 @@
     return { u, v };
   }
 
+  function syncSlidersFromBench() {
+    $("object").value = String(round5(bench.h - bench.o));
+    $("screen").value = String(round5(bench.s - bench.h));
+  }
+
+  /** 拖曳結束：只調整被拖元件，另兩者 cm 位置維持不動 */
+  function finalizeAfterDrag(kind, b0) {
+    if (kind === "object") {
+      bench.o = Math.max(0, Math.min(b0.h - MIN_U, round5(bench.o)));
+      bench.h = b0.h;
+      bench.s = b0.s;
+    } else if (kind === "hole") {
+      bench.o = b0.o;
+      bench.s = b0.s;
+      bench.h = Math.max(b0.o + MIN_U, Math.min(b0.s - MIN_V, round5(bench.h)));
+    } else if (kind === "screen") {
+      bench.o = b0.o;
+      bench.h = b0.h;
+      bench.s = Math.max(b0.h + MIN_V, Math.min(b0.h + MAX_V, round5(bench.s)));
+    }
+    syncSlidersFromBench();
+  }
+
   /**
    * 水平、垂直共用同一 ppm（每 cm 像素），物距／屏距／物高／像高一起等比縮放。
    * 寬或高任一方向放不下時，整圖統一縮小（不是只把箭頭變短）。
@@ -199,8 +222,45 @@
     };
   }
 
-  function cmFromSvgX(x, oRef, ppm, offsetX) {
-    return oRef + (x - offsetX) / ppm;
+  /** 拖曳中：凍結另兩元件的螢幕位置；放開後才整圖重配 */
+  function layoutForDraw() {
+    const u = bench.h - bench.o;
+    const v = bench.s - bench.h;
+    if (drag && drag.frozen) {
+      const f = drag.frozen;
+      const b0 = drag.bench0;
+      let ox;
+      let holeX;
+      let sx;
+      if (drag.kind === "object") {
+        ox = f.ox0 + (bench.o - b0.o) * f.ppm;
+        holeX = f.holeX0;
+        sx = f.sx0;
+      } else if (drag.kind === "hole") {
+        ox = f.ox0;
+        holeX = f.holeX0 + (bench.h - b0.h) * f.ppm;
+        sx = f.sx0;
+      } else {
+        ox = f.ox0;
+        holeX = f.holeX0;
+        sx = f.sx0 + (bench.s - b0.s) * f.ppm;
+      }
+      const ohPx = OBJ_H_CM * f.ppm;
+      const ihPx = OBJ_H_CM * (v / u) * f.ppm;
+      return {
+        u,
+        v,
+        ppm: f.ppm,
+        ohPx,
+        ihPx,
+        ox,
+        holeX,
+        sx,
+        sceneScaled: false,
+        dragFrozen: true
+      };
+    }
+    return layoutBench();
   }
 
   function addDragHit(parent, x, y, w, h, kind) {
@@ -324,7 +384,7 @@
     svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
     svg.replaceChildren();
 
-    const layout = layoutBench();
+    const layout = layoutForDraw();
     const { u, v, ox, holeX, sx, ppm, ohPx, ihPx, sceneScaled } = layout;
     const cy = H * 0.5;
     const topY = cy - ohPx / 2;
@@ -399,9 +459,10 @@
   }
 
   function handleDragMove(clientX) {
-    if (!drag) return;
+    if (!drag || !drag.frozen) return;
     const x = clientToSvgX(clientX);
-    const ppm = drag.ppm;
+    const f = drag.frozen;
+    const ppm = f.ppm;
     const b0 = drag.bench0;
     if (drag.kind === "object") {
       const newO = b0.o + (x - drag.x0) / ppm;
@@ -411,21 +472,27 @@
         s: b0.s
       };
     } else if (drag.kind === "hole") {
-      const newH = cmFromSvgX(x, b0.o, ppm, drag.offsetX);
+      const minX = f.ox0 + MIN_U * ppm;
+      const maxX = f.sx0 - MIN_V * ppm;
+      const holeX = Math.max(minX, Math.min(maxX, x));
+      const newH = b0.o + (holeX - f.ox0) / ppm;
       bench = {
         o: b0.o,
         h: Math.max(b0.o + MIN_U, Math.min(b0.s - MIN_V, newH)),
         s: b0.s
       };
     } else if (drag.kind === "screen") {
-      const newS = cmFromSvgX(x, b0.o, ppm, drag.offsetX);
+      const minX = f.holeX0 + MIN_V * ppm;
+      const maxX = f.ox0 + (b0.h + MAX_V - b0.o) * ppm;
+      const sx = Math.max(minX, Math.min(maxX, x));
+      const newS = b0.o + (sx - f.ox0) / ppm;
       bench = {
         o: b0.o,
         h: b0.h,
         s: Math.max(b0.h + MIN_V, Math.min(b0.h + MAX_V, newS))
       };
     }
-    applyBenchLimits();
+    syncSlidersFromBench();
     scheduleDraw();
   }
 
@@ -439,8 +506,12 @@
     drag = {
       kind,
       bench0: { ...bench },
-      ppm: layout.ppm,
-      offsetX: layout.offsetX,
+      frozen: {
+        ox0: layout.ox,
+        holeX0: layout.holeX,
+        sx0: layout.sx,
+        ppm: layout.ppm
+      },
       x0: clientToSvgX(e.clientX)
     };
     const label = { object: "物體", hole: "針孔", screen: "紙屏" };
@@ -451,14 +522,21 @@
     handleDragMove(e.clientX);
   });
   svg.addEventListener("pointerup", () => {
-    if (!dragging) return;
+    if (!dragging || !drag) return;
+    const { kind, bench0 } = drag;
     dragging = false;
     drag = null;
+    finalizeAfterDrag(kind, bench0);
+    scheduleDraw();
     out("status", "已更新物距／屏距；觀察像的大小");
   });
   svg.addEventListener("pointercancel", () => {
+    if (!drag) return;
+    const { kind, bench0 } = drag;
     dragging = false;
     drag = null;
+    finalizeAfterDrag(kind, bench0);
+    scheduleDraw();
   });
 
   ["object", "screen"].forEach((id) => {
