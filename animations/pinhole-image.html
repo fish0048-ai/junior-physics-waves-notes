@@ -138,6 +138,7 @@
   let H = 520;
   let dragging = false;
   let drag = null;
+  let rafPending = false;
   /** 光具座位置（cm）：o 物體、h 針孔、s 紙屏 */
   let bench = { o: 0, h: 80, s: 200 };
 
@@ -159,21 +160,46 @@
     bench.s = bench.h + v;
     $("object").value = String(u);
     $("screen").value = String(v);
+    return { u, v };
   }
 
-  function benchPpm() {
+  /** 物體～紙屏區間永遠完整塞進畫布寬度，避免拉到極限時跑出畫面 */
+  function layoutBench() {
+    const u = bench.h - bench.o;
+    const v = bench.s - bench.h;
     const span = Math.max(MIN_U + MIN_V, bench.s - bench.o);
-    return (W - MARGIN_L - MARGIN_R) / span;
+    const innerW = Math.max(180, W - MARGIN_L - MARGIN_R);
+    const ppm = innerW / span;
+    return {
+      u,
+      v,
+      span,
+      ppm,
+      ox: MARGIN_L,
+      holeX: MARGIN_L + u * ppm,
+      sx: W - MARGIN_R
+    };
   }
 
-  function benchPixels(ppm) {
-    const p = ppm || benchPpm();
-    return {
-      ox: MARGIN_L + bench.o * p,
-      holeX: MARGIN_L + bench.h * p,
-      sx: MARGIN_L + bench.s * p,
-      ppm: p
-    };
+  function cmFromSvgX(x, oRef, ppm) {
+    return oRef + (x - MARGIN_L) / ppm;
+  }
+
+  /** 像高依比例，但整組不超過可用高度 */
+  function computeHeights(u, v, ppm) {
+    const maxVert = H * 0.74;
+    const minOh = 34;
+    const minIh = 18;
+    let ohPx = Math.max(minOh, OBJ_H_CM * ppm * 0.48);
+    ohPx = Math.min(H * 0.36, ohPx);
+    let ihPx = ohPx * (v / u);
+    const pairMax = Math.max(ohPx, ihPx);
+    if (pairMax > maxVert) {
+      const s = maxVert / pairMax;
+      ohPx = Math.max(minOh, ohPx * s);
+      ihPx = Math.max(minIh, ihPx * s);
+    }
+    return { ohPx, ihPx, vertClamped: pairMax > maxVert };
   }
 
   function addDragHit(parent, x, y, w, h, kind) {
@@ -282,71 +308,86 @@
     screenSvg.replaceChildren();
     nZoom("rect", { x: 8, y: 8, width: zw - 16, height: zh - 16, rx: 10, fill: "#fffbeb", stroke: "#d97706", "stroke-width": 2 });
     nZoom("text", { x: zw / 2, y: 28, "text-anchor": "middle", "font-size": 13, fill: "#92400e" }, "紙屏上的像");
-    const scale = Math.min((zh - 70) / Math.max(ihPx, 40), (zw - 40) / 36) * 1.15;
-    drawArrowObject(screenSvg, zw / 2, zh / 2 + 8, Math.max(48, ihPx * scale), true);
+    const maxH = zh - 72;
+    const drawH = Math.min(maxH, Math.max(28, ihPx * 0.95));
+    drawArrowObject(screenSvg, zw / 2, zh / 2 + 6, drawH, true);
     nZoom("text", { x: zw / 2, y: zh - 14, "text-anchor": "middle", "font-size": 12, fill: "#64748b" }, `像高 ${imgH} cm　×${mag}`);
   }
 
   function draw() {
+    rafPending = false;
     W = Math.max(320, svg.clientWidth || 900);
-    H = svg.clientHeight || 520;
+    const svgRect = svg.getBoundingClientRect();
+    H = Math.max(360, svgRect.height || 520);
     svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
     svg.replaceChildren();
 
-    const u = bench.h - bench.o;
-    const v = bench.s - bench.h;
+    const layout = layoutBench();
+    const { u, v, ox, holeX, sx, ppm } = layout;
     const cy = H * 0.52;
-    const { ox, holeX, sx, ppm } = benchPixels();
-    const ohPx = Math.min(H * 0.42, Math.max(56, OBJ_H_CM * ppm * 0.55));
-    const ihPx = ohPx * (v / u);
+    const { ohPx, ihPx, vertClamped } = computeHeights(u, v, ppm);
     const topY = cy - ohPx / 2;
     const botY = cy + ohPx / 2;
     const imgTopY = cy + ihPx / 2;
     const imgBotY = cy - ihPx / 2;
+    const vertHalf = Math.max(ohPx, ihPx) / 2 + 36;
+    const rodTop = Math.max(32, cy - vertHalf);
+    const rodBot = Math.min(H - 40, cy + vertHalf);
 
+    n("rect", { x: 0, y: 0, width: W, height: H, fill: "#fafcff", rx: 0 });
     n("line", { x1: 16, y1: cy, x2: W - 16, y2: cy, stroke: C.gray, "stroke-width": 1.5, "stroke-dasharray": "6 5", opacity: 0.7 });
-
-    const objGroup = n("g", { cursor: "ew-resize" });
-    drawArrowObject(objGroup, ox, cy, ohPx, false);
-    addDragHit(objGroup, ox, 24, 72, H - 48, "object");
-    objGroup.setAttribute("data-drag-root", "object");
-
-    const board = n("g", { id: "hole-board", cursor: "ew-resize" });
-    n("line", { x1: holeX, y1: 36, x2: holeX, y2: H - 72, stroke: C.hole, "stroke-width": 7, "stroke-linecap": "round" });
-    n("rect", { x: holeX - 14, y: cy - 18, width: 28, height: 36, rx: 4, fill: "#f8fafc", stroke: C.hole, "stroke-width": 2 });
-    n("circle", { cx: holeX, cy, r: 5, fill: "#fff", stroke: C.hole, "stroke-width": 2 });
-    addDragHit(board, holeX, 24, 56, H - 48, "hole");
-
-    const screenGroup = n("g", { cursor: "ew-resize" });
-    n("line", {
-      x1: sx, y1: cy - Math.max(ihPx, ohPx) * 0.65 - 24,
-      x2: sx, y2: cy + Math.max(ihPx, ohPx) * 0.65 + 24,
-      stroke: C.gray, "stroke-width": 5, "stroke-linecap": "round"
-    });
-    n("rect", { x: sx - 3, y: imgBotY - 8, width: 6, height: ihPx + 16, rx: 2, fill: "#fef3c7", stroke: "#f59e0b", "stroke-width": 1.5, opacity: 0.85 });
-    drawArrowObject(screenGroup, sx, cy, ihPx, true);
-    addDragHit(screenGroup, sx, 24, 64, H - 48, "screen");
 
     arrow(svg, ox, topY, holeX, cy, C.red, false, 3.5);
     arrow(svg, holeX, cy, sx, imgTopY, C.red, false, 3.5);
     arrow(svg, ox, botY, holeX, cy, C.blue, false, 3.5);
     arrow(svg, holeX, cy, sx, imgBotY, C.blue, false, 3.5);
 
-    n("text", { x: ox, y: topY - 22, "text-anchor": "middle", "font-size": 16 }, "物體 ↑（可拖）");
-    n("text", { x: holeX, y: 24, "text-anchor": "middle", "font-size": 16, fill: C.hole }, "針孔（可拖）");
-    n("text", { x: sx, y: H - 28, "text-anchor": "middle", "font-size": 16 }, "紙屏（可拖）");
-    n("text", { x: (ox + holeX) / 2, y: cy + 28, "text-anchor": "middle", "font-size": 13, fill: "#64748b" }, `物距 ${u} cm`);
-    n("text", { x: (holeX + sx) / 2, y: cy + 28, "text-anchor": "middle", "font-size": 13, fill: "#64748b" }, `屏距 ${v} cm`);
+    const objGroup = n("g", { cursor: "ew-resize" });
+    drawArrowObject(objGroup, ox, cy, ohPx, false);
+    addDragHit(objGroup, ox, 20, Math.max(72, ohPx + 48), H - 40, "object");
+
+    const board = n("g", { id: "hole-board", cursor: "ew-resize" });
+    n("line", { x1: holeX, y1: rodTop, x2: holeX, y2: rodBot, stroke: C.hole, "stroke-width": 7, "stroke-linecap": "round" });
+    n("rect", { x: holeX - 14, y: cy - 18, width: 28, height: 36, rx: 4, fill: "#f8fafc", stroke: C.hole, "stroke-width": 2 });
+    n("circle", { cx: holeX, cy, r: 5, fill: "#fff", stroke: C.hole, "stroke-width": 2 });
+    addDragHit(board, holeX, 20, 56, H - 40, "hole");
+
+    const screenGroup = n("g", { cursor: "ew-resize" });
+    n("line", { x1: sx, y1: rodTop, x2: sx, y2: rodBot, stroke: C.gray, "stroke-width": 5, "stroke-linecap": "round" });
+    n("rect", {
+      x: sx - 3,
+      y: Math.max(rodTop + 4, imgBotY - 8),
+      width: 6,
+      height: Math.min(rodBot - rodTop - 8, ihPx + 16),
+      rx: 2, fill: "#fef3c7", stroke: "#f59e0b", "stroke-width": 1.5, opacity: 0.85
+    });
+    drawArrowObject(screenGroup, sx, cy, ihPx, true);
+    addDragHit(screenGroup, sx, 20, 64, H - 40, "screen");
+
+    const labelY = Math.max(18, topY - 18);
+    n("text", { x: ox, y: labelY, "text-anchor": "middle", "font-size": 15 }, "物體 ↑（可拖）");
+    n("text", { x: holeX, y: 22, "text-anchor": "middle", "font-size": 15, fill: C.hole }, "針孔（可拖）");
+    n("text", { x: sx, y: H - 18, "text-anchor": "middle", "font-size": 15 }, "紙屏（可拖）");
+    n("text", { x: (ox + holeX) / 2, y: Math.min(H - 52, cy + ohPx / 2 + 28), "text-anchor": "middle", "font-size": 13, fill: "#64748b" }, `物距 ${u} cm`);
+    n("text", { x: (holeX + sx) / 2, y: Math.min(H - 52, cy + ohPx / 2 + 28), "text-anchor": "middle", "font-size": 13, fill: "#64748b" }, `屏距 ${v} cm`);
 
     const mag = (v / u).toFixed(2);
     const imgH = (OBJ_H_CM * v / u).toFixed(1);
     out("object-out", u + " cm");
     out("screen-out", v + " cm");
+    const magLabel = mag >= 1 ? "倒立放大實像" : "倒立縮小實像";
+    const clampNote = vertClamped ? "　（像已縮放以完整顯示）" : "";
     $("result").innerHTML =
       `放大率 屏距÷物距＝${mag} ｜ 像高 ${imgH} cm（物高 ${OBJ_H_CM} cm）` +
-      `<span class="readout-sub">${mag >= 1 ? "倒立放大實像" : "倒立縮小實像"}　上下顛倒、左右相反</span>`;
+      `<span class="readout-sub">${magLabel}　上下顛倒、左右相反${clampNote}</span>`;
 
     drawScreenZoom(ihPx, mag, imgH);
+  }
+
+  function scheduleDraw() {
+    if (rafPending) return;
+    rafPending = true;
+    requestAnimationFrame(draw);
   }
 
   function clientToSvgX(clientX) {
@@ -360,21 +401,21 @@
     const ppm = drag.ppm;
     const b0 = drag.bench0;
     if (drag.kind === "object") {
-      const newO = b0.o + (x - drag.ox0) / ppm;
+      const newO = b0.o + (x - drag.x0) / ppm;
       bench = {
         o: Math.max(0, Math.min(b0.h - MIN_U, newO)),
         h: b0.h,
         s: b0.s
       };
     } else if (drag.kind === "hole") {
-      const newH = (x - MARGIN_L) / ppm;
+      const newH = cmFromSvgX(x, b0.o, ppm);
       bench = {
         o: b0.o,
         h: Math.max(b0.o + MIN_U, Math.min(b0.s - MIN_V, newH)),
         s: b0.s
       };
     } else if (drag.kind === "screen") {
-      const newS = (x - MARGIN_L) / ppm;
+      const newS = cmFromSvgX(x, b0.o, ppm);
       bench = {
         o: b0.o,
         h: b0.h,
@@ -382,7 +423,7 @@
       };
     }
     applyBenchLimits();
-    draw();
+    scheduleDraw();
   }
 
   svg.addEventListener("pointerdown", (e) => {
@@ -391,12 +432,12 @@
     e.preventDefault();
     dragging = true;
     svg.setPointerCapture(e.pointerId);
-    const px = benchPixels();
+    const layout = layoutBench();
     drag = {
       kind,
       bench0: { ...bench },
-      ppm: px.ppm,
-      ox0: px.ox
+      ppm: layout.ppm,
+      x0: clientToSvgX(e.clientX)
     };
     const label = { object: "物體", hole: "針孔", screen: "紙屏" };
     out("status", `拖動${label[kind]}中…（另兩者位置不動）`);
@@ -419,8 +460,9 @@
   ["object", "screen"].forEach((id) => {
     $(id).addEventListener("input", () => {
       syncBenchFromSliders();
+      applyBenchLimits();
       out("status", "可調整條件觀察");
-      draw();
+      scheduleDraw();
     });
   });
 
@@ -428,27 +470,34 @@
     $("object").value = "50";
     $("screen").value = "160";
     syncBenchFromSliders();
-    draw();
+    applyBenchLimits();
+    scheduleDraw();
     out("status", "物距小、屏距大 → 像放大");
   });
   $("preset-small").addEventListener("click", () => {
     $("object").value = "130";
     $("screen").value = "50";
     syncBenchFromSliders();
-    draw();
+    applyBenchLimits();
+    scheduleDraw();
     out("status", "物距大、屏距小 → 像縮小");
   });
   $("preset-reset").addEventListener("click", () => {
     $("object").value = "80";
     $("screen").value = "120";
     syncBenchFromSliders();
-    draw();
+    applyBenchLimits();
+    scheduleDraw();
     out("status", "已重設");
   });
 
   syncBenchFromSliders();
-  new ResizeObserver(draw).observe(svg);
-  draw();
+  applyBenchLimits();
+  new ResizeObserver(scheduleDraw).observe(svg);
+  if (window.ResizeObserver) {
+    new ResizeObserver(scheduleDraw).observe(document.documentElement);
+  }
+  scheduleDraw();
 })();
 </script>
 <script src="embed-resize.js"></script>
