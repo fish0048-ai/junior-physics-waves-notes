@@ -134,6 +134,8 @@
   const MAX_V = 200;
   const MARGIN_L = 56;
   const MARGIN_R = 56;
+  const MARGIN_TOP = 44;
+  const MARGIN_BOT = 44;
   let W = 900;
   let H = 520;
   let dragging = false;
@@ -163,43 +165,42 @@
     return { u, v };
   }
 
-  /** 物體～紙屏區間永遠完整塞進畫布寬度，避免拉到極限時跑出畫面 */
+  /**
+   * 水平、垂直共用同一 ppm（每 cm 像素），物距／屏距／物高／像高一起等比縮放。
+   * 寬或高任一方向放不下時，整圖統一縮小（不是只把箭頭變短）。
+   */
   function layoutBench() {
     const u = bench.h - bench.o;
     const v = bench.s - bench.h;
     const span = Math.max(MIN_U + MIN_V, bench.s - bench.o);
     const innerW = Math.max(180, W - MARGIN_L - MARGIN_R);
-    const ppm = innerW / span;
+    const innerH = Math.max(160, H - MARGIN_TOP - MARGIN_BOT);
+    const imgHcm = OBJ_H_CM * (v / u);
+    const vertCm = Math.max(OBJ_H_CM, imgHcm) + OBJ_H_CM * 0.12;
+    const ppmW = innerW / span;
+    const ppmH = innerH / vertCm;
+    const ppm = Math.min(ppmW, ppmH);
+    const sceneW = span * ppm;
+    const offsetX = MARGIN_L + (innerW - sceneW) / 2;
+    const ohPx = OBJ_H_CM * ppm;
+    const ihPx = imgHcm * ppm;
     return {
       u,
       v,
       span,
       ppm,
-      ox: MARGIN_L,
-      holeX: MARGIN_L + u * ppm,
-      sx: W - MARGIN_R
+      offsetX,
+      ohPx,
+      ihPx,
+      ox: offsetX,
+      holeX: offsetX + u * ppm,
+      sx: offsetX + span * ppm,
+      sceneScaled: Math.min(ppmW, ppmH) / Math.max(ppmW, ppmH) < 0.92
     };
   }
 
-  function cmFromSvgX(x, oRef, ppm) {
-    return oRef + (x - MARGIN_L) / ppm;
-  }
-
-  /** 像高依比例，但整組不超過可用高度 */
-  function computeHeights(u, v, ppm) {
-    const maxVert = H * 0.74;
-    const minOh = 34;
-    const minIh = 18;
-    let ohPx = Math.max(minOh, OBJ_H_CM * ppm * 0.48);
-    ohPx = Math.min(H * 0.36, ohPx);
-    let ihPx = ohPx * (v / u);
-    const pairMax = Math.max(ohPx, ihPx);
-    if (pairMax > maxVert) {
-      const s = maxVert / pairMax;
-      ohPx = Math.max(minOh, ohPx * s);
-      ihPx = Math.max(minIh, ihPx * s);
-    }
-    return { ohPx, ihPx, vertClamped: pairMax > maxVert };
+  function cmFromSvgX(x, oRef, ppm, offsetX) {
+    return oRef + (x - offsetX) / ppm;
   }
 
   function addDragHit(parent, x, y, w, h, kind) {
@@ -263,9 +264,9 @@
     const half = h / 2;
     const top = inverted ? cy + half : cy - half;
     const bot = inverted ? cy - half : cy + half;
-    const shaftW = Math.max(8, h * 0.14);
-    const headW = Math.max(16, h * 0.32);
-    const headL = Math.max(14, h * 0.28);
+    const shaftW = Math.max(3, h * 0.14);
+    const headW = Math.max(6, h * 0.32);
+    const headL = Math.max(4, h * 0.28);
     const color = inverted ? "#c2410c" : C.gold;
     const fill = inverted ? "#fed7aa" : "#fef3c7";
 
@@ -292,7 +293,7 @@
     if (!inverted) {
       const flame = document.createElementNS(NS, "ellipse");
       flame.setAttribute("cx", String(x));
-      flame.setAttribute("cy", String(bot + 10));
+      flame.setAttribute("cy", String(bot + Math.max(6, h * 0.1)));
       flame.setAttribute("rx", String(Math.max(6, h * 0.12)));
       flame.setAttribute("ry", String(Math.max(8, h * 0.16)));
       flame.setAttribute("fill", C.flame);
@@ -301,7 +302,7 @@
     }
   }
 
-  function drawScreenZoom(ihPx, mag, imgH) {
+  function drawScreenZoom(ohPx, ihPx, mag, imgH) {
     const zw = 180;
     const zh = 220;
     screenSvg.setAttribute("viewBox", `0 0 ${zw} ${zh}`);
@@ -309,7 +310,8 @@
     nZoom("rect", { x: 8, y: 8, width: zw - 16, height: zh - 16, rx: 10, fill: "#fffbeb", stroke: "#d97706", "stroke-width": 2 });
     nZoom("text", { x: zw / 2, y: 28, "text-anchor": "middle", "font-size": 13, fill: "#92400e" }, "紙屏上的像");
     const maxH = zh - 72;
-    const drawH = Math.min(maxH, Math.max(28, ihPx * 0.95));
+    const refH = Math.max(ohPx, ihPx, 24);
+    const drawH = Math.max(24, Math.min(maxH, maxH * 0.92 * (ihPx / refH)));
     drawArrowObject(screenSvg, zw / 2, zh / 2 + 6, drawH, true);
     nZoom("text", { x: zw / 2, y: zh - 14, "text-anchor": "middle", "font-size": 12, fill: "#64748b" }, `像高 ${imgH} cm　×${mag}`);
   }
@@ -323,9 +325,8 @@
     svg.replaceChildren();
 
     const layout = layoutBench();
-    const { u, v, ox, holeX, sx, ppm } = layout;
-    const cy = H * 0.52;
-    const { ohPx, ihPx, vertClamped } = computeHeights(u, v, ppm);
+    const { u, v, ox, holeX, sx, ppm, ohPx, ihPx, sceneScaled } = layout;
+    const cy = H * 0.5;
     const topY = cy - ohPx / 2;
     const botY = cy + ohPx / 2;
     const imgTopY = cy + ihPx / 2;
@@ -348,7 +349,9 @@
 
     const board = n("g", { id: "hole-board", cursor: "ew-resize" });
     n("line", { x1: holeX, y1: rodTop, x2: holeX, y2: rodBot, stroke: C.hole, "stroke-width": 7, "stroke-linecap": "round" });
-    n("rect", { x: holeX - 14, y: cy - 18, width: 28, height: 36, rx: 4, fill: "#f8fafc", stroke: C.hole, "stroke-width": 2 });
+    const holeW = Math.max(16, ppm * 6);
+    const holeMarkH = Math.max(20, ohPx * 0.45);
+    n("rect", { x: holeX - holeW / 2, y: cy - holeMarkH / 2, width: holeW, height: holeMarkH, rx: 4, fill: "#f8fafc", stroke: C.hole, "stroke-width": 2 });
     n("circle", { cx: holeX, cy, r: 5, fill: "#fff", stroke: C.hole, "stroke-width": 2 });
     addDragHit(board, holeX, 20, 56, H - 40, "hole");
 
@@ -376,12 +379,12 @@
     out("object-out", u + " cm");
     out("screen-out", v + " cm");
     const magLabel = mag >= 1 ? "倒立放大實像" : "倒立縮小實像";
-    const clampNote = vertClamped ? "　（像已縮放以完整顯示）" : "";
+    const scaleNote = sceneScaled ? "　（整圖等比縮放以完整顯示）" : "";
     $("result").innerHTML =
       `放大率 屏距÷物距＝${mag} ｜ 像高 ${imgH} cm（物高 ${OBJ_H_CM} cm）` +
-      `<span class="readout-sub">${magLabel}　上下顛倒、左右相反${clampNote}</span>`;
+      `<span class="readout-sub">${magLabel}　上下顛倒、左右相反${scaleNote}</span>`;
 
-    drawScreenZoom(ihPx, mag, imgH);
+    drawScreenZoom(ohPx, ihPx, mag, imgH);
   }
 
   function scheduleDraw() {
@@ -408,14 +411,14 @@
         s: b0.s
       };
     } else if (drag.kind === "hole") {
-      const newH = cmFromSvgX(x, b0.o, ppm);
+      const newH = cmFromSvgX(x, b0.o, ppm, drag.offsetX);
       bench = {
         o: b0.o,
         h: Math.max(b0.o + MIN_U, Math.min(b0.s - MIN_V, newH)),
         s: b0.s
       };
     } else if (drag.kind === "screen") {
-      const newS = cmFromSvgX(x, b0.o, ppm);
+      const newS = cmFromSvgX(x, b0.o, ppm, drag.offsetX);
       bench = {
         o: b0.o,
         h: b0.h,
@@ -437,6 +440,7 @@
       kind,
       bench0: { ...bench },
       ppm: layout.ppm,
+      offsetX: layout.offsetX,
       x0: clientToSvgX(e.clientX)
     };
     const label = { object: "物體", hole: "針孔", screen: "紙屏" };
