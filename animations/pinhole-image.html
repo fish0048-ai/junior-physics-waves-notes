@@ -81,6 +81,7 @@
     <span class="key" style="background:#fee2e2;color:#b91c1c">倒立像</span>
     <span class="key">針孔可上下移</span>
     <span class="key" style="background:#fef08a;color:#854d0e">● 光點沿直線前進</span>
+    <span class="key" style="background:#fef08a;color:#854d0e">● 物體點光源</span>
     <span class="key" style="background:#e2e8f0;color:#475569">- - 被隔板擋住</span>
   </p>
   <div class="presets">
@@ -102,7 +103,7 @@
     <button type="button" id="add-hole">＋ 增加針孔</button>
     <button type="button" id="remove-hole">－ 減少針孔</button>
     <button type="button" class="primary" id="toggle-ray-anim">暫停光線動畫</button>
-    <button type="button" id="toggle-many-rays">顯示許多光線（含被擋）</button>
+    <button type="button" id="toggle-many-rays">點光源四面八方發光</button>
     <span id="hole-count">目前 1 個針孔</span>
   </div>
   <p class="drag-hint">左右拖：物體、針孔隔板、紙屏（拖哪個，另兩者水平位置不動）。<strong>上下拖針孔上的圓點</strong>，該孔的像會跟著在紙屏上移動。</p>
@@ -123,7 +124,7 @@
     <b>先想一想：</b>針孔往上移，紙屏上的像會往哪個方向移動？為什麼多個針孔會出現多個像？
     <details>
       <summary>查看解釋</summary>
-      <p>光沿<strong>直線</strong>前進（可看光點動畫）。物體各處都會發光，但<strong>隔板擋住大部分光線</strong>，只有穿過針孔的才能到紙屏（按「顯示許多光線」可看到被擋住的虛線）。物體上方的光到達紙屏下方，因此成<strong>倒立實像</strong>；F 左右不對稱，所以像也<strong>左右相反</strong>。</p>
+      <p>物體上每個點都像<strong>小燈泡</strong>，向<strong>四面八方</strong>發光（按「點光源四面八方發光」）。光沿直線前進，但<strong>隔板擋住絕大多數方向</strong>，只有穿過針孔的那幾條能到紙屏，匯聚成<strong>倒立、左右相反</strong>的像。</p>
     </details>
   </div>
   <p class="note">理想小孔模型；物高固定 20 cm。針孔愈多，通過的光愈分散，每個像愈淡（未模擬孔徑繞射）。針孔最多 5 個。</p>
@@ -161,7 +162,12 @@
   let holes = [{ id: 0, yCm: 0 }];
   let nextHoleId = 1;
   const RAY_ANIM_MS = 2800;
-  const MANY_RAY_SAMPLES = 17;
+  const RAY_ANGLES = (() => {
+    const arr = [];
+    for (let deg = -78; deg <= 78; deg += 13) arr.push((deg * Math.PI) / 180);
+    return arr;
+  })();
+  const HOLE_HALF_PX = 7;
   let rayAnimPlaying = true;
   let manyRays = false;
   let rayAnimRaf = null;
@@ -360,13 +366,54 @@
     return "#2563eb";
   }
 
-  function drawBlockedMark(parent, x, y) {
-    const s = 4;
-    pathEl(parent, [[x - s, y - s], [x + s, y + s]], "#64748b", 1.4, 0.55);
-    pathEl(parent, [[x + s, y - s], [x - s, y + s]], "#64748b", 1.4, 0.55);
+  function localFContains(lx, ly) {
+    if (lx < 0 || lx > F_W || ly < 0 || ly > F_H) return false;
+    if (ly <= 24) return true;
+    return lx <= 16;
   }
 
-  function drawSceneRays(blockedG, throughBackG, throughFrontG, layout, ox, topY, botY, holeX, sx, u, v) {
+  function sampleObjectPoints(ox, cy, ohPx) {
+    const s = ohPx / F_H;
+    const pts = [];
+    for (let ly = 5; ly <= F_H - 5; ly += 6) {
+      for (let lx = 5; lx <= F_W - 3; lx += 6) {
+        if (!localFContains(lx, ly)) continue;
+        pts.push({
+          x: ox + (lx - F_W / 2) * s,
+          y: cy + (ly - F_H / 2) * s
+        });
+      }
+    }
+    return pts;
+  }
+
+  function traceRayFromPoint(px, py, angle, holeX, holeY, sx) {
+    const cos = Math.cos(angle);
+    const sin = Math.sin(angle);
+    if (cos <= 0.08) return null;
+    const tan = sin / cos;
+    const yHit = py + tan * (holeX - px);
+    if (Math.abs(yHit - holeY) <= HOLE_HALF_PX) {
+      const yScreen = yHit + tan * (sx - holeX);
+      return {
+        type: "through",
+        back: [[px, py], [holeX, yHit]],
+        front: [[holeX, yHit], [sx, yScreen]]
+      };
+    }
+    return { type: "blocked", seg: [[px, py], [holeX, yHit]] };
+  }
+
+  function drawObjectSources(parent, ox, cy, ohPx) {
+    sampleObjectPoints(ox, cy, ohPx).forEach((pt) => {
+      n("circle", parent, {
+        cx: pt.x, cy: pt.y, r: 3,
+        fill: "#fef08a", stroke: "#ca8a04", "stroke-width": 1.2, opacity: 0.92
+      });
+    });
+  }
+
+  function drawSceneRays(blockedG, throughBackG, throughFrontG, layout, ox, topY, botY, holeX, sx, u, v, ohPx, cy) {
     const imgAlpha = imageOpacityPerHole();
     if (!manyRays) {
       holes.forEach((hole) => {
@@ -376,24 +423,26 @@
       });
       return;
     }
+    const objPts = sampleObjectPoints(ox, cy, ohPx);
+    const blockedOp = imgAlpha * 0.28;
+    const throughOp = imgAlpha * 0.48;
+    const frontOp = imgAlpha * 0.65;
     holes.forEach((hole) => {
       const hi = holeInfo(layout, hole);
-      for (let i = 0; i < MANY_RAY_SAMPLES; i++) {
-        const t = i / (MANY_RAY_SAMPLES - 1);
-        const yObj = topY + t * (botY - topY);
-        const yImg = mapImageY(yObj, hi.holeYPx, v, u);
+      objPts.forEach((pt) => {
+        const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
         const color = rayColorAtT(t);
-        if (blockedG && Math.abs(yObj - hi.holeYPx) > 2.5) {
-          pathEl(blockedG, [[ox, yObj], [holeX, yObj]], "#94a3b8", 1.1, imgAlpha * 0.45, true);
-          drawBlockedMark(blockedG, holeX, yObj);
-        }
-        if (throughBackG) {
-          pathEl(throughBackG, [[ox, yObj], [holeX, hi.holeYPx]], color, 1.2, imgAlpha * 0.5);
-        }
-        if (throughFrontG) {
-          pathEl(throughFrontG, [[holeX, hi.holeYPx], [sx, yImg]], color, 1.6, imgAlpha * 0.72);
-        }
-      }
+        RAY_ANGLES.forEach((angle) => {
+          const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
+          if (!tr) return;
+          if (tr.type === "blocked" && blockedG) {
+            pathEl(blockedG, tr.seg, "#94a3b8", 0.75, blockedOp, true);
+          } else if (tr.type === "through") {
+            if (throughBackG) pathEl(throughBackG, tr.back, color, 0.85, throughOp);
+            if (throughFrontG) pathEl(throughFrontG, tr.front, color, 1.15, frontOp);
+          }
+        });
+      });
     });
   }
 
@@ -461,7 +510,8 @@
 
   function buildRayPaths(layout, ox, topY, botY, holeX, sx) {
     const imgAlpha = imageOpacityPerHole();
-    const { u, v } = layout;
+    const { u, v, ohPx } = layout;
+    const cy = H * 0.5;
     const paths = [];
     if (!manyRays) {
       holes.forEach((hole) => {
@@ -479,21 +529,28 @@
       });
       return paths;
     }
+    const objPts = sampleObjectPoints(ox, cy, ohPx);
     holes.forEach((hole) => {
       const hi = holeInfo(layout, hole);
-      for (let i = 0; i < MANY_RAY_SAMPLES; i++) {
-        if (i % 2 !== 0) continue;
-        const t = i / (MANY_RAY_SAMPLES - 1);
-        const yObj = topY + t * (botY - topY);
-        const yImg = mapImageY(yObj, hi.holeYPx, v, u);
-        paths.push({
-          points: [[ox, yObj], [holeX, hi.holeYPx], [sx, yImg]],
-          color: rayColorAtT(t),
-          opacity: imgAlpha * 0.75
+      objPts.forEach((pt) => {
+        const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
+        const color = rayColorAtT(t);
+        RAY_ANGLES.forEach((angle) => {
+          const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
+          if (tr && tr.type === "through") {
+            paths.push({
+              points: [...tr.back, tr.front[1]],
+              color,
+              opacity: imgAlpha * 0.75
+            });
+          }
         });
-      }
+      });
     });
-    return paths;
+    const MAX_ANIM_PATHS = 48;
+    if (paths.length <= MAX_ANIM_PATHS) return paths;
+    const step = paths.length / MAX_ANIM_PATHS;
+    return Array.from({ length: MAX_ANIM_PATHS }, (_, i) => paths[Math.floor(i * step)]);
   }
 
   function mountRayPulses() {
@@ -612,10 +669,11 @@
 
     const rayBlocked = n("g", svg, { id: "rays-blocked", "pointer-events": "none" });
     const rayThroughBack = n("g", svg, { id: "rays-through-back", "pointer-events": "none" });
-    drawSceneRays(rayBlocked, rayThroughBack, null, layout, ox, topY, botY, holeX, sx, u, v);
+    drawSceneRays(rayBlocked, rayThroughBack, null, layout, ox, topY, botY, holeX, sx, u, v, ohPx, cy);
 
     const objGroup = n("g", svg, { cursor: "ew-resize" });
     drawLetterF(objGroup, ox, cy, ohPx, false);
+    if (manyRays) drawObjectSources(objGroup, ox, cy, ohPx);
     addDragHit(objGroup, ox, rodTop, Math.max(56, ohPx * 0.6 + 24), rodBot - rodTop, "object");
 
     const board = n("g", svg, { id: "hole-board" });
@@ -640,7 +698,7 @@
 
     const rayThroughFront = n("g", svg, { id: "rays-through-front", "pointer-events": "none" });
     if (manyRays) {
-      drawSceneRays(null, null, rayThroughFront, layout, ox, topY, botY, holeX, sx, u, v);
+      drawSceneRays(null, null, rayThroughFront, layout, ox, topY, botY, holeX, sx, u, v, ohPx, cy);
     }
 
     n("text", svg, { x: ox, y: Math.max(16, topY - 10), "text-anchor": "middle", "font-size": 14 }, "物體 F（可左右拖）");
@@ -658,7 +716,7 @@
     const holeNote = holes.length > 1
       ? `　${holes.length} 個針孔 → ${holes.length} 個像（每像亮度約 1/${holes.length}）`
       : "";
-    const rayNote = manyRays ? "　虛線＝被擋住；實線匯聚處＝紙屏上的像" : "";
+    const rayNote = manyRays ? "　黃點＝物體點光源；虛線＝被隔板擋住；穿孔實線匯聚成像" : "";
     $("result").innerHTML =
       `放大率 屏距÷物距＝${mag} ｜ 像高 ${imgH} cm（物高 ${OBJ_H_CM} cm）` +
       `<span class="readout-sub">${magLabel}　F 字像上下顛倒、左右相反${holeNote}${rayNote}${scaleNote}</span>`;
@@ -808,11 +866,11 @@
   $("toggle-many-rays").addEventListener("click", () => {
     manyRays = !manyRays;
     const btn = $("toggle-many-rays");
-    btn.textContent = manyRays ? "只示範兩條光線" : "顯示許多光線（含被擋）";
+    btn.textContent = manyRays ? "只示範兩條光線" : "點光源四面八方發光";
     btn.classList.toggle("primary", manyRays);
     scheduleDraw();
     out("status", manyRays
-      ? "已顯示多條光線：虛線在隔板被擋住，只有穿過針孔的實線能到紙屏"
+      ? "物體上許多點向四面八方發光；絕大多數被隔板擋住，只有穿過針孔的能到紙屏"
       : "已切換為兩條示範光線（頂、底）");
   });
 
