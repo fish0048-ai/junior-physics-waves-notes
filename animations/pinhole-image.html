@@ -93,6 +93,7 @@
     <span class="key" style="background:#fef08a;color:#854d0e">● 點光源（多方向）</span>
     <span class="key" style="background:#fde047;color:#854d0e">○ 點選黃點：單點觀察</span>
     <span class="key" style="background:#fed7aa;color:#c2410c">━ 穿過針孔（較亮較粗）</span>
+    <span class="key" style="background:#fecaca;color:#b91c1c">● 光線落點（選取時）</span>
     <span class="key" style="background:#e2e8f0;color:#475569">- - 被隔板擋住</span>
   </p>
   <div class="presets">
@@ -510,6 +511,23 @@
     });
   }
 
+  function drawImageHitMarkers(parent, pt, layout, holeX, u, v) {
+    const holeColors = ["#ef4444", "#f97316", "#eab308", "#84cc16", "#06b6d4"];
+    holes.forEach((hole, i) => {
+      const hi = holeInfo(layout, hole);
+      const hit = mapImagePoint(pt.x, pt.y, holeX, hi.holeYPx, u, v);
+      const color = holeColors[i % holeColors.length];
+      n("circle", parent, {
+        cx: hit.x, cy: hit.y, r: 11,
+        fill: "none", stroke: color, "stroke-width": 2.4, opacity: 0.9
+      });
+      n("circle", parent, {
+        cx: hit.x, cy: hit.y, r: 4.5,
+        fill: color, stroke: "#fff", "stroke-width": 1.4, opacity: 0.95
+      });
+    });
+  }
+
   function drawSelectedPointLabel(parent, pt, ox, ohPx, holeX) {
     const objMidX = ox;
     const onLeft = pt.x <= objMidX;
@@ -829,6 +847,10 @@
           n("g", svg, { id: "selected-source-label", "pointer-events": "none" }),
           selectedPt, ox, ohPx, holeX
         );
+        drawImageHitMarkers(
+          n("g", svg, { id: "image-hit-markers", "pointer-events": "none" }),
+          selectedPt, layout, holeX, u, v
+        );
       }
       drawSourcePickers(n("g", svg, { id: "source-picker" }), ox, cy, ohPx);
     }
@@ -853,7 +875,7 @@
       : "";
     const rayNote = manyRays
       ? (selectedPt
-        ? "　已選取光點：此點光線較亮，其餘變淡；虛線＝被擋；穿孔實線匯聚成像"
+        ? "　已選取光點：紅點＝此點光線在像上的落點（上下顛倒、左右相反）；其餘光點光線變淡"
         : "　點任一黃點可單獨觀察；虛線＝被擋；穿孔實線匯聚成像")
       : "　（簡化示範：實際每點都往多方向發直線，按「點光源四面八方發光」）";
     $("result").innerHTML =
@@ -937,7 +959,7 @@
     selectedSourceId = selectedSourceId === id ? null : id;
     scheduleDraw();
     out("status", selectedSourceId
-      ? "已選取光點：此點光線較亮，其餘光點變淡；再點一次或按「取消選取光點」"
+      ? "已選取光點：紅點標示光線在像上的落點；再點一次或按「取消選取光點」"
       : "已取消選取；可再點任一黃點單獨觀察");
   }
 
