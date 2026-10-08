@@ -437,18 +437,31 @@
 
   function getDemoPoint(ox, cy, ohPx) {
     const s = ohPx / F_H;
-    const lx = 6;
-    const ly = 36;
+    const toLocal = (pt) => ({
+      lx: (pt.x - ox) / s + F_W / 2,
+      ly: (pt.y - cy) / s + F_H / 2
+    });
+    const pts = sampleObjectPoints(ox, cy, ohPx);
+    const stemMid = pts
+      .map((pt) => ({ pt, ...toLocal(pt) }))
+      .filter(({ lx, ly }) => ly > 24 && lx <= 16)
+      .sort((a, b) => {
+        const score = (p) => Math.abs(p.lx - 11) * 2 + Math.abs(p.ly - 36);
+        return score(a) - score(b);
+      });
+    if (stemMid.length) return stemMid[0].pt;
+    const targetLx = 11;
+    const targetLy = 35;
     return {
-      x: ox + (lx - F_W / 2) * s,
-      y: cy + (ly - F_H / 2) * s
+      x: ox + (targetLx - F_W / 2) * s,
+      y: cy + (targetLy - F_H / 2) * s
     };
   }
 
   function drawObjectSources(parent, ox, cy, ohPx) {
     const demo = getDemoPoint(ox, cy, ohPx);
     sampleObjectPoints(ox, cy, ohPx).forEach((pt) => {
-      if (Math.hypot(pt.x - demo.x, pt.y - demo.y) < 4) return;
+      if (Math.hypot(pt.x - demo.x, pt.y - demo.y) < 2) return;
       n("circle", parent, {
         cx: pt.x, cy: pt.y, r: 3,
         fill: "#fef08a", stroke: "#ca8a04", "stroke-width": 1.2, opacity: 0.92
@@ -505,7 +518,7 @@
     holes.forEach((hole) => {
       const hi = holeInfo(layout, hole);
       objPts.forEach((pt) => {
-        if (Math.hypot(pt.x - demo.x, pt.y - demo.y) < 4) return;
+        if (Math.hypot(pt.x - demo.x, pt.y - demo.y) < 2) return;
         const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
         const color = rayColorAtT(t);
         BLOCKED_ANGLES.forEach((angle) => {
