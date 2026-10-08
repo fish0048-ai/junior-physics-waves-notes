@@ -10,3 +10,8 @@ _parse_ch4_exams.ps1
 _parse_ch2.ps1
 _parse_ch6.ps1
 _diag_ch4.ps1
+
+# 本機紙本批改工具
+tools/classroom-auto-grade/.env
+tools/classroom-auto-grade/node_modules/
+tools/classroom-auto-grade/reports/
