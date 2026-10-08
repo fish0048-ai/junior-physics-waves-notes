@@ -2659,9 +2659,20 @@ body.is-printing .recap-key-section {
   color: #fff;
   padding: 10px 14px;
   border-radius: 12px;
-  display: none;
   z-index: 80;
   box-shadow: 0 8px 24px rgba(0,0,0,.18);
+}
+.toast:not(.is-on) {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+  box-shadow: none;
 }
 
 code {
@@ -2766,9 +2777,9 @@ body.ink-draw .section-nav a {
   background: #ea580c;
   color: #fff;
   border: 0;
-  min-width: 52px;
-  min-height: 28px;
-  padding: 3px 10px;
+  min-width: 44px;
+  min-height: 44px;
+  padding: 8px 12px;
   border-radius: 999px;
   font: inherit;
   font-weight: 800;
@@ -2823,6 +2834,7 @@ body.ink-draw .ink-panel {
 body.ink-draw .ink-panel-head {
   margin-bottom: 4px;
   align-items: center;
+  flex-wrap: wrap;
 }
 body.ink-draw .ink-panel-head strong { font-size: 13px; }
 body.ink-draw .ink-status { font-size: 11px; }
@@ -2831,13 +2843,23 @@ body.ink-draw .ink-field {
   font-size: 11px;
 }
 body.ink-draw .ink-field select,
-body.ink-draw .ink-row input[type="text"],
-body.ink-draw .ink-row .btn {
-  min-height: 32px;
+body.ink-draw .ink-row input[type="text"] {
+  min-height: 44px;
   font-size: 13px;
-  padding: 4px 8px;
+  padding: 8px 10px;
 }
-body.ink-draw .ink-row { margin: 4px 0; }
+body.ink-draw .ink-row {
+  margin: 4px 0;
+  flex-wrap: wrap;
+}
+body.ink-draw .ink-row .btn {
+  min-height: 44px;
+  min-width: 44px;
+  flex: 1 1 44px;
+  box-sizing: border-box;
+  font-size: 13px;
+  padding: 8px 10px;
+}
 body.ink-draw .ink-tools {
   margin: 4px 0;
   gap: 4px;

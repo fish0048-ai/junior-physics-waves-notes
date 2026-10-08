@@ -96,6 +96,8 @@ test.describe("三種寬度回歸", () => {
     await expect(page.locator("script[src*='register-sw.js']")).toHaveCount(1);
     const sw = await page.request.get("/sw-main.js");
     expect(sw.ok()).toBeTruthy();
-    expect(await sw.text()).toContain('CACHE_VERSION = "jpwn-pwa-v2"');
+    expect(await sw.text()).toContain('CACHE_VERSION = "jpwn-pwa-v3"');
+    expect(await sw.text()).toContain("networkFirst");
+    expect(await sw.text()).not.toContain("indexedDB");
   });
 });

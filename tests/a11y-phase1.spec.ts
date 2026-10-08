@@ -45,20 +45,32 @@ test.describe("第一階段無障礙", () => {
     expect(await pseudoContent(blank)).toBe("none");
   });
 
-  test("顯示答案會朗讀，對錯樣式帶有文字", async ({ page }) => {
+  test("提示區域一直可被讀取，連續兩次訊息會更換", async ({ page }) => {
     await openLocal(page, "/sections/4-1.html");
     const toast = page.locator("#toast");
-    await expect(toast).not.toHaveAttribute("aria-live", "polite");
-    const blank = page.locator(".blank").first();
-    await blank.focus();
-    await page.keyboard.press("Enter");
-    await expect(blank).toHaveClass(/revealed/);
-    await page.locator("#btn-answers").click();
     await expect(toast).toHaveAttribute("role", "status");
     await expect(toast).toHaveAttribute("aria-live", "polite");
-    await expect(toast).toContainText("答案");
-    await blank.evaluate((el) => el.classList.add("wrong"));
-    expect(await pseudoContent(blank)).toBe('"再看"');
+    await expect(toast).toHaveAttribute("aria-atomic", "true");
+    const hiddenDisplay = await toast.evaluate((el) => getComputedStyle(el).display);
+    expect(hiddenDisplay).not.toBe("none");
+    await page.locator("#btn-answers").click();
+    await expect(toast).toContainText("已顯示");
+    await expect(toast).toHaveClass(/is-on/);
+    await page.locator("#btn-answers").click();
+    await expect(toast).toContainText("已隱藏");
+    await expect(toast).toHaveClass(/is-on/);
+  });
+
+  test("揭曉挖空後讀得到答案，而且不會變成批改", async ({ page }) => {
+    await openLocal(page, "/sections/4-1.html");
+    const blank = page.locator(".blank").first();
+    await expect(blank).toHaveAttribute("aria-label", "挖空");
+    await blank.focus();
+    await page.keyboard.press("Enter");
+    const answer = await blank.evaluate((el) => (el.dataset.answer || "").split("|")[0]);
+    await expect(blank).toHaveText(answer);
+    await expect(blank).not.toHaveAttribute("aria-label");
+    await expect(blank).not.toHaveClass(/correct|wrong/);
   });
 
   test("筆記模式在平板寬度維持 44px", async ({ page }) => {

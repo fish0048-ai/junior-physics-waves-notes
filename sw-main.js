@@ -1,5 +1,5 @@
 /* 國中理化講義站 PWA — 離線快取（Phase 1：第 3 章核心） */
-const CACHE_VERSION = "jpwn-pwa-v2";
+const CACHE_VERSION = "jpwn-pwa-v3";
 
 const PRECACHE = [
   "cover.html",
@@ -141,12 +141,17 @@ self.addEventListener("fetch", (event) => {
     return;
   }
 
-  if (dest === "style" || dest === "script" || dest === "font" || dest === "image") {
+  if (dest === "style" || dest === "script" || /\.(css|js)$/i.test(url.pathname)) {
+    event.respondWith(networkFirst(req));
+    return;
+  }
+
+  if (dest === "font" || dest === "image") {
     event.respondWith(cacheFirst(req));
     return;
   }
 
-  if (/\.(css|js|html|webmanifest|svg|png|jpg|webp|woff2?)$/i.test(url.pathname)) {
+  if (/\.(html|webmanifest|svg|png|jpg|webp|woff2?)$/i.test(url.pathname)) {
     event.respondWith(cacheFirst(req));
   }
 });

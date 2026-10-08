@@ -305,9 +305,11 @@
     if (on) {
       el.textContent = answerOf(el);
       el.classList.add("revealed");
+      el.removeAttribute("aria-label");
     } else {
-      el.textContent = "";
+      el.textContent = "\u00a0";
       el.classList.remove("revealed");
+      el.setAttribute("aria-label", "挖空");
     }
   }
 
@@ -491,18 +493,31 @@
     toast("挖空無需輸入，請按「顯示本卡答案」或點單一空格");
   }
 
-  function toast(msg) {
+  function ensureToast() {
     const t = $("#toast");
-    if (!t) return;
+    if (!t) return null;
     t.setAttribute("role", "status");
     t.setAttribute("aria-live", "polite");
-    t.textContent = msg;
-    t.style.display = "block";
+    t.setAttribute("aria-atomic", "true");
+    return t;
+  }
+
+  function toast(msg) {
+    const t = ensureToast();
+    if (!t) return;
+    t.classList.remove("is-on");
+    t.textContent = "";
+    window.requestAnimationFrame(() => {
+      t.textContent = msg;
+      t.classList.add("is-on");
+    });
     clearTimeout(toast._id);
     toast._id = setTimeout(() => {
-      t.style.display = "none";
+      t.classList.remove("is-on");
+      t.textContent = "";
     }, 2600);
   }
+  ensureToast();
 
   function delay(ms) {
     return new Promise((resolve) => window.setTimeout(resolve, ms));
