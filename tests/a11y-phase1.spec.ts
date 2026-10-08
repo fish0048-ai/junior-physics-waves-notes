@@ -15,17 +15,24 @@ async function pseudoContent(locator: Locator) {
 test.describe("第一階段無障礙", () => {
   test("鍵盤移到導覽時看得到外框", async ({ page }) => {
     await openLocal(page, "/cover.html");
-    const gate = page.getByRole("link", { name: "練習專區" });
-    for (let i = 0; i < 20; i += 1) {
-      const focused = await page.evaluate(() => document.activeElement?.textContent || "");
-      if (focused.includes("練習專區")) break;
+    const gate = page.locator("a.portal-gate.is-practice");
+    for (let i = 0; i < 80; i += 1) {
+      const href = await page.evaluate(() => {
+        const el = document.activeElement;
+        return el instanceof HTMLAnchorElement ? el.getAttribute("href") || "" : "";
+      });
+      if (href.includes("practice.html")) break;
       await page.keyboard.press("Tab");
     }
     await expect(gate).toBeFocused();
-    const outline = await gate.evaluate((el) => getComputedStyle(el).outlineStyle);
-    expect(outline).not.toBe("none");
-    const width = await gate.evaluate((el) => parseFloat(getComputedStyle(el).outlineWidth));
-    expect(width).toBeGreaterThanOrEqual(3);
+    const outline = await gate.evaluate((el) => ({
+      style: getComputedStyle(el).outlineStyle,
+      width: parseFloat(getComputedStyle(el).outlineWidth),
+      color: getComputedStyle(el).outlineColor,
+    }));
+    expect(outline.style).not.toBe("none");
+    expect(outline.width).toBeGreaterThanOrEqual(3);
+    expect(outline.color).toBe("rgb(28, 25, 23)");
   });
 
   test("尚未檢查時挖空沒有對錯文字", async ({ page }) => {

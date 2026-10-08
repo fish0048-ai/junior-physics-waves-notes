@@ -33,8 +33,8 @@
     if (!frame) return;
     try {
       const doc = frame.contentDocument;
-      if (!doc) return;
-      const root = doc.querySelector("main") || doc.documentElement || doc.body;
+      const root = doc && doc.querySelector("main");
+      if (!root) return;
       const height = Math.ceil(
         Math.max(
           root.scrollHeight || 0,
