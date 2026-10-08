@@ -92,6 +92,7 @@
     <span class="key">針孔可上下移</span>
     <span class="key" style="background:#fef08a;color:#854d0e">● 點光源（多方向）</span>
     <span class="key" style="background:#fde047;color:#854d0e">○ 示範：同一點發光</span>
+    <span class="key" style="background:#fed7aa;color:#c2410c">━ 穿過針孔（較亮較粗）</span>
     <span class="key" style="background:#e2e8f0;color:#475569">- - 被隔板擋住</span>
   </p>
   <div class="presets">
@@ -178,12 +179,14 @@
   let holes = [{ id: 0, yCm: 0 }];
   let nextHoleId = 1;
   const RAY_ANIM_MS = 2800;
-  const RAY_ANGLES = (() => {
+  /** 示範「被擋住」的發射方向（較疏，避免蓋過穿孔光線） */
+  const BLOCKED_ANGLES = (() => {
     const arr = [];
-    for (let deg = -78; deg <= 78; deg += 13) arr.push((deg * Math.PI) / 180);
+    for (let deg = -78; deg <= 78; deg += 11) arr.push((deg * Math.PI) / 180);
     return arr;
   })();
   const HOLE_HALF_PX = 7;
+  const HOLE_APERTURE_STEPS = 7;
   let rayAnimPlaying = true;
   let manyRays = false;
   let rayAnimRaf = null;
@@ -420,6 +423,18 @@
     return { type: "blocked", seg: [[px, py], [holeX, yHit]] };
   }
 
+  /** 從物點對準針孔開口的多條方向，保證有足夠「穿孔」光線可見 */
+  function holeApertureAngles(px, py, holeX, holeY) {
+    const dx = holeX - px;
+    if (dx <= 4) return [];
+    const angles = [];
+    for (let i = 0; i <= HOLE_APERTURE_STEPS; i++) {
+      const yTarget = holeY - HOLE_HALF_PX + (2 * HOLE_HALF_PX * i) / HOLE_APERTURE_STEPS;
+      angles.push(Math.atan2(yTarget - py, dx));
+    }
+    return angles;
+  }
+
   function getDemoPoint(ox, cy, ohPx) {
     const s = ohPx / F_H;
     const lx = 6;
@@ -444,14 +459,15 @@
   function drawDemoPointHighlight(parent, layout, ox, cy, ohPx, holeX, sx, topY, botY) {
     const pt = getDemoPoint(ox, cy, ohPx);
     const hi = holeInfo(layout, holes[0]);
-    RAY_ANGLES.forEach((angle) => {
+    BLOCKED_ANGLES.forEach((angle) => {
       const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
-      if (!tr) return;
-      if (tr.type === "blocked") {
-        pathEl(parent, tr.seg, "#64748b", 1.5, 0.62, true);
-      } else {
-        pathEl(parent, [...tr.back, tr.front[1]], "#ea580c", 2.4, 0.9);
-      }
+      if (!tr || tr.type !== "blocked") return;
+      pathEl(parent, tr.seg, "#64748b", 1.2, 0.5, true);
+    });
+    holeApertureAngles(pt.x, pt.y, holeX, hi.holeYPx).forEach((angle) => {
+      const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
+      if (!tr || tr.type !== "through") return;
+      pathEl(parent, [...tr.back, tr.front[1]], "#ea580c", 2.8, 0.95);
     });
     n("circle", parent, {
       cx: pt.x, cy: pt.y, r: 10,
@@ -483,24 +499,25 @@
     }
     const objPts = sampleObjectPoints(ox, cy, ohPx);
     const demo = getDemoPoint(ox, cy, ohPx);
-    const blockedOp = imgAlpha * 0.28;
-    const throughOp = imgAlpha * 0.48;
-    const frontOp = imgAlpha * 0.65;
+    const blockedOp = imgAlpha * 0.22;
+    const throughOp = Math.min(1, imgAlpha * 0.82);
+    const frontOp = Math.min(1, imgAlpha * 0.95);
     holes.forEach((hole) => {
       const hi = holeInfo(layout, hole);
       objPts.forEach((pt) => {
         if (Math.hypot(pt.x - demo.x, pt.y - demo.y) < 4) return;
         const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
         const color = rayColorAtT(t);
-        RAY_ANGLES.forEach((angle) => {
+        BLOCKED_ANGLES.forEach((angle) => {
           const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
-          if (!tr) return;
-          if (tr.type === "blocked" && blockedG) {
-            pathEl(blockedG, tr.seg, "#94a3b8", 0.75, blockedOp, true);
-          } else if (tr.type === "through") {
-            if (throughBackG) pathEl(throughBackG, tr.back, color, 0.85, throughOp);
-            if (throughFrontG) pathEl(throughFrontG, tr.front, color, 1.15, frontOp);
-          }
+          if (!tr || tr.type !== "blocked" || !blockedG) return;
+          pathEl(blockedG, tr.seg, "#94a3b8", 0.65, blockedOp, true);
+        });
+        holeApertureAngles(pt.x, pt.y, holeX, hi.holeYPx).forEach((angle) => {
+          const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
+          if (!tr || tr.type !== "through") return;
+          if (throughBackG) pathEl(throughBackG, tr.back, color, 1.35, throughOp);
+          if (throughFrontG) pathEl(throughFrontG, tr.front, color, 1.65, frontOp);
         });
       });
     });
@@ -595,13 +612,13 @@
       objPts.forEach((pt) => {
         const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
         const color = rayColorAtT(t);
-        RAY_ANGLES.forEach((angle) => {
+        holeApertureAngles(pt.x, pt.y, holeX, hi.holeYPx).forEach((angle) => {
           const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
           if (tr && tr.type === "through") {
             paths.push({
               points: [...tr.back, tr.front[1]],
               color,
-              opacity: imgAlpha * 0.75
+              opacity: imgAlpha * 0.85
             });
           }
         });
