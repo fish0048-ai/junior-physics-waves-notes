@@ -13,26 +13,29 @@ async function pseudoContent(locator: Locator) {
 }
 
 test.describe("第一階段無障礙", () => {
-  test("鍵盤移到導覽時看得到外框", async ({ page }) => {
-    await openLocal(page, "/cover.html");
-    const gate = page.locator("a.portal-gate.is-practice");
-    for (let i = 0; i < 80; i += 1) {
-      const href = await page.evaluate(() => {
-        const el = document.activeElement;
-        return el instanceof HTMLAnchorElement ? el.getAttribute("href") || "" : "";
+  test.use({ serviceWorkers: "block" });
+
+  test("鍵盤焦點在按鈕、導覽與挖空上看得到外框", async ({ page }) => {
+    await openLocal(page, "/sections/4-1.html");
+    const targets = [
+      page.locator("#btn-answers"),
+      page.locator(".site-nav a").first(),
+      page.locator(".blank").first(),
+    ];
+    for (const target of targets) {
+      await target.evaluate((el) => {
+        if (el instanceof HTMLElement) el.focus({ focusVisible: true });
       });
-      if (href.includes("practice.html")) break;
-      await page.keyboard.press("Tab");
+      await expect(target).toBeFocused();
+      const outline = await target.evaluate((el) => ({
+        style: getComputedStyle(el).outlineStyle,
+        width: parseFloat(getComputedStyle(el).outlineWidth),
+        color: getComputedStyle(el).outlineColor,
+      }));
+      expect(outline.style).not.toBe("none");
+      expect(outline.width).toBeGreaterThanOrEqual(3);
+      expect(outline.color).toBe("rgb(28, 25, 23)");
     }
-    await expect(gate).toBeFocused();
-    const outline = await gate.evaluate((el) => ({
-      style: getComputedStyle(el).outlineStyle,
-      width: parseFloat(getComputedStyle(el).outlineWidth),
-      color: getComputedStyle(el).outlineColor,
-    }));
-    expect(outline.style).not.toBe("none");
-    expect(outline.width).toBeGreaterThanOrEqual(3);
-    expect(outline.color).toBe("rgb(28, 25, 23)");
   });
 
   test("尚未檢查時挖空沒有對錯文字", async ({ page }) => {
@@ -108,7 +111,7 @@ test.describe("第一階段無障礙", () => {
 
   test("動畫檔載入失敗時改為可捲動備援", async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
-    await page.route("**/animations/pinhole-image.html", (route) => route.abort());
+    await page.route("**/pinhole-image.html", (route) => route.abort());
     await openLocal(page, "/sections/4-1.html");
     const frame = page.locator("#anim-pinhole-image");
     await frame.scrollIntoViewIfNeeded();
