@@ -422,18 +422,27 @@
     return sampleObjectPoints(ox, cy, ohPx).find((pt) => pt.id === id) || null;
   }
 
-  function traceRayFromPoint(px, py, angle, holeX, holeY, sx) {
+  /** 物體點 (px,py) 經針孔在像上的位置：上下顛倒＋左右相反 */
+  function mapImagePoint(px, py, holeX, holeY, u, v) {
+    const m = v / u;
+    return {
+      x: holeX + m * (holeX - px),
+      y: holeY + m * (holeY - py)
+    };
+  }
+
+  function traceRayFromPoint(px, py, angle, holeX, holeY, u, v) {
     const cos = Math.cos(angle);
     const sin = Math.sin(angle);
     if (cos <= 0.08) return null;
     const tan = sin / cos;
     const yHit = py + tan * (holeX - px);
     if (Math.abs(yHit - holeY) <= HOLE_HALF_PX) {
-      const yScreen = yHit + tan * (sx - holeX);
+      const img = mapImagePoint(px, py, holeX, holeY, u, v);
       return {
         type: "through",
         back: [[px, py], [holeX, yHit]],
-        front: [[holeX, yHit], [sx, yScreen]]
+        front: [[holeX, yHit], [img.x, img.y]]
       };
     }
     return { type: "blocked", seg: [[px, py], [holeX, yHit]] };
@@ -451,7 +460,7 @@
     return angles;
   }
 
-  function drawPointRays(pt, holeX, holeY, sx, topY, botY, blockedG, throughBackG, throughFrontG, imgAlpha, mode) {
+  function drawPointRays(pt, holeX, holeY, u, v, topY, botY, blockedG, throughBackG, throughFrontG, imgAlpha, mode) {
     const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
     const color = mode === "focus" ? "#ea580c" : rayColorAtT(t);
     const styles = {
@@ -460,12 +469,12 @@
       focus: { blockedOp: imgAlpha * 0.55, throughOp: 0.95, frontOp: 1, blockedW: 1.2, throughW: 2.4, frontW: 2.8 }
     }[mode];
     BLOCKED_ANGLES.forEach((angle) => {
-      const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, holeY, sx);
+      const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, holeY, u, v);
       if (!tr || tr.type !== "blocked" || !blockedG) return;
       pathEl(blockedG, tr.seg, mode === "focus" ? "#64748b" : "#94a3b8", styles.blockedW, styles.blockedOp, true);
     });
     holeApertureAngles(pt.x, pt.y, holeX, holeY).forEach((angle) => {
-      const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, holeY, sx);
+      const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, holeY, u, v);
       if (!tr || tr.type !== "through") return;
       if (throughBackG) pathEl(throughBackG, tr.back, color, styles.throughW, styles.throughOp);
       if (throughFrontG) pathEl(throughFrontG, tr.front, color, styles.frontW, styles.frontOp);
@@ -542,7 +551,7 @@
       objPts.forEach((pt) => {
         if (selectedSourceId && pt.id === selectedSourceId) return;
         const mode = selectedSourceId ? "dim" : "normal";
-        drawPointRays(pt, holeX, hi.holeYPx, sx, topY, botY, blockedG, throughBackG, throughFrontG, imgAlpha, mode);
+        drawPointRays(pt, holeX, hi.holeYPx, u, v, topY, botY, blockedG, throughBackG, throughFrontG, imgAlpha, mode);
       });
     });
   }
@@ -640,7 +649,7 @@
         const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
         const color = selectedSourceId ? "#ea580c" : rayColorAtT(t);
         holeApertureAngles(pt.x, pt.y, holeX, hi.holeYPx).forEach((angle) => {
-          const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
+          const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, u, v);
           if (tr && tr.type === "through") {
             paths.push({
               points: [...tr.back, tr.front[1]],
@@ -813,7 +822,7 @@
       if (selectedPt) {
         holes.forEach((hole) => {
           const hi = holeInfo(layout, hole);
-          drawPointRays(selectedPt, holeX, hi.holeYPx, sx, topY, botY,
+          drawPointRays(selectedPt, holeX, hi.holeYPx, u, v, topY, botY,
             rayFocusBlocked, rayFocusThroughBack, rayFocusThroughFront, imgAlpha, "focus");
         });
         drawSelectedPointLabel(
