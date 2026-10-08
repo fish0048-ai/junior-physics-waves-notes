@@ -1,0 +1,13 @@
+{
+  "name": "junior-physics-waves-notes",
+  "private": true,
+  "description": "國中理化講義的 Playwright 測試。安裝與執行只在 GitHub Actions，請勿在本機執行 npm 或 npx。",
+  "scripts": {
+    "test": "playwright test",
+    "test:basic": "playwright test --grep @basic",
+    "test:full": "playwright test"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0"
+  }
+}

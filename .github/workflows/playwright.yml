@@ -1,0 +1,62 @@
+name: Playwright
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: 測試範圍
+        required: true
+        default: full
+        type: choice
+        options:
+          - basic
+          - full
+
+permissions:
+  contents: read
+
+concurrency:
+  group: playwright-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  test:
+    name: Chromium
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: 取出原始碼
+        uses: actions/checkout@v6
+
+      - name: 安裝 Node.js
+        uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: 安裝測試依賴
+        run: npm install --no-audit --no-fund
+
+      - name: 安裝 Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: 執行測試
+        run: |
+          if [ "${{ github.event_name }}" = "pull_request" ] || [ "${{ inputs.suite }}" = "basic" ]; then
+            npx playwright test --grep @basic
+          else
+            npx playwright test
+          fi
+
+      - name: 上傳失敗的報告、截圖與 trace
+        if: failure()
+        uses: actions/upload-artifact@v5
+        with:
+          name: playwright-report
+          path: |
+            playwright-report/
+            test-results/
+          retention-days: 14
+          if-no-files-found: ignore
