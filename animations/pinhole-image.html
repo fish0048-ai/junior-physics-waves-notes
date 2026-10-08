@@ -84,14 +84,14 @@
   <p>物體用<strong>左右不對稱的 F</strong>，方便看出像<strong>上下顛倒、左右相反</strong>。可<strong>增加針孔</strong>（孔越多像越多），針孔可<strong>上下拖移</strong>；物體／隔板／紙屏仍可左右拖移。</p>
   <p class="misconception" id="ray-misconception">
     <b>常見誤解：</b>「光直線前進」≠ 光只走<strong>同一個方向</strong>。
-    物體上每個點都是<strong>點光源</strong>，同時往<strong>四面八方</strong>發出許多<strong>直線</strong>；方向不同所以看起來是斜線，但<strong>每一條仍是直的、不會自己轉彎</strong>。按「點光源四面八方發光」觀察黃圈示範點。
+    物體上每個點都是<strong>點光源</strong>，同時往<strong>四面八方</strong>發出許多<strong>直線</strong>；方向不同所以看起來是斜線，但<strong>每一條仍是直的、不會自己轉彎</strong>。按「點光源四面八方發光」後，<strong>點任一黃點</strong>可單獨觀察該點發光。
   </p>
   <p class="legend">
     <span class="key" style="background:#dbeafe;color:#1d4ed8">物體 F</span>
     <span class="key" style="background:#fee2e2;color:#b91c1c">倒立像</span>
     <span class="key">針孔可上下移</span>
     <span class="key" style="background:#fef08a;color:#854d0e">● 點光源（多方向）</span>
-    <span class="key" style="background:#fde047;color:#854d0e">○ 示範：同一點發光</span>
+    <span class="key" style="background:#fde047;color:#854d0e">○ 點選黃點：單點觀察</span>
     <span class="key" style="background:#fed7aa;color:#c2410c">━ 穿過針孔（較亮較粗）</span>
     <span class="key" style="background:#e2e8f0;color:#475569">- - 被隔板擋住</span>
   </p>
@@ -115,9 +115,10 @@
     <button type="button" id="remove-hole">－ 減少針孔</button>
     <button type="button" class="primary" id="toggle-ray-anim">暫停光線動畫</button>
     <button type="button" id="toggle-many-rays">點光源四面八方發光</button>
+    <button type="button" id="clear-source" hidden>取消選取光點</button>
     <span id="hole-count">目前 1 個針孔</span>
   </div>
-  <p class="drag-hint">左右拖：物體、針孔隔板、紙屏（拖哪個，另兩者水平位置不動）。<strong>上下拖針孔上的圓點</strong>，該孔的像會跟著在紙屏上移動。</p>
+  <p class="drag-hint">左右拖：物體、針孔隔板、紙屏（拖哪個，另兩者水平位置不動）。<strong>上下拖針孔上的圓點</strong>，該孔的像會跟著在紙屏上移動。點光源模式下<strong>點任一黃點</strong>可單獨觀察該點向各方向發光（再點一次取消）。</p>
   <div class="visual-wrap">
     <aside class="screen-preview" aria-label="紙屏特寫">
       <h2>紙屏特寫（倒立、左右相反的像）</h2>
@@ -190,6 +191,8 @@
   const HOLE_APERTURE_STEPS = 7;
   let rayAnimPlaying = true;
   let manyRays = false;
+  /** @type {string|null} 目前選取的點光源 id（lx,ly） */
+  let selectedSourceId = null;
   let rayAnimRaf = null;
   /** @type {{ points: number[][], color: string, opacity: number }[]} */
   let rayPaths = [];
@@ -407,10 +410,16 @@
     for (let ly = 5; ly <= F_H - 5; ly += 6) {
       for (let lx = 5; lx <= F_W - 3; lx += 6) {
         if (!localFContains(lx, ly)) continue;
-        pts.push(objectLocalToScene(ox, cy, ohPx, lx, ly));
+        const scene = objectLocalToScene(ox, cy, ohPx, lx, ly);
+        pts.push({ id: `${lx},${ly}`, lx, ly, x: scene.x, y: scene.y });
       }
     }
     return pts;
+  }
+
+  function findSourcePoint(ox, cy, ohPx, id) {
+    if (!id) return null;
+    return sampleObjectPoints(ox, cy, ohPx).find((pt) => pt.id === id) || null;
   }
 
   function traceRayFromPoint(px, py, angle, holeX, holeY, sx) {
@@ -442,56 +451,57 @@
     return angles;
   }
 
-  function getDemoPoint(ox, cy, ohPx) {
-    const s = ohPx / F_H;
-    const toLocal = (pt) => ({
-      lx: (pt.x - ox) / s + F_W / 2,
-      ly: (pt.y - cy) / s + F_H / 2
-    });
-    const pts = sampleObjectPoints(ox, cy, ohPx);
-    const stemMid = pts
-      .map((pt) => ({ pt, ...toLocal(pt) }))
-      .filter(({ lx, ly }) => ly > 24 && lx <= 16)
-      .sort((a, b) => {
-        const score = (p) => Math.abs(p.lx - 11) * 2 + Math.abs(p.ly - 36);
-        return score(a) - score(b);
-      });
-    if (stemMid.length) return stemMid[0].pt;
-    return objectLocalToScene(ox, cy, ohPx, 11, 35);
-  }
-
-  function drawObjectSources(parent, ox, cy, ohPx) {
-    const demo = getDemoPoint(ox, cy, ohPx);
-    sampleObjectPoints(ox, cy, ohPx).forEach((pt) => {
-      if (Math.hypot(pt.x - demo.x, pt.y - demo.y) < 2) return;
-      n("circle", parent, {
-        cx: pt.x, cy: pt.y, r: 3,
-        fill: "#fef08a", stroke: "#ca8a04", "stroke-width": 1.2, opacity: 0.92
-      });
-    });
-  }
-
-  function drawDemoPointHighlight(parent, layout, ox, cy, ohPx, holeX, sx, topY, botY) {
-    const pt = getDemoPoint(ox, cy, ohPx);
-    const hi = holeInfo(layout, holes[0]);
+  function drawPointRays(pt, holeX, holeY, sx, topY, botY, blockedG, throughBackG, throughFrontG, imgAlpha, mode) {
+    const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
+    const color = mode === "focus" ? "#ea580c" : rayColorAtT(t);
+    const styles = {
+      normal: { blockedOp: imgAlpha * 0.22, throughOp: imgAlpha * 0.82, frontOp: imgAlpha * 0.95, blockedW: 0.65, throughW: 1.35, frontW: 1.65 },
+      dim: { blockedOp: imgAlpha * 0.05, throughOp: imgAlpha * 0.08, frontOp: imgAlpha * 0.1, blockedW: 0.45, throughW: 0.7, frontW: 0.8 },
+      focus: { blockedOp: imgAlpha * 0.55, throughOp: 0.95, frontOp: 1, blockedW: 1.2, throughW: 2.4, frontW: 2.8 }
+    }[mode];
     BLOCKED_ANGLES.forEach((angle) => {
-      const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
-      if (!tr || tr.type !== "blocked") return;
-      pathEl(parent, tr.seg, "#64748b", 1.2, 0.5, true);
+      const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, holeY, sx);
+      if (!tr || tr.type !== "blocked" || !blockedG) return;
+      pathEl(blockedG, tr.seg, mode === "focus" ? "#64748b" : "#94a3b8", styles.blockedW, styles.blockedOp, true);
     });
-    holeApertureAngles(pt.x, pt.y, holeX, hi.holeYPx).forEach((angle) => {
-      const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
+    holeApertureAngles(pt.x, pt.y, holeX, holeY).forEach((angle) => {
+      const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, holeY, sx);
       if (!tr || tr.type !== "through") return;
-      pathEl(parent, [...tr.back, tr.front[1]], "#ea580c", 2.8, 0.95);
+      if (throughBackG) pathEl(throughBackG, tr.back, color, styles.throughW, styles.throughOp);
+      if (throughFrontG) pathEl(throughFrontG, tr.front, color, styles.frontW, styles.frontOp);
     });
-    n("circle", parent, {
-      cx: pt.x, cy: pt.y, r: 10,
-      fill: "none", stroke: "#eab308", "stroke-width": 2.2, opacity: 0.85
+  }
+
+  function drawSourcePickers(parent, ox, cy, ohPx) {
+    sampleObjectPoints(ox, cy, ohPx).forEach((pt) => {
+      const selected = pt.id === selectedSourceId;
+      n("circle", parent, {
+        cx: pt.x, cy: pt.y, r: 14,
+        fill: "transparent",
+        "data-source-id": pt.id,
+        cursor: "pointer"
+      });
+      n("circle", parent, {
+        cx: pt.x, cy: pt.y, r: selected ? 4.5 : 3,
+        fill: selected ? "#fde047" : "#fef08a",
+        stroke: selected ? "#eab308" : "#ca8a04",
+        "stroke-width": selected ? 2 : 1.2,
+        opacity: selected ? 1 : 0.88,
+        "data-source-id": pt.id,
+        cursor: "pointer",
+        "pointer-events": "none"
+      });
+      if (selected) {
+        n("circle", parent, {
+          cx: pt.x, cy: pt.y, r: 10,
+          fill: "none", stroke: "#eab308", "stroke-width": 2.2, opacity: 0.9,
+          "pointer-events": "none"
+        });
+      }
     });
-    n("circle", parent, {
-      cx: pt.x, cy: pt.y, r: 4.5,
-      fill: "#fde047", stroke: "#ca8a04", "stroke-width": 1.6
-    });
+  }
+
+  function drawSelectedPointLabel(parent, pt) {
     const labelX = Math.max(24, pt.x - 12);
     const labelY = Math.max(36, pt.y - 34);
     n("text", parent, {
@@ -513,27 +523,12 @@
       return;
     }
     const objPts = sampleObjectPoints(ox, cy, ohPx);
-    const demo = getDemoPoint(ox, cy, ohPx);
-    const blockedOp = imgAlpha * 0.22;
-    const throughOp = Math.min(1, imgAlpha * 0.82);
-    const frontOp = Math.min(1, imgAlpha * 0.95);
     holes.forEach((hole) => {
       const hi = holeInfo(layout, hole);
       objPts.forEach((pt) => {
-        if (Math.hypot(pt.x - demo.x, pt.y - demo.y) < 2) return;
-        const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
-        const color = rayColorAtT(t);
-        BLOCKED_ANGLES.forEach((angle) => {
-          const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
-          if (!tr || tr.type !== "blocked" || !blockedG) return;
-          pathEl(blockedG, tr.seg, "#94a3b8", 0.65, blockedOp, true);
-        });
-        holeApertureAngles(pt.x, pt.y, holeX, hi.holeYPx).forEach((angle) => {
-          const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
-          if (!tr || tr.type !== "through") return;
-          if (throughBackG) pathEl(throughBackG, tr.back, color, 1.35, throughOp);
-          if (throughFrontG) pathEl(throughFrontG, tr.front, color, 1.65, frontOp);
-        });
+        if (selectedSourceId && pt.id === selectedSourceId) return;
+        const mode = selectedSourceId ? "dim" : "normal";
+        drawPointRays(pt, holeX, hi.holeYPx, sx, topY, botY, blockedG, throughBackG, throughFrontG, imgAlpha, mode);
       });
     });
   }
@@ -622,18 +617,21 @@
       return paths;
     }
     const objPts = sampleObjectPoints(ox, cy, ohPx);
+    const animPts = selectedSourceId
+      ? objPts.filter((pt) => pt.id === selectedSourceId)
+      : objPts;
     holes.forEach((hole) => {
       const hi = holeInfo(layout, hole);
-      objPts.forEach((pt) => {
+      animPts.forEach((pt) => {
         const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
-        const color = rayColorAtT(t);
+        const color = selectedSourceId ? "#ea580c" : rayColorAtT(t);
         holeApertureAngles(pt.x, pt.y, holeX, hi.holeYPx).forEach((angle) => {
           const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
           if (tr && tr.type === "through") {
             paths.push({
               points: [...tr.back, tr.front[1]],
               color,
-              opacity: imgAlpha * 0.85
+              opacity: selectedSourceId ? 0.95 : imgAlpha * 0.85
             });
           }
         });
@@ -765,7 +763,6 @@
 
     const objGroup = n("g", svg, { cursor: "ew-resize" });
     drawLetterF(objGroup, ox, cy, ohPx, false);
-    if (manyRays) drawObjectSources(objGroup, ox, cy, ohPx);
     addDragHit(objGroup, ox, rodTop, Math.max(56, ohPx * 0.6 + 24), rodBot - rodTop, "object");
 
     const board = n("g", svg, { id: "hole-board" });
@@ -789,14 +786,31 @@
     drawImageOnScreen(screenGroup, layout, sx, topY, botY, ihPx, u, v, screenImgAlpha);
 
     const rayThroughFront = n("g", svg, { id: "rays-through-front", "pointer-events": "none" });
+    const rayFocusBlocked = n("g", svg, { id: "rays-focus-blocked", "pointer-events": "none" });
+    const rayFocusThroughBack = n("g", svg, { id: "rays-focus-through-back", "pointer-events": "none" });
+    const rayFocusThroughFront = n("g", svg, { id: "rays-focus-through-front", "pointer-events": "none" });
+    let selectedPt = null;
     if (manyRays) {
+      if (selectedSourceId) {
+        selectedPt = findSourcePoint(ox, cy, ohPx, selectedSourceId);
+        if (!selectedPt) selectedSourceId = null;
+      }
       drawSceneRays(null, null, rayThroughFront, layout, ox, topY, botY, holeX, sx, u, v, ohPx, cy);
-      drawDemoPointHighlight(n("g", svg, { id: "demo-point-source", "pointer-events": "none" }),
-        layout, ox, cy, ohPx, holeX, sx, topY, botY);
+      if (selectedPt) {
+        holes.forEach((hole) => {
+          const hi = holeInfo(layout, hole);
+          drawPointRays(selectedPt, holeX, hi.holeYPx, sx, topY, botY,
+            rayFocusBlocked, rayFocusThroughBack, rayFocusThroughFront, imgAlpha, "focus");
+        });
+        drawSelectedPointLabel(n("g", svg, { id: "selected-source-label", "pointer-events": "none" }), selectedPt);
+      }
+      drawSourcePickers(n("g", svg, { id: "source-picker" }), ox, cy, ohPx);
     }
 
     n("text", svg, { x: ox, y: Math.max(16, topY - 10), "text-anchor": "middle", "font-size": 14 },
-      manyRays ? "物體 F（每點都是點光源）" : "物體 F（簡化：只畫頂、底各一條）");
+      manyRays
+        ? (selectedPt ? "物體 F（已選取一個點光源）" : "物體 F（點黃點可單獨觀察）")
+        : "物體 F（簡化：只畫頂、底各一條）");
     n("text", svg, { x: holeX, y: rodTop - 6, "text-anchor": "middle", "font-size": 14, fill: C.hole }, "針孔隔板（左右拖）");
     n("text", svg, { x: sx, y: H - 14, "text-anchor": "middle", "font-size": 14 }, manyRays ? "紙屏・成像處（可左右拖）" : "紙屏（可左右拖）");
     n("text", svg, { x: (ox + holeX) / 2, y: Math.min(H - 48, rodBot + 18), "text-anchor": "middle", "font-size": 12, fill: "#64748b" }, `物距 ${u} cm`);
@@ -812,7 +826,9 @@
       ? `　${holes.length} 個針孔 → ${holes.length} 個像（每像亮度約 1/${holes.length}）`
       : "";
     const rayNote = manyRays
-      ? "　黃圈示範：同一點同時往各方向發直線；虛線＝被擋；穿孔實線匯聚成像"
+      ? (selectedPt
+        ? "　已選取光點：此點光線較亮，其餘變淡；虛線＝被擋；穿孔實線匯聚成像"
+        : "　點任一黃點可單獨觀察；虛線＝被擋；穿孔實線匯聚成像")
       : "　（簡化示範：實際每點都往多方向發直線，按「點光源四面八方發光」）";
     $("result").innerHTML =
       `放大率 屏距÷物距＝${mag} ｜ 像高 ${imgH} cm（物高 ${OBJ_H_CM} cm）` +
@@ -821,6 +837,7 @@
     drawScreenPreview(layout);
     updateHoleCountLabel();
     $("ray-misconception").classList.toggle("active", manyRays);
+    $("clear-source").hidden = !(manyRays && selectedSourceId);
 
     rayPaths = buildRayPaths(layout, ox, topY, botY, holeX, sx);
     mountRayPulses();
@@ -890,7 +907,21 @@
     scheduleDraw();
   }
 
+  function toggleSourceSelection(id) {
+    selectedSourceId = selectedSourceId === id ? null : id;
+    scheduleDraw();
+    out("status", selectedSourceId
+      ? "已選取光點：此點光線較亮，其餘光點變淡；再點一次或按「取消選取光點」"
+      : "已取消選取；可再點任一黃點單獨觀察");
+  }
+
   svg.addEventListener("pointerdown", (e) => {
+    const sourceEl = e.target.closest("[data-source-id]");
+    if (sourceEl && manyRays) {
+      e.preventDefault();
+      toggleSourceSelection(sourceEl.dataset.sourceId);
+      return;
+    }
     const target = e.target.closest("[data-drag]");
     if (!target) return;
     const kind = target.dataset.drag;
@@ -963,13 +994,20 @@
 
   $("toggle-many-rays").addEventListener("click", () => {
     manyRays = !manyRays;
+    if (!manyRays) selectedSourceId = null;
     const btn = $("toggle-many-rays");
     btn.textContent = manyRays ? "只示範兩條光線" : "點光源四面八方發光";
     btn.classList.toggle("primary", manyRays);
     scheduleDraw();
     out("status", manyRays
-      ? "斜線正常：同一點同時往各方向發「直線」；隔板擋住多數，只有穿針孔的到紙屏"
+      ? "點任一黃點可單獨觀察該點向各方向發光；隔板擋住多數，只有穿針孔的到紙屏"
       : "簡化模式：只畫頂、底各一條。實際每點都往多方向發直線");
+  });
+
+  $("clear-source").addEventListener("click", () => {
+    selectedSourceId = null;
+    scheduleDraw();
+    out("status", "已取消選取；可再點任一黃點");
   });
 
   ["object", "screen"].forEach((id) => {
@@ -1002,6 +1040,7 @@
     $("screen").value = "120";
     holes = [{ id: 0, yCm: 0 }];
     nextHoleId = 1;
+    selectedSourceId = null;
     syncBenchFromSliders();
     applyBenchLimits();
     scheduleDraw();
