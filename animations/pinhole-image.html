@@ -154,7 +154,8 @@
   const screenSvg = $("screen-zoom");
   const NS = "http://www.w3.org/2000/svg";
   const C = { blue: "#1d4ed8", red: "#b91c1c", gray: "#94a3b8", hole: "#475569" };
-  const F_PATH = "M0 0 h28 v72 h-12 v-48 h-16 z";
+  /** 含左側豎筆的 F，與點光源取樣區域一致 */
+  const F_PATH = "M0 0 h28 v24 h-12 v18 h12 v30 h-28 v-48 h-16 z";
   const F_H = 72;
   const F_W = 28;
   const OBJ_H_CM = 20;
@@ -388,19 +389,25 @@
   function localFContains(lx, ly) {
     if (lx < 0 || lx > F_W || ly < 0 || ly > F_H) return false;
     if (ly <= 24) return true;
-    return lx <= 16;
+    if (ly <= 42 && lx >= 16) return true;
+    if (lx <= 16) return true;
+    return lx >= 16 && ly >= 42;
+  }
+
+  function objectLocalToScene(ox, cy, ohPx, lx, ly) {
+    const s = ohPx / F_H;
+    return {
+      x: ox + (lx - F_W / 2) * s,
+      y: cy + (ly - F_H / 2) * s
+    };
   }
 
   function sampleObjectPoints(ox, cy, ohPx) {
-    const s = ohPx / F_H;
     const pts = [];
     for (let ly = 5; ly <= F_H - 5; ly += 6) {
       for (let lx = 5; lx <= F_W - 3; lx += 6) {
         if (!localFContains(lx, ly)) continue;
-        pts.push({
-          x: ox + (lx - F_W / 2) * s,
-          y: cy + (ly - F_H / 2) * s
-        });
+        pts.push(objectLocalToScene(ox, cy, ohPx, lx, ly));
       }
     }
     return pts;
@@ -450,12 +457,7 @@
         return score(a) - score(b);
       });
     if (stemMid.length) return stemMid[0].pt;
-    const targetLx = 11;
-    const targetLy = 35;
-    return {
-      x: ox + (targetLx - F_W / 2) * s,
-      y: cy + (targetLy - F_H / 2) * s
-    };
+    return objectLocalToScene(ox, cy, ohPx, 11, 35);
   }
 
   function drawObjectSources(parent, ox, cy, ohPx) {
