@@ -22,6 +22,7 @@
           if (!el.textContent || !el.textContent.trim()) {
             el.textContent = el.dataset.answer ? el.dataset.answer.split("|")[0] : "";
           }
+          el.removeAttribute("aria-label");
         });
         clone.querySelectorAll("[data-reveal]").forEach((el) => { el.hidden = false; });
       }
