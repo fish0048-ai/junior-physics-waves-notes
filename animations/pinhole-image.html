@@ -62,6 +62,12 @@
     .legend { font-size: 14px; margin: 8px 0 12px; }
     .key { display: inline-block; padding: 2px 8px; border-radius: 6px; background: #e6f1f5; margin: 2px; }
     .drag-hint { font-size: 13px; color: #0e7490; margin: 0 0 10px; }
+    .misconception {
+      margin: 0 0 12px; padding: 12px 14px;
+      background: #fef2f2; border-left: 4px solid #e11d48; border-radius: 7px; font-size: 14px;
+    }
+    .misconception b { color: #be123c; }
+    .misconception.active { background: #fff7ed; border-left-color: #ea580c; }
     #ray-pulses { pointer-events: none; }
     @media (max-width: 760px) {
       svg#scene { height: 440px; }
@@ -76,12 +82,16 @@
   <small>國中理化 · 4-1 針孔成像</small>
   <h1>小孔怎麼把影像倒過來？</h1>
   <p>物體用<strong>左右不對稱的 F</strong>，方便看出像<strong>上下顛倒、左右相反</strong>。可<strong>增加針孔</strong>（孔越多像越多），針孔可<strong>上下拖移</strong>；物體／隔板／紙屏仍可左右拖移。</p>
+  <p class="misconception" id="ray-misconception">
+    <b>常見誤解：</b>「光直線前進」≠ 光只走<strong>同一個方向</strong>。
+    物體上每個點都是<strong>點光源</strong>，同時往<strong>四面八方</strong>發出許多<strong>直線</strong>；方向不同所以看起來是斜線，但<strong>每一條仍是直的、不會自己轉彎</strong>。按「點光源四面八方發光」觀察黃圈示範點。
+  </p>
   <p class="legend">
     <span class="key" style="background:#dbeafe;color:#1d4ed8">物體 F</span>
     <span class="key" style="background:#fee2e2;color:#b91c1c">倒立像</span>
     <span class="key">針孔可上下移</span>
-    <span class="key" style="background:#fef08a;color:#854d0e">● 光點沿直線前進</span>
-    <span class="key" style="background:#fef08a;color:#854d0e">● 物體點光源</span>
+    <span class="key" style="background:#fef08a;color:#854d0e">● 點光源（多方向）</span>
+    <span class="key" style="background:#fde047;color:#854d0e">○ 示範：同一點發光</span>
     <span class="key" style="background:#e2e8f0;color:#475569">- - 被隔板擋住</span>
   </p>
   <div class="presets">
@@ -125,6 +135,12 @@
     <details>
       <summary>查看解釋</summary>
       <p>物體上每個點都像<strong>小燈泡</strong>，向<strong>四面八方</strong>發光（按「點光源四面八方發光」）。光沿直線前進，但<strong>隔板擋住絕大多數方向</strong>，只有穿過針孔的那幾條能到紙屏，匯聚成<strong>倒立、左右相反</strong>的像。</p>
+    </details>
+    <details>
+      <summary>為什麼光線是斜的？光不是直線前進嗎？</summary>
+      <p><strong>直線前進</strong>是指：光走<strong>直的路</strong>，不會自己拐彎（均勻介質中）。<strong>不是</strong>指全班光只能朝同一個方向。</p>
+      <p>同一個黃點（點光源）可以<strong>同時</strong>往右上、右下、水平……發出很多條直線，所以圖上會看到<strong>不同斜率的斜線</strong>。隔板擋住大部分，只有穿過針孔的那幾條能到紙屏。</p>
+      <p>預設只畫物體<strong>頂、底各一條</strong>，是為了先簡化；實際上每個點都往多方向發光。</p>
     </details>
   </div>
   <p class="note">理想小孔模型；物高固定 20 cm。針孔愈多，通過的光愈分散，每個像愈淡（未模擬孔徑繞射）。針孔最多 5 個。</p>
@@ -404,13 +420,55 @@
     return { type: "blocked", seg: [[px, py], [holeX, yHit]] };
   }
 
+  function getDemoPoint(ox, cy, ohPx) {
+    const s = ohPx / F_H;
+    const lx = 6;
+    const ly = 36;
+    return {
+      x: ox + (lx - F_W / 2) * s,
+      y: cy + (ly - F_H / 2) * s
+    };
+  }
+
   function drawObjectSources(parent, ox, cy, ohPx) {
+    const demo = getDemoPoint(ox, cy, ohPx);
     sampleObjectPoints(ox, cy, ohPx).forEach((pt) => {
+      if (Math.hypot(pt.x - demo.x, pt.y - demo.y) < 4) return;
       n("circle", parent, {
         cx: pt.x, cy: pt.y, r: 3,
         fill: "#fef08a", stroke: "#ca8a04", "stroke-width": 1.2, opacity: 0.92
       });
     });
+  }
+
+  function drawDemoPointHighlight(parent, layout, ox, cy, ohPx, holeX, sx, topY, botY) {
+    const pt = getDemoPoint(ox, cy, ohPx);
+    const hi = holeInfo(layout, holes[0]);
+    RAY_ANGLES.forEach((angle) => {
+      const tr = traceRayFromPoint(pt.x, pt.y, angle, holeX, hi.holeYPx, sx);
+      if (!tr) return;
+      if (tr.type === "blocked") {
+        pathEl(parent, tr.seg, "#64748b", 1.5, 0.62, true);
+      } else {
+        pathEl(parent, [...tr.back, tr.front[1]], "#ea580c", 2.4, 0.9);
+      }
+    });
+    n("circle", parent, {
+      cx: pt.x, cy: pt.y, r: 10,
+      fill: "none", stroke: "#eab308", "stroke-width": 2.2, opacity: 0.85
+    });
+    n("circle", parent, {
+      cx: pt.x, cy: pt.y, r: 4.5,
+      fill: "#fde047", stroke: "#ca8a04", "stroke-width": 1.6
+    });
+    const labelX = Math.max(24, pt.x - 12);
+    const labelY = Math.max(36, pt.y - 34);
+    n("text", parent, {
+      x: labelX, y: labelY, "text-anchor": "end", "font-size": 12, fill: "#a16207", "font-weight": 700
+    }, "同一個點");
+    n("text", parent, {
+      x: labelX, y: labelY + 14, "text-anchor": "end", "font-size": 11, fill: "#854d0e"
+    }, "同時往各方向發直線");
   }
 
   function drawSceneRays(blockedG, throughBackG, throughFrontG, layout, ox, topY, botY, holeX, sx, u, v, ohPx, cy) {
@@ -424,12 +482,14 @@
       return;
     }
     const objPts = sampleObjectPoints(ox, cy, ohPx);
+    const demo = getDemoPoint(ox, cy, ohPx);
     const blockedOp = imgAlpha * 0.28;
     const throughOp = imgAlpha * 0.48;
     const frontOp = imgAlpha * 0.65;
     holes.forEach((hole) => {
       const hi = holeInfo(layout, hole);
       objPts.forEach((pt) => {
+        if (Math.hypot(pt.x - demo.x, pt.y - demo.y) < 4) return;
         const t = Math.max(0, Math.min(1, (pt.y - topY) / (botY - topY)));
         const color = rayColorAtT(t);
         RAY_ANGLES.forEach((angle) => {
@@ -699,9 +759,12 @@
     const rayThroughFront = n("g", svg, { id: "rays-through-front", "pointer-events": "none" });
     if (manyRays) {
       drawSceneRays(null, null, rayThroughFront, layout, ox, topY, botY, holeX, sx, u, v, ohPx, cy);
+      drawDemoPointHighlight(n("g", svg, { id: "demo-point-source", "pointer-events": "none" }),
+        layout, ox, cy, ohPx, holeX, sx, topY, botY);
     }
 
-    n("text", svg, { x: ox, y: Math.max(16, topY - 10), "text-anchor": "middle", "font-size": 14 }, "物體 F（可左右拖）");
+    n("text", svg, { x: ox, y: Math.max(16, topY - 10), "text-anchor": "middle", "font-size": 14 },
+      manyRays ? "物體 F（每點都是點光源）" : "物體 F（簡化：只畫頂、底各一條）");
     n("text", svg, { x: holeX, y: rodTop - 6, "text-anchor": "middle", "font-size": 14, fill: C.hole }, "針孔隔板（左右拖）");
     n("text", svg, { x: sx, y: H - 14, "text-anchor": "middle", "font-size": 14 }, manyRays ? "紙屏・成像處（可左右拖）" : "紙屏（可左右拖）");
     n("text", svg, { x: (ox + holeX) / 2, y: Math.min(H - 48, rodBot + 18), "text-anchor": "middle", "font-size": 12, fill: "#64748b" }, `物距 ${u} cm`);
@@ -716,13 +779,16 @@
     const holeNote = holes.length > 1
       ? `　${holes.length} 個針孔 → ${holes.length} 個像（每像亮度約 1/${holes.length}）`
       : "";
-    const rayNote = manyRays ? "　黃點＝物體點光源；虛線＝被隔板擋住；穿孔實線匯聚成像" : "";
+    const rayNote = manyRays
+      ? "　黃圈示範：同一點同時往各方向發直線；虛線＝被擋；穿孔實線匯聚成像"
+      : "　（簡化示範：實際每點都往多方向發直線，按「點光源四面八方發光」）";
     $("result").innerHTML =
       `放大率 屏距÷物距＝${mag} ｜ 像高 ${imgH} cm（物高 ${OBJ_H_CM} cm）` +
       `<span class="readout-sub">${magLabel}　F 字像上下顛倒、左右相反${holeNote}${rayNote}${scaleNote}</span>`;
 
     drawScreenPreview(layout);
     updateHoleCountLabel();
+    $("ray-misconception").classList.toggle("active", manyRays);
 
     rayPaths = buildRayPaths(layout, ox, topY, botY, holeX, sx);
     mountRayPulses();
@@ -870,8 +936,8 @@
     btn.classList.toggle("primary", manyRays);
     scheduleDraw();
     out("status", manyRays
-      ? "物體上許多點向四面八方發光；絕大多數被隔板擋住，只有穿過針孔的能到紙屏"
-      : "已切換為兩條示範光線（頂、底）");
+      ? "斜線正常：同一點同時往各方向發「直線」；隔板擋住多數，只有穿針孔的到紙屏"
+      : "簡化模式：只畫頂、底各一條。實際每點都往多方向發直線");
   });
 
   ["object", "screen"].forEach((id) => {
