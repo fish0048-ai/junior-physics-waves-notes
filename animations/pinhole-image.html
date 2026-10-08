@@ -501,14 +501,28 @@
     });
   }
 
-  function drawSelectedPointLabel(parent, pt) {
-    const labelX = Math.max(24, pt.x - 12);
-    const labelY = Math.max(36, pt.y - 34);
+  function drawSelectedPointLabel(parent, pt, ox, ohPx, holeX) {
+    const objMidX = ox;
+    const onLeft = pt.x <= objMidX;
+    const pad = 16;
+    let labelX;
+    let anchor;
+    if (onLeft) {
+      labelX = Math.min(holeX - 12, pt.x + pad);
+      labelX = Math.max(pt.x + 8, labelX);
+      anchor = "start";
+    } else {
+      labelX = Math.max(24, pt.x - pad);
+      anchor = "end";
+    }
+    let labelY = pt.y - 28;
+    if (labelY < 36) labelY = pt.y + 32;
+    labelY = Math.max(36, Math.min(H - 24, labelY));
     n("text", parent, {
-      x: labelX, y: labelY, "text-anchor": "end", "font-size": 12, fill: "#a16207", "font-weight": 700
+      x: labelX, y: labelY, "text-anchor": anchor, "font-size": 12, fill: "#a16207", "font-weight": 700
     }, "同一個點");
     n("text", parent, {
-      x: labelX, y: labelY + 14, "text-anchor": "end", "font-size": 11, fill: "#854d0e"
+      x: labelX, y: labelY + 14, "text-anchor": anchor, "font-size": 11, fill: "#854d0e"
     }, "同時往各方向發直線");
   }
 
@@ -802,7 +816,10 @@
           drawPointRays(selectedPt, holeX, hi.holeYPx, sx, topY, botY,
             rayFocusBlocked, rayFocusThroughBack, rayFocusThroughFront, imgAlpha, "focus");
         });
-        drawSelectedPointLabel(n("g", svg, { id: "selected-source-label", "pointer-events": "none" }), selectedPt);
+        drawSelectedPointLabel(
+          n("g", svg, { id: "selected-source-label", "pointer-events": "none" }),
+          selectedPt, ox, ohPx, holeX
+        );
       }
       drawSourcePickers(n("g", svg, { id: "source-picker" }), ox, cy, ohPx);
     }
