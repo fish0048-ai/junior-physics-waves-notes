@@ -21,11 +21,19 @@
   --shadow: 0 8px 24px rgba(20, 83, 45, 0.07);
   --radius: 14px;
   --proj-scale: 1;
+  --sticky-offset: 4.75rem;
 }
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  scroll-padding-top: var(--sticky-offset);
+}
+
+:where(h1, h2, h3, [id]) {
+  scroll-margin-top: var(--sticky-offset);
+}
 
 body {
   margin: 0;
@@ -147,6 +155,20 @@ html.is-proj .video-card {
 }
 
 .btn:hover { transform: translateY(-1px); }
+.btn:focus-visible,
+.site-nav a:focus-visible,
+.section-nav a:focus-visible,
+.section-nav-summary:focus-visible,
+.exam-nav-summary:focus-visible,
+.toc a:focus-visible,
+.blank:focus-visible,
+.exam-choice:focus-visible,
+.ink-tools button:focus-visible,
+.ink-colors button:focus-visible,
+.ink-fab:focus-visible {
+  outline: 3px solid #1c1917;
+  outline-offset: 3px;
+}
 .btn-green { background: var(--green-700); color: #fff; }
 .btn-green:hover { background: var(--green-800); }
 .btn-orange { background: #ea580c; color: #fff; }
@@ -692,6 +714,14 @@ iframe[data-physics-animation] {
   overflow: hidden;
   vertical-align: top;
 }
+iframe.physics-animation.is-anim-fallback,
+iframe[data-physics-animation].is-anim-fallback,
+.physics-animation-frame.is-anim-fallback,
+.wave-particle-frame.is-anim-fallback {
+  height: min(920px, 140vh);
+  min-height: min(640px, 100vh);
+  overflow: auto;
+}
 .physics-animation-embed iframe,
 .wave-particle-embed iframe {
   margin: 0;
@@ -926,12 +956,16 @@ svg.diagram.diagram-lg {
   min-height: 1.2em;
   line-height: 1.35;
 }
-.blank:focus {
-  outline: none;
-}
-
 .blank.correct { background: #bbf7d0; border-bottom-color: #15803d; }
 .blank.wrong { background: #fecaca; border-bottom-color: #b91c1c; }
+.blank.correct::after,
+.blank.wrong::after {
+  margin-left: 0.3em;
+  font-size: 0.78em;
+  font-weight: 800;
+}
+.blank.correct::after { content: "正確"; color: #14532d; }
+.blank.wrong::after { content: "再看"; color: #7f1d1d; }
 .blank.revealed { background: #fde68a; border-bottom-color: #d97706; }
 
 table {
@@ -2455,6 +2489,14 @@ details.is-exam-nav > a { margin-left: 18px; }
 }
 .exam-q.is-right { border-color: #86efac; background: #f0fdf4; }
 .exam-q.is-wrong { border-color: #fecaca; background: #fff7f7; }
+.exam-q.is-right > .exam-stem::after,
+.exam-q.is-wrong > .exam-stem::after {
+  margin-left: 0.35em;
+  font-size: 0.86em;
+  font-weight: 800;
+}
+.exam-q.is-right > .exam-stem::after { content: "（正確）"; color: #14532d; }
+.exam-q.is-wrong > .exam-stem::after { content: "（再看一次）"; color: #7f1d1d; }
 .exam-stem { margin: 0 0 8px; font-size: 15px; }
 .exam-choices { display: grid; gap: 6px; }
 .exam-choice {
@@ -2475,6 +2517,15 @@ details.is-exam-nav > a { margin-left: 18px; }
 .exam-choice.is-on { border-color: var(--green-700); background: var(--green-50); font-weight: 700; }
 .exam-choice.is-key { border-color: #15803d; background: #dcfce7; }
 .exam-choice.is-miss { border-color: #b91c1c; background: #fecaca; }
+.exam-choice.is-key::after,
+.exam-choice.is-miss::after {
+  margin-left: auto;
+  font-size: 12px;
+  font-weight: 800;
+  white-space: nowrap;
+}
+.exam-choice.is-key::after { content: "正確答案"; color: #14532d; }
+.exam-choice.is-miss::after { content: "你的選擇"; color: #7f1d1d; }
 .exam-letter {
   flex: none;
   width: 1.5em;
@@ -2673,9 +2724,11 @@ body.ink-draw .brand {
 }
 body.ink-draw .toolbar .btn,
 body.ink-draw .toolbar-actions .btn {
-  min-height: 30px;
-  padding: 3px 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 12px;
   font-size: 12px;
+  box-sizing: border-box;
 }
 body.ink-draw .site-nav,
 body.ink-draw .section-nav {
@@ -2684,9 +2737,13 @@ body.ink-draw .section-nav {
 }
 body.ink-draw .site-nav a,
 body.ink-draw .section-nav a {
-  min-height: 28px;
-  padding: 2px 8px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 12px;
   font-size: 12px;
+  box-sizing: border-box;
+  display: inline-flex;
+  align-items: center;
 }
 
 .ink-dock {
@@ -2785,19 +2842,22 @@ body.ink-draw .ink-tools {
   gap: 4px;
 }
 body.ink-draw .ink-tools button {
-  min-height: 32px;
+  min-height: 44px;
+  min-width: 44px;
   font-size: 13px;
 }
 body.ink-draw .ink-colors {
   margin: 4px 0;
   gap: 6px;
+  flex-wrap: wrap;
 }
 body.ink-draw .ink-colors button {
-  width: 26px;
-  height: 26px;
+  width: 44px;
+  height: 44px;
 }
 body.ink-draw .ink-check {
   margin: 3px 0;
+  min-height: 44px;
   font-size: 12px;
 }
 body.ink-draw .ink-check input {
@@ -2809,9 +2869,9 @@ body.ink-draw .ink-hint {
   font-size: 11px;
 }
 body.ink-draw .ink-fab {
-  min-height: 36px;
-  min-width: 36px;
-  padding: 6px 12px;
+  min-height: 44px;
+  min-width: 44px;
+  padding: 8px 12px;
   font-size: 13px;
 }
 .ink-panel-head {
@@ -3117,6 +3177,7 @@ html.is-immersive .brand > span:last-child {
 }
 
 @media (max-width: 800px) {
+  :root { --sticky-offset: 11rem; }
   .split, .two-col, .drill-grid { grid-template-columns: 1fr; }
   .lab-step { padding-left: 16px; padding-top: 56px; }
   .lab-step::before { left: 16px; top: 12px; }
@@ -3146,16 +3207,23 @@ html.is-immersive .brand > span:last-child {
   .ink-panel { width: 100%; max-width: none; }
   .ink-fab { align-self: flex-end; }
   body.ink-draw .wrap { padding-bottom: 200px; }
-  body.ink-draw .toolbar .btn,
-  body.ink-draw .toolbar-actions .btn {
-    min-height: 30px;
-  }
-  body.ink-draw .site-nav a,
-  body.ink-draw .section-nav a { min-height: 28px; }
   body.ink-draw .ink-panel {
     width: 100%;
     max-height: min(36dvh, 280px);
   }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .btn:hover { transform: none; }
 }
 
 @media print {
@@ -3166,7 +3234,10 @@ html.is-immersive .brand > span:last-child {
   }
   html {
     color-scheme: only light;
+    scroll-padding-top: 0;
   }
+  :root { --sticky-offset: 0px; }
+  :where(h1, h2, h3, [id]) { scroll-margin-top: 0; }
   html, body {
     background: #fff !important;
     height: auto !important;

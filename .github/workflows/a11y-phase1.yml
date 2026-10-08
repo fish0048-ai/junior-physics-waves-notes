@@ -1,0 +1,32 @@
+name: a11y-phase1
+
+on:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  playwright:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+      - name: Install Playwright
+        run: npm install
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Run phase-1 checks
+        run: npx playwright test tests/a11y-phase1.spec.ts
+      - uses: actions/upload-artifact@v5
+        if: failure()
+        with:
+          name: playwright-a11y-phase1
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 14

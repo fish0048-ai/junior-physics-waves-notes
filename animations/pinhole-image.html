@@ -190,7 +190,7 @@
   })();
   const HOLE_HALF_PX = 7;
   const HOLE_APERTURE_STEPS = 7;
-  let rayAnimPlaying = true;
+  let rayAnimPlaying = !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
   let manyRays = false;
   /** @type {string|null} 目前選取的點光源 id（lx,ly） */
   let selectedSourceId = null;
@@ -1104,6 +1104,7 @@
   new ResizeObserver(scheduleDraw).observe(svg);
   new ResizeObserver(scheduleDraw).observe(screenSvg);
   scheduleDraw();
+  if (!rayAnimPlaying) setRayAnimPlaying(false);
 })();
 </script>
 <script src="embed-resize.js"></script>

@@ -7,11 +7,26 @@
     return $$("iframe[data-physics-animation], #wave-particle-frame");
   }
 
+  function markPhysicsAnimationSized(frame) {
+    frame.dataset.animSized = "1";
+    frame.classList.remove("is-anim-fallback");
+  }
+
   function applyPhysicsAnimationHeight(frame, height) {
     if (!frame || !Number.isFinite(height) || height < 280 || height > 5000) return;
     const h = Math.ceil(height + 6);
     frame.style.height = h + "px";
-    frame.style.minHeight = Math.min(h, 480) + "px";
+    frame.style.minHeight = h + "px";
+    markPhysicsAnimationSized(frame);
+  }
+
+  function armPhysicsAnimationFallback(frame) {
+    window.setTimeout(() => {
+      if (!frame || frame.dataset.animSized === "1") return;
+      frame.classList.add("is-anim-fallback");
+      frame.style.height = "";
+      frame.style.minHeight = "";
+    }, 1400);
   }
 
   function measurePhysicsAnimationFrame(frame) {
@@ -47,6 +62,7 @@
   function initPhysicsAnimationFrames() {
     const frames = physicsAnimationFrames();
     frames.forEach((frame) => {
+      armPhysicsAnimationFallback(frame);
       frame.addEventListener("load", () => {
         measurePhysicsAnimationFrame(frame);
         window.setTimeout(() => measurePhysicsAnimationFrame(frame), 180);
@@ -78,6 +94,8 @@
       span.dataset.answer = input.dataset.answer || "";
       if (input.style.width) span.style.width = input.style.width;
       if (input.style.minWidth) span.style.minWidth = input.style.minWidth;
+      span.tabIndex = 0;
+      span.setAttribute("role", "button");
       span.setAttribute("aria-label", "挖空");
       if (!span.textContent) span.textContent = "\u00a0";
       input.replaceWith(span);
@@ -476,6 +494,8 @@
   function toast(msg) {
     const t = $("#toast");
     if (!t) return;
+    t.setAttribute("role", "status");
+    t.setAttribute("aria-live", "polite");
     t.textContent = msg;
     t.style.display = "block";
     clearTimeout(toast._id);
@@ -557,6 +577,12 @@
       revealOne(el, !el.classList.contains("revealed"));
       syncAnswerButton();
       saveRevealState();
+    });
+    el.addEventListener("keydown", (e) => {
+      if (e.key !== "Enter" && e.key !== " ") return;
+      if (document.body.classList.contains("ink-draw")) return;
+      e.preventDefault();
+      el.click();
     });
   });
 

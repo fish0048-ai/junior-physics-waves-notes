@@ -1,0 +1,10 @@
+{
+  "name": "junior-physics-waves-notes",
+  "private": true,
+  "scripts": {
+    "test:a11y": "playwright test tests/a11y-phase1.spec.ts"
+  },
+  "devDependencies": {
+    "@playwright/test": "1.64.0"
+  }
+}
