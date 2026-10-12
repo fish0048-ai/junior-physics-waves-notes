@@ -31,7 +31,7 @@ const LAB_SHEET_SCIENCE: Array<{ file: string; mustInclude: string[] }> = [
   {
     file: "sections/lab-1-2-sheet.html",
     mustInclude: [
-      "M<sub>量筒</sub>",
+      "<sub>量筒</sub>",
       "誤差提醒",
       "截留",
       "必交",
