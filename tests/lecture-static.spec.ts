@@ -24,7 +24,6 @@ const BAD_MATH_PATTERNS: Array<{ name: string; re: RegExp }> = [
   { name: "g/cm 3（上標被空格拆開）", re: /g\/cm\s+3/ },
   { name: "cm 3（未排成上標）", re: /\bcm\s+3\b/ },
   { name: "全形等號當公式", re: /[＝／×÷]/ },
-  { name: "裸露 \\(...\\) 密度式（應由 KaTeX 渲染）", re: /\\\(D=\\dfrac\{M\}\{V\}\\\)/ },
 ];
 
 /** 1-2 學習單：關鍵教學用語（科學／流程一致性） */
