@@ -1,28 +1,35 @@
 ---
-description: 每次完成修改後必須 commit 並 push 到 GitHub；訊息繁中 type: 主旨。
+description: 完成修改後 commit 並 push；PR 與合併 main 依 jpwn-automation 安全清單。
 alwaysApply: true
 ---
 
 # GitHub 上傳（不可破）
 
-本倉庫每次改完講義／CSS／JS／規則／技能，**自動**提交並推上 GitHub，不必等使用者再說「上傳」。
+改完講義／CSS／JS／規則／技能／測試後，**自動** commit 並 push 至對應功能分支，不必等使用者說「上傳」。
 
-## 流程（任務收尾必做）
+## 流程（任務收尾）
 
-1. `git status`／`git diff`／`git log` 確認變更與訊息風格
-2. `git add` 相關檔（不要加 `_bank_extract/`、密鑰、`.env`）
-3. `git commit`，訊息格式：`<type>: <主旨>`（**繁體中文**）
-4. `git push origin HEAD`（或目前追蹤的 remote 分支）
-5. 回覆時附上短 commit hash 或說明已上線
+1. `git status`／`git diff`／`git log` 確認變更
+2. `git add` 相關檔（排除 `_bank_extract/`、密鑰、`.env`）
+3. `git commit` — `<type>: <主旨>`（**繁體中文**）
+4. `git push origin HEAD`（**禁止** force push）
+5. 需要時 **建立或更新 PR**（base `main` 或約定分支）
+6. 監看 GitHub Actions；失敗時最多 **3 輪**修正（見 `docs/voice-driven-automation.md`）
+7. 安全清單成立 → **可自動合併** PR 至 `main`；合併後確認 Vercel 部署
 
-## 例外（才可不 push）
+## 例外
 
-- 使用者**明確**說：先不要上傳／不要 commit／不要 push
-- 變更只有本機暫存、尚未完成的半成品（應先問是否要暫存 commit）
-- 會動到 secrets／憑證的檔案 → 警告並排除，不要推上去
+- 使用者明確：不要 push／commit／合併
+- 半成品應先問是否暫存 commit
+- 密鑰／憑證 → 排除並警告
+- 任務明示「規範 PR 不自動合併」→ 只 push + 開 PR
 
-## 與其他規則的關係
+## 禁止
 
-- 覆寫一般「未要求不要 commit／push」：在本專案以本規則為準。
-- **多 Agent 並行**（`jpwn-multi-agent.mdc`）：不得 push／合併 `main`、須走 PR＋CI；老師未授權不得部署正式站。其餘分支之 commit 仍依本規則訊息格式。
-- 仍禁止：改 `git config`、force push `main`、`--no-verify`、未經要求的 amend（除非符合既有 amend 安全條件）。
+- 改 `git config`、force push、`--no-verify`、未授權 amend
+- 直接 push 到 `main`（須 PR 合併）
+
+## 與其他規則
+
+- **`jpwn-automation.mdc`**：口語驅動、合併條件、簡短回報
+- **`jpwn-multi-agent.mdc`**：Worktree、禁止跨區

@@ -2,7 +2,7 @@
 
 > 正式站：https://junior-physics-waves-notes.vercel.app  
 > 倉庫：fish0048-ai/junior-physics-waves-notes  
-> 本文件為 `AGENTS.md` 的補充細節；衝突時以 `.cursor/rules/jpwn-multi-agent.mdc` 與 `AGENTS.md` 為準。
+> 本文件為 `AGENTS.md` 的補充細節。衝突時以 `docs/voice-driven-automation.md`、`.cursor/rules/jpwn-automation.mdc` 為準，其次為本文件與 `jpwn-multi-agent.mdc`。
 
 ## Worktree 對照表
 
@@ -14,7 +14,7 @@
 
 - 三個目錄共用**同一 Git 物件庫**；`git worktree list` 可一次查看。
 - **禁止**在 A 的 Cursor 視窗編輯 B 的路徑檔案（反之亦然）。
-- `main`（目前基線示例：`89cd18c`）對應 Vercel 正式站；**不得**在未授權下於 worktree 直接改 `main` 或 force push。
+- `main` 對應 Vercel 正式站；**不得**在 worktree 直接改 `main` 或 force push。合併 `main` 依口語自動化安全清單（非常規 PR 或使用者禁止時不合併）。
 
 ## 檔案責任（摘要）
 
@@ -45,11 +45,13 @@
 4. 確認未改 `main`、未部署正式站。
 5. 若動到 PWA／Service Worker：註明對 IndexedDB 手寫筆記的影響。
 
-## PR 與分支同步（人工／授權後）
+## PR、CI 與自動合併
 
-1. **講義**：`feature/lecture-content` → PR → CI 綠燈 → 老師合併 `main`。
-2. **測試**：`test/site-quality` → PR → CI 綠燧 → 合併。
-3. 規範類文件（`AGENTS.md`、`.cursor/rules/`、`docs/agent-cooperation.md`）應先在一分支提交，另一 worktree 用 **merge 或 rebase 該 commit**，勿手動複製未提交檔案覆蓋。
+1. **講義**：`feature/lecture-content` → PR → CI 綠燈 → 符合 [`voice-driven-automation.md`](voice-driven-automation.md) 安全清單 → **Agent 可自動合併** `main`。
+2. **測試**：`test/site-quality` → PR → CI 綠燈 → 同上。
+3. **跨 Agent**：講義 Agent 不修改 testing 目錄；需新 spec／workflow 時由 testing 分支 PR，或以既有 workflow **overlay 教材 SHA**（如 `lab-1-2-sheet-pr6.yml`）驗證講義 PR。
+4. 規範類文件：在一分支提交後，另一 worktree 以 **merge 該 commit** 同步，勿手動複製覆蓋。
+5. 使用者或任務明示「規範 PR 不自動合併」→ 只開 PR、等待確認。
 
 ### 將規範同步到 testing worktree（示例）
 

@@ -1,0 +1,39 @@
+---
+description: 口語指令驅動自動化：判斷任務、commit/push/PR/CI/合併/部署；優先於舊「逐步確認」習慣。
+alwaysApply: true
+---
+
+# 口語驅動自動化（不可破）
+
+完整流程見 `docs/voice-driven-automation.md`。使用者用自然語言描述教學需求時，Agent **自行**完成工程步驟，勿要求逐步下 Git／CI 指令。
+
+## 任務路由
+
+- **講義／題目／動畫／教學設計** → Worktree `C:\Users\chunhsinkuo\junior-physics-lecture`，分支 `feature/lecture-content`
+- **Playwright／Actions／a11y／PDF／RWD CI** → Worktree `C:\Users\chunhsinkuo\junior-physics-testing`，分支 `test/site-quality`
+- **禁止**跨 Worktree 改檔；**禁止**在 `main` 直接開發
+- 無法直呼另一 Agent → 以 **PR + GitHub Actions** 協作，勿假裝已代跑
+
+## 預設自動（常規）
+
+commit、push、開 PR、跑／看 CI、最多三輪失敗修正、符合安全條件時合併 `main`、確認 Vercel 部署。
+
+使用者明確「先不要 push／commit／合併」或觸發 `voice-driven-automation.md`「必須詢問」條款 → **停止自動合併／部署**。
+
+## 合併前必查
+
+必要 CI success、無衝突、無重大科學／功能問題、證據完整、無密鑰。缺 PDF／截圖證據 → 不得宣稱視覺通過；證據不足 → 不合併。
+
+## 本機
+
+公司 Windows：**禁止** Node／npm／npx／pnpm／yarn。
+
+## 回報
+
+成功：改動摘要、教學正確性、測試、部署、連結。失敗才詳列技術資訊。
+
+## 與其他規則
+
+- 優先於 `jpwn-multi-agent.mdc` 中「須老師逐步授權才合併」之舊表述（已改為安全清單自動合併）
+- `jpwn-github.mdc`：commit 訊息繁中、仍禁止 force push／改 git config
+- `jpwn-workflow.mdc`：**人工必交**原料（新章 Word、題庫 docx 等）仍不可代替
