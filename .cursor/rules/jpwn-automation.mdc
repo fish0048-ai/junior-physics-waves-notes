@@ -16,13 +16,15 @@ alwaysApply: true
 
 ## 預設自動（常規）
 
-commit、push、開 PR、跑／看 CI、最多三輪失敗修正、符合安全條件時合併 `main`、確認 Vercel 部署。
+commit、push **功能分支**、**必開 PR**、跑／看 **PR 上** CI、最多三輪失敗修正、符合安全條件時 **GitHub 合併 PR**、確認 Vercel 部署。
+
+**禁止**：本機合併進 `main` 後 push、fast-forward 遠端 `main`、無 PR 上線。無 `gh` → GitHub API／MCP 開 PR；仍無法 → 停並回報。
 
 使用者明確「先不要 push／commit／合併」或觸發 `voice-driven-automation.md`「必須詢問」條款 → **停止自動合併／部署**。
 
 ## 合併前必查
 
-必要 CI success、無衝突、無重大科學／功能問題、證據完整、無密鑰。缺 PDF／截圖證據 → 不得宣稱視覺通過；證據不足 → 不合併。
+PR 必要 CI success（綁定 PR head）、`mergeable`、無重大科學／功能問題、證據完整、無密鑰。缺 PDF／截圖證據 → 不得宣稱視覺通過；證據不足 → 不合併 PR。
 
 ## 本機
 

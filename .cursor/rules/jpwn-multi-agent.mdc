@@ -21,8 +21,8 @@ alwaysApply: true
 ## 與自動化、GitHub 規則
 
 - 口語任務預設流程（commit／push／PR／CI／合併）見 **`jpwn-automation.mdc`**
-- **不得** push 到 `main` 分支指標（須 PR 合併）；功能分支 push 依 `jpwn-github.mdc`
-- 合併 `main`：**安全清單全部成立**時自動執行；使用者說不要合併或規範 PR 特別指示 → 停止
+- **不得** `git push origin main` 或本機 merge／ff／cherry-pick 更新遠端 `main`（**僅** GitHub PR 合併）；功能分支 push 依 `jpwn-github.mdc`
+- 更新 `main`：**安全清單全部成立**時在 **GitHub 合併 PR**；使用者說不要合併或規範 PR 特別指示 → 停止
 - 無跨 Agent 直呼 → **GitHub Actions** 為測試協作主機制
 
 ## Agent 分工（摘要）

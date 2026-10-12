@@ -9,7 +9,7 @@
 
 ## 口語指令自動化（必讀優先）
 
-老師以自然語言描述需求即可（例如「改這份講義」「檢查第四章」「修正列印」）。Agent **自行**完成修改、commit、push、PR、CI、符合條件時合併與部署驗證，無需逐步下 Git 指令。
+老師以自然語言描述需求即可（例如「改這份講義」「檢查第四章」「修正列印」）。Agent **自行**完成修改、commit、push **功能分支**、**建立 PR**、PR 上 CI、符合條件時**在 GitHub 合併 PR** 與部署驗證，無需逐步下 Git 指令。**禁止**跳過 PR 直接更新 `main`（含本機 merge／fast-forward 後 push `main`）。
 
 - **總則**：[`docs/voice-driven-automation.md`](docs/voice-driven-automation.md)
 - **Cursor 規則**：`.cursor/rules/jpwn-automation.mdc`（優先於舊「每步都要確認」習慣）
@@ -33,9 +33,10 @@
 
 - 每個並行 Agent **必須**使用上表對應的 Worktree；任務開始前執行 `git worktree list`、`git branch --show-current`、`git status`。
 - **不得**跨 Worktree 編輯；**不得**在 `main` 直接開發。
+- **禁止** `git push origin main`、本機合併／fast-forward／cherry-pick 進遠端 `main`；進 `main` **僅能**經 GitHub PR 合併（見 [`docs/voice-driven-automation.md`](docs/voice-driven-automation.md)「GitHub PR 強制流程」）。
 - **禁止** `git reset --hard`、`git clean -fd`、force push、刪除他人未提交修改。
 - 新任務先確認檔案所有權（見 `docs/agent-cooperation.md`）及是否與另一 Agent 重疊。
-- 功能完成 → **PR** → 雲端 CI 通過 → 符合 [`docs/voice-driven-automation.md`](docs/voice-driven-automation.md) **安全清單**時**自動合併** `main`（Vercel 正式站）。
+- 功能完成 → **push 功能分支** → **開 PR** → PR 上 CI 通過 → 符合安全清單時**在 GitHub 合併 PR**（Vercel 正式站）。無 `gh` 時用 GitHub API／MCP 開 PR；無法開 PR 則停並回報，**不得**繞過。
 - 使用者當次說「不要合併／不要 push」，或觸發「必須詢問」條款 → 停止合併／部署。
 
 ### 二、Agent 分工
