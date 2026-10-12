@@ -32,7 +32,7 @@ jobs:
 
       - name: Overlay PR content (lab sheet + CSS)
         env:
-          CONTENT_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.content_ref || github.event.pull_request.head.sha || github.sha }}
+          CONTENT_REF: ${{ github.event_name == 'workflow_dispatch' && inputs.content_ref || github.event.pull_request.head.sha || '6c71b626d8949551f6c1496b1e1a0c8467217cfc' }}
         run: |
           git fetch origin "$CONTENT_REF"
           git checkout "$CONTENT_REF" -- sections/lab-1-2-sheet.html css/style.css
