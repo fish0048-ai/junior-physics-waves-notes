@@ -849,7 +849,7 @@ window.EXAM_BANK_SECTIONS = Object.assign(window.EXAM_BANK_SECTIONS || {}, {
       "imgs": [],
       "choices": ["qpbd", "bdpq", "pqbd", "dbqp "],
       "lead": "",
-      "explain": "pqbd 從背面看為 bdpq。",
+      "explain": "平面鏡成像左右相反：整串 pqbd 在鏡中由左而右讀為 bdpq（選 B）。講義牛刀小試「bd」面向鏡子則為 db——那是單詞左右對調，不是上下顛倒（勿選 qp）。",
       "choiceImgs": []
     },
     {
