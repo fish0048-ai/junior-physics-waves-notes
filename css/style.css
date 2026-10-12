@@ -1610,6 +1610,11 @@ svg.math-graph text {
 .lab-sheet-tight .sheet-prompt-line .sheet-field-md { min-width: 5.5em; }
 .lab-sheet-tight .sheet-prompt-line .sheet-field-lg { min-width: 9em; }
 .lab-sheet-tight .sheet-prompt-free { margin-top: 10px; }
+.lab-sheet-tight .sheet-prompt-readonly {
+  color: #57534e;
+  font-size: 13px;
+  line-height: 1.5;
+}
 .lab-sheet-tight .sheet-write-summary-short {
   flex: 1;
   min-height: 5.5em;
@@ -4125,8 +4130,8 @@ html.is-immersive .brand > span:last-child {
   .lab-sheet-tight #p-d {
     break-before: page;
     page-break-before: always;
-    break-inside: avoid;
-    page-break-inside: avoid;
+    break-inside: auto;
+    page-break-inside: auto;
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -4183,9 +4188,29 @@ html.is-immersive .brand > span:last-child {
   .lab-sheet-tight .sheet-extra-head { font-size: 8.5pt; margin: 0 0 0.5mm; }
   .lab-sheet-tight #p-d .sheet-write-stem { min-height: 11mm; }
   .lab-sheet-tight #p-d .sheet-write-opt { min-height: 7mm; }
-  .lab-sheet-tight #p-d .sheet-mcq-wide-list li { margin: 0.4mm 0; }
-  .lab-sheet-tight #p-d .sheet-explain-grow { min-height: 26mm; }
+  .lab-sheet-tight #p-d .sheet-mcq-wide-list li {
+    margin: 0.4mm 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .lab-sheet-tight #p-d .lab-record.sheet-answer-line {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  .lab-sheet-tight #p-d .sheet-explain-grow {
+    min-height: 26mm;
+    break-before: avoid;
+    page-break-before: avoid;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
   .lab-sheet-tight #p-d .sheet-explain-grow .sheet-write-explain { min-height: 22mm; }
+  .lab-sheet-tight #p-d .sheet-prompt-readonly {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    color: #44403c;
+    font-size: 7.5pt;
+  }
   .lab-sheet-tight .sheet-done,
   .lab-sheet-tight .sheet-done-inline {
     margin: 2mm 0 0;
