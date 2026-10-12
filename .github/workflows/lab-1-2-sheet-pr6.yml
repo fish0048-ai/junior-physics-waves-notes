@@ -1,6 +1,9 @@
 name: lab-1-2-sheet-pr6
 
 on:
+  push:
+    branches:
+      - test/site-quality
   workflow_dispatch:
     inputs:
       content_ref:
