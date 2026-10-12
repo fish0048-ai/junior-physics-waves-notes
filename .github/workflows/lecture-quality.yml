@@ -74,15 +74,25 @@ jobs:
           fi
 
           grep -E '^(sections/|exams/).+\.html$' /tmp/all_changed.txt > /tmp/html_changed.txt || true
+
           if grep -qE '^sections/lab-1-2-sheet\.html$|^css/style\.css$' /tmp/all_changed.txt; then
             echo "run_lab_sheet=true" >> "$GITHUB_OUTPUT"
           else
             echo "run_lab_sheet=false" >> "$GITHUB_OUTPUT"
           fi
 
+          # 只改 workflow／spec 時仍用 repo 當版跑一輪（不 overlay SHA）
+          if grep -qE '^\.github/workflows/lecture-quality\.yml$|^tests/(lecture-|lab-1-2-sheet)' /tmp/all_changed.txt; then
+            echo "run_lab_sheet=true" >> "$GITHUB_OUTPUT"
+            if ! grep -qx 'sections/lab-1-2-sheet.html' /tmp/html_changed.txt 2>/dev/null; then
+              echo 'sections/lab-1-2-sheet.html' >> /tmp/html_changed.txt
+            fi
+          fi
+
           if [ -s /tmp/html_changed.txt ]; then
             echo "run_lecture_browser=true" >> "$GITHUB_OUTPUT"
             echo "run_static=true" >> "$GITHUB_OUTPUT"
+            sort -u /tmp/html_changed.txt -o /tmp/html_changed.txt
             CHANGED_HTML=$(paste -sd '\n' /tmp/html_changed.txt)
             CHANGED_CSV=$(paste -sd ',' /tmp/html_changed.txt | sed 's/,/,/g')
             {
