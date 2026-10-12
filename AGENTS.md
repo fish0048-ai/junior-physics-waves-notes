@@ -7,9 +7,19 @@
 
 ---
 
-## 多 Agent 並行（必讀優先）
+## 口語指令自動化（必讀優先）
 
-本專案以 **Git Worktree** 讓多個 Cursor Agent 同時工作。完整細節見 [`docs/agent-cooperation.md`](docs/agent-cooperation.md)。Cursor 規則：`.cursor/rules/jpwn-multi-agent.mdc`（並行時**優先**於 `jpwn-github.mdc` 的 push／合併 main）。
+老師以自然語言描述需求即可（例如「改這份講義」「檢查第四章」「修正列印」）。Agent **自行**完成修改、commit、push、PR、CI、符合條件時合併與部署驗證，無需逐步下 Git 指令。
+
+- **總則**：[`docs/voice-driven-automation.md`](docs/voice-driven-automation.md)
+- **Cursor 規則**：`.cursor/rules/jpwn-automation.mdc`（優先於舊「每步都要確認」習慣）
+- **人工必交原料**（新章 Word、題庫 docx 等）仍見 `jpwn-workflow.mdc`／技能 `workflow.md`— AI 不可代替
+
+---
+
+## 多 Agent 並行
+
+本專案以 **Git Worktree** 分工。細節見 [`docs/agent-cooperation.md`](docs/agent-cooperation.md)。規則：`.cursor/rules/jpwn-multi-agent.mdc`、`.cursor/rules/jpwn-github.mdc`（合併 `main` 條件見口語自動化文件）。
 
 ### Worktree 與分支
 
@@ -25,8 +35,8 @@
 - **不得**跨 Worktree 編輯；**不得**在 `main` 直接開發。
 - **禁止** `git reset --hard`、`git clean -fd`、force push、刪除他人未提交修改。
 - 新任務先確認檔案所有權（見 `docs/agent-cooperation.md`）及是否與另一 Agent 重疊。
-- 功能完成後開 **PR**，雲端 CI（Playwright 等）通過後，**經老師授權**才合併 `main`（正式 Vercel 站）。
-- 未明確授權：**不得**合併 `main`、不得正式部署。
+- 功能完成 → **PR** → 雲端 CI 通過 → 符合 [`docs/voice-driven-automation.md`](docs/voice-driven-automation.md) **安全清單**時**自動合併** `main`（Vercel 正式站）。
+- 使用者當次說「不要合併／不要 push」，或觸發「必須詢問」條款 → 停止合併／部署。
 
 ### 二、Agent 分工
 
@@ -58,22 +68,10 @@
 - PR 須回報：修改檔案、測試結果、commit SHA、潛在衝突。
 - `main` 對應正式站；PWA 變更須評估 Service Worker 與 **IndexedDB 手寫筆記**。
 
-### 五、開始／結束檢查清單
+### 五、Agent 內部檢查（不必逐項報告給老師）
 
-**開始**
-
-1. 確認 Worktree 與分支  
-2. 確認未提交修改（是否含他人 WIP）  
-3. 確認本次修改範圍  
-4. 確認是否與其他 Agent 重疊  
-
-**結束**
-
-1. 列出修改檔案  
-2. 說明測試／CI 結果  
-3. 回報 commit SHA 與 PR  
-4. 回報尚未驗證項目  
-5. 確認未改 `main` 與正式站  
+開始：Worktree、分支、`git status`、修改範圍、是否與另一 Agent 重疊。
+結束：依口語自動化文件**簡短回報**；僅失敗時附 PR／CI 細節。
 
 ---
 
@@ -98,5 +96,6 @@
 
 `.cursor/rules/jpwn-*.mdc` — 講義格式、數學、題庫、頁碼等。  
 - **分工**：`jpwn-workflow.mdc`（人工交原料／AI 組站）  
-- **並行**：`jpwn-multi-agent.mdc`（Worktree、PR、禁止動 main）  
-- **GitHub**：`jpwn-github.mdc`（commit 訊息繁中；並行期 push／合併 main 受 multi-agent 限制）
+- **自動化**：`jpwn-automation.mdc`（口語驅動、PR、CI、合併條件）
+- **並行**：`jpwn-multi-agent.mdc`（Worktree、禁止跨區）
+- **GitHub**：`jpwn-github.mdc`（commit／push；合併 main 依安全清單）
