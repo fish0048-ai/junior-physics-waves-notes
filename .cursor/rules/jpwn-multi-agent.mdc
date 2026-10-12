@@ -1,0 +1,45 @@
+---
+description: 多 Agent 並行時必守：獨立 Worktree、分支分工、禁止跨區編輯與動 main；優先於 jpwn-github 的 push/合併。
+alwaysApply: true
+---
+
+# 多 Agent 並行（不可破）
+
+細節見根目錄 `AGENTS.md` 與 `docs/agent-cooperation.md`。任務開始前先確認**本機路徑**與 **Worktree 代號**。
+
+## Worktree（必須對號入座）
+
+| Agent | 路徑 | 分支 |
+|-------|------|------|
+| A 理化講義 | `C:\Users\chunhsinkuo\junior-physics-lecture` | `feature/lecture-content` |
+| B 網站品質 | `C:\Users\chunhsinkuo\junior-physics-testing` | `test/site-quality` |
+| 歷史（勿新開發） | `C:\Users\chunhsinkuo\junior-physics-waves-notes` | `fix/a11y-phase1` |
+
+- **禁止**跨 Worktree 修改檔案；**禁止**在 `main` 上直接開發。
+- **禁止** `reset --hard`、`clean -fd`、force push、刪除未提交修改。
+- 不確定檔案歸屬或與另一 Agent 衝突 → **停止並回報**，勿覆蓋。
+
+## 與 `jpwn-github.mdc` 的關係
+
+- 並行開發期間：**不得**自動 push 到 `main`、不得合併、不得觸發正式部署。
+- 功能完成 → **PR** → GitHub Actions（Playwright 等）通過 → **老師授權**後合併 `main`。
+- 若使用者明確說「先不要 push／不要 commit」，以使用者指示為準。
+- 單一 worktree、老師明示可直推的功能分支時，其餘 `jpwn-github` 流程仍適用。
+
+## Agent 分工（摘要）
+
+- **A**：`sections/`、`exams/`、`animations/`、題庫與講義規範；繁中、科學正確；不亂改已驗證物理模型。
+- **B**：`tests/`、`.github/workflows/`、Playwright、a11y；發現教材 bug 用重現步驟＋測試回報，不大改講義。
+
+## 高衝突檔
+
+`package.json`、`playwright.config.ts`、`.gitignore`、`sw-main.js`、`js/app.js` 等同時間只一 Agent 主導；另一邊先 merge 最新提交再改。
+
+## 本機測試
+
+公司 Windows：**禁止** Node／npm／npx／pnpm／yarn；測試只在核准的 **GitHub Actions** 或 Vercel 雲端執行。
+
+## 任務前後
+
+**開始**：Worktree、分支、`git status`、修改範圍、是否與他 Agent 重疊。  
+**結束**：修改清單、CI 結果、commit SHA、PR、未驗證項、確認未動 `main`／正式站。

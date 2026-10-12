@@ -24,4 +24,5 @@ alwaysApply: true
 ## 與其他規則的關係
 
 - 覆寫一般「未要求不要 commit／push」：在本專案以本規則為準。
+- **多 Agent 並行**（`jpwn-multi-agent.mdc`）：不得 push／合併 `main`、須走 PR＋CI；老師未授權不得部署正式站。其餘分支之 commit 仍依本規則訊息格式。
 - 仍禁止：改 `git config`、force push `main`、`--no-verify`、未經要求的 amend（除非符合既有 amend 安全條件）。

@@ -34,6 +34,17 @@
 ```bash
 npx vercel --prod
 ```
+## Agent 並行開發（Worktree）
+
+多個 Cursor Agent 請使用**不同本機目錄**，勿共用同一工作樹。規範見 [`AGENTS.md`](AGENTS.md) 與 [`docs/agent-cooperation.md`](docs/agent-cooperation.md)。
+
+| 用途 | 本機路徑 | 分支 |
+|------|----------|------|
+| 講義／動畫 | `C:\Users\chunhsinkuo\junior-physics-lecture` | `feature/lecture-content` |
+| 測試／CI | `C:\Users\chunhsinkuo\junior-physics-testing` | `test/site-quality` |
+
+公司 Windows 本機**勿**執行 npm／Playwright；測試在 GitHub Actions 執行。
+
 ## 資料夾
 
 ```
