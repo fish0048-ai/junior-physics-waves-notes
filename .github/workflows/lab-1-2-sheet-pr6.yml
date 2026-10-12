@@ -58,7 +58,6 @@ jobs:
         with:
           name: pr6-lab-sheet-evidence
           path: |
-            test-results/**/pr6-lab-sheet/**
-            test-results/**/*.png
+            test-results/
             playwright-report/
           retention-days: 14
