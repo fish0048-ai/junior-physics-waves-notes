@@ -1,0 +1,165 @@
+name: lecture-quality
+
+# 講義／CSS／段考頁變更：依 diff 跑靜態檢查、KaTeX、RWD、必要時 PDF 列印證據（一律測 checkout 的當次版本，不 overlay 固定 SHA）
+on:
+  pull_request:
+    paths:
+      - "sections/**"
+      - "css/**"
+      - "exams/**"
+      - "review-*.html"
+      - "recap-*.html"
+      - "js/layout.js"
+      - "tests/lab-1-2-sheet.spec.ts"
+      - "tests/lecture-changed.spec.ts"
+      - "tests/lecture-static.spec.ts"
+      - ".github/workflows/lecture-quality.yml"
+  push:
+    branches: [main]
+    paths:
+      - "sections/**"
+      - "css/**"
+      - "exams/**"
+      - "review-*.html"
+      - "recap-*.html"
+      - "js/layout.js"
+      - "tests/lab-1-2-sheet.spec.ts"
+      - "tests/lecture-changed.spec.ts"
+      - "tests/lecture-static.spec.ts"
+      - ".github/workflows/lecture-quality.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: lecture-quality-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  detect:
+    name: 變更範圍
+    runs-on: ubuntu-latest
+    outputs:
+      changed_html: ${{ steps.collect.outputs.changed_html }}
+      changed_html_csv: ${{ steps.collect.outputs.changed_html_csv }}
+      run_lab_sheet: ${{ steps.collect.outputs.run_lab_sheet }}
+      run_lecture_browser: ${{ steps.collect.outputs.run_lecture_browser }}
+      run_static: ${{ steps.collect.outputs.run_static }}
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - name: 列出本次變更的講義／段考 HTML
+        id: collect
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "run_lab_sheet=true" >> "$GITHUB_OUTPUT"
+            echo "run_lecture_browser=true" >> "$GITHUB_OUTPUT"
+            echo "run_static=true" >> "$GITHUB_OUTPUT"
+            echo "changed_html_csv=sections/lab-1-2-sheet.html" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            BASE="${{ github.event.pull_request.base.sha }}"
+            HEAD="${{ github.event.pull_request.head.sha }}"
+            git diff --name-only "$BASE" "$HEAD" > /tmp/all_changed.txt
+          elif [ "${{ github.event_name }}" = "push" ] && [ -n "${{ github.event.before }}" ] && [ "${{ github.event.before }}" != "0000000000000000000000000000000000000000" ]; then
+            git diff --name-only "${{ github.event.before }}" "${{ github.sha }}" > /tmp/all_changed.txt
+          else
+            git show --name-only --pretty=format: HEAD > /tmp/all_changed.txt || true
+          fi
+
+          grep -E '^(sections/|exams/).+\.html$' /tmp/all_changed.txt > /tmp/html_changed.txt || true
+
+          if grep -qE '^sections/lab-1-2-sheet\.html$|^css/style\.css$' /tmp/all_changed.txt; then
+            echo "run_lab_sheet=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_lab_sheet=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          # 只改 workflow／spec 時仍用 repo 當版跑一輪（不 overlay SHA）
+          if grep -qE '^\.github/workflows/lecture-quality\.yml$|^tests/(lecture-|lab-1-2-sheet)' /tmp/all_changed.txt; then
+            echo "run_lab_sheet=true" >> "$GITHUB_OUTPUT"
+            if ! grep -qx 'sections/lab-1-2-sheet.html' /tmp/html_changed.txt 2>/dev/null; then
+              echo 'sections/lab-1-2-sheet.html' >> /tmp/html_changed.txt
+            fi
+          fi
+
+          if [ -s /tmp/html_changed.txt ]; then
+            echo "run_lecture_browser=true" >> "$GITHUB_OUTPUT"
+            echo "run_static=true" >> "$GITHUB_OUTPUT"
+            sort -u /tmp/html_changed.txt -o /tmp/html_changed.txt
+            CHANGED_HTML=$(paste -sd '\n' /tmp/html_changed.txt)
+            CHANGED_CSV=$(paste -sd ',' /tmp/html_changed.txt | sed 's/,/,/g')
+            {
+              echo "changed_html<<EOF"
+              echo "$CHANGED_HTML"
+              echo "EOF"
+            } >> "$GITHUB_OUTPUT"
+            echo "changed_html_csv=$CHANGED_CSV" >> "$GITHUB_OUTPUT"
+          else
+            echo "run_lecture_browser=false" >> "$GITHUB_OUTPUT"
+            if grep -qE '^(sections/|css/|exams/)' /tmp/all_changed.txt; then
+              echo "run_static=true" >> "$GITHUB_OUTPUT"
+            else
+              echo "run_static=false" >> "$GITHUB_OUTPUT"
+            fi
+            echo "changed_html_csv=" >> "$GITHUB_OUTPUT"
+          fi
+
+  quality:
+    name: Playwright
+    needs: detect
+    if: |
+      needs.detect.outputs.run_lab_sheet == 'true' ||
+      needs.detect.outputs.run_lecture_browser == 'true' ||
+      needs.detect.outputs.run_static == 'true'
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 22
+
+      - name: 安裝 Playwright
+        run: npm install --no-audit --no-fund
+
+      - name: 安裝 Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: 講義靜態（繁中、禁用公式字元）
+        if: needs.detect.outputs.run_static == 'true'
+        env:
+          LECTURE_CHANGED_PATHS: ${{ needs.detect.outputs.changed_html_csv }}
+          CI_FORCE_LAB_SHEET_STATIC: ${{ needs.detect.outputs.run_lab_sheet == 'true' && '1' || '' }}
+        run: npx playwright test tests/lecture-static.spec.ts
+
+      - name: 變更頁面 KaTeX／手機版面
+        if: needs.detect.outputs.run_lecture_browser == 'true'
+        env:
+          LECTURE_CHANGED_PATHS: ${{ needs.detect.outputs.changed_html_csv }}
+        run: npx playwright test tests/lecture-changed.spec.ts
+
+      - name: 1-2 學習單 PDF／KaTeX／RWD
+        if: needs.detect.outputs.run_lab_sheet == 'true'
+        run: npx playwright test tests/lab-1-2-sheet.spec.ts
+
+      - name: 打包測試證據（PDF、截圖、頁數摘要）
+        if: always()
+        uses: actions/upload-artifact@v5
+        with:
+          name: lecture-quality-evidence-${{ github.run_id }}
+          path: |
+            test-results/
+            playwright-report/
+          retention-days: 30
+          if-no-files-found: warn
