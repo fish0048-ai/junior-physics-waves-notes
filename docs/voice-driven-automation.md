@@ -52,13 +52,13 @@
 
 | 檢查 | 講義 Agent | 測試 Agent／CI |
 |------|------------|----------------|
-| 國中理化科學正確性 | 必做（靜態＋對照課文） | — |
+| 國中理化科學正確性 | 必做（靜態＋對照課文） | `lecture-static`（關鍵頁錨點） |
 | 題目與詳解一致 | 必做 | 題庫 spec 若有 |
-| 繁中、錯字、亂碼 | 必做 | — |
+| 繁中、錯字、亂碼 | 必做 | `lecture-static` |
 | 國中生可理解度 | 必做 | — |
 | 手機／平板／桌面 | 靜態 HTML/CSS 檢查 | Playwright viewport |
 | KaTeX、圖、SVG、JS | 靜態＋頁面載入 | Playwright／Chromium |
-| PDF 列印頁數／版面 | 標註待測 | `lab-1-2-sheet-pr6` 等 workflow |
+| PDF 列印頁數／版面 | 標註待測 | `lecture-quality`（artifact：PDF、`print-metrics.json`） |
 | 既有 Playwright 回歸 | 透過 PR CI | 直接維護 spec |
 
 圖解／動畫：**只在**抽象或易誤解處增加，不無差別堆素材。
@@ -67,11 +67,10 @@
 
 ## CI 協作（無跨 Agent 直呼時）
 
-1. 講義 PR → `a11y-phase1`（及 PR 觸發的其他 workflow）  
-2. 專項頁面 → 如 `lab-1-2-sheet-pr6`（testing 分支 overlay 教材 SHA）  
-3. 測試基礎建設 → `test/site-quality` PR  
+1. 講義 PR → `lecture-quality`（依 diff：靜態／KaTeX／RWD／必要 PDF）＋ `a11y-phase1`＋ `playwright`  
+2. 測試基礎建設 → `test/site-quality` PR（workflow／spec，**不** overlay 固定教材 SHA）  
 
-講義 Agent **不**在本機跑 Node；以 Actions 結果為準。缺少 PDF／截圖 artifact 時**不得**宣稱視覺驗證通過。
+講義 Agent **不**在本機跑 Node；以 Actions 結果為準。`lecture-quality` 應上傳 `lecture-quality-evidence-*` artifact；缺少 PDF／截圖時**不得**宣稱視覺驗證通過。
 
 ---
 

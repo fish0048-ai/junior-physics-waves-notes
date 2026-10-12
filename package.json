@@ -6,7 +6,8 @@
     "test": "playwright test",
     "test:basic": "playwright test --grep @basic",
     "test:full": "playwright test",
-    "test:a11y": "playwright test tests/a11y-phase1.spec.ts tests/a11y-viewports.spec.ts tests/a11y-ink.spec.ts tests/a11y-sw.spec.ts tests/a11y-book.spec.ts"
+    "test:a11y": "playwright test tests/a11y-phase1.spec.ts tests/a11y-viewports.spec.ts tests/a11y-ink.spec.ts tests/a11y-sw.spec.ts tests/a11y-book.spec.ts",
+    "test:lecture": "playwright test tests/lecture-static.spec.ts tests/lecture-changed.spec.ts tests/lab-1-2-sheet.spec.ts"
   },
   "devDependencies": {
     "@playwright/test": "1.64.0"

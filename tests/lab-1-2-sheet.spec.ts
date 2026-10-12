@@ -3,7 +3,9 @@ import fs from "node:fs";
 import path from "node:path";
 
 const SHEET = "/sections/lab-1-2-sheet.html";
-const PR6_MARKERS = ["必交", "誤差提醒", "一般木炭不等於活性碳"];
+
+/** 本頁關鍵教學標記（隨內容演進可調整；CI 測的是 checkout 當版） */
+const LAB_SHEET_MARKERS = ["必交", "誤差提醒", "一般木炭不等於活性碳"];
 
 const viewports = [
   { name: "手機375", width: 375, height: 812 },
@@ -23,7 +25,7 @@ async function openLabSheet(page: Page) {
 
 async function waitForSheetReady(page: Page) {
   await openLabSheet(page);
-  for (const text of PR6_MARKERS) {
+  for (const text of LAB_SHEET_MARKERS) {
     await expect(page.getByText(text, { exact: false }).first()).toBeVisible({ timeout: 12_000 });
   }
   await expect
@@ -42,7 +44,7 @@ function pdfPageCount(buffer: Buffer): number {
 }
 
 function ensureArtifactDir(testInfo: TestInfo) {
-  const dir = path.join(testInfo.outputDir, "pr6-lab-sheet");
+  const dir = path.join(testInfo.outputDir, "lab-1-2-sheet");
   fs.mkdirSync(dir, { recursive: true });
   return dir;
 }
@@ -55,7 +57,7 @@ async function attachPdf(testInfo: TestInfo, name: string, buffer: Buffer) {
   return { filePath, pages: pdfPageCount(buffer) };
 }
 
-test.describe("PR #6｜1-2 實驗學習單", () => {
+test.describe("1-2 實驗學習單", { tag: "@lecture" }, () => {
   test.use({ serviceWorkers: "block" });
 
   test("KaTeX：密度公式已排版且無裸露 \\(...\\)", async ({ page }) => {
@@ -122,6 +124,19 @@ test.describe("PR #6｜1-2 實驗學習單", () => {
     expect(b4.pages).toBeGreaterThanOrEqual(2);
     expect(b4.pages).toBeLessThanOrEqual(5);
 
+    const metrics = {
+      sheet: SHEET,
+      a4Pages: a4.pages,
+      b4Pages: b4.pages,
+      generatedAt: new Date().toISOString(),
+    };
+    const dir = ensureArtifactDir(testInfo);
+    fs.writeFileSync(path.join(dir, "print-metrics.json"), JSON.stringify(metrics, null, 2));
+    await testInfo.attach("print-metrics.json", {
+      body: Buffer.from(JSON.stringify(metrics, null, 2)),
+      contentType: "application/json",
+    });
+
     test.info().annotations.push({ type: "A4 pages", description: String(a4.pages) });
     test.info().annotations.push({ type: "B4 pages", description: String(b4.pages) });
   });
@@ -141,6 +156,7 @@ test.describe("PR #6｜1-2 實驗學習單", () => {
       await expect(page.locator(".sheet-c-fig svg")).toBeVisible();
       const shot = await page.screenshot({ fullPage: true });
       await testInfo.attach(`rwd-${vp.name}.png`, { body: shot, contentType: "image/png" });
+      fs.writeFileSync(path.join(ensureArtifactDir(testInfo), `rwd-${vp.name}.png`), shot);
     });
   }
 });
