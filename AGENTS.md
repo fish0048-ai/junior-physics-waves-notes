@@ -9,7 +9,7 @@
 
 ## 口語指令自動化（必讀優先）
 
-老師以自然語言描述需求即可（例如「改這份講義」「檢查第四章」「修正列印」）。Agent **自行**完成修改、commit、push **功能分支**、**建立 PR**、PR 上 CI、符合條件時**在 GitHub 合併 PR** 與部署驗證，無需逐步下 Git 指令。**禁止**跳過 PR 直接更新 `main`（含本機 merge／fast-forward 後 push `main`）。
+老師以自然語言描述需求即可（例如「改這份講義」「檢查第四章」「修正列印」）。Agent **自行**完成修改、檢查、`commit`、**`push origin main`**、監看 GitHub Actions 與 Vercel 部署，**不需 PR**、**不必**每次詢問是否 push。高風險變更仍須先取得同意（見口語自動化文件）。
 
 - **總則**：[`docs/voice-driven-automation.md`](docs/voice-driven-automation.md)
 - **Cursor 規則**：`.cursor/rules/jpwn-automation.mdc`（優先於舊「每步都要確認」習慣）
@@ -26,17 +26,17 @@
 | 工作區 | 路徑 | 分支 | 用途 |
 |--------|------|------|------|
 | 歷史 | `C:\Users\chunhsinkuo\junior-physics-waves-notes` | `fix/a11y-phase1` | 保留，**勿再開發** |
-| **Agent A 講義** | `C:\Users\chunhsinkuo\junior-physics-lecture` | `feature/lecture-content` | 講義、題目、詳解、動畫 |
-| **Agent B 品質** | `C:\Users\chunhsinkuo\junior-physics-testing` | `test/site-quality` | Playwright、Actions、a11y |
+| **講義（主）** | `C:\Users\chunhsinkuo\junior-physics-lecture` | **`main`** | 講義、題目、詳解、動畫；**push main 主入口** |
+| **品質／CI** | `C:\Users\chunhsinkuo\junior-physics-testing` | `test/site-quality` | Playwright、Actions；合入 `main` 後 push |
 
 ### 一、Git 工作安全
 
 - 每個並行 Agent **必須**使用上表對應的 Worktree；任務開始前執行 `git worktree list`、`git branch --show-current`、`git status`。
-- **不得**跨 Worktree 編輯；**不得**在 `main` 直接開發。
-- **禁止** `git push origin main`、本機合併／fast-forward／cherry-pick 進遠端 `main`；進 `main` **僅能**經 GitHub PR 合併（見 [`docs/voice-driven-automation.md`](docs/voice-driven-automation.md)「GitHub PR 強制流程」）。
-- **禁止** `git reset --hard`、`git clean -fd`、force push、刪除他人未提交修改。
-- 新任務先確認檔案所有權（見 `docs/agent-cooperation.md`）及是否與另一 Agent 重疊。
-- 功能完成 → **push 功能分支** → **開 PR** → PR 上 CI 通過 → 符合安全清單時**在 GitHub 合併 PR**（Vercel 正式站）。無 `gh` 時用 GitHub API／MCP 開 PR；無法開 PR 則停並回報，**不得**繞過。
+- **不得**跨 Worktree 編輯。講義常規在 **lecture worktree 的 `main`** 開發並 **`push origin main`**。
+- **禁止** force push、刪 stash（除非老師明確要求）、覆蓋他人未提交修改、`git reset --hard`／`git clean -fd`。
+- 推送前：`git fetch`；落後則 `pull --ff-only`；確認 `git status`（見 [`docs/voice-driven-automation.md`](docs/voice-driven-automation.md)）。
+- 推送後：確認 Actions 與 Vercel；失敗則停並回報，不得假稱成功。
+- 若 GitHub **拒絕 push**（branch protection）→ 回報須調整的設定，**不得**繞過。
 - 使用者當次說「不要合併／不要 push」，或觸發「必須詢問」條款 → 停止合併／部署。
 
 ### 二、Agent 分工
@@ -66,7 +66,7 @@
 
 - 公司 Windows：**禁止** Node.js、npm、npx、pnpm、yarn。
 - 安裝、建置、自動化測試僅在核准的 **GitHub Actions** 或 **Vercel** 執行；不得繞過資安政策。
-- PR 須回報：修改檔案、測試結果、commit SHA、潛在衝突。
+- 任務結束須回報：修改摘要、push 後測試／部署結果、commit SHA（失敗時必附）。
 - `main` 對應正式站；PWA 變更須評估 Service Worker 與 **IndexedDB 手寫筆記**。
 
 ### 五、Agent 內部檢查（不必逐項報告給老師）
@@ -99,4 +99,4 @@
 - **分工**：`jpwn-workflow.mdc`（人工交原料／AI 組站）  
 - **自動化**：`jpwn-automation.mdc`（口語驅動、PR、CI、合併條件）
 - **並行**：`jpwn-multi-agent.mdc`（Worktree、禁止跨區）
-- **GitHub**：`jpwn-github.mdc`（commit／push；合併 main 依安全清單）
+- **GitHub**：`jpwn-github.mdc`（commit／**push main**；推送前後檢查）

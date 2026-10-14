@@ -1,30 +1,27 @@
 ---
-description: 口語指令驅動自動化：判斷任務、commit/push/PR/CI/合併/部署；優先於舊「逐步確認」習慣。
+description: 口語指令驅動：修改、檢查、commit、push main、CI／部署驗證；單人維護，不需 PR。
 alwaysApply: true
 ---
 
 # 口語驅動自動化（不可破）
 
-完整流程見 `docs/voice-driven-automation.md`。使用者用自然語言描述教學需求時，Agent **自行**完成工程步驟，勿要求逐步下 Git／CI 指令。
+完整流程見 `docs/voice-driven-automation.md`。使用者用自然語言描述需求時，Agent **自行**完成工程步驟，勿要求逐步下 Git／CI 指令，**勿**為常規任務詢問是否 push。
 
 ## 任務路由
 
-- **講義／題目／動畫／教學設計** → Worktree `C:\Users\chunhsinkuo\junior-physics-lecture`，分支 `feature/lecture-content`
-- **Playwright／Actions／a11y／PDF／RWD CI** → Worktree `C:\Users\chunhsinkuo\junior-physics-testing`，分支 `test/site-quality`
-- **禁止**跨 Worktree 改檔；**禁止**在 `main` 直接開發
-- 無法直呼另一 Agent → 以 **PR + GitHub Actions** 協作，勿假裝已代跑
+- **講義／題目／動畫** → Worktree `C:\Users\chunhsinkuo\junior-physics-lecture`，分支 **`main`**
+- **Playwright／Actions／a11y** → Worktree `C:\Users\chunhsinkuo\junior-physics-testing`（改完合入 `main` 並在 lecture worktree **push origin main**，見 `agent-cooperation.md`）
+- **禁止**跨 Worktree 改檔
 
 ## 預設自動（常規）
 
-commit、push **功能分支**、**必開 PR**、跑／看 **PR 上** CI、最多三輪失敗修正、符合安全條件時 **GitHub 合併 PR**、確認 Vercel 部署。
+靜態／教學自查 → `commit` → 推送前 `fetch`／`pull --ff-only` → **`push origin main`** → 監看 push 觸發的 Actions → 確認 Vercel。
 
-**禁止**：本機合併進 `main` 後 push、fast-forward 遠端 `main`、無 PR 上線。無 `gh` → GitHub API／MCP 開 PR；仍無法 → 停並回報。
+使用者「先不要 push／commit」或高風險清單 → **停止 push**。
 
-使用者明確「先不要 push／commit／合併」或觸發 `voice-driven-automation.md`「必須詢問」條款 → **停止自動合併／部署**。
+## 推送後必查
 
-## 合併前必查
-
-PR 必要 CI success（綁定 PR head）、`mergeable`、無重大科學／功能問題、證據完整、無密鑰。缺 PDF／截圖證據 → 不得宣稱視覺通過；證據不足 → 不合併 PR。
+必要 Actions 對**本次 push SHA** success；部署成功。證據不足或 CI 失敗 → 不合併式假裝完成、不繼續堆修改（先修或回報）。
 
 ## 本機
 
@@ -32,10 +29,9 @@ PR 必要 CI success（綁定 PR head）、`mergeable`、無重大科學／功�
 
 ## 回報
 
-成功：改動摘要、教學正確性、測試、部署、連結。失敗才詳列技術資訊。
+成功：改動、正確性、測試／部署、連結。失敗或未跑完 CI：SHA、run、風險說明。
 
 ## 與其他規則
 
-- 優先於 `jpwn-multi-agent.mdc` 中「須老師逐步授權才合併」之舊表述（已改為安全清單自動合併）
-- `jpwn-github.mdc`：commit 訊息繁中、仍禁止 force push／改 git config
-- `jpwn-workflow.mdc`：**人工必交**原料（新章 Word、題庫 docx 等）仍不可代替
+- `jpwn-github.mdc`：push main、禁止 force  
+- `jpwn-workflow.mdc`：**人工必交**原料仍不可代替  

@@ -1,38 +1,37 @@
 ---
-description: 多 Agent Worktree 分工、禁止跨區；合併與部署依 jpwn-automation 安全清單。
+description: Worktree 分工（單人維護）；常規 push origin main，禁止跨區與 force push。
 alwaysApply: true
 ---
 
-# 多 Agent 並行（不可破）
+# 多 Worktree（單人維護）（不可破）
 
 細節：`AGENTS.md`、`docs/agent-cooperation.md`、`docs/voice-driven-automation.md`。
 
 ## Worktree（必須對號入座）
 
-| Agent | 路徑 | 分支 |
-|-------|------|------|
-| A 理化講義 | `C:\Users\chunhsinkuo\junior-physics-lecture` | `feature/lecture-content` |
-| B 網站品質 | `C:\Users\chunhsinkuo\junior-physics-testing` | `test/site-quality` |
-| 歷史（勿新開發） | `C:\Users\chunhsinkuo\junior-physics-waves-notes` | `fix/a11y-phase1` |
+| 用途 | 路徑 | 預設分支 |
+|------|------|----------|
+| 講義／題庫／動畫（**push main 主入口**） | `C:\Users\chunhsinkuo\junior-physics-lecture` | **`main`** |
+| 測試／workflow | `C:\Users\chunhsinkuo\junior-physics-testing` | `test/site-quality` |
+| 歷史（勿新開發） | `C:\Users\chunhsinkuo\junior-physics-waves-notes` | — |
 
-- **禁止**跨 Worktree 修改；**禁止**在 `main` 上直接開發
-- **禁止** `reset --hard`、`clean -fd`、force push、刪除未提交修改、刪 stash（除非使用者明確要求）
+- **禁止**跨 Worktree 修改  
+- **禁止** force push、刪 stash（除非使用者明確要求）、覆蓋他人未提交修改  
+- 同一時間僅一 worktree 可 checkout `main`；**遠端更新**以 `git push origin main` 為準（通常在 lecture worktree）
 
-## 與自動化、GitHub 規則
+## 與 GitHub 規則
 
-- 口語任務預設流程（commit／push／PR／CI／合併）見 **`jpwn-automation.mdc`**
-- **不得** `git push origin main` 或本機 merge／ff／cherry-pick 更新遠端 `main`（**僅** GitHub PR 合併）；功能分支 push 依 `jpwn-github.mdc`
-- 更新 `main`：**安全清單全部成立**時在 **GitHub 合併 PR**；使用者說不要合併或規範 PR 特別指示 → 停止
-- 無跨 Agent 直呼 → **GitHub Actions** 為測試協作主機制
+- 常規：**`jpwn-github.mdc`** — commit + push `main`，不需 PR  
+- push 被拒 → 回報 branch protection，不繞過  
 
-## Agent 分工（摘要）
+## 分工（摘要）
 
-- **A**：`sections/`、`exams/`、`animations/`、題庫；繁中、科學正確
-- **B**：`tests/`、`.github/workflows/`、Playwright、a11y；不大改講義內容
+- **講義區**：`sections/`、`exams/`、`animations/`、題庫  
+- **測試區**：`tests/`、`.github/workflows/`；完成後合入 `main` 再 push  
 
 ## 高衝突檔
 
-`package.json`、`playwright.config.ts`、`.gitignore`、`sw-main.js`、`js/app.js` 等同時間只一 Agent 主導。
+`package.json`、`playwright.config.ts`、`.gitignore`、`sw-main.js`、`js/app.js` 等同時間只在一處修改。
 
 ## 本機
 

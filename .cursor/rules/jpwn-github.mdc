@@ -1,38 +1,42 @@
 ---
-description: 完成修改後 commit 並 push；PR 與合併 main 依 jpwn-automation 安全清單。
+description: 完成修改後 commit 並 push origin main（單人維護）；推送前檢查與推送後 CI／部署驗證。
 alwaysApply: true
 ---
 
 # GitHub 上傳（不可破）
 
-改完講義／CSS／JS／規則／技能／測試後，**自動** commit 並 push 至**功能分支**（非 `main`），不必等使用者說「上傳」。進 `main` **只能**經 Pull Request。
+改完講義／CSS／JS／規則／技能／測試後，**自動** `commit` 並 **`push origin main`**，不必等使用者說「上傳」。**不**建立 PR（除非使用者明確要求）。
 
 ## 流程（任務收尾）
 
-1. `git status`／`git diff`／`git log` 確認變更（分支 ≠ `main`）
-2. `git add` 相關檔（排除 `_bank_extract/`、密鑰、`.env`）
-3. `git commit` — `<type>: <主旨>`（**繁體中文**）
-4. `git push origin HEAD`（**禁止** force push；**禁止** `git push origin main`）
-5. **建立或更新 PR**（`base`: `main`，`head`: 目前分支）— `gh` → GitHub REST API → MCP；無法開 PR 則停並回報
-6. 監看 **PR 上** GitHub Actions（head SHA）；失敗時最多 **3 輪**修正並 push 同一分支
-7. 安全清單成立 → **在 GitHub 合併 PR**（API／UI；**非**本機 `git merge main` + push）；合併後確認 Vercel 部署
+1. `git status`／`git diff`／`git log` — 確認無他人未提交 WIP、變更合理  
+2. `git fetch origin` — 落後則 `git pull --ff-only origin main`（衝突則停）  
+3. `git add`（排除 `_bank_extract/`、密鑰、`.env`）  
+4. `git commit` — `<type>: <主旨>`（**繁體中文**）；保留完整 commit 歷史，方便回復  
+5. **`git push origin main`**（**禁止** force push）  
+6. 若 push 被 branch protection 拒絕 → **停**，回報須調整的 GitHub 設定，不得繞過  
+7. 監看 **本次 SHA** 的 GitHub Actions；失敗最多 **3 輪**修正再 push  
+8. 確認 Vercel 部署；失敗或未驗證 → 不得假稱成功  
+
+## 推送前無法跑 CI 時
+
+本機禁止 Node → 須在回報中**清楚標明**：推送前未跑 Playwright，依 push 後 Actions 為準。
 
 ## 例外
 
-- 使用者明確：不要 push／commit／合併
-- 半成品應先問是否暫存 commit
-- 密鑰／憑證 → 排除並警告
-- 任務明示「規範 PR 不自動合併」→ 只 push + 開 PR，不合併
+- 使用者明確：不要 push／commit  
+- 半成品 → 先問是否暫存 commit  
+- 密鑰／憑證 → 排除並警告  
+- 高風險變更 → 先問使用者（見 `voice-driven-automation.md`）  
 
 ## 禁止
 
-- 改 `git config`、force push、`--no-verify`、未授權 amend
-- `git push origin main`、本機 merge／fast-forward／cherry-pick 直接上 `main`
-- 無 PR 時以「事後補開 PR」代替事前 PR＋CI
-- 缺 `gh` CLI 時改走直接推 `main`
+- 改 `git config`、force push、`--no-verify`、未授權 amend  
+- 刪 stash（除非使用者明確要求）  
+- 覆蓋其他 worktree 未提交修改  
 
 ## 與其他規則
 
-- **`docs/voice-driven-automation.md`**：PR 強制流程與安全清單（優先）
-- **`jpwn-automation.mdc`**：口語驅動、簡短回報
-- **`jpwn-multi-agent.mdc`**：Worktree、禁止跨區
+- **`docs/voice-driven-automation.md`**：推送前後安全與高風險清單  
+- **`jpwn-automation.mdc`**：口語驅動、簡短回報  
+- **`jpwn-multi-agent.mdc`**：Worktree、禁止跨區  

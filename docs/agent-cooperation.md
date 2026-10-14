@@ -9,12 +9,12 @@
 | 代號 | 本機路徑 | 分支 | 用途 | 狀態 |
 |------|----------|------|------|------|
 | 歷史區 | `C:\Users\chunhsinkuo\junior-physics-waves-notes` | `fix/a11y-phase1` | 舊 a11y 線，**暫停新開發** | 保留 |
-| **Agent A 講義** | `C:\Users\chunhsinkuo\junior-physics-lecture` | `feature/lecture-content` | 講義、題庫、動畫、互動 | 使用中 |
+| **講義（主）** | `C:\Users\chunhsinkuo\junior-physics-lecture` | **`main`** | 講義、題庫、動畫；push main | 使用中 |
 | **Agent B 品質** | `C:\Users\chunhsinkuo\junior-physics-testing` | `test/site-quality` | Playwright、Actions、a11y | 使用中 |
 
 - 三個目錄共用**同一 Git 物件庫**；`git worktree list` 可一次查看。
 - **禁止**在 A 的 Cursor 視窗編輯 B 的路徑檔案（反之亦然）。
-- `main` 對應 Vercel 正式站；**不得**在 worktree 直接改 `main`、force push、或本機 merge 後 push `main`。進 `main` **僅**經 GitHub PR；合併依口語自動化安全清單（使用者禁止時不合併 PR）。
+- `main` 對應 Vercel 正式站。**單人維護**：常規在 lecture worktree 的 `main` 上改動並 **`push origin main`**（不需 PR）。禁止 force push；push 被拒時依口語自動化文件回報 branch protection。
 
 ## 檔案責任（摘要）
 
@@ -32,7 +32,7 @@
 ## 開始任務（必做）
 
 1. `git worktree list` — 確認自己在正確目錄。
-2. `git branch --show-current` — 確認分支（非 `main`）。
+2. `git branch --show-current` — lecture 區通常為 **`main`**；testing 區為 `test/site-quality`。
 3. `git status` — 記錄是否含**他人**未提交修改；若有，先停止並回報。
 4. 列出本次將改的檔案；對照上表是否與另一 Agent 重疊。
 5. 公司 Windows：**禁止**執行 `node`／`npm`／`npx`／`pnpm`／`yarn`；測試依 GitHub Actions。
@@ -42,25 +42,24 @@
 1. 列出修改檔案與 commit SHA（若已提交）。
 2. 說明 CI／Playwright 結果（PR 連結或 workflow run）。
 3. 標註**尚未**在雲端驗證的項目。
-4. 確認未改 `main`、未部署正式站。
+4. 若已 push：確認 Actions／Vercel；未 push 則標註「尚未上線」。
 5. 若動到 PWA／Service Worker：註明對 IndexedDB 手寫筆記的影響。
 
-## PR、CI 與自動合併
+## push `main`、CI 與部署
 
-1. **講義**：功能分支（常用 `feature/lecture-content`）→ **開 PR** → **PR head 上** CI 綠燈 → 符合 [`voice-driven-automation.md`](voice-driven-automation.md) 安全清單 → **Agent 可在 GitHub 合併 PR**（非本機 push `main`）。
-2. **測試**：`test/site-quality` → PR → 同上。
-3. **跨 Agent**：講義 Agent 不修改 testing 目錄；需新 spec／workflow 時由 testing 分支 PR；講義 PR 由 `lecture-quality.yml` 等依 diff 驗證。
-4. 規範類文件：在一分支提交 → PR 合併後，另一 worktree `fetch` + `merge --ff-only origin/main` 同步，勿手動複製覆蓋。
-5. 使用者或任務明示「規範 PR 不自動合併」→ 只開 PR、等待確認。
-6. **禁止**無 PR 直推 `main`；**禁止**事後補 PR 代替事前 PR 審查。無 `gh` 時用 GitHub API／MCP 開 PR，否則停並回報。
+1. **講義（lecture worktree）**：在 `main` 上 `commit` → 推送前 `fetch`／`pull --ff-only` → **`git push origin main`** → 監看該 SHA 的 Actions → 確認 Vercel。
+2. **測試（testing worktree）**：在 `test/site-quality` 改 `tests/`、workflow → `commit` → 切到 **lecture**（或已 checkout `main` 的 worktree）`merge` 變更 → 再 **push origin main**（同一 repo 僅一處 checkout `main`）。
+3. **跨區**：講義不直接改 testing 目錄；測試不大改講義內容。
+4. 規範／共用檔 push 後，另一 worktree：`git fetch` + `merge --ff-only origin/main` 同步。
+5. CI 失敗：最多三輪修正再 push；仍失敗則停，附 run 連結。
+6. 推送前無法跑 Playwright（本機禁 Node）→ 回報須寫明**風險**，以 push 後 Actions 為準。
 
-### 將規範同步到 testing worktree（示例）
+### 將 `main` 同步到 testing worktree（示例）
 
 ```powershell
-# 在 testing 目錄（勿在有未提交講義修改時覆蓋整棵樹）
 cd C:\Users\chunhsinkuo\junior-physics-testing
 git fetch origin
-git merge <規範提交的 SHA>   # 或 merge origin/feature/lecture-content 上已 push 的節點
+git merge --ff-only origin/main
 ```
 
 合併後 `git status` 應仍**不含** `sections/lab-1-2-sheet.html` 等講義 WIP（除非 B 分支刻意納入）。
@@ -74,5 +73,5 @@ git merge <規範提交的 SHA>   # 或 merge origin/feature/lecture-content 上
 
 - `git reset --hard`、`git clean -fd`、force push、刪除他人未提交修改。
 - 跨 worktree 直接編輯檔案。
-- 未授權合併／部署 `main`。
+- 未經老師同意的高風險變更仍 push `main`。
 - 以覆蓋方式解決 merge conflict（須保留雙方意圖、必要時三方合併）。
