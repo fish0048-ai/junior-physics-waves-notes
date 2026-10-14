@@ -21,8 +21,10 @@
       border: 1px solid #afc4d0; border-radius: 8px; color: #193247; background: white; cursor: pointer;
     }
     button.primary { background: #076b87; color: white; border-color: #076b87; }
+    button.mode-on { background: #076b87; color: white; border-color: #076b87; }
     button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid #e5a12a; outline-offset: 3px; }
     .presets { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+    .mode-toggle { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
     .visual { background: white; border: 1px solid #dbe7ed; border-radius: 16px; overflow: hidden; }
     svg#scene {
       display: block; width: 100%; height: 400px;
@@ -43,6 +45,7 @@
     summary { cursor: pointer; min-height: 44px; padding: 8px 0; font-weight: 600; }
     details p { margin: 6px 0; }
     .note { font-size: 13px; color: #526c7d; }
+    .control.is-hidden { display: none; }
     @media (max-width: 480px) {
       main { padding: 14px; }
       svg#scene { height: 440px; }
@@ -56,18 +59,23 @@
 <main>
   <small>國中理化 · 4-1 影子的大小</small>
   <h1>影子有多大？</h1>
-  <p>點光源、直立物體與牆面構成<strong>相似三角形</strong>。可<strong>在圖上用手指拖曳</strong>物體、牆面或物頂，也可用滑桿與情境按鈕。</p>
-  <p class="drag-hint"><strong>平板／手機：</strong>左右拖<strong>藍色物體</strong>改光源距離 u；左右拖<strong>牆面</strong>改 v；上下拖<strong>物體頂端圓點</strong>改物高 h。</p>
+  <p>點光源、直立物體與<strong>牆面或地面</strong>構成相似三角形。用手指拖曳光源、物體、牆面或物頂，觀察影子落在<strong>不同位置</strong>、大小如何改變。</p>
+  <p class="drag-hint"><strong>平板／手機：</strong>拖<strong>黃色光源</strong>（左右改位置；地面模式可上下改高度）→ 拖<strong>藍色物體</strong>→ 拖<strong>牆面</strong>（牆面模式）→ 拖<strong>物頂圓點</strong>改 h。</p>
+  <div class="mode-toggle" role="group" aria-label="影子落在">
+    <button type="button" class="mode-on" id="mode-wall" data-mode="wall">影子在牆面（影高 H）</button>
+    <button type="button" id="mode-ground" data-mode="ground">影子在地面（影長 L）</button>
+  </div>
   <p class="legend">
     <span class="key" style="background:#fef08a;color:#854d0e">● 點光源</span>
     <span class="key" style="background:#dbeafe;color:#1d4ed8">物體</span>
-    <span class="key" style="background:#1e293b;color:#f8fafc">影子區</span>
+    <span class="key" style="background:#1e293b;color:#f8fafc">影子</span>
     <span class="key">虛線＝相似三角形</span>
   </p>
   <div class="presets">
     <button type="button" class="primary" id="preset-quiz">小華例題（100＋100 cm）</button>
     <button type="button" id="preset-lamp">靠近光源（影變大）</button>
     <button type="button" id="preset-wall">靠近牆面（影變小）</button>
+    <button type="button" id="preset-ground-long">地面：傍晚長影</button>
   </div>
   <div class="controls">
     <div class="control">
@@ -82,19 +90,23 @@
       <label for="h">物體高度 <output id="h-out"></output></label>
       <input id="h" type="range" min="120" max="200" step="5" value="180">
     </div>
+    <div class="control is-hidden" id="lamp-height-wrap">
+      <label for="lampH">光源高度 <output id="lampH-out"></output></label>
+      <input id="lampH" type="range" min="160" max="320" step="5" value="240">
+    </div>
   </div>
   <div class="visual">
-    <svg id="scene" role="img" aria-label="點光源、物體與牆面影子相似三角形示意"></svg>
+    <svg id="scene" role="img" aria-label="點光源、物體與影子相似三角形示意"></svg>
     <div class="readout" id="result"></div>
   </div>
   <div class="question">
     <b>先想一想：</b>物體往牆面移動，影高會變大還是變小？為什麼？
     <details>
       <summary>查看解釋</summary>
-      <p>影高 H＝h×v÷u（u＝光源到物體，v＝光源到牆，h＝物高）。物體靠近牆 → u 變大、v 不變 → H 變小。物體靠近燈 → u 變小 → H 變大。</p>
+      <p>牆面：影高 H＝h×v÷u。地面：影長 L＝h×u÷(Hl−h)（Hl 為光源高度，需 Hl＞h）。物體靠近牆／屏 → u 變大 → 牆面影變小、地面影長通常變長。</p>
     </details>
   </div>
-  <p class="note">側視圖：光源與物體底端在同一水平地面；牆面垂直。僅考慮點光源，不畫半影。距離單位 cm。</p>
+  <p class="note">側視圖；距離單位 cm。地面模式光源可離地（路燈／斜射光）；牆面模式光源在地面。僅點光源、不畫半影。</p>
 </main>
 <script>
 (() => {
@@ -102,11 +114,8 @@
   const $ = (id) => document.getElementById(id);
   const svg = $("scene");
   const NS = "http://www.w3.org/2000/svg";
-  const C = { gold: "#ca8a04", blue: "#2563eb", gray: "#94a3b8", dark: "#0f172a", red: "#dc2626", dash: "#64748b" };
-  const U_MIN = 60;
-  const U_MAX = 220;
-  const V_MIN = 120;
-  const V_MAX = 360;
+  const C = { gold: "#ca8a04", blue: "#2563eb", gray: "#94a3b8", dark: "#0f172a", dash: "#64748b" };
+  const GAP = 10;
   const H_MIN = 120;
   const H_MAX = 200;
   const STEP = 5;
@@ -114,9 +123,52 @@
   let viewH = 400;
   let dragging = false;
   let dragKind = null;
+  let shadowMode = "wall";
+  /** cm：光源、物體、牆面在地上的水平位置（牆面模式用 wallX） */
+  let lightX = 0;
+  let objX = 100;
+  let wallX = 200;
 
   function snap(val, min, max) {
     return Math.max(min, Math.min(max, Math.round(val / STEP) * STEP));
+  }
+
+  function syncFromSliders() {
+    const u = Number($("u").value);
+    const v = Number($("v").value);
+    objX = lightX + u;
+    wallX = lightX + v;
+    clampPositions();
+    syncSlidersFromPositions();
+  }
+
+  function syncSlidersFromPositions() {
+    const u = objX - lightX;
+    const v = wallX - lightX;
+    $("u").value = String(u);
+    $("v").value = String(v);
+  }
+
+  function clampPositions() {
+    lightX = snap(lightX, 0, objX - GAP);
+    objX = snap(objX, lightX + GAP, wallX - GAP);
+    wallX = snap(wallX, objX + GAP, 360);
+    syncSlidersFromPositions();
+  }
+
+  function readH() {
+    let h = Number($("h").value);
+    h = snap(h, H_MIN, H_MAX);
+    $("h").value = String(h);
+    return h;
+  }
+
+  function readLampH(h) {
+    let lampH = Number($("lampH").value);
+    const minL = h + 20;
+    lampH = snap(lampH, minL, 320);
+    $("lampH").value = String(lampH);
+    return lampH;
   }
 
   function clientToSvgX(clientX) {
@@ -175,22 +227,36 @@
     return n("text", attrs, t);
   }
 
-  function read() {
-    let u = Number($("u").value);
-    let v = Number($("v").value);
-    const h = Number($("h").value);
-    if (v <= u + 10) {
-      v = u + 10;
-      $("v").value = String(v);
-    }
-    return { u, v, h };
+  let layout = { padL: 36, sx: 1, sy: 1, groundY: 320 };
+
+  function cmToX(cm) {
+    return layout.padL + cm * layout.sx;
+  }
+
+  function xToCm(x) {
+    return (x - layout.padL) / layout.sx;
+  }
+
+  function groundShadowLengthCm(u, h, lampH) {
+    if (lampH <= h + 5) return 400;
+    return (u * h) / (lampH - h);
+  }
+
+  function setMode(mode) {
+    shadowMode = mode;
+    $("mode-wall").classList.toggle("mode-on", mode === "wall");
+    $("mode-ground").classList.toggle("mode-on", mode === "ground");
+    $("lamp-height-wrap").classList.toggle("is-hidden", mode !== "ground");
+    draw();
   }
 
   function draw() {
     const { W, H } = clear();
-    const { u, v, h } = read();
-    const Hshadow = (h * v) / u;
-    const w = v - u;
+    clampPositions();
+    const u = objX - lightX;
+    const v = wallX - lightX;
+    const h = readH();
+    const w = wallX - objX;
 
     $("u-out").textContent = u + " cm";
     $("v-out").textContent = v + " cm";
@@ -199,41 +265,105 @@
     const padL = 36;
     const padR = 28;
     const groundY = H * 0.82;
-    const maxV = V_MAX;
+    const maxV = 360;
     const sx = (W - padL - padR) / maxV;
     const sy = (H * 0.55) / 400;
-    layout = layoutFromDraw(padL, sx, sy, groundY);
+    layout = { padL, sx, sy, groundY };
 
-    const xL = padL;
-    const xO = padL + u * sx;
-    const xW = padL + v * sx;
+    const xL = cmToX(lightX);
+    const xO = cmToX(objX);
+    const xW = cmToX(wallX);
     const yTop = groundY - h * sy;
-    const yShadowTop = groundY - Hshadow * sy;
+
+    const lampH = shadowMode === "ground" ? readLampH(h) : 0;
+    $("lampH-out").textContent = lampH + " cm";
+
+    const yLight = shadowMode === "ground" ? groundY - lampH * sy : groundY;
 
     n("rect", { x: 0, y: groundY, width: W, height: H - groundY, fill: "#e2e8f0" });
     line(0, groundY, W, groundY, C.gray, false, 2);
     label(12, groundY + 22, "地面", "start");
 
-    n("rect", { x: xW, y: 0, width: W - xW, height: H, fill: "#f1f5f9" });
-    line(xW, 0, xW, H, C.gray, false, 3);
-    label(xW + 10, 24, "牆面", "start");
+    let Hshadow = 0;
+    let Lshadow = 0;
+    let xShadowEnd = xO;
 
-    n("rect", {
-      x: xW - 2, y: yShadowTop, width: 14, height: groundY - yShadowTop,
-      fill: "#1e293b", opacity: 0.85
+    if (shadowMode === "wall") {
+      Hshadow = (h * v) / u;
+      const yShadowTop = groundY - Hshadow * sy;
+
+      n("rect", { x: xW, y: 0, width: W - xW, height: H, fill: "#f1f5f9" });
+      line(xW, 0, xW, H, C.gray, false, 3);
+      label(xW + 10, 24, "牆面", "start");
+
+      n("rect", {
+        x: xW - 2, y: yShadowTop, width: 14, height: groundY - yShadowTop,
+        fill: "#1e293b", opacity: 0.85
+      });
+
+      line(xL, groundY, xO, groundY, C.dash, true, 1.5);
+      line(xL, groundY, xO, yTop, C.dash, true, 1.5);
+      line(xL, groundY, xW, yShadowTop, C.dash, true, 1.5);
+      label((xL + xO) / 2, groundY + 18, "u", "middle", C.dash);
+      label((xL + xW) / 2, groundY - 8, "v", "middle", C.dash);
+
+      arrow(xL, groundY, xO, yTop, C.gold);
+      arrow(xL, groundY, xW, yShadowTop, C.gold);
+
+      label(xW + 6, (yShadowTop + groundY) / 2, "H", "start", C.dark);
+      label(xW + 6, yShadowTop - 6, Hshadow.toFixed(0) + " cm", "start", C.dark);
+
+      addDragHit(xW, 0, 48, groundY, "wall");
+
+      $("result").innerHTML =
+        `<strong>u／v＝h／H</strong> → ${u}／${v}＝${h}／${Hshadow.toFixed(0)}` +
+        ` ｜ 牆面影高 <strong>H≈${Hshadow.toFixed(0)} cm</strong> ｜ 物體距牆 ${w} cm`;
+
+      svg.setAttribute("aria-label",
+        `牆面模式，影高約 ${Hshadow.toFixed(0)} 公分，物體距牆 ${w} 公分`);
+    } else {
+      Lshadow = groundShadowLengthCm(u, h, lampH);
+      const shadowEndCm = objX + Lshadow;
+      xShadowEnd = cmToX(shadowEndCm);
+
+      n("rect", {
+        x: xO, y: groundY - 10, width: Math.max(8, xShadowEnd - xO), height: 10,
+        fill: "#1e293b", opacity: 0.88, rx: 2
+      });
+      if (xW <= W - padR) {
+        line(xW, groundY - 40, xW, groundY + 4, C.gray, true, 1.5);
+        label(xW, groundY - 46, "參考牆", "middle", C.dash);
+      }
+
+      line(xL, yLight, xO, groundY, C.dash, true, 1.5);
+      line(xL, yLight, xO, yTop, C.dash, true, 1.5);
+      line(xL, yLight, xShadowEnd, groundY, C.dash, true, 1.5);
+      label((xL + xO) / 2, groundY + 18, "u", "middle", C.dash);
+      label((xO + xShadowEnd) / 2, groundY - 14, "L", "middle", C.dark);
+
+      arrow(xL, yLight, xO, yTop, C.gold);
+      arrow(xL, yLight, xShadowEnd, groundY, C.gold);
+
+      label((xShadowEnd + xO) / 2, groundY - 28, Lshadow.toFixed(0) + " cm", "middle", C.dark);
+
+      $("result").innerHTML =
+        `<strong>h／L＝(Hl−h)／u</strong> → 影長 <strong>L≈${Lshadow.toFixed(0)} cm</strong>` +
+        ` ｜ 光源高 ${lampH} cm ｜ 物體距牆 ${w} cm（參考）`;
+
+      svg.setAttribute("aria-label",
+        `地面模式，影長約 ${Lshadow.toFixed(0)} 公分，光源高度 ${lampH} 公分`);
+    }
+
+    n("circle", {
+      cx: xL, cy: yLight, r: 12, fill: "#fef08a", stroke: C.gold, "stroke-width": 2,
+      "data-drag": "light"
     });
-
-    line(xL, groundY, xO, groundY, C.dash, true, 1.5);
-    line(xL, groundY, xO, yTop, C.dash, true, 1.5);
-    line(xL, groundY, xW, yShadowTop, C.dash, true, 1.5);
-    label((xL + xO) / 2, groundY + 18, "u", "middle", C.dash);
-    label((xL + xW) / 2, groundY - 8, "v", "middle", C.dash);
-
-    arrow(xL, groundY, xO, yTop, C.gold);
-    arrow(xL, groundY, xW, yShadowTop, C.gold);
-
-    n("circle", { cx: xL, cy: groundY, r: 10, fill: "#fef08a", stroke: C.gold, "stroke-width": 2 });
-    label(xL, groundY - 18, "光源", "middle");
+    if (shadowMode === "ground") {
+      line(xL, yLight, xL, groundY, C.gold, true, 1.5);
+      label(xL - 14, (yLight + groundY) / 2, "Hl", "end", C.gold);
+    }
+    label(xL, yLight - 18, "光源", "middle");
+    addDragHit(xL, yLight - 20, 52, Math.max(52, groundY - yLight + 24), "light");
 
     n("rect", {
       x: xO - 7, y: yTop, width: 14, height: groundY - yTop,
@@ -243,46 +373,36 @@
 
     const objH = groundY - yTop;
     addDragHit(xO, yTop - 8, Math.max(56, 28), Math.max(44, objH + 16), "object");
-    addDragHit(xW, 0, 48, groundY, "wall");
     n("circle", {
       cx: xO, cy: yTop, r: 14, fill: "#93c5fd", stroke: C.blue, "stroke-width": 2,
-      "data-drag": "height", "pointer-events": "all"
+      "data-drag": "height"
     });
     addDragHit(xO, yTop - 22, 52, 52, "height");
-
-    label(xW + 6, (yShadowTop + groundY) / 2, "H", "start", C.dark);
-    label(xW + 6, yShadowTop - 6, Hshadow.toFixed(0) + " cm", "start", C.dark);
-
-    $("result").innerHTML =
-      `<strong>u／v＝h／H</strong> → ${u}／${v}＝${h}／${Hshadow.toFixed(0)}` +
-      ` ｜ 影高 <strong>H≈${Hshadow.toFixed(0)} cm</strong> ｜ 物體距牆 ${w} cm`;
-
-    svg.setAttribute("aria-label",
-      `光源到物體 ${u} 公分，到牆 ${v} 公分，物高 ${h} 公分，影高約 ${Hshadow.toFixed(0)} 公分`);
   }
-
-  function layoutFromDraw(padL, sx, sy, groundY) {
-    return { padL, sx, sy, groundY };
-  }
-  let layout = { padL: 36, sx: 1, sy: 1, groundY: 320 };
 
   function applyDrag(clientX, clientY) {
     const x = clientToSvgX(clientX);
     const y = clientToSvgY(clientY);
-    let u = Number($("u").value);
-    let v = Number($("v").value);
-    let h = Number($("h").value);
-    const { padL, sx, sy, groundY } = layout;
+    const h = readH();
+    const { groundY, sy } = layout;
 
     if (dragKind === "object") {
-      u = snap((x - padL) / sx, U_MIN, Math.min(U_MAX, v - 10));
-      $("u").value = String(u);
+      objX = snap(xToCm(x), lightX + GAP, wallX - GAP);
+      clampPositions();
     } else if (dragKind === "wall") {
-      v = snap((x - padL) / sx, Math.max(V_MIN, u + 10), V_MAX);
-      $("v").value = String(v);
+      wallX = snap(xToCm(x), objX + GAP, 360);
+      clampPositions();
+    } else if (dragKind === "light") {
+      lightX = snap(xToCm(x), 0, objX - GAP);
+      clampPositions();
+      if (shadowMode === "ground") {
+        const lampH = readLampH(h);
+        const rawH = (groundY - y) / sy;
+        $("lampH").value = String(snap(rawH, h + 20, 320));
+      }
     } else if (dragKind === "height") {
-      h = snap((groundY - y) / sy, H_MIN, H_MAX);
-      $("h").value = String(h);
+      $("h").value = String(snap((groundY - y) / sy, H_MIN, H_MAX));
+      readLampH(Number($("h").value));
     }
     draw();
   }
@@ -291,6 +411,7 @@
     const target = e.target.closest("[data-drag]");
     if (!target) return;
     dragKind = target.getAttribute("data-drag");
+    if (dragKind === "wall" && shadowMode !== "wall") return;
     dragging = true;
     svg.classList.add("is-dragging");
     e.preventDefault();
@@ -319,30 +440,54 @@
     svg.classList.remove("is-dragging");
   });
 
-  ["u", "v", "h"].forEach((id) => {
-    $(id).addEventListener("input", draw);
+  ["u", "v", "h", "lampH"].forEach((id) => {
+    $(id).addEventListener("input", () => {
+      syncFromSliders();
+      readH();
+      if (shadowMode === "ground") readLampH(Number($("h").value));
+      draw();
+    });
   });
 
+  $("mode-wall").addEventListener("click", () => setMode("wall"));
+  $("mode-ground").addEventListener("click", () => setMode("ground"));
+
   $("preset-quiz").addEventListener("click", () => {
+    lightX = 0;
     $("u").value = "100";
     $("v").value = "200";
     $("h").value = "180";
-    draw();
+    syncFromSliders();
+    setMode("wall");
   });
   $("preset-lamp").addEventListener("click", () => {
+    lightX = 0;
     $("u").value = "70";
     $("v").value = "220";
     $("h").value = "180";
-    draw();
+    syncFromSliders();
+    setMode("wall");
   });
   $("preset-wall").addEventListener("click", () => {
+    lightX = 0;
     $("u").value = "150";
     $("v").value = "200";
     $("h").value = "180";
-    draw();
+    syncFromSliders();
+    setMode("wall");
+  });
+  $("preset-ground-long").addEventListener("click", () => {
+    lightX = 20;
+    $("u").value = "80";
+    $("v").value = "260";
+    $("h").value = "180";
+    $("lampH").value = "200";
+    syncFromSliders();
+    setMode("ground");
   });
 
   new ResizeObserver(draw).observe(svg);
+  syncFromSliders();
   draw();
 })();
 </script>
