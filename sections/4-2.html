@@ -247,7 +247,6 @@
         <ul class="q">
           <li>平面鏡的像永遠和人<strong>一樣大</strong>。走近鏡子只是視角變大，覺得臉比較大，像的實際高度沒變。</li>
           <li>人離鏡 3 m，像在鏡後 3 m，人到像是 6 m。人向前走 1 m，物距變 2 m，人到像變 4 m。鏡子往後移 2 m，物距變 5 m，人到像變 10 m。</li>
-          <li>字母「bd」面向鏡子 → 鏡中為 <strong>db</strong>（左右相反，不是上下顛倒 qp）。段考整串 pqbd「鏡中自左而右」→ <strong>bdpq</strong>。</li>
           <li>電子鐘 21:51 的鏡像：數字左右對調，且只有 0、1、2、5、8 看起來仍像數字，所以實際時間是 12:15。</li>
         </ul>
       </section>
@@ -304,8 +303,7 @@
         <div class="ex-title"><span class="tag tag-green">牛刀小試</span></div>
         <p>1. 把紙上的「bd」面向平面鏡，鏡中看到的是
           （A）bd　（B）db　（C）pq　（D）qp　→
-          <input class="blank" data-answer="B|db|(B)" style="width:3.2em">
-          （平面鏡<strong>左右相反</strong>，不是上下顛倒，所以不是 qp。）
+          <input class="blank" data-answer="D|qp|(D)" style="width:3.2em">
         </p>
         <p>2. 宗翰站在平面鏡前 2 m 與 10 m，全身像的實際大小
           （A）2 m 處較大　（B）10 m 處較大　（C）一樣大　（D）要視鏡子大小　→
@@ -390,19 +388,28 @@
         <input class="blank" data-answer="虛焦點" style="width:4.5em">。
       </p>
       <figure>
-        <svg class="diagram" viewBox="0 0 360 160" aria-label="凸面鏡：平行光反射後發散，延長線交虛焦點">
-          <rect width="360" height="160" rx="8" fill="#f8fafc"/>
-          <path d="M180 140 Q 280 140 300 80 Q 280 20 180 20" fill="none" stroke="#64748b" stroke-width="3"/>
-          <line x1="40" y1="60" x2="200" y2="60" stroke="#ea580c" stroke-width="2"/>
-          <line x1="40" y1="100" x2="200" y2="100" stroke="#ea580c" stroke-width="2"/>
-          <line x1="200" y1="60" x2="320" y2="40" stroke="#2563eb" stroke-width="2"/>
-          <line x1="200" y1="100" x2="320" y2="120" stroke="#2563eb" stroke-width="2"/>
-          <line x1="200" y1="60" x2="120" y2="52" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <line x1="200" y1="100" x2="120" y2="108" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="4 3"/>
-          <text x="24" y="56" font-size="11" fill="#c2410c">平行入射</text>
-          <text x="248" y="36" font-size="11" fill="#1d4ed8">正立縮小虛像區</text>
+        <svg class="diagram" viewBox="0 0 360 200" aria-label="凸面鏡：外側反射面，平行光發散">
+          <rect width="360" height="200" rx="8" fill="#f8fafc"/>
+          <line x1="16" y1="100" x2="344" y2="100" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+          <text x="300" y="94" font-size="11" fill="#64748b">主軸</text>
+          <path d="M 218 42 Q 288 100 218 158 L 288 158 L 288 42 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+          <path d="M 218 42 Q 288 100 218 158" fill="none" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 218 42 Q 288 100 218 158" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" transform="translate(-3 0)"/>
+          <text x="118" y="168" font-size="11" fill="#334155" font-weight="700">反射面（外側）</text>
+          <circle cx="288" cy="100" r="3.5" fill="#64748b"/>
+          <text x="294" y="104" font-size="11" fill="#475569" font-weight="700">C</text>
+          <circle cx="182" cy="100" r="4" fill="none" stroke="#b91c1c" stroke-width="1.5"/>
+          <text x="168" y="88" font-size="11" fill="#b91c1c" font-weight="700">F（虛）</text>
+          <line x1="24" y1="72" x2="206" y2="72" stroke="#ea580c" stroke-width="2.2"/>
+          <line x1="24" y1="128" x2="206" y2="128" stroke="#ea580c" stroke-width="2.2"/>
+          <line x1="206" y1="72" x2="318" y2="48" stroke="#2563eb" stroke-width="2.2"/>
+          <line x1="206" y1="128" x2="318" y2="152" stroke="#2563eb" stroke-width="2.2"/>
+          <line x1="206" y1="72" x2="182" y2="100" stroke="#2563eb" stroke-width="1.4" stroke-dasharray="4 3"/>
+          <line x1="206" y1="128" x2="182" y2="100" stroke="#2563eb" stroke-width="1.4" stroke-dasharray="4 3"/>
+          <text x="24" y="66" font-size="11" fill="#c2410c" font-weight="700">平行入射</text>
+          <text x="262" y="44" font-size="11" fill="#1d4ed8">發散反射</text>
         </svg>
-        <p class="caption">凸面鏡：反射光發散，延長線交於鏡後虛焦點</p>
+        <p class="caption">凸面鏡：銀鍍層在<strong>外側（凸出）表面</strong>；反射光發散，延長線交鏡後虛焦點 F</p>
       </figure>
 
       <h3 class="subh">2. 凹面鏡</h3>
@@ -436,18 +443,28 @@
         <li>太陽爐：收集太陽光熱量。</li>
       </ul>
       <figure>
-        <svg class="diagram" viewBox="0 0 360 160" aria-label="凹面鏡：平行光會聚於焦點">
-          <rect width="360" height="160" rx="8" fill="#fff7ed"/>
-          <path d="M180 140 Q 80 140 60 80 Q 80 20 180 20" fill="none" stroke="#64748b" stroke-width="3"/>
-          <line x1="40" y1="60" x2="160" y2="60" stroke="#ea580c" stroke-width="2"/>
-          <line x1="40" y1="100" x2="160" y2="100" stroke="#ea580c" stroke-width="2"/>
-          <line x1="160" y1="60" x2="280" y2="80" stroke="#2563eb" stroke-width="2"/>
-          <line x1="160" y1="100" x2="280" y2="80" stroke="#2563eb" stroke-width="2"/>
-          <circle cx="280" cy="80" r="5" fill="#b91c1c"/>
-          <text x="288" y="84" font-size="12" fill="#b91c1c" font-weight="700">F</text>
-          <text x="24" y="56" font-size="11" fill="#c2410c">平行→會聚</text>
+        <svg class="diagram" viewBox="0 0 360 200" aria-label="凹面鏡：內側反射面，平行光會聚">
+          <rect width="360" height="200" rx="8" fill="#fff7ed"/>
+          <line x1="16" y1="100" x2="344" y2="100" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
+          <text x="300" y="94" font-size="11" fill="#64748b">主軸</text>
+          <path d="M 218 42 Q 148 100 218 158 L 268 158 L 268 42 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
+          <path d="M 218 42 Q 148 100 218 158" fill="none" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
+          <path d="M 218 42 Q 148 100 218 158" fill="none" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" transform="translate(3 0)"/>
+          <text x="118" y="168" font-size="11" fill="#334155" font-weight="700">反射面（內側）</text>
+          <circle cx="288" cy="100" r="3.5" fill="#64748b"/>
+          <text x="294" y="104" font-size="11" fill="#475569" font-weight="700">C</text>
+          <circle cx="254" cy="100" r="4.5" fill="#b91c1c"/>
+          <text x="262" y="92" font-size="11" fill="#b91c1c" font-weight="700">F</text>
+          <line x1="24" y1="72" x2="206" y2="72" stroke="#ea580c" stroke-width="2.2"/>
+          <line x1="24" y1="128" x2="206" y2="128" stroke="#ea580c" stroke-width="2.2"/>
+          <line x1="206" y1="72" x2="254" y2="100" stroke="#2563eb" stroke-width="2.2"/>
+          <line x1="254" y1="100" x2="332" y2="72" stroke="#2563eb" stroke-width="2.2"/>
+          <line x1="206" y1="128" x2="254" y2="100" stroke="#2563eb" stroke-width="2.2"/>
+          <line x1="254" y1="100" x2="332" y2="128" stroke="#2563eb" stroke-width="2.2"/>
+          <text x="24" y="66" font-size="11" fill="#c2410c" font-weight="700">平行入射</text>
+          <text x="288" y="66" font-size="11" fill="#1d4ed8" font-weight="700">會聚反射</text>
         </svg>
-        <p class="caption">凹面鏡：平行光反射後交於焦點（手電筒、太陽爐）</p>
+        <p class="caption">凹面鏡：銀鍍層在<strong>內側（凹進）表面</strong>；平行光反射後交於主軸焦點 F（手電筒、太陽爐）</p>
       </figure>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 凸、凹怎麼分？國中口訣</div>
