@@ -1,0 +1,237 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>影子有多大？相似三角形</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f8fa; color: #193247; font: 16px/1.65 system-ui, "Microsoft JhengHei", sans-serif; }
+    main { max-width: 1050px; margin: auto; padding: 24px; }
+    small { color: #547082; }
+    h1 { font-size: clamp(23px, 4vw, 31px); line-height: 1.4; margin: 6px 0 8px; }
+    p { margin: 8px 0 16px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0; align-items: center; }
+    .control { flex: 1 1 190px; max-width: 340px; }
+    .control label { display: flex; justify-content: space-between; gap: 10px; font-size: 15px; }
+    .control output { font-variant-numeric: tabular-nums; font-weight: 600; }
+    input[type=range] { width: 100%; min-height: 44px; accent-color: #087fa4; }
+    button {
+      font: inherit; min-height: 44px; padding: 8px 14px;
+      border: 1px solid #afc4d0; border-radius: 8px; color: #193247; background: white; cursor: pointer;
+    }
+    button.primary { background: #076b87; color: white; border-color: #076b87; }
+    button:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid #e5a12a; outline-offset: 3px; }
+    .presets { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 12px; }
+    .visual { background: white; border: 1px solid #dbe7ed; border-radius: 16px; overflow: hidden; }
+    svg#scene { display: block; width: 100%; height: 400px; }
+    svg text { font: 14px system-ui, "Microsoft JhengHei", sans-serif; fill: #29495e; }
+    .readout { padding: 14px 18px; background: #edf5f8; min-height: 56px; font-variant-numeric: tabular-nums; font-size: 15px; line-height: 1.5; }
+    .readout strong { color: #0e7490; }
+    .legend { font-size: 14px; margin: 8px 0 12px; }
+    .key { display: inline-block; padding: 2px 8px; border-radius: 6px; background: #e6f1f5; margin: 2px; }
+    .question { margin-top: 18px; padding: 16px; background: #eaf3f7; border-left: 4px solid #087fa4; border-radius: 7px; }
+    summary { cursor: pointer; min-height: 44px; padding: 8px 0; font-weight: 600; }
+    details p { margin: 6px 0; }
+    .note { font-size: 13px; color: #526c7d; }
+    @media (max-width: 480px) {
+      main { padding: 14px; }
+      svg#scene { height: 440px; }
+    }
+  </style>
+  <link rel="stylesheet" href="embed.css">
+</head>
+<body>
+<script>if (window.parent !== window) document.documentElement.classList.add("is-embed");</script>
+<script>document.documentElement.classList.add("shadow-size-page");</script>
+<main>
+  <small>國中理化 · 4-1 影子的大小</small>
+  <h1>影子有多大？</h1>
+  <p>點光源、直立物體與牆面構成<strong>相似三角形</strong>。拖曳滑桿或按情境按鈕，觀察光線與影高如何改變。</p>
+  <p class="legend">
+    <span class="key" style="background:#fef08a;color:#854d0e">● 點光源</span>
+    <span class="key" style="background:#dbeafe;color:#1d4ed8">物體</span>
+    <span class="key" style="background:#1e293b;color:#f8fafc">影子區</span>
+    <span class="key">虛線＝相似三角形</span>
+  </p>
+  <div class="presets">
+    <button type="button" class="primary" id="preset-quiz">小華例題（100＋100 cm）</button>
+    <button type="button" id="preset-lamp">靠近光源（影變大）</button>
+    <button type="button" id="preset-wall">靠近牆面（影變小）</button>
+  </div>
+  <div class="controls">
+    <div class="control">
+      <label for="u">光源→物體 <output id="u-out"></output></label>
+      <input id="u" type="range" min="60" max="220" step="5" value="100">
+    </div>
+    <div class="control">
+      <label for="v">光源→牆面 <output id="v-out"></output></label>
+      <input id="v" type="range" min="120" max="360" step="5" value="200">
+    </div>
+    <div class="control">
+      <label for="h">物體高度 <output id="h-out"></output></label>
+      <input id="h" type="range" min="120" max="200" step="5" value="180">
+    </div>
+  </div>
+  <div class="visual">
+    <svg id="scene" role="img" aria-label="點光源、物體與牆面影子相似三角形示意"></svg>
+    <div class="readout" id="result"></div>
+  </div>
+  <div class="question">
+    <b>先想一想：</b>物體往牆面移動，影高會變大還是變小？為什麼？
+    <details>
+      <summary>查看解釋</summary>
+      <p>影高 H＝h×v÷u（u＝光源到物體，v＝光源到牆，h＝物高）。物體靠近牆 → u 變大、v 不變 → H 變小。物體靠近燈 → u 變小 → H 變大。</p>
+    </details>
+  </div>
+  <p class="note">側視圖：光源與物體底端在同一水平地面；牆面垂直。僅考慮點光源，不畫半影。距離單位 cm。</p>
+</main>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const svg = $("scene");
+  const NS = "http://www.w3.org/2000/svg";
+  const C = { gold: "#ca8a04", blue: "#2563eb", gray: "#94a3b8", dark: "#0f172a", red: "#dc2626", dash: "#64748b" };
+
+  function n(tag, attrs = {}, text = "") {
+    const node = document.createElementNS(NS, tag);
+    Object.entries(attrs).forEach(([k, v]) => node.setAttribute(k, v));
+    if (text !== undefined) node.textContent = text;
+    svg.append(node);
+    return node;
+  }
+  function clear() {
+    const W = Math.max(280, svg.clientWidth);
+    const H = svg.clientHeight || 400;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.replaceChildren();
+    return { W, H };
+  }
+  function line(x1, y1, x2, y2, color, dash, w = 2) {
+    return n("line", {
+      x1, y1, x2, y2, stroke: color, "stroke-width": w,
+      ...(dash ? { "stroke-dasharray": "6 5" } : {})
+    });
+  }
+  function arrow(x1, y1, x2, y2, color) {
+    line(x1, y1, x2, y2, color, false, 2.2);
+    const a = Math.atan2(y2 - y1, x2 - x1);
+    const L = 9;
+    n("path", {
+      d: `M${x2} ${y2} L${x2 - L * Math.cos(a - 0.45)} ${y2 - L * Math.sin(a - 0.45)} L${x2 - L * Math.cos(a + 0.45)} ${y2 - L * Math.sin(a + 0.45)} Z`,
+      fill: color, stroke: "none"
+    });
+  }
+  function label(x, y, t, anchor, color) {
+    const attrs = { x, y, "text-anchor": anchor || "middle" };
+    if (color) attrs.fill = color;
+    return n("text", attrs, t);
+  }
+
+  function read() {
+    let u = Number($("u").value);
+    let v = Number($("v").value);
+    const h = Number($("h").value);
+    if (v <= u + 10) {
+      v = u + 10;
+      $("v").value = String(v);
+    }
+    return { u, v, h };
+  }
+
+  function draw() {
+    const { W, H } = clear();
+    const { u, v, h } = read();
+    const Hshadow = (h * v) / u;
+    const w = v - u;
+
+    $("u-out").textContent = u + " cm";
+    $("v-out").textContent = v + " cm";
+    $("h-out").textContent = h + " cm";
+
+    const padL = 36;
+    const padR = 28;
+    const groundY = H * 0.82;
+    const maxV = 360;
+    const sx = (W - padL - padR) / maxV;
+    const sy = (H * 0.55) / 400;
+
+    const xL = padL;
+    const xO = padL + u * sx;
+    const xW = padL + v * sx;
+    const yTop = groundY - h * sy;
+    const yShadowTop = groundY - Hshadow * sy;
+
+    n("rect", { x: 0, y: groundY, width: W, height: H - groundY, fill: "#e2e8f0" });
+    line(0, groundY, W, groundY, C.gray, false, 2);
+    label(12, groundY + 22, "地面", "start");
+
+    n("rect", { x: xW, y: 0, width: W - xW, height: H, fill: "#f1f5f9" });
+    line(xW, 0, xW, H, C.gray, false, 3);
+    label(xW + 10, 24, "牆面", "start");
+
+    n("rect", {
+      x: xW - 2, y: yShadowTop, width: 14, height: groundY - yShadowTop,
+      fill: "#1e293b", opacity: 0.85
+    });
+
+    line(xL, groundY, xO, groundY, C.dash, true, 1.5);
+    line(xL, groundY, xO, yTop, C.dash, true, 1.5);
+    line(xL, groundY, xW, yShadowTop, C.dash, true, 1.5);
+    label((xL + xO) / 2, groundY + 18, "u", "middle", C.dash);
+    label((xL + xW) / 2, groundY - 8, "v", "middle", C.dash);
+
+    arrow(xL, groundY, xO, yTop, C.gold);
+    arrow(xL, groundY, xW, yShadowTop, C.gold);
+
+    n("circle", { cx: xL, cy: groundY, r: 10, fill: "#fef08a", stroke: C.gold, "stroke-width": 2 });
+    label(xL, groundY - 18, "光源", "middle");
+
+    n("rect", {
+      x: xO - 7, y: yTop, width: 14, height: groundY - yTop,
+      fill: "#dbeafe", stroke: C.blue, "stroke-width": 2, rx: 3
+    });
+    label(xO, yTop - 10, "h", "middle", C.blue);
+
+    label(xW + 6, (yShadowTop + groundY) / 2, "H", "start", C.dark);
+    label(xW + 6, yShadowTop - 6, Hshadow.toFixed(0) + " cm", "start", C.dark);
+
+    $("result").innerHTML =
+      `<strong>u／v＝h／H</strong> → ${u}／${v}＝${h}／${Hshadow.toFixed(0)}` +
+      ` ｜ 影高 <strong>H≈${Hshadow.toFixed(0)} cm</strong> ｜ 物體距牆 ${w} cm`;
+
+    svg.setAttribute("aria-label",
+      `光源到物體 ${u} 公分，到牆 ${v} 公分，物高 ${h} 公分，影高約 ${Hshadow.toFixed(0)} 公分`);
+  }
+
+  ["u", "v", "h"].forEach((id) => {
+    $(id).addEventListener("input", draw);
+  });
+
+  $("preset-quiz").addEventListener("click", () => {
+    $("u").value = "100";
+    $("v").value = "200";
+    $("h").value = "180";
+    draw();
+  });
+  $("preset-lamp").addEventListener("click", () => {
+    $("u").value = "70";
+    $("v").value = "220";
+    $("h").value = "180";
+    draw();
+  });
+  $("preset-wall").addEventListener("click", () => {
+    $("u").value = "150";
+    $("v").value = "200";
+    $("h").value = "180";
+    draw();
+  });
+
+  new ResizeObserver(draw).observe(svg);
+  draw();
+})();
+</script>
+<script src="embed-resize.js"></script>
+</body>
+</html>
