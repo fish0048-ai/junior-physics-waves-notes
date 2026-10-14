@@ -9,12 +9,40 @@
 ## 規範優先順序（衝突時）
 
 1. 平台實際權限（Cursor／GitHub／Vercel 核准卡）— 不可繞過  
-2. 本文件與 `.cursor/rules/jpwn-automation.mdc`  
-3. `.cursor/rules/jpwn-multi-agent.mdc`、`docs/agent-cooperation.md`  
-4. `.cursor/rules/jpwn-github.mdc`  
-5. `AGENTS.md` 與講義技能（`jpwn-core`、`jpwn-workflow` 等）
+2. **GitHub PR 強制流程**（本文件下一節）— 不可因缺 `gh` CLI 而繞過  
+3. 本文件其餘章節與 `.cursor/rules/jpwn-automation.mdc`  
+4. `.cursor/rules/jpwn-multi-agent.mdc`、`docs/agent-cooperation.md`  
+5. `.cursor/rules/jpwn-github.mdc`  
+6. `AGENTS.md` 與講義技能（`jpwn-core`、`jpwn-workflow` 等）
 
-使用者若明確說「先不要 push／不要 commit／不要合併」，以**當次指示**覆寫自動化預設。
+使用者若明確說「先不要 push／不要 commit／不要合併」，以**當次指示**覆寫自動化預設。  
+**例外**：「授權自動合併」僅指**符合安全條件的 PR 在 GitHub 上合併**，不是允許跳過 PR 或直接更新 `main`。
+
+---
+
+## GitHub PR 強制流程（不可破）
+
+所有教材與程式修改進入 `main`（含 Vercel 正式站）**只能**經 Pull Request，不得走捷徑。
+
+| # | 規則 |
+|---|------|
+| 1 | 變更在**功能分支**完成；`commit` 後 `push` 該分支（非 `main`）。 |
+| 2 | **禁止**本機 `git push origin main`、本機 `git merge`／fast-forward 進 `main`、cherry-pick 直接上 `main`、或以任何方式**跳過 PR** 更新遠端 `main`。 |
+| 3 | 建立 PR：`base` = `main`，`head` = 功能分支。優先順序：`gh pr create` → **GitHub REST API**（`git credential`／環境 token）→ 已連線的 GitHub MCP（若可用）。 |
+| 4 | **若無法建立 PR**：保留分支與 commit、回報阻礙（缺 token、403 等）；**不得**改為直接推 `main`。 |
+| 5 | 使用者「自動合併」= 在 PR 上、安全清單**全部成立**時，經 **GitHub 合併 PR**（merge／squash 依 repo 慣例）；不是本機合併。 |
+| 6 | **CI 必須針對 PR 的 head commit**（`pull_request` 觸發的 workflow run）；僅 `push` 到 `main` 的綠燈**不能**代替 PR 檢查。必要 checks 全綠、`mergeable` 後才可合併。 |
+| 7 | PR 合併後：查 Vercel／commit status，確認正式部署成功。 |
+| 8 | **禁止**「事後補開 PR」取代事前 PR 審查與 PR 上 CI。 |
+| 9 | 教訓案例：曾因本機無 `gh` 而 fast-forward 合併（如 `30ca1e5`）— **僅作流程警示，不回退已上線內容**。 |
+
+### 標準收尾（Agent）
+
+1. 功能分支：`commit` → `push origin <branch>`  
+2. 建立／更新 PR（附簡述與測試計畫）  
+3. 等待 PR 上必要 Actions success；失敗則最多三輪修正並 push 至**同一分支**（PR head 更新）  
+4. 安全清單成立 → **GitHub API／UI 合併 PR**（非本機 `git checkout main && merge`）  
+5. 確認 Vercel 部署 → 各 worktree `git fetch` + `merge --ff-only origin/main`（僅同步本機，**不是**寫入遠端 `main`）
 
 ---
 
@@ -41,7 +69,7 @@
 - 建立／更新 PR
 - 觸發與監看 GitHub Actions
 - 依 CI 日誌修正（見下方「三輪修正」）
-- 在**安全條件全部成立**時合併常規 PR 至 `main`
+- 在**安全條件全部成立**時，於 **GitHub 合併 PR**（更新 `main`）
 - 依既有 Vercel 連動確認部署（不擅自改正式環境機密設定）
 
 **不得**因「習慣上再問一次」而打斷流程；但若觸發「必須詢問」條款，仍須停下。
@@ -82,10 +110,10 @@
 
 ---
 
-## 自動合併 `main` 的安全條件（全部成立才 merge）
+## 自動合併 PR 的安全條件（全部成立才在 GitHub merge）
 
 - [ ] 變更符合使用者當次口語需求（或 PR 描述可追溯）  
-- [ ] 必要 CI 全數 success（含 Playwright／Chromium 等 PR 上 required checks）  
+- [ ] 必要 CI 全數 success，且 run 綁定**本 PR head SHA**（含 Playwright／`lecture-quality`／a11y 等 required checks）  
 - [ ] `mergeable`、無未解衝突  
 - [ ] 無已知**重大**科學錯誤或高嚴重度功能／版面問題  
 - [ ] 所需測試證據完整（無則標待驗證且**不合併**）  
@@ -140,10 +168,11 @@
 
 | 能力 | 現狀 |
 |------|------|
-| 口語 → 判斷 Worktree → 改檔 → commit/push/PR | Cursor Agent + git credential／API **可** |
-| PR 上 Playwright／Chromium CI | **可**（`a11y-phase1.yml` 等） |
-| 專項 PDF／RWD（overlay 教材 SHA） | **可**（`lab-1-2-sheet-pr6.yml` 在 `test/site-quality`） |
-| 自動合併 PR | Agent **可**呼叫 GitHub API（需權限；受安全清單約束） |
+| 口語 → 判斷 Worktree → 改檔 → commit/push 功能分支/PR | Cursor Agent + git credential／API **可** |
+| PR 上 Playwright／Chromium CI | **可**（`playwright.yml`、`a11y-phase1.yml` 等 `pull_request` 觸發） |
+| 講義 PDF／RWD 證據 | **可**（`lecture-quality.yml` 等） |
+| 建立／合併 PR（無 `gh` 時） | **須** GitHub REST API 或 MCP；**不可**改推 `main` |
+| 自動合併 PR | Agent **可**經 GitHub API `merge`（受安全清單約束；**禁止**本機合併後 push `main`） |
 | Vercel 部署 | **可**（`main` 合併後自動；Agent 可查 deployment 狀態） |
 | 同一對話內「自動呼叫 testing Agent」 | **不可**— 以 CI + 分支協調代替 |
 | 本機 Playwright | **不可**（公司政策） |

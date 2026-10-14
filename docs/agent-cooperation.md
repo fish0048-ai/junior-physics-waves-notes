@@ -14,7 +14,7 @@
 
 - 三個目錄共用**同一 Git 物件庫**；`git worktree list` 可一次查看。
 - **禁止**在 A 的 Cursor 視窗編輯 B 的路徑檔案（反之亦然）。
-- `main` 對應 Vercel 正式站；**不得**在 worktree 直接改 `main` 或 force push。合併 `main` 依口語自動化安全清單（非常規 PR 或使用者禁止時不合併）。
+- `main` 對應 Vercel 正式站；**不得**在 worktree 直接改 `main`、force push、或本機 merge 後 push `main`。進 `main` **僅**經 GitHub PR；合併依口語自動化安全清單（使用者禁止時不合併 PR）。
 
 ## 檔案責任（摘要）
 
@@ -47,11 +47,12 @@
 
 ## PR、CI 與自動合併
 
-1. **講義**：`feature/lecture-content` → PR → CI 綠燈 → 符合 [`voice-driven-automation.md`](voice-driven-automation.md) 安全清單 → **Agent 可自動合併** `main`。
-2. **測試**：`test/site-quality` → PR → CI 綠燈 → 同上。
-3. **跨 Agent**：講義 Agent 不修改 testing 目錄；需新 spec／workflow 時由 testing 分支 PR，或以既有 workflow **overlay 教材 SHA**（如 `lab-1-2-sheet-pr6.yml`）驗證講義 PR。
-4. 規範類文件：在一分支提交後，另一 worktree 以 **merge 該 commit** 同步，勿手動複製覆蓋。
+1. **講義**：功能分支（常用 `feature/lecture-content`）→ **開 PR** → **PR head 上** CI 綠燈 → 符合 [`voice-driven-automation.md`](voice-driven-automation.md) 安全清單 → **Agent 可在 GitHub 合併 PR**（非本機 push `main`）。
+2. **測試**：`test/site-quality` → PR → 同上。
+3. **跨 Agent**：講義 Agent 不修改 testing 目錄；需新 spec／workflow 時由 testing 分支 PR；講義 PR 由 `lecture-quality.yml` 等依 diff 驗證。
+4. 規範類文件：在一分支提交 → PR 合併後，另一 worktree `fetch` + `merge --ff-only origin/main` 同步，勿手動複製覆蓋。
 5. 使用者或任務明示「規範 PR 不自動合併」→ 只開 PR、等待確認。
+6. **禁止**無 PR 直推 `main`；**禁止**事後補 PR 代替事前 PR 審查。無 `gh` 時用 GitHub API／MCP 開 PR，否則停並回報。
 
 ### 將規範同步到 testing worktree（示例）
 
