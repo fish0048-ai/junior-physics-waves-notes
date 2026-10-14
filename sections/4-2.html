@@ -388,28 +388,44 @@
         <input class="blank" data-answer="虛焦點" style="width:4.5em">。
       </p>
       <figure>
-        <svg class="diagram" viewBox="0 0 360 200" aria-label="凸面鏡：外側反射面，平行光發散">
-          <rect width="360" height="200" rx="8" fill="#f8fafc"/>
-          <line x1="16" y1="100" x2="344" y2="100" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
-          <text x="300" y="94" font-size="11" fill="#64748b">主軸</text>
-          <path d="M 218 42 Q 288 100 218 158 L 288 158 L 288 42 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-          <path d="M 218 42 Q 288 100 218 158" fill="none" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
-          <path d="M 218 42 Q 288 100 218 158" fill="none" stroke="#94a3b8" stroke-width="2.5" stroke-linecap="round" transform="translate(-3 0)"/>
-          <text x="118" y="168" font-size="11" fill="#334155" font-weight="700">反射面（外側）</text>
-          <circle cx="288" cy="100" r="3.5" fill="#64748b"/>
-          <text x="294" y="104" font-size="11" fill="#475569" font-weight="700">C</text>
-          <circle cx="182" cy="100" r="4" fill="none" stroke="#b91c1c" stroke-width="1.5"/>
-          <text x="168" y="88" font-size="11" fill="#b91c1c" font-weight="700">F（虛）</text>
-          <line x1="24" y1="72" x2="206" y2="72" stroke="#ea580c" stroke-width="2.2"/>
-          <line x1="24" y1="128" x2="206" y2="128" stroke="#ea580c" stroke-width="2.2"/>
-          <line x1="206" y1="72" x2="318" y2="48" stroke="#2563eb" stroke-width="2.2"/>
-          <line x1="206" y1="128" x2="318" y2="152" stroke="#2563eb" stroke-width="2.2"/>
-          <line x1="206" y1="72" x2="182" y2="100" stroke="#2563eb" stroke-width="1.4" stroke-dasharray="4 3"/>
-          <line x1="206" y1="128" x2="182" y2="100" stroke="#2563eb" stroke-width="1.4" stroke-dasharray="4 3"/>
-          <text x="24" y="66" font-size="11" fill="#c2410c" font-weight="700">平行入射</text>
-          <text x="262" y="44" font-size="11" fill="#1d4ed8">發散反射</text>
+        <svg class="diagram" viewBox="0 0 480 260" aria-label="凸面鏡成像光路：虛正立縮小像">
+          <defs>
+            <pattern id="mirror-hatch-convex" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="7" stroke="#cbd5e1" stroke-width="1.2"/>
+            </pattern>
+            <marker id="ray-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0 0 L8 4 L0 8 z" fill="context-stroke"/>
+            </marker>
+          </defs>
+          <rect width="480" height="260" rx="8" fill="#f8fafc"/>
+          <line x1="24" y1="168" x2="456" y2="168" stroke="#334155" stroke-width="1.5"/>
+          <text x="418" y="184" font-size="12" fill="#334155" font-weight="700">主軸</text>
+          <!-- 凸面鏡：反射面迎物體（外側），鏡背斜線 -->
+          <path d="M 232 48 Q 318 168 232 288 L 318 288 L 318 48 Z" fill="url(#mirror-hatch-convex)"/>
+          <path d="M 232 48 Q 318 168 232 288" fill="none" stroke="#334155" stroke-width="4.5" stroke-linecap="round"/>
+          <text x="326" y="168" font-size="11" fill="#64748b">鏡背</text>
+          <text x="248" y="36" font-size="11" fill="#334155" font-weight="700">鏡面（外側反射）</text>
+          <circle cx="168" cy="168" r="4.5" fill="#dc2626"/>
+          <text x="118" y="158" font-size="12" fill="#dc2626" font-weight="700">（虛）焦點</text>
+          <!-- 物 A -->
+          <line x1="348" y1="168" x2="348" y2="98" stroke="#475569" stroke-width="3"/>
+          <polygon points="348,88 338,104 358,104" fill="#475569"/>
+          <text x="356" y="82" font-size="13" fill="#334155" font-weight="700">物 A</text>
+          <!-- 像 A′ -->
+          <line x1="196" y1="168" x2="196" y2="128" stroke="#94a3b8" stroke-width="2.5"/>
+          <polygon points="196,120 190,132 202,132" fill="#94a3b8"/>
+          <text x="204" y="118" font-size="12" fill="#64748b" font-weight="700">A′</text>
+          <text x="152" y="148" font-size="12" fill="#64748b" font-weight="700">虛正立縮小像</text>
+          <!-- 光線 1：平行主軸 → 反射發散，延長線過虛焦點 -->
+          <line x1="348" y1="98" x2="252" y2="98" stroke="#2563eb" stroke-width="2.2" marker-end="url(#ray-arr)"/>
+          <line x1="252" y1="98" x2="348" y2="62" stroke="#2563eb" stroke-width="2.2" marker-end="url(#ray-arr)"/>
+          <line x1="252" y1="98" x2="168" y2="168" stroke="#2563eb" stroke-width="1.6" stroke-dasharray="5 4"/>
+          <!-- 光線 2：指鏡心 → 反射對稱，延長線成虛像 -->
+          <line x1="348" y1="98" x2="232" y2="168" stroke="#dc2626" stroke-width="2.2" marker-end="url(#ray-arr)"/>
+          <line x1="232" y1="168" x2="348" y2="238" stroke="#dc2626" stroke-width="2.2" marker-end="url(#ray-arr)"/>
+          <line x1="232" y1="168" x2="196" y2="128" stroke="#dc2626" stroke-width="1.6" stroke-dasharray="5 4"/>
         </svg>
-        <p class="caption">凸面鏡：銀鍍層在<strong>外側（凸出）表面</strong>；反射光發散，延長線交鏡後虛焦點 F</p>
+        <p class="caption">凸面鏡：物在鏡前，反射面在<strong>外側</strong>；兩條典型光線的<strong>延長線</strong>交於鏡後，得正立縮小虛像（對照課本光路圖）</p>
       </figure>
 
       <h3 class="subh">2. 凹面鏡</h3>
@@ -443,28 +459,63 @@
         <li>太陽爐：收集太陽光熱量。</li>
       </ul>
       <figure>
-        <svg class="diagram" viewBox="0 0 360 200" aria-label="凹面鏡：內側反射面，平行光會聚">
-          <rect width="360" height="200" rx="8" fill="#fff7ed"/>
-          <line x1="16" y1="100" x2="344" y2="100" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="5 4"/>
-          <text x="300" y="94" font-size="11" fill="#64748b">主軸</text>
-          <path d="M 218 42 Q 148 100 218 158 L 268 158 L 268 42 Z" fill="#e2e8f0" stroke="#cbd5e1" stroke-width="1"/>
-          <path d="M 218 42 Q 148 100 218 158" fill="none" stroke="#475569" stroke-width="5" stroke-linecap="round"/>
-          <path d="M 218 42 Q 148 100 218 158" fill="none" stroke="#cbd5e1" stroke-width="2.5" stroke-linecap="round" transform="translate(3 0)"/>
-          <text x="118" y="168" font-size="11" fill="#334155" font-weight="700">反射面（內側）</text>
-          <circle cx="288" cy="100" r="3.5" fill="#64748b"/>
-          <text x="294" y="104" font-size="11" fill="#475569" font-weight="700">C</text>
-          <circle cx="254" cy="100" r="4.5" fill="#b91c1c"/>
-          <text x="262" y="92" font-size="11" fill="#b91c1c" font-weight="700">F</text>
-          <line x1="24" y1="72" x2="206" y2="72" stroke="#ea580c" stroke-width="2.2"/>
-          <line x1="24" y1="128" x2="206" y2="128" stroke="#ea580c" stroke-width="2.2"/>
-          <line x1="206" y1="72" x2="254" y2="100" stroke="#2563eb" stroke-width="2.2"/>
-          <line x1="254" y1="100" x2="332" y2="72" stroke="#2563eb" stroke-width="2.2"/>
-          <line x1="206" y1="128" x2="254" y2="100" stroke="#2563eb" stroke-width="2.2"/>
-          <line x1="254" y1="100" x2="332" y2="128" stroke="#2563eb" stroke-width="2.2"/>
-          <text x="24" y="66" font-size="11" fill="#c2410c" font-weight="700">平行入射</text>
-          <text x="288" y="66" font-size="11" fill="#1d4ed8" font-weight="700">會聚反射</text>
+        <svg class="diagram" viewBox="0 0 520 280" aria-label="凹面鏡：焦點外成實像、焦點內成正立放大虛像">
+          <defs>
+            <pattern id="mirror-hatch-concave" patternUnits="userSpaceOnUse" width="7" height="7" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="7" stroke="#cbd5e1" stroke-width="1.2"/>
+            </pattern>
+            <marker id="ray-arr-c" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+              <path d="M0 0 L8 4 L0 8 z" fill="context-stroke"/>
+            </marker>
+          </defs>
+          <rect width="520" height="280" rx="8" fill="#fff7ed"/>
+          <line x1="260" y1="24" x2="260" y2="268" stroke="#e2e8f0" stroke-width="1" stroke-dasharray="4 4"/>
+          <text x="268" y="20" font-size="11" fill="#94a3b8">左：焦點外　｜　右：焦點內</text>
+          <!-- ===== 左：實像 ===== -->
+          <g aria-label="凹面鏡焦點外">
+            <line x1="16" y1="168" x2="248" y2="168" stroke="#334155" stroke-width="1.5"/>
+            <text x="200" y="184" font-size="11" fill="#334155" font-weight="700">主軸</text>
+            <path d="M 188 52 Q 118 168 188 272 L 238 272 L 238 52 Z" fill="url(#mirror-hatch-concave)"/>
+            <path d="M 188 52 Q 118 168 188 272" fill="none" stroke="#334155" stroke-width="4.5"/>
+            <text x="198" y="44" font-size="11" fill="#334155" font-weight="700">鏡面</text>
+            <circle cx="152" cy="168" r="4" fill="#dc2626"/>
+            <text x="128" y="158" font-size="11" fill="#dc2626" font-weight="700">焦點</text>
+            <line x1="56" y1="168" x2="56" y2="108" stroke="#475569" stroke-width="3"/>
+            <polygon points="56,98 48,114 64,114" fill="#475569"/>
+            <text x="64" y="96" font-size="11" fill="#334155" font-weight="700">物體</text>
+            <line x1="56" y1="108" x2="178" y2="108" stroke="#2563eb" stroke-width="2" marker-end="url(#ray-arr-c)"/>
+            <line x1="178" y1="108" x2="152" y2="168" stroke="#2563eb" stroke-width="2" marker-end="url(#ray-arr-c)"/>
+            <line x1="152" y1="168" x2="72" y2="168" stroke="#2563eb" stroke-width="2" marker-end="url(#ray-arr-c)"/>
+            <line x1="56" y1="108" x2="152" y2="168" stroke="#ea580c" stroke-width="2" marker-end="url(#ray-arr-c)"/>
+            <line x1="152" y1="168" x2="178" y2="108" stroke="#ea580c" stroke-width="2" marker-end="url(#ray-arr-c)"/>
+            <line x1="178" y1="108" x2="218" y2="108" stroke="#ea580c" stroke-width="2" marker-end="url(#ray-arr-c)"/>
+            <line x1="120" y1="168" x2="120" y2="218" stroke="#64748b" stroke-width="2.5"/>
+            <polygon points="120,226 114,214 126,214" fill="#64748b"/>
+            <text x="128" y="240" font-size="11" fill="#334155" font-weight="700">實像</text>
+          </g>
+          <!-- ===== 右：正立放大虛像 ===== -->
+          <g transform="translate(260 0)" aria-label="凹面鏡焦點內">
+            <line x1="16" y1="168" x2="248" y2="168" stroke="#334155" stroke-width="1.5"/>
+            <text x="200" y="184" font-size="11" fill="#334155" font-weight="700">主軸</text>
+            <path d="M 188 52 Q 118 168 188 272 L 238 272 L 238 52 Z" fill="url(#mirror-hatch-concave)"/>
+            <path d="M 188 52 Q 118 168 188 272" fill="none" stroke="#334155" stroke-width="4.5"/>
+            <circle cx="72" cy="168" r="4" fill="#dc2626"/>
+            <text x="48" y="158" font-size="11" fill="#dc2626" font-weight="700">焦點</text>
+            <line x1="148" y1="168" x2="148" y2="108" stroke="#475569" stroke-width="3"/>
+            <polygon points="148,98 140,114 156,114" fill="#475569"/>
+            <text x="156" y="96" font-size="11" fill="#334155" font-weight="700">物體</text>
+            <line x1="148" y1="108" x2="178" y2="108" stroke="#2563eb" stroke-width="2" marker-end="url(#ray-arr-c)"/>
+            <line x1="178" y1="108" x2="210" y2="78" stroke="#2563eb" stroke-width="2" marker-end="url(#ray-arr-c)"/>
+            <line x1="178" y1="108" x2="72" y2="168" stroke="#2563eb" stroke-width="1.6" stroke-dasharray="5 4"/>
+            <line x1="148" y1="108" x2="188" y2="168" stroke="#ea580c" stroke-width="2" marker-end="url(#ray-arr-c)"/>
+            <line x1="188" y1="168" x2="228" y2="198" stroke="#ea580c" stroke-width="2" marker-end="url(#ray-arr-c)"/>
+            <line x1="188" y1="168" x2="108" y2="88" stroke="#ea580c" stroke-width="1.6" stroke-dasharray="5 4"/>
+            <line x1="108" y1="168" x2="108" y2="88" stroke="#94a3b8" stroke-width="3"/>
+            <polygon points="108,78 100,94 116,94" fill="#94a3b8"/>
+            <text x="48" y="82" font-size="11" fill="#64748b" font-weight="700">正立放大虛像</text>
+          </g>
         </svg>
-        <p class="caption">凹面鏡：銀鍍層在<strong>內側（凹進）表面</strong>；平行光反射後交於主軸焦點 F（手電筒、太陽爐）</p>
+        <p class="caption">凹面鏡：反射面在<strong>內側</strong>（鏡背斜線在後）；物在焦點外→倒立<strong>實像</strong>；物在焦點內→<strong>正立放大虛像</strong>（化妝鏡）</p>
       </figure>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 凸、凹怎麼分？國中口訣</div>
