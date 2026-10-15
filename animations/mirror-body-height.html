@@ -84,6 +84,10 @@
   let H = 460;
   let drag = null;
   const state = { xPerson: null, eyeY: null };
+  const HEAD_R = 14;
+  const PAD = 18;
+  const VIRT_LABEL = 40;
+  const MIRROR_GAP = 36;
 
   function n(tag, attrs = {}, text = "") {
     const el = document.createElementNS(NS, tag);
@@ -125,27 +129,34 @@
   }
 
   function drawPerson(x, footY, headY, eyeY, opts) {
-    const { dashed, stroke, fillHead, label } = opts;
+    const { dashed, stroke, fillHead, label, labelX } = opts;
+    const headCy = headY - 10;
+    const bodyTop = headCy - HEAD_R;
     const sw = dashed ? 3 : 5;
     n("line", {
-      x1: x, y1: footY, x2: x, y2: headY,
+      x1: x, y1: footY, x2: x, y2: dashed ? bodyTop : headY,
       stroke, "stroke-width": sw, "stroke-linecap": "round",
-      ...(dashed ? { "stroke-dasharray": "8 6", opacity: "0.9" } : {})
+      ...(dashed ? { "stroke-dasharray": "8 6", opacity: "0.95" } : {})
     });
-    n("circle", {
-      cx: x, cy: headY - 10, r: 14,
-      fill: fillHead, stroke, "stroke-width": 2,
-      ...(dashed ? { fill: "none", "stroke-dasharray": "5 4" } : {})
-    });
-    if (!dashed) {
+    if (dashed) {
+      n("circle", {
+        cx: x, cy: headCy, r: HEAD_R,
+        fill: "none", stroke, "stroke-width": 2.5,
+        "stroke-dasharray": "8 6", "stroke-linecap": "round"
+      });
+      n("circle", {
+        cx: x, cy: eyeY, r: 4.5,
+        fill: "none", stroke, "stroke-width": 2,
+        "stroke-dasharray": "4 4"
+      });
+    } else {
+      n("circle", { cx: x, cy: headCy, r: HEAD_R, fill: fillHead, stroke, "stroke-width": 2 });
       n("circle", { cx: x - 5, cy: eyeY, r: 3.5, fill: C.eye });
       n("circle", { cx: x + 5, cy: eyeY, r: 3.5, fill: C.eye });
-    } else {
-      n("circle", { cx: x, cy: eyeY, r: 4, fill: "none", stroke: C.virt, "stroke-width": 1.5, "stroke-dasharray": "3 3" });
     }
     if (label) {
       n("text", {
-        x: x + (dashed ? 18 : -18), y: headY - 24,
+        x: labelX, y: Math.max(PAD + 8, headCy - HEAD_R - 6),
         "text-anchor": dashed ? "start" : "end",
         fill: dashed ? C.virt : stroke, "font-weight": "700"
       }, label);
@@ -156,19 +167,23 @@
     const hCm = Number($("height").value);
     const frac = Number($("mirrorFrac").value) / 100;
     const footY = H - 48;
-    const pxPerCm = (H - 100) / hCm;
+    const topLimit = PAD + 28;
+    const pxPerCm = Math.min((H - 100) / hCm, (footY - topLimit - HEAD_R - 10) / hCm);
     const headY = footY - hCm * pxPerCm;
     const defaultEye = footY - 0.86 * hCm * pxPerCm;
-    const xMirror = W * 0.68;
-    if (state.xPerson == null) state.xPerson = W * 0.22;
+    const xMirror = PAD + (W - 2 * PAD) * 0.52;
+    const maxVirtX = W - PAD - HEAD_R - VIRT_LABEL;
+    const minPersonX = Math.max(PAD + HEAD_R, 2 * xMirror - maxVirtX);
+    const maxPersonX = xMirror - MIRROR_GAP;
+    if (state.xPerson == null) state.xPerson = minPersonX + (maxPersonX - minPersonX) * 0.35;
     if (state.eyeY == null) state.eyeY = defaultEye;
-    state.xPerson = Math.max(W * 0.1, Math.min(xMirror - 36, state.xPerson));
-    state.eyeY = Math.max(headY + 8, Math.min(footY - 12, state.eyeY));
+    state.xPerson = Math.min(maxPersonX, Math.max(minPersonX, state.xPerson));
+    state.eyeY = Math.max(headY + HEAD_R + 6, Math.min(footY - 12, state.eyeY));
     const eyeY = state.eyeY;
     const xPerson = state.xPerson;
     const xVirt = 2 * xMirror - xPerson;
     const distCm = (xMirror - xPerson) / pxPerCm;
-    return { hCm, frac, footY, pxPerCm, headY, eyeY, xPerson, xMirror, xVirt, distCm };
+    return { hCm, frac, footY, pxPerCm, headY, eyeY, xPerson, xMirror, xVirt, distCm, minPersonX, maxPersonX };
   }
 
   function draw() {
@@ -198,22 +213,33 @@
     n("line", { x1: 24, y1: footY, x2: W - 24, y2: footY, stroke: C.floor, "stroke-width": 3 });
     n("text", { x: 28, y: footY + 22, "text-anchor": "start", "font-size": "13" }, "地面");
 
+    const virtLabelX = Math.min(xVirt + 14, W - PAD - 4);
     n("rect", {
-      x: xMirror + 2, y: headY - 36, width: W - xMirror - 20, height: footY - headY + 50,
+      x: xMirror + 2,
+      y: Math.max(PAD, headY - HEAD_R - 20),
+      width: Math.max(0, W - PAD - xMirror - 2),
+      height: footY - Math.max(PAD, headY - HEAD_R - 20) + 8,
       fill: "#fff1f2", opacity: "0.55"
     });
-    n("text", { x: (xMirror + W - 16) / 2, y: headY - 12, "text-anchor": "middle", fill: C.virt, "font-size": "13", "font-weight": "700" }, "鏡後（虛像區）");
+    n("text", {
+      x: Math.min(W - PAD, (xMirror + W - PAD) / 2),
+      y: Math.max(PAD + 12, headY - HEAD_R - 14),
+      "text-anchor": "middle", fill: C.virt, "font-size": "13", "font-weight": "700"
+    }, "鏡後（虛像區）");
 
     drawPerson(xVirt, footY, headY, eyeY, {
-      dashed: true, stroke: C.virt, fillHead: "none", label: "虛像"
+      dashed: true, stroke: C.virt, label: "虛像", labelX: virtLabelX
     });
 
     n("line", { x1: xMirror, y1: headY - 40, x2: xMirror, y2: footY + 24, stroke: "#64748b", "stroke-width": 4, opacity: "0.35" });
 
     drawPerson(xPerson, footY, headY, eyeY, {
-      dashed: false, stroke: C.person, fillHead: "#fde68a", label: "物"
+      dashed: false, stroke: C.person, fillHead: "#fde68a", label: "物", labelX: Math.max(PAD, xPerson - 14)
     });
-    n("text", { x: xPerson - 18, y: eyeY - 10, "text-anchor": "end", fill: C.eye, "font-weight": "700" }, "眼（可拖）");
+    n("text", {
+      x: Math.max(PAD, xPerson - 14), y: Math.min(footY - 4, eyeY + 18),
+      "text-anchor": "end", fill: C.eye, "font-weight": "700", "font-size": "13"
+    }, "眼（可拖）");
 
     n("line", {
       x1: xMirror, y1: minTop, x2: xMirror, y2: minBot,
@@ -227,11 +253,15 @@
     if (frac > needFrac + 0.001) {
       if (topY < minTop - 1) {
         n("line", { x1: xMirror, y1: topY, x2: xMirror, y2: minTop, stroke: C.mirrorExtra, "stroke-width": 8, "stroke-linecap": "round" });
-        n("text", { x: xMirror + 14, y: (topY + minTop) / 2 + 4, "text-anchor": "start", fill: "#64748b", "font-size": "12" }, "多餘");
+        if (xMirror + 52 < W - PAD) {
+          n("text", { x: xMirror + 14, y: (topY + minTop) / 2 + 4, "text-anchor": "start", fill: "#64748b", "font-size": "12" }, "多餘");
+        }
       }
       if (botY > minBot + 1) {
         n("line", { x1: xMirror, y1: minBot, x2: xMirror, y2: botY, stroke: C.mirrorExtra, "stroke-width": 8, "stroke-linecap": "round" });
-        n("text", { x: xMirror + 14, y: (minBot + botY) / 2 + 4, "text-anchor": "start", fill: "#64748b", "font-size": "12" }, "多餘");
+        if (xMirror + 52 < W - PAD) {
+          n("text", { x: xMirror + 14, y: (minBot + botY) / 2 + 4, "text-anchor": "start", fill: "#64748b", "font-size": "12" }, "多餘");
+        }
       }
     }
 
@@ -239,7 +269,7 @@
     const canFoot = topY <= yHitFoot && botY >= yHitFoot;
 
     [
-      { yObj: headY - 8, yHit: yHitHead, yVirt: headY - 8, color: C.headRay, name: "頭" },
+      { yObj: headY - 10 - HEAD_R + 4, yHit: yHitHead, yVirt: headY - 10 - HEAD_R + 4, color: C.headRay, name: "頭" },
       { yObj: footY, yHit: yHitFoot, yVirt: footY, color: C.footRay, name: "腳" }
     ].forEach(({ yObj, yHit, yVirt, color }) => {
       n("circle", { cx: xMirror, cy: yHit, r: 5, fill: C.mid, stroke: "#fff", "stroke-width": 1.5 });
@@ -255,15 +285,22 @@
       }
     });
 
-    const braceX = xMirror + 22;
+    const braceX = Math.min(xMirror + 20, W - PAD - 8);
     n("line", { x1: braceX, y1: minTop, x2: braceX, y2: minBot, stroke: C.mirrorNeed, "stroke-width": 2 });
     n("line", { x1: braceX - 6, y1: minTop, x2: braceX + 6, y2: minTop, stroke: C.mirrorNeed, "stroke-width": 2 });
     n("line", { x1: braceX - 6, y1: minBot, x2: braceX + 6, y2: minBot, stroke: C.mirrorNeed, "stroke-width": 2 });
-    n("text", { x: braceX + 10, y: (minTop + minBot) / 2 + 5, "text-anchor": "start", fill: C.mirrorNeed, "font-weight": "700" },
-      `最短 ≈ h/2（${(hCm / 2).toFixed(0)} cm）`);
+    const h2Label = `最短 ≈ h/2（${(hCm / 2).toFixed(0)} cm）`;
+    if (braceX + 96 < W - PAD) {
+      n("text", { x: braceX + 8, y: (minTop + minBot) / 2 + 5, "text-anchor": "start", fill: C.mirrorNeed, "font-weight": "700", "font-size": "13" }, h2Label);
+    } else {
+      n("text", { x: xMirror, y: Math.min(footY + 14, H - PAD), "text-anchor": "middle", fill: C.mirrorNeed, "font-weight": "700", "font-size": "12" }, h2Label);
+    }
 
     dashLine(xPerson, eyeY, xVirt, eyeY, C.virt, 1);
-    n("text", { x: (xPerson + xVirt) / 2, y: eyeY - 10, "text-anchor": "middle", fill: C.virt, "font-size": "12" }, "物距＝像距");
+    n("text", {
+      x: (xPerson + xVirt) / 2, y: Math.max(PAD + 10, eyeY - 10),
+      "text-anchor": "middle", fill: C.virt, "font-size": "12"
+    }, "物距＝像距");
 
     n("text", { x: xMirror, y: H - 18, "text-anchor": "middle", "font-weight": "700" }, "平面鏡");
 
@@ -298,9 +335,23 @@
 
   function onPointerMove(e) {
     if (!drag || drag.id !== e.pointerId) return;
+    W = Math.max(300, svg.clientWidth);
+    H = svg.clientHeight || 460;
     const p = clientToSvg(e.clientX, e.clientY);
-    if (drag.kind === "person") state.xPerson = p.x;
-    else if (drag.kind === "eye") state.eyeY = p.y;
+    const footY = H - 48;
+    const hCm = Number($("height").value);
+    const topLimit = PAD + 28;
+    const pxPerCm = Math.min((H - 100) / hCm, (footY - topLimit - HEAD_R - 10) / hCm);
+    const headY = footY - hCm * pxPerCm;
+    const xMirror = PAD + (W - 2 * PAD) * 0.52;
+    const maxVirtX = W - PAD - HEAD_R - VIRT_LABEL;
+    const minPersonX = Math.max(PAD + HEAD_R, 2 * xMirror - maxVirtX);
+    const maxPersonX = xMirror - MIRROR_GAP;
+    if (drag.kind === "person") {
+      state.xPerson = Math.min(maxPersonX, Math.max(minPersonX, p.x));
+    } else if (drag.kind === "eye") {
+      state.eyeY = Math.max(headY + HEAD_R + 6, Math.min(footY - 12, p.y));
+    }
     draw();
     e.preventDefault();
   }
