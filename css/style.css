@@ -635,6 +635,17 @@ svg.diagram-practice-mirror,
 .figure-mirror-practice svg.diagram {
   max-height: 320px;
 }
+.mirror-practice-grid {
+  margin: 12px 0 8px;
+}
+.mirror-practice-grid .figure-mirror-practice {
+  margin: 0;
+}
+.mirror-practice-grid .caption {
+  font-size: 13px;
+  margin: 6px 0 0;
+  text-align: center;
+}
 .video-card {
   margin: 12px 0 16px;
   padding: 12px 14px 10px;
@@ -3691,6 +3702,14 @@ html.is-immersive .brand > span:last-child {
     margin: 2mm 0 3mm !important;
     break-inside: avoid;
     page-break-inside: avoid;
+  }
+  .mirror-practice-grid {
+    grid-template-columns: 1fr !important;
+    gap: 4mm !important;
+  }
+  .mirror-practice-grid svg.diagram-practice-mirror {
+    max-height: 82mm !important;
+    min-height: 68mm;
   }
   svg.math-graph {
     max-height: 48mm !important;
