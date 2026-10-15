@@ -17,6 +17,8 @@
     .control output { font-variant-numeric: tabular-nums; font-weight: 600; }
     input[type=range] { width: 100%; min-height: 44px; accent-color: #087fa4; }
     select { font: inherit; min-height: 44px; padding: 8px 12px; border: 1px solid #afc4d0; border-radius: 8px; max-width: 100%; }
+    .control-depth-ray { flex: 1 1 240px; max-width: 420px; }
+    .control-depth-ray.is-hidden { display: none; }
     .visual { background: white; border: 1px solid #dbe7ed; border-radius: 16px; overflow: hidden; }
     svg#scene {
       display: block; width: 100%; height: 420px;
@@ -55,6 +57,12 @@
       <label for="distance">物距／實深<output id="distance-out"></output></label>
       <input id="distance" type="range" min="5" max="60" step="1" value="30">
     </div>
+    <label class="control-depth-ray is-hidden" id="depth-ray-wrap">追光方式
+      <select id="depth-ray">
+        <option value="normal">正上方垂直入射（不偏折）</option>
+        <option value="pupil">固定瞳孔左右兩端點追光</option>
+      </select>
+    </label>
   </div>
   <p class="legend">
     <span class="key" style="background:#fef08a;color:#854d0e">● P 物點（可拖）</span>
@@ -73,7 +81,7 @@
       <p>實線表示實際光路，虛線表示反向延長。平面鏡及水中視深的像都是<strong>虛像</strong>：虛線交點處沒有光線真正經過，但眼睛沿虛線方向會以為光從那裡來。</p>
     </details>
   </div>
-  <p class="note">水中視深：斜向看才偏折；眼睛在 P 正上方（垂直入射）時<strong>不偏折</strong>，視深＝實深。斜看時依史涅爾定律（n<sub>水</sub>＝1.33），視深約為實深÷1.33。</p>
+  <p class="note">水中視深預設依<strong>垂直入射不偏折</strong>；可改選「瞳孔左右兩端點」比較：即使視線對準 P，仍會因瞳孔略寬追出偏折與虛像。斜看時視深約為實深÷1.33（n<sub>水</sub>＝1.33）。</p>
 </main>
 <script>
 (() => {
@@ -207,6 +215,17 @@
   }
 
   /** 水面折射點 bx：P(px,oy) → 水面 → 空氣中到達 (eX, ey)，滿足 n水 sinθ水 = n空 sinθ空 */
+  const PUPIL_HALF = 6;
+
+  function depthUsesPupilEndpoints() {
+    return $("depth-ray").value === "pupil";
+  }
+
+  function syncDepthControls() {
+    const show = $("mode").value === "depth";
+    $("depth-ray-wrap").classList.toggle("is-hidden", !show);
+  }
+
   function surfaceHitForRay(px, oy, surface, eX, ey, nw) {
     const D = oy - surface;
     let lo = Math.min(px, eX);
@@ -232,8 +251,9 @@
     n("line", { x1: 0, y1: surface, x2: W, y2: surface, stroke: C.blue, "stroke-width": 2 });
     n("text", { x: 16, y: surface - 12, "text-anchor": "start" }, "空氣");
     n("text", { x: 16, y: H - 14, "text-anchor": "start" }, "水");
-    /** 眼睛中心對準 P 正上方：法線入射，不應因「瞳孔寬度」硬畫成斜射 */
-    const verticalView = Math.abs(ex - px) < 10;
+    const pupilEndpoints = depthUsesPupilEndpoints();
+    const alignedAbove = Math.abs(ex - px) < 10;
+    const verticalView = !pupilEndpoints && alignedAbove;
     let rays;
     let ix;
     let iy;
@@ -244,8 +264,8 @@
       iy = oy;
       app = p;
     } else {
-      const pupil = Math.min(6, Math.abs(ex - px) * 0.35);
-      const eyeXs = [ex - pupil, ex + pupil];
+      const half = pupilEndpoints ? PUPIL_HALF : Math.min(PUPIL_HALF, Math.abs(ex - px) * 0.35);
+      const eyeXs = [ex - half, ex + half];
       rays = eyeXs.map((eX) => surfaceHitForRay(px, oy, surface, eX, ey, nw));
       const dep = (rays[1].bx - rays[0].bx) / (rays[0].m - rays[1].m);
       ix = rays[0].bx + rays[0].m * dep;
@@ -277,6 +297,11 @@
     }
     n("ellipse", { cx: ex, cy: ey - 4, rx: 24, ry: 14, fill: "#fff", stroke: C.green, "stroke-width": 2 });
     n("line", { x1: ex - 7, y1: ey, x2: ex + 7, y2: ey, stroke: C.green, "stroke-width": 4 });
+    if (pupilEndpoints) {
+      [ex - PUPIL_HALF, ex + PUPIL_HALF].forEach((pupX) => {
+        n("circle", { cx: pupX, cy: ey, r: 3.5, fill: C.green, stroke: "#166534", "stroke-width": 1 });
+      });
+    }
     n("text", { x: ex, y: ey - 28 }, "E 眼睛");
     n("circle", { cx: px, cy: oy, r: 9, fill: C.gold, stroke: "#854d0e", "stroke-width": 2 });
     n("text", { x: px + 12, y: oy - 8, fill: C.gold }, "P");
@@ -286,12 +311,20 @@
     }
     hitTarget("depth-p", px, oy, 32);
     hitTarget("depth-e", ex, ey - 4, 36);
-    $("result").textContent = verticalView
-      ? `垂直從上方看：入射角＝0°，折射角＝0°，光路不彎 ｜ 實深 ${p} cm＝視深 ${p} cm（I 與 P 重合）`
-      : `P → 水面折射 → E ｜ 反向延長得 I ｜ 實深 ${p} cm，視深約 ${app.toFixed(1)} cm`;
+    if (verticalView) {
+      $("result").textContent =
+        `垂直從上方看：入射角＝0°，折射角＝0°，光路不彎 ｜ 實深 ${p} cm＝視深 ${p} cm（I 與 P 重合）`;
+    } else if (pupilEndpoints && alignedAbove) {
+      $("result").textContent =
+        `瞳孔兩端點追光（±${PUPIL_HALF} px）：視線對準 P 仍會追出偏折 ｜ 實深 ${p} cm，近似視深 ${app.toFixed(1)} cm ｜ 對照「垂直入射」模式`;
+    } else {
+      $("result").textContent =
+        `P → 水面折射 → E ｜ 反向延長得 I ｜ 實深 ${p} cm，視深約 ${app.toFixed(1)} cm`;
+    }
   }
 
   function draw() {
+    syncDepthControls();
     clearScene();
     if ($("mode").value === "mirror") drawMirror();
     else if ($("mode").value === "depth") drawDepth();
@@ -349,16 +382,22 @@
     resetPositions($("mode").value);
     draw();
   });
+  $("depth-ray").addEventListener("change", draw);
   $("distance").addEventListener("input", () => {
     const mode = $("mode").value;
     resetPositions(mode);
     draw();
   });
 
-  const initialMode = new URLSearchParams(location.search).get("mode");
+  const qs = new URLSearchParams(location.search);
+  const initialMode = qs.get("mode");
   if (initialMode && Array.from($("mode").options).some((o) => o.value === initialMode)) {
     $("mode").value = initialMode;
     resetPositions(initialMode);
+  }
+  const initialDepthRay = qs.get("depthRay");
+  if (initialDepthRay === "pupil" || initialDepthRay === "normal") {
+    $("depth-ray").value = initialDepthRay;
   }
 
   new ResizeObserver(draw).observe(svg);
