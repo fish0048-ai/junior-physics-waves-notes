@@ -1,0 +1,387 @@
+<!doctype html>
+<html lang="zh-Hant" class="lens-imaging-page">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>凸透鏡與凹透鏡成像</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f8fa; color: #0f172a; font: 16px/1.65 system-ui, "Microsoft JhengHei", sans-serif; }
+    main { max-width: 920px; margin: auto; padding: 24px; }
+    small { color: #64748b; }
+    h1 { font-size: clamp(22px, 4vw, 28px); line-height: 1.35; margin: 6px 0 8px; }
+    p { margin: 8px 0 14px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 14px 0; align-items: center; }
+    label, select { font: inherit; }
+    select { min-height: 44px; padding: 8px 12px; border: 1px solid #cbd5e1; border-radius: 8px; max-width: 100%; }
+    .visual { background: #fff; border: 1px solid #dbe7ed; border-radius: 14px; overflow: hidden; }
+    svg#scene {
+      display: block; width: 100%; height: auto;
+      touch-action: none; cursor: default;
+      -webkit-user-select: none; user-select: none;
+    }
+    svg#scene.is-dragging { cursor: grabbing; }
+    .readout { padding: 12px 16px; background: #f1f5f9; min-height: 52px; font-size: 15px; line-height: 1.55; }
+    .drag-hint { font-size: 14px; color: #0e7490; margin: 0 0 10px; }
+    .legend { font-size: 14px; margin: 10px 0; color: #475569; }
+    .key { display: inline-block; padding: 2px 8px; border-radius: 6px; margin: 2px 4px 2px 0; }
+    .note { font-size: 13px; color: #64748b; }
+  </style>
+  <link rel="stylesheet" href="embed.css">
+</head>
+<body>
+<script>if (window.parent !== window) document.documentElement.classList.add("is-embed");</script>
+<main>
+  <small>國中理化 · 4-3 透鏡成像</small>
+  <h1>凸透鏡與凹透鏡成像</h1>
+  <p>主軸、O、F 與作圖練習相同。拖曳<strong>物體箭頭</strong>改變物距，觀察兩條典型折射線與像的位置。</p>
+  <p class="drag-hint"><strong>平板／手機：</strong>按住橙色箭頭尖端左右拖曳；勿把物體拖進透鏡內。</p>
+  <div class="controls">
+    <label>透鏡種類
+      <select id="lens-type">
+        <option value="convex">凸透鏡（會聚）</option>
+        <option value="concave">凹透鏡（發散）</option>
+      </select>
+    </label>
+  </div>
+  <p class="legend">
+    <span class="key" style="background:#ffedd5;color:#c2410c">● 物體（可拖）</span>
+    <span class="key" style="background:#fef9c3;color:#854d0e">— 折射光</span>
+    <span class="key" style="background:#e2e8f0;color:#475569">- - 延長線</span>
+    <span class="key" style="background:#dbeafe;color:#1d4ed8">像</span>
+  </p>
+  <div class="visual">
+    <svg id="scene" viewBox="0 0 480 260" role="img" aria-label="凸透鏡與凹透鏡成像互動示意"></svg>
+    <div class="readout" id="readout"></div>
+  </div>
+  <p class="note">虛像以虛線標示；像畫在圖內即可，不必畫到紙外。物距非常接近焦距時，像會非常大或無法在有限距離成像。</p>
+</main>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const svg = $("scene");
+  const NS = "http://www.w3.org/2000/svg";
+
+  const W = 480;
+  const H = 260;
+  const OX = 252;
+  const AY = 140;
+  const F = 58;
+  const F_L = OX - F;
+  const F_R = OX + F;
+  const TWO_F_L = 136;
+  const TWO_F_R = 310;
+  const LENS_LEFT = OX - 10;
+  const OBJ_MAX_X = LENS_LEFT - 12;
+  const OBJ_MIN_X = 36;
+  const OBJ_H = 76;
+  const FONT = "system-ui,'Microsoft JhengHei',sans-serif";
+
+  let lensType = "convex";
+  let objX = 136;
+  let drag = false;
+
+  function n(tag, attrs = {}, text = "") {
+    const el = document.createElementNS(NS, tag);
+    Object.entries(attrs).forEach(([k, v]) => {
+      if (v != null && v !== "") el.setAttribute(k, v);
+    });
+    if (text) el.textContent = text;
+    return el;
+  }
+
+  function clear() {
+    svg.replaceChildren();
+  }
+
+  function clipSeg(x1, y1, x2, y2) {
+    let xA = x1;
+    let yA = y1;
+    let xB = x2;
+    let yB = y2;
+    const dx = xB - xA;
+    const dy = yB - yA;
+    const ts = [];
+    if (Math.abs(dx) > 1e-9) {
+      ts.push((0 - xA) / dx, (W - xA) / dx);
+    }
+    if (Math.abs(dy) > 1e-9) {
+      ts.push((0 - yA) / dy, (H - yA) / dy);
+    }
+    const pts = [{ x: xA, y: yA }, { x: xB, y: yB }];
+    ts.forEach((t) => {
+      if (t >= 0 && t <= 1) {
+        pts.push({ x: xA + dx * t, y: yA + dy * t });
+      }
+    });
+    const inside = pts.filter((p) => p.x >= 0 && p.x <= W && p.y >= 0 && p.y <= H);
+    if (inside.length < 2) return null;
+    inside.sort((a, b) => a.x - b.x || a.y - b.y);
+    return { x1: inside[0].x, y1: inside[0].y, x2: inside[inside.length - 1].x, y2: inside[inside.length - 1].y };
+  }
+
+  function drawArrow(x, yBase, yTip, color, dash, width = 2.2) {
+    const g = n("g");
+    g.append(n("line", {
+      x1: x, y1: yBase, x2: x, y2: yTip,
+      stroke: color, "stroke-width": width,
+      "stroke-dasharray": dash || null,
+      "stroke-linecap": "round"
+    }));
+    const up = yTip < yBase;
+    const ah = 9;
+    const wy = up ? 1 : -1;
+    g.append(n("path", {
+      d: `M ${x} ${yTip} L ${x - 5} ${yTip + wy * ah} L ${x + 5} ${yTip + wy * ah} Z`,
+      fill: color
+    }));
+    svg.append(g);
+  }
+
+  function drawBase() {
+    svg.append(n("rect", { width: W, height: H, fill: "#f8fafc" }));
+
+    svg.append(n("line", {
+      x1: 24, y1: AY, x2: 456, y2: AY,
+      stroke: "#334155", "stroke-width": 1.6
+    }));
+    svg.append(n("text", {
+      x: 400, y: 158, "font-size": 11, fill: "#334155", "font-weight": 700, "font-family": FONT
+    }, "主軸"));
+
+    if (lensType === "convex") {
+      svg.append(n("ellipse", {
+        cx: OX, cy: AY, rx: 10, ry: 74,
+        fill: "#dbeafe", stroke: "#2563eb", "stroke-width": 2.5
+      }));
+      svg.append(n("circle", { cx: TWO_F_L, cy: AY, r: 3.5, fill: "#94a3b8" }));
+      svg.append(n("text", {
+        x: 108, y: 124, "font-size": 10, fill: "#64748b", "font-weight": 700, "font-family": FONT
+      }, "2F"));
+      svg.append(n("circle", { cx: F_L, cy: AY, r: 5, fill: "#dc2626" }));
+      svg.append(n("text", {
+        x: 118, y: 118, "font-size": 10, fill: "#dc2626", "font-weight": 700, "font-family": FONT
+      }, "焦點 F"));
+      svg.append(n("circle", { cx: TWO_F_R, cy: AY, r: 3.5, fill: "#94a3b8" }));
+      svg.append(n("text", {
+        x: 316, y: 124, "font-size": 10, fill: "#64748b", "font-weight": 700, "font-family": FONT
+      }, "2F"));
+    } else {
+      svg.append(n("path", {
+        d: "M 238 66 C 248 140 248 140 238 214 L 266 214 C 256 140 256 140 266 66 Z",
+        fill: "#fef3c7", stroke: "#b45309", "stroke-width": 2.5, "stroke-linejoin": "round"
+      }));
+      svg.append(n("text", {
+        x: OX, y: 144, "text-anchor": "middle", "font-size": 10,
+        fill: "#92400e", "font-weight": 700, "font-family": FONT
+      }, "凹"));
+      svg.append(n("circle", { cx: F_L, cy: AY, r: 5, fill: "#dc2626" }));
+      svg.append(n("text", {
+        x: 118, y: 118, "font-size": 10, fill: "#dc2626", "font-weight": 700, "font-family": FONT
+      }, "虛焦點 F"));
+      svg.append(n("circle", { cx: F_R, cy: AY, r: 5, fill: "#dc2626" }));
+      svg.append(n("text", {
+        x: 316, y: 118, "font-size": 10, fill: "#dc2626", "font-weight": 700, "font-family": FONT
+      }, "虛焦點 F"));
+    }
+
+    svg.append(n("circle", { cx: OX, cy: AY, r: 4, fill: "#64748b" }));
+    svg.append(n("text", {
+      x: OX, y: 168, "text-anchor": "middle", "font-size": 10,
+      fill: "#64748b", "font-weight": 700, "font-family": FONT
+    }, "O"));
+  }
+
+  function imaging() {
+    const oy = AY - OBJ_H;
+    const u = OX - objX;
+    const f = lensType === "convex" ? F : -F;
+    const eps = 1.2;
+    if (u < eps) {
+      return { kind: "invalid", u, oy };
+    }
+    if (lensType === "convex" && Math.abs(u - F) < eps) {
+      return { kind: "atF", u, oy };
+    }
+    const v = (u * f) / (u - f);
+    const m = -v / u;
+    const ix = OX + v;
+    let iy = AY + m * OBJ_H;
+    const virtual = v < 0;
+    const inverted = m < 0;
+    return { kind: "ok", u, v, m, ix, iy, oy, virtual, inverted };
+  }
+
+  function describe(im) {
+    if (im.kind === "invalid") return "物體太靠近透鏡，請往左拖一點。";
+    if (im.kind === "atF") return "物距 ≈ 焦距：折射後平行主軸，<strong>無法在紙屏上成有限大小的像</strong>。";
+    const u = im.u;
+    const parts = [];
+    parts.push(`物距 <strong>${u.toFixed(0)}</strong>（約 ${(u / F).toFixed(2)} f）`);
+    if (Math.abs(im.v) < 800) {
+      parts.push(`像距 ${Math.abs(im.v).toFixed(0)}（${im.virtual ? "虛像，同側" : "實像，另一側"}）`);
+    }
+    if (lensType === "concave") {
+      parts.push("<strong>正立、縮小、虛像</strong>（與作圖練習相同）");
+    } else if (im.virtual) {
+      parts.push("<strong>正立、放大、虛像</strong>（放大鏡）");
+    } else if (u > 2 * F) {
+      parts.push("<strong>倒立、縮小、實像</strong>");
+    } else if (Math.abs(u - 2 * F) < 3) {
+      parts.push("<strong>倒立、等大、實像</strong>");
+    } else {
+      parts.push("<strong>倒立、放大、實像</strong>");
+    }
+    const mag = Math.abs(im.m);
+    if (Number.isFinite(mag) && mag < 20) {
+      parts.push(`|放大率| ≈ ${mag.toFixed(2)}`);
+    } else if (mag >= 20) {
+      parts.push("像非常大（請略遠離焦點）");
+    }
+    return parts.join("　｜　");
+  }
+
+  function drawRay(x1, y1, x2, y2, solid) {
+    const seg = clipSeg(x1, y1, x2, y2);
+    if (!seg) return;
+    svg.append(n("line", {
+      x1: seg.x1, y1: seg.y1, x2: seg.x2, y2: seg.y2,
+      stroke: solid ? "#ca8a04" : "#94a3b8",
+      "stroke-width": solid ? 2 : 1.6,
+      "stroke-dasharray": solid ? null : "6 5",
+      "stroke-linecap": "round"
+    }));
+  }
+
+  function drawRays(im) {
+    const { oy } = im;
+    if (im.kind !== "ok") {
+      if (im.kind === "atF") {
+        drawRay(objX, oy, OX, oy, true);
+        drawRay(OX, oy, W, oy, true);
+        drawRay(objX, oy, W, AY + (oy - AY) * (W - objX) / (OX - objX), true);
+      }
+      return;
+    }
+
+    if (lensType === "convex") {
+      drawRay(objX, oy, OX, oy, true);
+      const dx = F_R - OX;
+      const dy = AY - oy;
+      const len = Math.hypot(dx, dy) || 1;
+      drawRay(OX, oy, OX + (dx / len) * 400, oy + (dy / len) * 400, true);
+      drawRay(objX, oy, W, AY + (oy - AY) * (W - OX) / (objX - OX), true);
+      if (im.virtual && im.ix >= 0 && im.ix <= W) {
+        drawRay(OX, oy, im.ix, im.iy, false);
+        drawRay(OX, AY, im.ix, im.iy, false);
+      }
+    } else {
+      drawRay(objX, oy, OX, oy, true);
+      const dx = OX - F_L;
+      const dy = oy - AY;
+      const len = Math.hypot(dx, dy) || 1;
+      drawRay(OX, oy, OX + (dx / len) * 380, oy + (dy / len) * 380, true);
+      drawRay(objX, oy, W, AY + (oy - AY) * (W - OX) / (objX - OX), true);
+      if (im.ix >= 0 && im.ix <= W) {
+        drawRay(OX, oy, im.ix, im.iy, false);
+        drawRay(OX, AY, im.ix, im.iy, false);
+      }
+    }
+  }
+
+  function clampImageY(iy, inverted) {
+    const minY = 18;
+    const maxY = H - 18;
+    if (iy < minY) return minY;
+    if (iy > maxY) return maxY;
+    return iy;
+  }
+
+  function drawImage(im) {
+    if (im.kind !== "ok") return;
+    let { ix, iy, virtual, inverted } = im;
+    if (ix < 8 || ix > W - 8) return;
+    iy = clampImageY(iy, inverted);
+    const color = virtual ? "#2563eb" : "#1e40af";
+    const dash = virtual ? "5 4" : null;
+    drawArrow(ix, AY, iy, color, dash, virtual ? 1.8 : 2.2);
+    svg.append(n("text", {
+      x: ix + 6, y: Math.min(iy, AY) - 6,
+      "font-size": 10, fill: color, "font-family": FONT, "font-weight": 700
+    }, virtual ? "虛像" : "實像"));
+  }
+
+  function drawObject() {
+    const oy = AY - OBJ_H;
+    drawArrow(objX, AY, oy, "#ea580c", null, 2.6);
+    const hit = n("circle", {
+      cx: objX, cy: oy, r: 22,
+      fill: "transparent", stroke: "transparent",
+      "data-drag": "obj",
+      style: "cursor: grab; pointer-events: all"
+    });
+    svg.append(hit);
+    svg.append(n("text", {
+      x: objX + 8, y: oy - 4, "font-size": 10, fill: "#9a3412", "font-family": FONT
+    }, "拖曳"));
+  }
+
+  function draw() {
+    clear();
+    drawBase();
+    const im = imaging();
+    drawRays(im);
+    drawImage(im);
+    drawObject();
+    $("readout").innerHTML = describe(im);
+  }
+
+  function svgPoint(evt) {
+    const pt = svg.createSVGPoint();
+    pt.x = evt.clientX;
+    pt.y = evt.clientY;
+    const m = svg.getScreenCTM();
+    if (!m) return { x: objX, y: AY };
+    const p = pt.matrixTransform(m.inverse());
+    return { x: p.x, y: p.y };
+  }
+
+  function onDown(evt) {
+    const t = evt.target;
+    if (t && t.getAttribute && t.getAttribute("data-drag") === "obj") {
+      drag = true;
+      svg.classList.add("is-dragging");
+      evt.preventDefault();
+    }
+  }
+
+  function onMove(evt) {
+    if (!drag) return;
+    const p = svgPoint(evt);
+    objX = Math.max(OBJ_MIN_X, Math.min(OBJ_MAX_X, p.x));
+    draw();
+    evt.preventDefault();
+  }
+
+  function onUp() {
+    drag = false;
+    svg.classList.remove("is-dragging");
+  }
+
+  $("lens-type").addEventListener("change", () => {
+    lensType = $("lens-type").value;
+    draw();
+  });
+
+  svg.addEventListener("pointerdown", onDown);
+  window.addEventListener("pointermove", onMove);
+  window.addEventListener("pointerup", onUp);
+  window.addEventListener("pointercancel", onUp);
+
+  draw();
+})();
+</script>
+<script src="embed-resize.js"></script>
+</body>
+</html>
