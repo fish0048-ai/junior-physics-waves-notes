@@ -288,14 +288,14 @@
     if (state.showLabels) {
       layer.appendChild(el("text", { x: 740, y: VY + 22, fill: "#334155", "font-weight": 700, "font-size": 14, text: "主軸" }));
       layer.appendChild(el("circle", { cx: VX, cy: VY, r: 4, fill: "#64748b" }));
-      layer.appendChild(el("text", { x: VX + 6, y: VY + 18, fill: "#64748b", "font-size": 13, text: "V" }));
+      layer.appendChild(el("text", { x: VX + 6, y: VY + 18, fill: "#64748b", "font-size": 12, text: "鏡心 V" }));
       layer.appendChild(el("circle", { cx: Fp.x, cy: Fp.y, r: 5, fill: "#dc2626" }));
       layer.appendChild(el("text", {
-        x: Fp.x + (state.type === "concave" ? -28 : 8),
+        x: Fp.x + (state.type === "concave" ? -52 : 8),
         y: Fp.y - 10,
         fill: "#dc2626",
-        "font-size": 13,
-        text: state.type === "concave" ? "F" : "F（虛）"
+        "font-size": 12,
+        text: state.type === "concave" ? "焦點 F" : "虛焦點 F"
       }));
       layer.appendChild(el("circle", { cx: C.x, cy: C.y, r: 3.5, fill: "#94a3b8" }));
       layer.appendChild(el("text", { x: C.x - 8, y: C.y - 12, fill: "#64748b", "font-size": 12, text: "C" }));
