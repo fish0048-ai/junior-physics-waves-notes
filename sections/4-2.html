@@ -397,14 +397,15 @@
           <rect width="420" height="260" fill="#f8fafc"/>
           <line x1="24" y1="140" x2="396" y2="140" stroke="#334155" stroke-width="1.6"/>
           <text x="368" y="160" font-size="13" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#334155" font-weight="700">主軸</text>
-          <path d="M 218 66 A 74 74 0 0 0 218 214 L 152 214 L 152 66 Z" fill="url(#conv-mirror-back)"/>
-          <path d="M 218 66 A 74 74 0 0 0 218 214" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+          <!-- 曲率中心 C 在凸出外側 (292,140)；反射面朝左，斜線在右側鏡背 -->
+          <path d="M 292 66 A 74 74 0 1 0 292 214 L 366 214 L 366 66 Z" fill="url(#conv-mirror-back)"/>
+          <path d="M 292 66 A 74 74 0 1 0 292 214" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
           <circle cx="218" cy="140" r="4" fill="#64748b"/>
           <text x="224" y="136" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">鏡心 V</text>
-          <circle cx="181" cy="140" r="5" fill="#dc2626"/>
-          <text x="100" y="128" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#dc2626" font-weight="700">虛焦點 F</text>
+          <circle cx="255" cy="140" r="5" fill="#dc2626"/>
+          <text x="262" y="128" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#dc2626" font-weight="700">虛焦點 F</text>
         </svg>
-        <p class="caption"><strong>作圖練習</strong>：V、F 已標；請標 C 與物體，畫兩條典型光線。反射光用<strong>延長線</strong> → <strong>虛、正立、縮小</strong>像。銀鍍層在<strong>外側</strong>（斜線為鏡背）。</p>
+        <p class="caption"><strong>作圖練習</strong>：V、虛焦點 F 已標在<strong>凸出外側</strong>主軸上（V 與 C 之間）；請標 C 與物體，畫兩條典型光線。反射光用<strong>延長線</strong> → <strong>虛、正立、縮小</strong>像。斜線在<strong>外側鏡背</strong>。</p>
       </figure>
 
       <h3 class="subh">2. 凹面鏡</h3>
