@@ -632,6 +632,7 @@ figure {
 .diagram-sm { max-height: 160px; }
 /* 4-2 球面鏡作圖練習：螢幕略放大 */
 svg.diagram-practice-mirror,
+svg.diagram-practice-lens,
 .figure-mirror-practice svg.diagram {
   max-height: 320px;
 }
@@ -651,6 +652,28 @@ svg.diagram-practice-mirror,
 .mirror-practice-concave .figure-mirror-practice svg.diagram {
   max-height: 420px;
   width: 100%;
+}
+.lens-practice-grid {
+  margin: 12px 0 8px;
+}
+.lens-practice-convex,
+.lens-practice-concave {
+  grid-template-columns: 1fr;
+  gap: 14px;
+  max-width: 640px;
+}
+.lens-practice-convex svg.diagram-practice-lens,
+.lens-practice-concave svg.diagram-practice-lens {
+  max-height: 420px;
+  width: 100%;
+}
+.lens-practice-grid .figure-mirror-practice {
+  margin: 0;
+}
+.lens-practice-grid .caption {
+  font-size: 13px;
+  margin: 6px 0 0;
+  text-align: center;
 }
 .mirror-practice-grid .caption {
   font-size: 13px;
@@ -3721,6 +3744,7 @@ html.is-immersive .brand > span:last-child {
   .diagram-lg { max-height: 58mm !important; }
   .diagram-sm { max-height: 36mm !important; }
   svg.diagram-practice-mirror,
+  svg.diagram-practice-lens,
   .figure-mirror-practice svg.diagram {
     max-height: 95mm !important;
     min-height: 72mm;
@@ -3745,6 +3769,17 @@ html.is-immersive .brand > span:last-child {
     gap: 5mm !important;
   }
   .mirror-practice-concave svg.diagram-practice-mirror {
+    max-height: 92mm !important;
+    min-height: 78mm;
+  }
+  .lens-practice-convex,
+  .lens-practice-concave {
+    grid-template-columns: 1fr !important;
+    max-width: none !important;
+    gap: 5mm !important;
+  }
+  .lens-practice-convex svg.diagram-practice-lens,
+  .lens-practice-concave svg.diagram-practice-lens {
     max-height: 92mm !important;
     min-height: 78mm;
   }
