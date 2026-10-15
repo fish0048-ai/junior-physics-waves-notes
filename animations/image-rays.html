@@ -73,7 +73,7 @@
       <p>實線表示實際光路，虛線表示反向延長。平面鏡及水中視深的像都是<strong>虛像</strong>：虛線交點處沒有光線真正經過，但眼睛沿虛線方向會以為光從那裡來。</p>
     </details>
   </div>
-  <p class="note">水中視深依史涅爾定律（n<sub>水</sub>＝1.33）；兩條折射線反向延長交點為近似虛像，視深約為實深÷1.33。</p>
+  <p class="note">水中視深：斜向看才偏折；眼睛在 P 正上方（垂直入射）時<strong>不偏折</strong>，視深＝實深。斜看時依史涅爾定律（n<sub>水</sub>＝1.33），視深約為實深÷1.33。</p>
 </main>
 <script>
 (() => {
@@ -206,6 +206,23 @@
     return { surface, scale, px: d.px, oy: d.oy, ex: d.ex, ey: d.ey, D: d.oy - surface };
   }
 
+  /** 水面折射點 bx：P(px,oy) → 水面 → 空氣中到達 (eX, ey)，滿足 n水 sinθ水 = n空 sinθ空 */
+  function surfaceHitForRay(px, oy, surface, eX, ey, nw) {
+    const D = oy - surface;
+    let lo = Math.min(px, eX);
+    let hi = Math.max(px, eX);
+    for (let k = 0; k < 70; k++) {
+      const bx = (lo + hi) / 2;
+      const f =
+        nw * (bx - px) / Math.hypot(bx - px, D) -
+        (eX - bx) / Math.hypot(eX - bx, surface - ey);
+      if (f > 0) hi = bx;
+      else lo = bx;
+    }
+    const bx = (lo + hi) / 2;
+    return { ex: eX, bx, m: (eX - bx) / (ey - surface) };
+  }
+
   function drawDepth() {
     const { surface, scale, px, oy, ex, ey, D } = depthGeom();
     const p = Number($("distance").value);
@@ -215,22 +232,26 @@
     n("line", { x1: 0, y1: surface, x2: W, y2: surface, stroke: C.blue, "stroke-width": 2 });
     n("text", { x: 16, y: surface - 12, "text-anchor": "start" }, "空氣");
     n("text", { x: 16, y: H - 14, "text-anchor": "start" }, "水");
-    const eyeXs = [ex - 6, ex + 6];
-    const rays = eyeXs.map((eX) => {
-      let lo = Math.min(px, eX);
-      let hi = Math.max(px, eX);
-      for (let k = 0; k < 70; k++) {
-        const bx = (lo + hi) / 2;
-        const f = nw * (bx - px) / Math.hypot(bx - px, D) - (eX - bx) / Math.hypot(eX - bx, surface - ey);
-        if (f > 0) hi = bx;
-        else lo = bx;
-      }
-      const bx = (lo + hi) / 2;
-      return { ex: eX, bx, m: (eX - bx) / (ey - surface) };
-    });
-    const dep = (rays[1].bx - rays[0].bx) / (rays[0].m - rays[1].m);
-    const ix = rays[0].bx + rays[0].m * dep;
-    const iy = surface + dep;
+    /** 眼睛中心對準 P 正上方：法線入射，不應因「瞳孔寬度」硬畫成斜射 */
+    const verticalView = Math.abs(ex - px) < 10;
+    let rays;
+    let ix;
+    let iy;
+    let app;
+    if (verticalView) {
+      rays = [{ ex, bx: px, vertical: true }];
+      ix = px;
+      iy = oy;
+      app = p;
+    } else {
+      const pupil = Math.min(6, Math.abs(ex - px) * 0.35);
+      const eyeXs = [ex - pupil, ex + pupil];
+      rays = eyeXs.map((eX) => surfaceHitForRay(px, oy, surface, eX, ey, nw));
+      const dep = (rays[1].bx - rays[0].bx) / (rays[0].m - rays[1].m);
+      ix = rays[0].bx + rays[0].m * dep;
+      iy = surface + dep;
+      app = dep / scale;
+    }
     const arrow = (x1, y1, x2, y2, color, dash) => {
       n("line", {
         x1, y1, x2, y2, stroke: color, "stroke-width": 2,
@@ -246,20 +267,28 @@
     rays.forEach((r) => {
       arrow(px, oy, r.bx, surface, C.gold, false);
       arrow(r.bx, surface, r.ex, ey, C.blue, false);
-      n("line", { x1: r.bx, y1: surface, x2: ix, y2: iy, stroke: C.red, "stroke-width": 1.5, "stroke-dasharray": "5 5" });
+      if (!verticalView) {
+        n("line", { x1: r.bx, y1: surface, x2: ix, y2: iy, stroke: C.red, "stroke-width": 1.5, "stroke-dasharray": "5 5" });
+      }
     });
+    if (verticalView) {
+      n("line", { x1: px, y1: surface, x2: px, y2: oy, stroke: C.gray, "stroke-width": 1, "stroke-dasharray": "4 4" });
+      n("text", { x: px + 14, y: surface - 8, fill: C.gray, "text-anchor": "start", "font-size": "13" }, "法線（垂直入射）");
+    }
     n("ellipse", { cx: ex, cy: ey - 4, rx: 24, ry: 14, fill: "#fff", stroke: C.green, "stroke-width": 2 });
     n("line", { x1: ex - 7, y1: ey, x2: ex + 7, y2: ey, stroke: C.green, "stroke-width": 4 });
     n("text", { x: ex, y: ey - 28 }, "E 眼睛");
     n("circle", { cx: px, cy: oy, r: 9, fill: C.gold, stroke: "#854d0e", "stroke-width": 2 });
     n("text", { x: px + 12, y: oy - 8, fill: C.gold }, "P");
-    n("circle", { cx: ix, cy: iy, r: 6, fill: "none", stroke: C.red, "stroke-width": 2 });
-    n("text", { x: ix + 10, y: iy + 4, fill: C.red }, "I");
+    if (!verticalView) {
+      n("circle", { cx: ix, cy: iy, r: 6, fill: "none", stroke: C.red, "stroke-width": 2 });
+      n("text", { x: ix + 10, y: iy + 4, fill: C.red }, "I");
+    }
     hitTarget("depth-p", px, oy, 32);
     hitTarget("depth-e", ex, ey - 4, 36);
-    const app = dep / scale;
-    $("result").textContent =
-      `P → 水面折射 → E ｜ 反向延長得 I ｜ 實深 ${p} cm，視深約 ${app.toFixed(1)} cm`;
+    $("result").textContent = verticalView
+      ? `垂直從上方看：入射角＝0°，折射角＝0°，光路不彎 ｜ 實深 ${p} cm＝視深 ${p} cm（I 與 P 重合）`
+      : `P → 水面折射 → E ｜ 反向延長得 I ｜ 實深 ${p} cm，視深約 ${app.toFixed(1)} cm`;
   }
 
   function draw() {
