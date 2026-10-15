@@ -3748,17 +3748,6 @@ html.is-immersive .brand > span:last-child {
     max-height: 92mm !important;
     min-height: 78mm;
   }
-  .mirror-body-practice-grid {
-    grid-template-columns: 1fr !important;
-    max-width: none !important;
-    gap: 5mm !important;
-  }
-  .mirror-body-practice-grid svg.diagram {
-    max-height: 88mm !important;
-    min-height: 72mm;
-    padding: 1.5mm !important;
-    background: #fff !important;
-  }
   .figure-mirror-body-practice {
     break-inside: avoid;
     page-break-inside: avoid;
@@ -3790,6 +3779,29 @@ html.is-immersive .brand > span:last-child {
   .math-graphs .diagram,
   .math-graphs svg.math-graph {
     max-height: 42mm !important;
+  }
+  /* 全身鏡生活連結：列印固定上下兩列（勿與 math-graphs-2 並排） */
+  .math-graphs.mirror-body-practice-grid {
+    display: grid !important;
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-auto-flow: row !important;
+    gap: 5mm !important;
+    max-width: none !important;
+  }
+  .math-graphs.mirror-body-practice-grid > figure.figure-mirror-body-practice {
+    grid-column: 1 / -1 !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    float: none !important;
+    clear: both !important;
+  }
+  .math-graphs.mirror-body-practice-grid svg.diagram,
+  .math-graphs.mirror-body-practice-grid .diagram {
+    max-height: 88mm !important;
+    min-height: 72mm !important;
+    width: 100% !important;
+    padding: 1.5mm !important;
+    background: #fff !important;
   }
   .gear-photos {
     display: grid !important;
