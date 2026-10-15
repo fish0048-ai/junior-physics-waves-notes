@@ -362,6 +362,57 @@
           <li>光線通過三稜鏡會偏兩次，永遠往<strong>比較厚</strong>的那一邊偏。兩塊稜鏡「底對底」像凸透鏡（中間厚、會聚）；「尖對尖」像凹透鏡（中間薄、發散）。</li>
           <li>判斷透鏡只看<strong>中間厚還是薄</strong>：凹凸＝中間仍較厚＝凸透鏡；凸凹＝中間較薄＝凹透鏡。把凸透鏡左右翻過來，中間還是厚的，不會變凹透鏡。</li>
         </ul>
+        <div class="prism-practice-stack">
+          <figure class="figure-prism-practice">
+            <svg class="diagram diagram-practice-prism" viewBox="0 0 480 260" role="img" aria-label="三稜鏡折射示範：光往較厚處偏">
+              <defs>
+                <marker id="prism-ray-arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto">
+                  <path d="M0 1.2 L9 5 L0 8.8 z" fill="#ca8a04"/>
+                </marker>
+              </defs>
+              <rect width="480" height="260" fill="#f8fafc"/>
+              <text x="240" y="22" text-anchor="middle" font-size="12" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#0f172a" font-weight="700">示範：三稜鏡兩次折射（總偏向較厚的一邊）</text>
+              <polygon points="240,44 122,216 358,216" fill="#e0f2fe" stroke="#0369a1" stroke-width="2.5" stroke-linejoin="round"/>
+              <text x="240" y="38" text-anchor="middle" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">尖（薄）</text>
+              <text x="240" y="238" text-anchor="middle" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#0f172a" font-weight="700">底邊（較厚）</text>
+              <path d="M248 228 L272 228 L260 210 Z" fill="#0369a1"/>
+              <text x="286" y="226" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#0369a1" font-weight="700">往厚處偏</text>
+              <text x="36" y="104" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b">空氣</text>
+              <line x1="24" y1="112" x2="195" y2="112" stroke="#ea580c" stroke-width="2.4" marker-end="url(#prism-ray-arr)"/>
+              <line x1="168" y1="78" x2="195" y2="112" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <text x="142" y="72" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">法線</text>
+              <line x1="195" y1="112" x2="334" y2="186" stroke="#ca8a04" stroke-width="2.4" marker-end="url(#prism-ray-arr)"/>
+              <text x="248" y="142" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#b45309" font-weight="700">① 第一次折射</text>
+              <line x1="308" y1="152" x2="334" y2="186" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <text x="312" y="146" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">法線</text>
+              <line x1="334" y1="186" x2="448" y2="232" stroke="#ca8a04" stroke-width="2.4" marker-end="url(#prism-ray-arr)"/>
+              <text x="372" y="218" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#b45309" font-weight="700">② 第二次折射</text>
+              <circle cx="195" cy="112" r="3.5" fill="#0f172a"/>
+              <circle cx="334" cy="186" r="3.5" fill="#0f172a"/>
+            </svg>
+            <p class="caption">空氣→玻璃偏向法線；玻璃→空氣偏離法線。兩次加總後，出射光較入射光更靠近<strong>底邊（厚）</strong>。</p>
+          </figure>
+          <figure class="figure-prism-practice">
+            <svg class="diagram diagram-practice-prism" viewBox="0 0 480 260" role="img" aria-label="三稜鏡折射作圖練習">
+              <rect width="480" height="260" fill="#f8fafc"/>
+              <text x="240" y="22" text-anchor="middle" font-size="12" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#0f172a" font-weight="700">作圖練習：標兩次折射與法線</text>
+              <polygon points="240,44 122,216 358,216" fill="#e0f2fe" stroke="#0369a1" stroke-width="2.5" stroke-linejoin="round"/>
+              <text x="240" y="38" text-anchor="middle" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">尖（薄）</text>
+              <text x="240" y="238" text-anchor="middle" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#0f172a" font-weight="700">底邊（較厚）</text>
+              <line x1="24" y1="112" x2="195" y2="112" stroke="#ea580c" stroke-width="2.6"/>
+              <text x="200" y="106" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b">入射光（已給）</text>
+              <line x1="168" y1="78" x2="195" y2="112" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <line x1="308" y1="152" x2="334" y2="186" stroke="#64748b" stroke-width="1.5" stroke-dasharray="5 4"/>
+              <text x="142" y="72" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">法線</text>
+              <text x="312" y="146" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">法線</text>
+              <circle cx="195" cy="112" r="4" fill="#94a3b8"/>
+              <circle cx="334" cy="186" r="4" fill="#94a3b8"/>
+              <text x="204" y="128" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">① 請畫折射線</text>
+              <text x="342" y="202" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">② 請畫折射線</text>
+            </svg>
+            <p class="caption">在兩個撞稜點各畫<strong>法線</strong>（已標）、<strong>折射線</strong>（快→慢靠法線；慢→快離法線），並用箭頭標出最後偏向<strong>底邊</strong>。</p>
+          </figure>
+        </div>
       </section>
       <section class="tips">
         <div class="ex-title"><span class="tag tag-cyan">生活連結</span></div>
