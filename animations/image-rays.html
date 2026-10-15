@@ -174,7 +174,7 @@
     };
     arrow(ox, cy + 40, ox, py, C.gold, false);
     arrow(ix, cy + 40, ix, py, C.red, true);
-    [ey - 6, ey + 6].forEach((ry) => {
+    [ey - MIRROR_PUPIL_HALF, ey + MIRROR_PUPIL_HALF].forEach((ry) => {
       const by = py + (ry - py) * (cx - ix) / (ex - ix);
       arrow(ox, py, cx, by, C.gold, false);
       arrow(cx, by, ex, ry, C.blue, false);
@@ -182,16 +182,26 @@
     });
     n("circle", { cx: ox, cy: py, r: 9, fill: C.gold, stroke: "#854d0e", "stroke-width": 2 });
     n("circle", { cx: ix, cy: py, r: 6, fill: "none", stroke: C.red, "stroke-width": 2 });
-    n("ellipse", { cx: ex - 4, cy: ey, rx: 14, ry: 22, fill: "#fff", stroke: C.green, "stroke-width": 2 });
-    n("line", { x1: ex, y1: ey - 7, x2: ex, y2: ey + 7, stroke: C.green, "stroke-width": 4 });
+    n("ellipse", { cx: ex - 2, cy: ey, rx: 20, ry: MIRROR_PUPIL_HALF + 10, fill: "#fff", stroke: C.green, "stroke-width": 2 });
+    n("line", {
+      x1: ex - 10, y1: ey - MIRROR_PUPIL_HALF, x2: ex + 10, y2: ey - MIRROR_PUPIL_HALF,
+      stroke: C.green, "stroke-width": 3
+    });
+    n("line", {
+      x1: ex - 10, y1: ey + MIRROR_PUPIL_HALF, x2: ex + 10, y2: ey + MIRROR_PUPIL_HALF,
+      stroke: C.green, "stroke-width": 3
+    });
+    [ey - MIRROR_PUPIL_HALF, ey + MIRROR_PUPIL_HALF].forEach((ry) => {
+      n("circle", { cx: ex, cy: ry, r: 4, fill: C.green, stroke: "#166534", "stroke-width": 1.5 });
+    });
     n("text", { x: ex, y: ey - 32 }, "E 眼睛");
     n("text", { x: ox, y: py - 14, fill: C.gold }, "P 物點");
     n("text", { x: Math.min(W - 20, ix), y: cy + 62 }, "I 虛像");
     n("text", { x: cx, y: H - 48, "text-anchor": "middle" }, "平面鏡");
     hitTarget("mirror-p", ox, py, 32);
-    hitTarget("mirror-e", ex, ey - 4, 36);
+    hitTarget("mirror-e", ex, ey, Math.max(40, MIRROR_PUPIL_HALF + 14));
     $("result").textContent =
-      `P → 鏡面反射 → E ｜ 物距 ${p} cm＝像距 ${p} cm ｜ 物與像相距 ${2 * p} cm ｜ 虛像 I 不發光`;
+      `P → 鏡面反射 → E（誇張畫出瞳孔上下兩受光點）｜ 物距 ${p} cm＝像距 ${p} cm ｜ 物與像相距 ${2 * p} cm ｜ 虛像 I 不發光`;
   }
 
   function depthGeom() {
@@ -216,6 +226,8 @@
 
   /** 水面折射點 bx：P(px,oy) → 水面 → 空氣中到達 (eX, ey)，滿足 n水 sinθ水 = n空 sinθ空 */
   const PUPIL_HALF = 6;
+  /** 平面鏡側視：誇張瞳孔上下跨度，方便看出兩條反射光各進眼睛不同位置 */
+  const MIRROR_PUPIL_HALF = 22;
 
   function depthUsesPupilEndpoints() {
     return $("depth-ray").value === "pupil";
