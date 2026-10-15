@@ -252,7 +252,71 @@
       </section>
       <section class="tips">
         <div class="ex-title"><span class="tag tag-cyan">生活連結</span> 全身鏡至少要多高？</div>
-        <p>國中常考：平面鏡大約只要身高的<strong>一半</strong>，就能看到全身（頭頂和腳的光線在鏡面中央附近反射進眼睛）。鏡子裂成好幾塊再拼回同一個平面，仍只成<strong>一個</strong>像，因為還是同一面平面鏡。</p>
+        <p>國中常考：平面鏡大約只要身高的<strong>一半</strong>，就能看到全身。關鍵不是「鏡子要和人一樣高」，而是<strong>頭頂、腳尖各有一條光</strong>能在鏡面某點反射後進眼睛——那兩個「撞鏡點」分別在「頭頂—眼」與「腳—眼」的<strong>中點高度</strong>，兩中點相距約 h／2（例：身高 170 cm → 極限鏡長約 <strong>85 cm</strong>）。虛像在鏡後，物距＝像距。</p>
+        <figure class="figure-mirror-body">
+          <svg class="diagram diagram-mirror-body" viewBox="0 0 800 460" aria-label="全身鏡極限長度側視光路與虛像示意（身高 170 cm）">
+            <rect width="800" height="460" rx="10" fill="#f8fafc"/>
+            <!-- 地面 -->
+            <line x1="24" y1="406" x2="776" y2="406" stroke="#94a3b8" stroke-width="3"/>
+            <text x="28" y="428" font-size="13" fill="#64748b" font-weight="700">地面</text>
+            <!-- 鏡後虛像區 -->
+            <rect x="417" y="104" width="361" height="310" fill="#fff1f2" opacity="0.55"/>
+            <text x="598" y="280" text-anchor="middle" font-size="13" fill="#d52b47" font-weight="700">鏡後（虛像區）</text>
+            <!-- 虛像（高）170 cm 例 -->
+            <line x1="625" y1="406" x2="625" y2="160" stroke="#d52b47" stroke-width="3" stroke-dasharray="8 6" stroke-linecap="round" opacity="0.95"/>
+            <circle cx="625" cy="136" r="24" fill="none" stroke="#d52b47" stroke-width="2.5" stroke-dasharray="8 6"/>
+            <circle cx="616" cy="142" r="4.5" fill="none" stroke="#d52b47" stroke-width="2" stroke-dasharray="3 3"/>
+            <circle cx="634" cy="142" r="4.5" fill="none" stroke="#d52b47" stroke-width="2" stroke-dasharray="3 3"/>
+            <text x="639" y="141" font-size="13" fill="#d52b47" font-weight="700">虛像（高）</text>
+            <!-- 平面鏡（全高淡色＋極限綠段） -->
+            <line x1="415" y1="98" x2="415" y2="422" stroke="#64748b" stroke-width="4" opacity="0.35"/>
+            <line x1="415" y1="129" x2="415" y2="274" stroke="#059669" stroke-width="8" stroke-linecap="round" opacity="0.35"/>
+            <line x1="415" y1="129" x2="415" y2="274" stroke="#047857" stroke-width="12" stroke-linecap="round"/>
+            <circle cx="415" cy="129" r="5" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+            <circle cx="415" cy="274" r="5" fill="#dc2626" stroke="#fff" stroke-width="1.5"/>
+            <!-- 實物（較高 170 cm） -->
+            <line x1="206" y1="406" x2="206" y2="160" stroke="#334155" stroke-width="5" stroke-linecap="round"/>
+            <circle cx="206" cy="136" r="24" fill="#fde68a" stroke="#334155" stroke-width="2.5"/>
+            <circle cx="197" cy="142" r="4.5" fill="#15803d"/>
+            <circle cx="215" cy="142" r="4.5" fill="#15803d"/>
+            <text x="192" y="141" text-anchor="end" font-size="13" fill="#334155" font-weight="700">較高</text>
+            <text x="192" y="170" text-anchor="end" font-size="13" fill="#15803d" font-weight="700">眼</text>
+            <!-- 虛延長線 -->
+            <line x1="415" y1="129" x2="625" y2="115" stroke="#d52b47" stroke-width="1.5" stroke-dasharray="6 5" opacity="0.85"/>
+            <line x1="415" y1="274" x2="625" y2="406" stroke="#d52b47" stroke-width="1.5" stroke-dasharray="6 5" opacity="0.85"/>
+            <line x1="206" y1="142" x2="625" y2="142" stroke="#d52b47" stroke-width="1" stroke-dasharray="6 5" opacity="0.85"/>
+            <!-- 反射光路：頭頂、腳尖 -->
+            <line x1="206" y1="115" x2="415" y2="129" stroke="#ca8a04" stroke-width="2"/>
+            <polygon points="415,129 409,137 421,137" fill="#ca8a04"/>
+            <line x1="415" y1="129" x2="206" y2="142" stroke="#ca8a04" stroke-width="2"/>
+            <polygon points="206,142 212,134 200,134" fill="#ca8a04"/>
+            <line x1="206" y1="406" x2="415" y2="274" stroke="#2563eb" stroke-width="2"/>
+            <polygon points="415,274 409,266 421,266" fill="#2563eb"/>
+            <line x1="415" y1="274" x2="206" y2="142" stroke="#2563eb" stroke-width="2"/>
+            <polygon points="206,142 212,150 200,150" fill="#2563eb"/>
+            <!-- 極限鏡長標示 -->
+            <line x1="435" y1="129" x2="435" y2="274" stroke="#059669" stroke-width="2"/>
+            <line x1="429" y1="129" x2="441" y2="129" stroke="#059669" stroke-width="2"/>
+            <line x1="429" y1="274" x2="441" y2="274" stroke="#059669" stroke-width="2"/>
+            <text x="443" y="206" font-size="12" fill="#059669" font-weight="700">最短 ≈ h/2（85 cm）</text>
+            <text x="416" y="448" text-anchor="middle" font-size="13" fill="#29495e" font-weight="700">平面鏡</text>
+            <text x="416" y="132" text-anchor="middle" font-size="12" fill="#d52b47" font-weight="700">物距＝像距</text>
+          </svg>
+          <p class="caption">側視：綠色鏡面＝極限長度（例 170 cm 身高 → 約 85 cm）；頭頂→鏡→眼、腳尖→鏡→眼，撞鏡點在物點與眼睛的中點高度。粉紅虛線為鏡後虛像與延長光路。</p>
+        </figure>
+        <p>鏡子裂成好幾塊再拼回同一個平面，仍只成<strong>一個</strong>像，因為還是同一面平面鏡。</p>
+      </section>
+      <section class="physics-animation-embed no-print" aria-label="全身鏡高度互動">
+        <div class="ex-title"><span class="tag tag-cyan">互動觀察</span> 全身鏡為什麼只要身高一半？</div>
+        <p class="physics-animation-lead">拖曳人物改物距；綠色鏡面固定為<strong>極限長度</strong>（cm），較矮者加入時依 h/2 與兩人光路更新。</p>
+        <iframe id="anim-mirror-body-height"
+          class="physics-animation physics-animation-frame"
+          data-physics-animation
+          src="../animations/mirror-body-height.html"
+          title="全身鏡最小高度側視光路"
+          width="100%" height="680" loading="lazy"
+          referrerpolicy="same-origin"></iframe>
+        <p class="physics-animation-open-link"><a href="../animations/mirror-body-height.html" target="_blank" rel="noopener">另開視窗操作動畫</a></p>
       </section>
       <section class="wrong-note">
         <div class="ex-title"><span class="tag tag-rose">易錯提醒</span></div>
@@ -387,6 +451,26 @@
       <p>平行光射向凸面鏡，反射線的延長線交於鏡後
         <input class="blank" data-answer="虛焦點" style="width:4.5em">。
       </p>
+      <figure class="figure-mirror-practice">
+        <svg class="diagram diagram-practice-mirror" viewBox="0 0 420 260" role="img" aria-label="凸面鏡作圖練習底圖：主軸、鏡面與虛焦點">
+          <defs>
+            <pattern id="conv-mirror-back" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#cbd5e1" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="420" height="260" fill="#f8fafc"/>
+          <line x1="24" y1="140" x2="396" y2="140" stroke="#334155" stroke-width="1.6"/>
+          <text x="368" y="160" font-size="13" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#334155" font-weight="700">主軸</text>
+          <!-- 曲率中心 C 在凸出外側 (292,140)；反射面朝左，斜線在右側鏡背 -->
+          <path d="M 292 66 A 74 74 0 1 0 292 214 L 366 214 L 366 66 Z" fill="url(#conv-mirror-back)"/>
+          <path d="M 292 66 A 74 74 0 1 0 292 214" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+          <circle cx="218" cy="140" r="4" fill="#64748b"/>
+          <text x="224" y="136" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">鏡心 V</text>
+          <circle cx="255" cy="140" r="5" fill="#dc2626"/>
+          <text x="262" y="128" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#dc2626" font-weight="700">虛焦點 F</text>
+        </svg>
+        <p class="caption"><strong>作圖練習</strong>：V、虛焦點 F 已標在<strong>凸出外側</strong>主軸上（V 與 C 之間）；請標 C 與物體，畫兩條典型光線。反射光用<strong>延長線</strong> → <strong>虛、正立、縮小</strong>像。斜線在<strong>外側鏡背</strong>。</p>
+      </figure>
 
       <h3 class="subh">2. 凹面鏡</h3>
       <p>
@@ -418,12 +502,88 @@
         </li>
         <li>太陽爐：收集太陽光熱量。</li>
       </ul>
+      <p class="note"><strong>作圖練習（三種物距）</strong>：每格已標 V、F、2F（＝C）；虛線為建議<strong>物體</strong>位置。請補物體箭頭、畫兩條典型光線並標像。</p>
+      <div class="math-graphs math-graphs-3 mirror-practice-grid">
+        <figure class="figure-mirror-practice">
+          <svg class="diagram diagram-practice-mirror" viewBox="0 0 420 260" role="img" aria-label="凹面鏡作圖練習①物在焦點內">
+            <defs>
+              <pattern id="conc-back-1" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="6" stroke="#cbd5e1" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="420" height="260" fill="#f8fafc"/>
+            <text x="210" y="22" text-anchor="middle" font-size="12" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#0f172a" font-weight="700">① 物在 F 內</text>
+            <line x1="24" y1="140" x2="396" y2="140" stroke="#334155" stroke-width="1.6"/>
+            <text x="348" y="158" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#334155" font-weight="700">主軸</text>
+            <path d="M 218 66 A 74 74 0 0 1 218 214 L 288 214 L 288 66 Z" fill="url(#conc-back-1)"/>
+            <path d="M 218 66 A 74 74 0 0 1 218 214" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="144" cy="140" r="3.5" fill="#94a3b8"/>
+            <text x="112" y="132" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">2F（C）</text>
+            <circle cx="181" cy="140" r="5" fill="#dc2626"/>
+            <text x="148" y="128" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#dc2626" font-weight="700">焦點 F</text>
+            <circle cx="218" cy="140" r="4" fill="#64748b"/>
+            <text x="224" y="154" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">鏡心 V</text>
+            <line x1="200" y1="72" x2="200" y2="140" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <text x="206" y="66" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b">物（請畫）</text>
+          </svg>
+          <p class="caption">→ <strong>正立、放大、虛像</strong>（反射光<strong>延長線</strong>）</p>
+        </figure>
+        <figure class="figure-mirror-practice">
+          <svg class="diagram diagram-practice-mirror" viewBox="0 0 420 260" role="img" aria-label="凹面鏡作圖練習②物在F與2F之間">
+            <defs>
+              <pattern id="conc-back-2" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="6" stroke="#cbd5e1" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="420" height="260" fill="#f8fafc"/>
+            <text x="210" y="22" text-anchor="middle" font-size="12" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#0f172a" font-weight="700">② 物在 F 與 2F 之間</text>
+            <line x1="24" y1="140" x2="396" y2="140" stroke="#334155" stroke-width="1.6"/>
+            <text x="348" y="158" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#334155" font-weight="700">主軸</text>
+            <path d="M 218 66 A 74 74 0 0 1 218 214 L 288 214 L 288 66 Z" fill="url(#conc-back-2)"/>
+            <path d="M 218 66 A 74 74 0 0 1 218 214" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="144" cy="140" r="3.5" fill="#94a3b8"/>
+            <text x="112" y="132" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">2F（C）</text>
+            <circle cx="181" cy="140" r="5" fill="#dc2626"/>
+            <text x="148" y="128" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#dc2626" font-weight="700">焦點 F</text>
+            <circle cx="218" cy="140" r="4" fill="#64748b"/>
+            <text x="224" y="154" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">鏡心 V</text>
+            <line x1="162" y1="68" x2="162" y2="140" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <text x="168" y="62" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b">物（請畫）</text>
+          </svg>
+          <p class="caption">→ <strong>倒立、放大、實像</strong>（同側）</p>
+        </figure>
+        <figure class="figure-mirror-practice">
+          <svg class="diagram diagram-practice-mirror" viewBox="0 0 420 260" role="img" aria-label="凹面鏡作圖練習③物在2F外">
+            <defs>
+              <pattern id="conc-back-3" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+                <line x1="0" y1="0" x2="0" y2="6" stroke="#cbd5e1" stroke-width="1"/>
+              </pattern>
+            </defs>
+            <rect width="420" height="260" fill="#f8fafc"/>
+            <text x="210" y="22" text-anchor="middle" font-size="12" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#0f172a" font-weight="700">③ 物在 2F 外</text>
+            <line x1="24" y1="140" x2="396" y2="140" stroke="#334155" stroke-width="1.6"/>
+            <text x="348" y="158" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#334155" font-weight="700">主軸</text>
+            <path d="M 218 66 A 74 74 0 0 1 218 214 L 288 214 L 288 66 Z" fill="url(#conc-back-3)"/>
+            <path d="M 218 66 A 74 74 0 0 1 218 214" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+            <circle cx="144" cy="140" r="3.5" fill="#94a3b8"/>
+            <text x="112" y="132" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">2F（C）</text>
+            <circle cx="181" cy="140" r="5" fill="#dc2626"/>
+            <text x="148" y="128" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#dc2626" font-weight="700">焦點 F</text>
+            <circle cx="218" cy="140" r="4" fill="#64748b"/>
+            <text x="224" y="154" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b" font-weight="700">鏡心 V</text>
+            <line x1="92" y1="64" x2="92" y2="140" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="5 4"/>
+            <text x="98" y="58" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b">物（請畫）</text>
+          </svg>
+          <p class="caption">→ <strong>倒立、縮小、實像</strong>（同側）</p>
+        </figure>
+      </div>
       <section class="extra">
         <div class="ex-title"><span class="tag tag-purple">觀念補充</span> 凸、凹怎麼分？國中口訣</div>
         <ul class="q">
           <li><strong>凸面鏡：</strong>中間往外鼓。永遠正立縮小虛像，所以能「縮小世界、看到更廣」→ 路口彎鏡、汽車後視鏡。</li>
           <li><strong>凹面鏡：</strong>中間往內凹，像湯匙內側。靠近它（化妝）→ 正立放大虛像；拿遠一點 → 倒立的實像。手電筒要把燈泡放在焦點，光才會平行射很遠。</li>
           <li>三種面鏡（平、凸、凹）成像都靠<strong>反射</strong>，和透鏡的折射不一樣。</li>
+          <li><strong>光路作圖</strong>（國中常用兩條即可）：平行主軸／過焦點／指鏡心（或指曲率中心 C）。凸面鏡反射光要畫<strong>延長線</strong>（虛像）；凹面鏡在焦點外反射光<strong>實際交會</strong>（實像）。</li>
         </ul>
       </section>
       <section class="wrong-note">
