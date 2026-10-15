@@ -91,11 +91,14 @@
   let H = 460;
   let drag = null;
   const state = { xPerson: null, eyeY: null };
-  const HEAD_R = 14;
+  /** 誇張大頭，方便在頭內拖曳眼睛看出光路差異 */
+  const HEAD_R = 24;
+  const EYE_R = 4.5;
+  const EYE_SPREAD = 9;
   const PAD = 18;
   const VIRT_LABEL = 40;
   const MIRROR_GAP = 36;
-  const TOP_MARGIN = 58;
+  const TOP_MARGIN = 64;
   const BOTTOM_MARGIN = 54;
 
   function bodyLayout(H, hCm) {
@@ -162,17 +165,17 @@
         "stroke-dasharray": "8 6", "stroke-linecap": "round"
       });
     } else {
-      n("circle", { cx: x, cy: headCy, r: HEAD_R, fill: fillHead, stroke, "stroke-width": 2 });
+      n("circle", { cx: x, cy: headCy, r: HEAD_R, fill: fillHead, stroke, "stroke-width": 2.5 });
     }
     n("circle", {
-      cx: x - 5, cy: eyeY, r: 3.5,
+      cx: x - EYE_SPREAD, cy: eyeY, r: EYE_R,
       fill: dashed ? "none" : C.eye,
       stroke: dashed ? stroke : C.eye,
       "stroke-width": dashed ? 2 : 0,
       ...(dashed ? { "stroke-dasharray": "3 3" } : {})
     });
     n("circle", {
-      cx: x + 5, cy: eyeY, r: 3.5,
+      cx: x + EYE_SPREAD, cy: eyeY, r: EYE_R,
       fill: dashed ? "none" : C.eye,
       stroke: dashed ? stroke : C.eye,
       "stroke-width": dashed ? 2 : 0,
@@ -196,7 +199,7 @@
     const hCm = Number($("height").value);
     const frac = Number($("mirrorFrac").value) / 100;
     const { footY, pxPerCm, headTop, headCy, neckY } = bodyLayout(H, hCm);
-    const defaultEye = headCy + 5;
+    const defaultEye = headCy + 6;
     const xMirror = PAD + (W - 2 * PAD) * 0.52;
     const maxVirtX = W - PAD - HEAD_R - VIRT_LABEL;
     const minPersonX = Math.max(PAD + HEAD_R, 2 * xMirror - maxVirtX);
@@ -204,7 +207,9 @@
     if (state.xPerson == null) state.xPerson = minPersonX + (maxPersonX - minPersonX) * 0.35;
     if (state.eyeY == null) state.eyeY = defaultEye;
     state.xPerson = Math.min(maxPersonX, Math.max(minPersonX, state.xPerson));
-    state.eyeY = Math.max(headCy - 6, Math.min(headCy + 9, state.eyeY));
+    const eyeMin = headCy - HEAD_R + 8;
+    const eyeMax = headCy + HEAD_R - 8;
+    state.eyeY = Math.max(eyeMin, Math.min(eyeMax, state.eyeY));
     const eyeY = state.eyeY;
     const xPerson = state.xPerson;
     const xVirt = 2 * xMirror - xPerson;
@@ -268,7 +273,7 @@
       dashed: false, stroke: C.person, fillHead: "#fde68a", label: "物", labelX: Math.max(PAD, xPerson - 14)
     });
     n("text", {
-      x: Math.max(PAD, xPerson - 14), y: headCy + 22,
+      x: Math.max(PAD, xPerson - 14), y: headCy + HEAD_R + 10,
       "text-anchor": "end", fill: C.eye, "font-weight": "700", "font-size": "13"
     }, "眼（可拖）");
 
@@ -336,7 +341,7 @@
     n("text", { x: xMirror, y: H - 18, "text-anchor": "middle", "font-weight": "700" }, "平面鏡");
 
     hitTarget("person", xPerson, (neckY + footY) / 2, Math.max(36, (footY - neckY) / 2 + 12));
-    hitTarget("eye", xPerson, eyeY, 28);
+    hitTarget("eye", xPerson, eyeY, 36);
 
     const actualCm = (hCm * frac).toFixed(0);
     const minCm = (hCm / 2).toFixed(0);
@@ -378,7 +383,9 @@
     if (drag.kind === "person") {
       state.xPerson = Math.min(maxPersonX, Math.max(minPersonX, p.x));
     } else if (drag.kind === "eye") {
-      state.eyeY = Math.max(headCy - 6, Math.min(headCy + 9, p.y));
+      const eyeMin = headCy - HEAD_R + 8;
+      const eyeMax = headCy + HEAD_R - 8;
+      state.eyeY = Math.max(eyeMin, Math.min(eyeMax, p.y));
     }
     draw();
     e.preventDefault();
