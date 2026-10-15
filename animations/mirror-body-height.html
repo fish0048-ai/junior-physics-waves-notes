@@ -47,7 +47,7 @@
   <small>國中理化 · 4-2 平面鏡</small>
   <h1>全身鏡為什麼只要身高一半？</h1>
   <p>側視圖：撞鏡點在「物點—眼睛」中點高度，鏡面最短約 <strong>h/2</strong>。平面鏡<strong>虛像</strong>在鏡後，物距＝像距。</p>
-  <p class="drag-hint"><strong>平板／手機：</strong>拖曳<strong>真人（物）</strong>改物距；拖曳<strong>眼</strong>可在頭部內微調。紅色虛線連到鏡後虛像。</p>
+  <p class="drag-hint"><strong>平板／手機：</strong>較矮者預設<strong>靠近鏡子</strong>；兩人皆可拖曳改物距。紅／粉虛線為鏡後虛像。</p>
   <div class="controls">
     <label class="control-check"><input type="checkbox" id="showShort"> 加入<strong>較矮的人</strong>（掛鏡以較矮者 h/2 為基準，鏡面上下緣涵蓋兩人）</label>
     <div class="control">
@@ -252,17 +252,21 @@
     const main = buildFigure(hCm, footY, pxPerCm, eyeOffset);
     state.eyeY = main.eyeY;
 
-    if (state.xPerson == null) {
-      state.xPerson = minPersonX + (maxPersonX - minPersonX) * (showShortPerson() ? 0.55 : 0.35);
-    }
+    const maxShortX = xMirror - MIRROR_GAP;
     if (showShortPerson()) {
-      const maxP2 = Math.min(maxPersonX - PERSON_GAP, (state.xPerson || maxPersonX) - PERSON_GAP);
-      const minP2 = minPersonX;
-      if (state.xPerson2 == null) state.xPerson2 = minP2 + Math.max(0, maxP2 - minP2) * 0.35;
-      state.xPerson2 = Math.min(maxP2, Math.max(minP2, state.xPerson2));
-      state.xPerson = Math.min(maxPersonX, Math.max(state.xPerson2 + PERSON_GAP, state.xPerson));
+      if (state.xPerson2 == null) state.xPerson2 = maxShortX;
+      state.xPerson2 = Math.min(maxShortX, Math.max(minPersonX + PERSON_GAP, state.xPerson2));
+      const maxTallX = state.xPerson2 - PERSON_GAP;
+      if (state.xPerson == null) {
+        state.xPerson = minPersonX + Math.max(0, maxTallX - minPersonX) * 0.25;
+      }
+      state.xPerson = Math.min(maxTallX, Math.max(minPersonX, state.xPerson));
+      if (state.xPerson2 <= state.xPerson + PERSON_GAP - 1) {
+        state.xPerson2 = Math.min(maxShortX, state.xPerson + PERSON_GAP);
+      }
     } else {
       state.xPerson2 = null;
+      if (state.xPerson == null) state.xPerson = minPersonX + (maxPersonX - minPersonX) * 0.35;
       state.xPerson = Math.min(maxPersonX, Math.max(minPersonX, state.xPerson));
     }
 
@@ -277,15 +281,18 @@
     }
 
     const xPerson = state.xPerson;
+    const xPerson2 = state.xPerson2;
     const xVirt = 2 * xMirror - xPerson;
+    const xVirt2 = xPerson2 != null ? 2 * xMirror - xPerson2 : null;
     const distCm = (xMirror - xPerson) / pxPerCm;
+    const distShortCm = xPerson2 != null ? (xMirror - xPerson2) / pxPerCm : null;
     return {
       hCm, hShort, frac, footY, pxPerCm, main, short, minTop, minBot, refHCm,
-      eyeY: main.eyeY, xPerson, xPerson2: state.xPerson2, xMirror, xVirt, distCm
+      eyeY: main.eyeY, xPerson, xPerson2, xMirror, xVirt, xVirt2, distCm, distShortCm
     };
   }
 
-  function drawRaysFor(xP, xV, fig, xMirror, canHead, canFoot, headColor, footColor, withVirt) {
+  function drawRaysFor(xP, xV, fig, xMirror, canHead, canFoot, headColor, footColor, withVirt, virtColor = C.virt) {
     const { headTop, eyeY, footY, yHitHead, yHitFoot } = fig;
     [
       { yObj: headTop + 3, yHit: yHitHead, color: headColor, ok: canHead },
@@ -294,7 +301,7 @@
       if (ok) {
         arrow(xP, yObj, xMirror, yHit, color, 2);
         arrow(xMirror, yHit, xP, eyeY, color, 2);
-        if (withVirt && xV != null) dashLine(xMirror, yHit, xV, yObj, C.virt, 1.5);
+        if (withVirt && xV != null) dashLine(xMirror, yHit, xV, yObj, virtColor, 1.5);
       } else {
         n("line", {
           x1: xP, y1: yObj, x2: xMirror, y2: yHit,
@@ -314,12 +321,14 @@
     const g = geom();
     const {
       hCm, hShort, frac, footY, pxPerCm, main, short, minTop, minBot, refHCm,
-      eyeY, xPerson, xPerson2, xMirror, xVirt, distCm
+      eyeY, xPerson, xPerson2, xMirror, xVirt, xVirt2, distCm, distShortCm
     } = g;
     const { headTop, headCy, neckY } = main;
     $("height-out").textContent = hCm + " cm";
     $("mirror-out").textContent = Math.round(frac * 100) + " %";
-    $("dist-out").textContent = distCm.toFixed(1) + " cm";
+    $("dist-out").textContent = short && distShortCm != null
+      ? `高 ${distCm.toFixed(1)}／矮 ${distShortCm.toFixed(1)} cm`
+      : distCm.toFixed(1) + " cm";
 
     const reqLenPx = minBot - minTop;
     const reqCm = reqLenPx / pxPerCm;
@@ -349,8 +358,14 @@
       "text-anchor": "middle", fill: C.virt, "font-size": "13", "font-weight": "700"
     }, "鏡後（虛像區）");
 
+    if (short && xVirt2 != null && xPerson2 != null) {
+      const v2LabelX = Math.min(xVirt2 + 14, W - PAD - 4);
+      drawPerson(xVirt2, footY, short.neckY, short.headCy, short.eyeY, {
+        dashed: true, stroke: "#db2777", label: "虛像（矮）", labelX: v2LabelX
+      });
+    }
     drawPerson(xVirt, footY, neckY, headCy, eyeY, {
-      dashed: true, stroke: C.virt, label: "虛像", labelX: virtLabelX
+      dashed: true, stroke: C.virt, label: "虛像（高）", labelX: virtLabelX
     });
 
     n("line", {
@@ -410,9 +425,10 @@
       });
     }
 
-    drawRaysFor(xPerson, xVirt, main, xMirror, cMain.head, cMain.foot, C.headRay, C.footRay, true);
-    if (short && xPerson2 != null) {
-      drawRaysFor(xPerson2, null, short, xMirror, cShort.head, cShort.foot, "#c084fc", "#818cf8", false);
+    drawRaysFor(xPerson, xVirt, main, xMirror, cMain.head, cMain.foot, C.headRay, C.footRay, true, C.virt);
+    if (short && xPerson2 != null && xVirt2 != null) {
+      drawRaysFor(xPerson2, xVirt2, short, xMirror, cShort.head, cShort.foot, "#c084fc", "#818cf8", true, "#db2777");
+      dashLine(xPerson2, short.eyeY, xVirt2, short.eyeY, "#db2777", 1);
     }
 
     const braceX = Math.min(xMirror + 20, W - PAD - 8);
@@ -453,8 +469,10 @@
         ? `鏡長 ${actualCm} cm 已涵蓋兩人（基準：較矮 ${hShort} cm，h/2≈${refHalfCm.toFixed(0)} cm）。`
         : `鏡長 ${actualCm} cm ≈ h/2，可見全身。`;
     }
-    $("result").textContent =
-      `${mirrorMsg} 物距 ${distCm.toFixed(1)} cm（以較高者計）→ 虛像在鏡後同距離。`;
+    const distNote = short && distShortCm != null
+      ? `物距：較高 ${distCm.toFixed(1)} cm、較矮 ${distShortCm.toFixed(1)} cm（各與虛像等距）。`
+      : `物距 ${distCm.toFixed(1)} cm → 虛像在鏡後同距離。`;
+    $("result").textContent = `${mirrorMsg} ${distNote}`;
   }
 
   function onPointerDown(e) {
@@ -479,11 +497,13 @@
     const maxVirtX = W - PAD - HEAD_R - VIRT_LABEL;
     const minPersonX = Math.max(PAD + HEAD_R, 2 * xMirror - maxVirtX);
     const maxPersonX = xMirror - MIRROR_GAP;
-    if (drag.kind === "person") {
-      state.xPerson = Math.min(maxPersonX, Math.max(showShortPerson() ? (state.xPerson2 || minPersonX) + PERSON_GAP : minPersonX, p.x));
-    } else if (drag.kind === "person2") {
-      const maxP2 = Math.min(maxPersonX - PERSON_GAP, state.xPerson - PERSON_GAP);
-      state.xPerson2 = Math.min(maxP2, Math.max(minPersonX, p.x));
+    const maxShortX = xMirror - MIRROR_GAP;
+    if (drag.kind === "person2") {
+      const minP2 = (state.xPerson || minPersonX) + PERSON_GAP;
+      state.xPerson2 = Math.min(maxShortX, Math.max(minP2, p.x));
+    } else if (drag.kind === "person") {
+      const maxTallX = showShortPerson() ? (state.xPerson2 || maxShortX) - PERSON_GAP : maxPersonX;
+      state.xPerson = Math.min(maxTallX, Math.max(minPersonX, p.x));
     } else if (drag.kind === "eye") {
       const eyeMin = main.headCy - HEAD_R + 8;
       const eyeMax = main.headCy + HEAD_R - 8;
@@ -507,7 +527,7 @@
 
   $("height").addEventListener("input", () => { state.eyeY = null; draw(); });
   $("heightShort").addEventListener("input", draw);
-  $("showShort").addEventListener("change", draw);
+  $("showShort").addEventListener("change", () => { state.xPerson2 = null; draw(); });
   $("mirrorFrac").addEventListener("input", draw);
   new ResizeObserver(draw).observe(svg);
   requestAnimationFrame(() => requestAnimationFrame(draw));
