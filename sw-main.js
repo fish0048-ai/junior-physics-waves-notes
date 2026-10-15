@@ -33,6 +33,7 @@ const PRECACHE = [
   "animations/audio-lab.html",
   "animations/resonance-lab.html",
   "animations/image-rays.html",
+  "animations/mirror-body-height.html",
   "sections/4-2.html",
   "manifest.webmanifest"
 ];

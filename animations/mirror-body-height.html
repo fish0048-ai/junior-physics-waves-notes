@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>全身鏡為什麼只要身高一半？</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f8fa; color: #193247; font: 16px/1.65 system-ui, "Microsoft JhengHei", sans-serif; }
+    main { max-width: 960px; margin: auto; padding: 22px; }
+    h1 { font-size: clamp(22px, 4vw, 30px); margin: 6px 0 10px; line-height: 1.35; }
+    small { color: #547082; }
+    p { margin: 8px 0 14px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 14px; margin: 16px 0; align-items: center; }
+    .control { flex: 1 1 200px; max-width: 360px; }
+    .control label { display: flex; justify-content: space-between; gap: 10px; font-size: 15px; }
+    .control output { font-variant-numeric: tabular-nums; font-weight: 700; }
+    input[type=range] { width: 100%; min-height: 44px; accent-color: #087fa4; }
+    .visual { background: #fff; border: 1px solid #dbe7ed; border-radius: 14px; overflow: hidden; }
+    svg#scene { display: block; width: 100%; height: 440px; touch-action: manipulation; }
+    svg text { font: 14px system-ui, "Microsoft JhengHei", sans-serif; fill: #29495e; }
+    .readout { padding: 12px 16px; background: #edf5f8; min-height: 52px; font-variant-numeric: tabular-nums; }
+    .legend { font-size: 14px; margin: 10px 0; }
+    .key { display: inline-block; padding: 2px 8px; border-radius: 6px; background: #e6f1f5; margin: 2px; }
+    .note { font-size: 13px; color: #526c7d; }
+  </style>
+  <link rel="stylesheet" href="embed.css">
+</head>
+<body>
+<script>if (window.parent !== window) document.documentElement.classList.add("is-embed");</script>
+<main>
+  <small>國中理化 · 4-2 平面鏡</small>
+  <h1>全身鏡為什麼只要身高一半？</h1>
+  <p>側視圖：要同時看見<strong>頭頂</strong>與<strong>腳尖</strong>，光線必須在鏡面<strong>撞到的點</strong>剛好在「物點—眼睛」的中點高度。兩個中點之間的鏡面長度＝身高的一半。</p>
+  <div class="controls">
+    <div class="control">
+      <label for="height">身高<output id="height-out"></output></label>
+      <input id="height" type="range" min="150" max="185" step="1" value="170">
+    </div>
+    <div class="control">
+      <label for="mirrorFrac">鏡面長度（占身高）<output id="mirror-out"></output></label>
+      <input id="mirrorFrac" type="range" min="35" max="100" step="1" value="50">
+    </div>
+  </div>
+  <p class="legend">
+    <span class="key" style="background:#fef08a">頭頂→鏡→眼</span>
+    <span class="key" style="background:#bfdbfe">腳尖→鏡→眼</span>
+    <span class="key" style="background:#bbf7d0">最短鏡面 h/2</span>
+  </p>
+  <div class="visual">
+    <svg id="scene" role="img" aria-label="全身鏡最小高度側視光路示意"></svg>
+    <div class="readout" id="result"></div>
+  </div>
+  <p class="note">掛鏡時：下緣約在「眼與腳的中點」、上緣約在「眼與頭頂的中點」。人離鏡遠近<strong>不改變</strong>所需最短鏡長，只改變用到鏡面的哪一段。</p>
+</main>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const svg = $("scene");
+  const NS = "http://www.w3.org/2000/svg";
+  const C = {
+    person: "#334155",
+    mirror: "#64748b",
+    mirrorNeed: "#059669",
+    mirrorExtra: "#cbd5e1",
+    headRay: "#ca8a04",
+    footRay: "#2563eb",
+    mid: "#dc2626",
+    eye: "#15803d",
+    floor: "#94a3b8"
+  };
+  let W = 800;
+  let H = 440;
+
+  function n(tag, attrs = {}, text = "") {
+    const el = document.createElementNS(NS, tag);
+    Object.entries(attrs).forEach(([k, v]) => { if (v != null && v !== "") el.setAttribute(k, v); });
+    if (text) el.textContent = text;
+    svg.append(el);
+    return el;
+  }
+
+  function arrow(x1, y1, x2, y2, color, width = 2) {
+    n("line", { x1, y1, x2, y2, stroke: color, "stroke-width": width });
+    const a = Math.atan2(y2 - y1, x2 - x1);
+    const L = 9;
+    n("path", {
+      d: `M ${x2} ${y2} L ${x2 - L * Math.cos(a - 0.45)} ${y2 - L * Math.sin(a - 0.45)} L ${x2 - L * Math.cos(a + 0.45)} ${y2 - L * Math.sin(a + 0.45)} Z`,
+      fill: color
+    });
+  }
+
+  function draw() {
+    W = Math.max(300, svg.clientWidth);
+    H = svg.clientHeight || 440;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.replaceChildren();
+
+    const hCm = Number($("height").value);
+    const frac = Number($("mirrorFrac").value) / 100;
+    $("height-out").textContent = hCm + " cm";
+    $("mirror-out").textContent = Math.round(frac * 100) + " %";
+
+    const footY = H - 48;
+    const pxPerCm = (H - 100) / hCm;
+    const headY = footY - hCm * pxPerCm;
+    const eyeY = footY - 0.86 * hCm * pxPerCm;
+    const xPerson = W * 0.22;
+    const xMirror = W * 0.72;
+
+    const yHitHead = (headY + eyeY) / 2;
+    const yHitFoot = (eyeY + footY) / 2;
+    const minTop = yHitHead;
+    const minBot = yHitFoot;
+    const minLen = minBot - minTop;
+    const needFrac = 0.5;
+
+    const centerY = (minTop + minBot) / 2;
+    const actualLen = hCm * frac * pxPerCm;
+    let topY = centerY - actualLen / 2;
+    let botY = centerY + actualLen / 2;
+
+    n("line", { x1: 24, y1: footY, x2: W - 24, y2: footY, stroke: C.floor, "stroke-width": 3 });
+    n("text", { x: 28, y: footY + 22, "text-anchor": "start", "font-size": "13" }, "地面");
+
+    n("line", { x1: xPerson, y1: footY, x2: xPerson, y2: headY, stroke: C.person, "stroke-width": 5, "stroke-linecap": "round" });
+    n("circle", { cx: xPerson, cy: headY - 10, r: 14, fill: "#fde68a", stroke: C.person, "stroke-width": 2 });
+    n("circle", { cx: xPerson - 5, cy: eyeY, r: 3.5, fill: C.eye });
+    n("circle", { cx: xPerson + 5, cy: eyeY, r: 3.5, fill: C.eye });
+    n("text", { x: xPerson - 18, y: eyeY - 10, "text-anchor": "end", fill: C.eye, "font-weight": "700" }, "眼");
+    n("text", { x: xPerson - 18, y: headY - 8, "text-anchor": "end", fill: C.headRay, "font-weight": "700" }, "頭頂");
+    n("text", { x: xPerson - 18, y: footY - 6, "text-anchor": "end", fill: C.footRay, "font-weight": "700" }, "腳尖");
+
+    n("line", {
+      x1: xMirror, y1: minTop, x2: xMirror, y2: minBot,
+      stroke: C.mirrorNeed, "stroke-width": 8, "stroke-linecap": "round", opacity: "0.25"
+    });
+    n("line", {
+      x1: xMirror, y1: topY, x2: xMirror, y2: botY,
+      stroke: frac >= needFrac - 0.001 ? "#047857" : "#dc2626",
+      "stroke-width": 12, "stroke-linecap": "round"
+    });
+    if (frac > needFrac + 0.001) {
+      if (topY < minTop - 1) {
+        n("line", { x1: xMirror, y1: topY, x2: xMirror, y2: minTop, stroke: C.mirrorExtra, "stroke-width": 8, "stroke-linecap": "round" });
+        n("text", { x: xMirror + 14, y: (topY + minTop) / 2 + 4, "text-anchor": "start", fill: "#64748b", "font-size": "12" }, "多餘");
+      }
+      if (botY > minBot + 1) {
+        n("line", { x1: xMirror, y1: minBot, x2: xMirror, y2: botY, stroke: C.mirrorExtra, "stroke-width": 8, "stroke-linecap": "round" });
+        n("text", { x: xMirror + 14, y: (minBot + botY) / 2 + 4, "text-anchor": "start", fill: "#64748b", "font-size": "12" }, "多餘");
+      }
+    }
+
+    [yHitHead, yHitFoot].forEach((ym, i) => {
+      n("circle", { cx: xMirror, cy: ym, r: 5, fill: C.mid, stroke: "#fff", "stroke-width": 1.5 });
+      n("line", {
+        x1: xPerson, y1: i ? footY : headY, x2: xMirror, y2: ym,
+        stroke: "#94a3b8", "stroke-width": 1, "stroke-dasharray": "4 4"
+      });
+      n("line", {
+        x1: xPerson, y1: eyeY, x2: xMirror, y2: ym,
+        stroke: "#94a3b8", "stroke-width": 1, "stroke-dasharray": "4 4"
+      });
+      n("text", {
+        x: (xPerson + xMirror) / 2, y: ym - 6, "text-anchor": "middle",
+        fill: C.mid, "font-size": "12", "font-weight": "700"
+      }, "中點");
+    });
+
+    const canHead = topY <= yHitHead && botY >= yHitHead;
+    const canFoot = topY <= yHitFoot && botY >= yHitFoot;
+
+    if (canHead) {
+      arrow(xPerson, headY - 8, xMirror, yHitHead, C.headRay);
+      arrow(xMirror, yHitHead, xPerson, eyeY, C.headRay);
+    } else {
+      n("line", { x1: xPerson, y1: headY - 8, x2: xMirror, y2: yHitHead, stroke: C.headRay, "stroke-width": 1.5, "stroke-dasharray": "6 5", opacity: "0.45" });
+    }
+    if (canFoot) {
+      arrow(xPerson, footY, xMirror, yHitFoot, C.footRay);
+      arrow(xMirror, yHitFoot, xPerson, eyeY, C.footRay);
+    } else {
+      n("line", { x1: xPerson, y1: footY, x2: xMirror, y2: yHitFoot, stroke: C.footRay, "stroke-width": 1.5, "stroke-dasharray": "6 5", opacity: "0.45" });
+    }
+
+    const braceX = xMirror + 22;
+    n("line", { x1: braceX, y1: minTop, x2: braceX, y2: minBot, stroke: C.mirrorNeed, "stroke-width": 2 });
+    n("line", { x1: braceX - 6, y1: minTop, x2: braceX + 6, y2: minTop, stroke: C.mirrorNeed, "stroke-width": 2 });
+    n("line", { x1: braceX - 6, y1: minBot, x2: braceX + 6, y2: minBot, stroke: C.mirrorNeed, "stroke-width": 2 });
+    n("text", { x: braceX + 10, y: (minTop + minBot) / 2 + 5, "text-anchor": "start", fill: C.mirrorNeed, "font-weight": "700" },
+      `最短 ≈ h/2（${(hCm / 2).toFixed(0)} cm）`);
+
+    n("text", { x: xMirror, y: H - 18, "text-anchor": "middle", "font-weight": "700" }, "平面鏡（側視）");
+
+    const minCm = (hCm / 2).toFixed(0);
+    const actualCm = (hCm * frac).toFixed(0);
+    let msg;
+    if (frac < needFrac - 0.001) {
+      const miss = [];
+      if (!canHead) miss.push("頭頂");
+      if (!canFoot) miss.push("腳尖");
+      msg = `鏡長 ${actualCm} cm（${Math.round(frac * 100)}%）短於 h/2 → 看不到${miss.join("、")}。`;
+    } else if (Math.abs(frac - needFrac) < 0.02) {
+      msg = `鏡長 ${actualCm} cm ≈ 身高一半：頭、腳兩條反射光都能進眼睛。`;
+    } else {
+      msg = `鏡長 ${actualCm} cm 已足夠；綠色區間 h/2＝${minCm} cm 即最短需求，再長只是多餘鏡面。`;
+    }
+    $("result").textContent = msg;
+  }
+
+  ["height", "mirrorFrac"].forEach((id) => $(id).addEventListener("input", draw));
+  new ResizeObserver(draw).observe(svg);
+  draw();
+})();
+</script>
+<script src="embed-resize.js"></script>
+</body>
+</html>
