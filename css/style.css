@@ -630,6 +630,11 @@ figure {
 }
 .diagram-lg { max-height: 240px; }
 .diagram-sm { max-height: 160px; }
+/* 4-2 球面鏡作圖練習：螢幕略放大 */
+svg.diagram-practice-mirror,
+.figure-mirror-practice svg.diagram {
+  max-height: 320px;
+}
 .video-card {
   margin: 12px 0 16px;
   padding: 12px 14px 10px;
@@ -3676,6 +3681,17 @@ html.is-immersive .brand > span:last-child {
   }
   .diagram-lg { max-height: 58mm !important; }
   .diagram-sm { max-height: 36mm !important; }
+  svg.diagram-practice-mirror,
+  .figure-mirror-practice svg.diagram {
+    max-height: 95mm !important;
+    min-height: 72mm;
+    padding: 1.5mm !important;
+  }
+  .figure-mirror-practice {
+    margin: 2mm 0 3mm !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
   svg.math-graph {
     max-height: 48mm !important;
   }
