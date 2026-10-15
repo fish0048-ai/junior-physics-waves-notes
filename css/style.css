@@ -628,11 +628,6 @@ figure {
   width: 100%;
   max-height: 190px;
 }
-.gifted svg.diagram-tir,
-svg.diagram.diagram-tir {
-  max-height: min(340px, 52vh) !important;
-  min-height: 260px;
-}
 .diagram-lg { max-height: 240px; }
 .diagram-sm { max-height: 160px; }
 /* 4-2 球面鏡作圖練習：螢幕略放大 */
@@ -3764,10 +3759,6 @@ html.is-immersive .brand > span:last-child {
   }
   .diagram-lg { max-height: 58mm !important; }
   .diagram-sm { max-height: 36mm !important; }
-  svg.diagram-tir {
-    max-height: 98mm !important;
-    min-height: 82mm;
-  }
   svg.diagram-practice-mirror,
   svg.diagram-practice-lens,
   .figure-mirror-practice svg.diagram {
