@@ -388,7 +388,41 @@
         <input class="blank" data-answer="虛焦點" style="width:4.5em">。
       </p>
       <figure>
-        <img class="diagram" src="../img/4-2/convex-mirror-rays.svg" width="420" height="240" alt="凸面鏡典型光路：平行主軸與指鏡心兩光線，延長線交鏡後虛正立縮小像">
+        <svg class="diagram" viewBox="0 0 420 240" role="img" aria-label="凸面鏡典型光路：平行主軸與指鏡心兩光線，延長線交鏡後虛正立縮小像">
+          <defs>
+            <pattern id="conv-hatch" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#cbd5e1" stroke-width="1"/>
+            </pattern>
+            <marker id="conv-arr" markerWidth="7" markerHeight="7" refX="6" refY="3.5" orient="auto">
+              <path d="M0 0 L7 3.5 L0 7 z" fill="context-stroke"/>
+            </marker>
+          </defs>
+          <rect width="420" height="240" fill="#f8fafc"/>
+          <line x1="20" y1="132" x2="400" y2="132" stroke="#334155" stroke-width="1.4"/>
+          <text x="360" y="148" font-size="12" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#334155">主軸</text>
+          <path d="M 218 74 A 72 72 0 0 1 218 190 L 152 190 L 152 74 Z" fill="url(#conv-hatch)"/>
+          <path d="M 218 74 A 72 72 0 0 1 218 190" fill="none" stroke="#334155" stroke-width="4"/>
+          <text x="228" y="66" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#334155">凸</text>
+          <circle cx="152" cy="132" r="3" fill="#64748b"/>
+          <text x="158" y="126" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b">C</text>
+          <circle cx="188" cy="132" r="4" fill="#dc2626"/>
+          <text x="168" y="120" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#dc2626">F（虛）</text>
+          <text x="224" y="148" font-size="10" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b">V</text>
+          <line x1="308" y1="132" x2="308" y2="82" stroke="#475569" stroke-width="3"/>
+          <polygon points="308,72 300,88 316,88" fill="#475569"/>
+          <text x="314" y="68" font-size="12" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#334155">物</text>
+          <line x1="206" y1="132" x2="206" y2="102" stroke="#94a3b8" stroke-width="2.5"/>
+          <polygon points="206,94 200,106 212,106" fill="#94a3b8"/>
+          <text x="214" y="92" font-size="11" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b">法線</text>
+          <text x="20" y="28" font-size="12" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#64748b">① 平行主軸 → 延長線過 F　② 指 V → 反射對稱 → 虛、正立、縮小像</text>
+          <line x1="308" y1="82" x2="204" y2="82" stroke="#2563eb" stroke-width="2" marker-end="url(#conv-arr)"/>
+          <line x1="204" y1="82" x2="308" y2="48" stroke="#2563eb" stroke-width="2" marker-end="url(#conv-arr)"/>
+          <line x1="204" y1="82" x2="188" y2="132" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <line x1="188" y1="132" x2="206" y2="102" stroke="#2563eb" stroke-width="1.5" stroke-dasharray="5 4"/>
+          <line x1="308" y1="82" x2="224" y2="132" stroke="#dc2626" stroke-width="2" marker-end="url(#conv-arr)"/>
+          <line x1="224" y1="132" x2="308" y2="182" stroke="#dc2626" stroke-width="2" marker-end="url(#conv-arr)"/>
+          <line x1="224" y1="132" x2="206" y2="102" stroke="#dc2626" stroke-width="1.5" stroke-dasharray="5 4"/>
+        </svg>
         <p class="caption">凸面鏡作圖（對照課本）：① 平行主軸 → 反射光<strong>延長線</strong>過虛焦點 F；② 指鏡心 V → 反射對稱；交得<strong>虛、正立、縮小</strong>像。銀鍍層在<strong>外側</strong>，斜線為鏡背。</p>
       </figure>
 
@@ -423,7 +457,18 @@
         <li>太陽爐：收集太陽光熱量。</li>
       </ul>
       <figure>
-        <img class="diagram" src="../img/4-2/concave-mirror-rays.svg" width="420" height="240" alt="凹面鏡作圖練習底圖：僅主軸與凹面鏡，供標記焦點與畫光路">
+        <svg class="diagram" viewBox="0 0 420 240" role="img" aria-label="凹面鏡作圖練習底圖：僅主軸與凹面鏡，供標記焦點與畫光路">
+          <defs>
+            <pattern id="conc-mirror-back" width="6" height="6" patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
+              <line x1="0" y1="0" x2="0" y2="6" stroke="#cbd5e1" stroke-width="1"/>
+            </pattern>
+          </defs>
+          <rect width="420" height="240" fill="#f8fafc"/>
+          <line x1="24" y1="132" x2="396" y2="132" stroke="#334155" stroke-width="1.6"/>
+          <text x="368" y="152" font-size="13" font-family="system-ui,'Microsoft JhengHei',sans-serif" fill="#334155" font-weight="700">主軸</text>
+          <path d="M 218 58 A 74 74 0 0 1 218 206 L 288 206 L 288 58 Z" fill="url(#conc-mirror-back)"/>
+          <path d="M 218 58 A 74 74 0 0 1 218 206" fill="none" stroke="#334155" stroke-width="4" stroke-linecap="round"/>
+        </svg>
         <p class="caption"><strong>作圖練習</strong>：在圖上標出鏡心 V、焦點 F、曲率中心 C 與物體，再依課本畫兩條典型光線（平行主軸／過焦點／指 C）。焦點外反射光<strong>實際交會</strong>→實像；焦點內畫<strong>延長線</strong>→虛像。</p>
       </figure>
       <section class="extra">
