@@ -659,16 +659,20 @@ svg.diagram-practice-mirror,
 }
 .mirror-body-practice-grid {
   margin: 10px 0 8px;
+  grid-template-columns: 1fr;
+  gap: 14px;
+  max-width: 720px;
 }
 .tips .mirror-body-practice-grid svg.diagram,
 .figure-mirror-body-practice svg.diagram {
-  max-height: 320px;
+  max-height: 380px;
+  width: 100%;
 }
 .figure-mirror-body-practice {
   margin: 0;
 }
 svg.diagram-mirror-body-wide {
-  max-height: 340px;
+  max-height: 400px;
 }
 .video-card {
   margin: 12px 0 16px;
@@ -3745,12 +3749,13 @@ html.is-immersive .brand > span:last-child {
     min-height: 78mm;
   }
   .mirror-body-practice-grid {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 3mm !important;
+    grid-template-columns: 1fr !important;
+    max-width: none !important;
+    gap: 5mm !important;
   }
   .mirror-body-practice-grid svg.diagram {
-    max-height: 78mm !important;
-    min-height: 62mm;
+    max-height: 88mm !important;
+    min-height: 72mm;
     padding: 1.5mm !important;
     background: #fff !important;
   }
