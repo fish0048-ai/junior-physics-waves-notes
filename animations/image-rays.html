@@ -1,43 +1,341 @@
-<!doctype html><html lang="zh-Hant"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>沿著光線找像的位置</title><style>
-*{box-sizing:border-box}body{margin:0;background:#f6f8fa;color:#193247;font:16px/1.65 system-ui,"Microsoft JhengHei",sans-serif}main{max-width:1050px;margin:auto;padding:24px}small{color:#547082}h1{font-size:clamp(23px,4vw,31px);line-height:1.4;margin:6px 0 8px}p{margin:8px 0 16px}.controls{display:flex;flex-wrap:wrap;gap:12px;margin:18px 0;align-items:center}.control{flex:1 1 190px;max-width:340px}.control label{display:flex;justify-content:space-between;gap:10px;font-size:15px}.control output{font-variant-numeric:tabular-nums;font-weight:600}input[type=range]{width:100%;min-height:38px;accent-color:#087fa4}select,button{font:inherit;min-height:44px;padding:8px 12px;border:1px solid #afc4d0;border-radius:8px;color:#193247;background:white}select{max-width:100%}button{cursor:pointer}button.primary{background:#076b87;color:white;border-color:#076b87}button:disabled{opacity:.5;cursor:default}button:focus-visible,select:focus-visible,input:focus-visible,summary:focus-visible{outline:3px solid #e5a12a;outline-offset:3px}.visual{background:white;border:1px solid #dbe7ed;border-radius:16px;overflow:hidden}svg{display:block;width:100%;height:390px}svg text{font:14px system-ui,"Microsoft JhengHei",sans-serif;fill:#29495e}.readout{padding:12px 16px;background:#edf5f8;min-height:52px;font-variant-numeric:tabular-nums}.note{font-size:13px;color:#526c7d}.question{margin-top:18px;padding:16px;background:#eaf3f7;border-left:4px solid #087fa4;border-radius:7px}summary{cursor:pointer;min-height:44px;padding:8px 0;font-weight:600}details p{margin:6px 0}#status{color:#496579;font-size:14px}.legend{font-size:14px;margin:12px 0}.key{display:inline-block;padding:2px 8px;border-radius:6px;background:#e6f1f5;margin:2px}.panel{display:flex;gap:12px;flex-wrap:wrap}.panel>div{flex:1 1 200px}a{color:#075f7d}@media(max-width:480px){main{padding:14px}.controls{gap:10px}.control{flex-basis:140px}svg{height:430px}.readout{font-size:14px}}
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>沿著光線找像的位置</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; background: #f6f8fa; color: #193247; font: 16px/1.65 system-ui, "Microsoft JhengHei", sans-serif; }
+    main { max-width: 1050px; margin: auto; padding: 24px; }
+    small { color: #547082; }
+    h1 { font-size: clamp(23px, 4vw, 31px); line-height: 1.4; margin: 6px 0 8px; }
+    p { margin: 8px 0 16px; }
+    .controls { display: flex; flex-wrap: wrap; gap: 12px; margin: 18px 0; align-items: center; }
+    .control { flex: 1 1 190px; max-width: 340px; }
+    .control label { display: flex; justify-content: space-between; gap: 10px; font-size: 15px; }
+    .control output { font-variant-numeric: tabular-nums; font-weight: 600; }
+    input[type=range] { width: 100%; min-height: 44px; accent-color: #087fa4; }
+    select { font: inherit; min-height: 44px; padding: 8px 12px; border: 1px solid #afc4d0; border-radius: 8px; max-width: 100%; }
+    .visual { background: white; border: 1px solid #dbe7ed; border-radius: 16px; overflow: hidden; }
+    svg#scene {
+      display: block; width: 100%; height: 420px;
+      touch-action: none; cursor: grab;
+      -webkit-user-select: none; user-select: none;
+    }
+    svg#scene.is-dragging { cursor: grabbing; }
+    svg text { font: 14px system-ui, "Microsoft JhengHei", sans-serif; fill: #29495e; }
+    .readout { padding: 12px 16px; background: #edf5f8; min-height: 52px; font-variant-numeric: tabular-nums; }
+    .drag-hint { font-size: 14px; color: #0e7490; margin: 0 0 10px; }
+    .legend { font-size: 14px; margin: 12px 0; }
+    .key { display: inline-block; padding: 2px 8px; border-radius: 6px; background: #e6f1f5; margin: 2px; }
+    .question { margin-top: 18px; padding: 16px; background: #eaf3f7; border-left: 4px solid #087fa4; border-radius: 7px; }
+    summary { cursor: pointer; min-height: 44px; padding: 8px 0; font-weight: 600; }
+    .note { font-size: 13px; color: #526c7d; }
+    #status { color: #496579; font-size: 14px; }
+    @media (max-width: 480px) { main { padding: 14px; } svg#scene { height: 460px; } }
+  </style>
+  <link rel="stylesheet" href="embed.css">
+</head>
+<body>
+<script>if (window.parent !== window) document.documentElement.classList.add("is-embed");</script>
+<main>
+  <small>國中理化 · 4-2 平面鏡／4-3 水中視深</small>
+  <h1>沿著光線找像的位置</h1>
+  <p>先找光從哪個物點出發，再沿箭頭追到眼睛受光的位置。紅色虛線只用來反推像的位置。</p>
+  <p class="drag-hint"><strong>平板／手機：</strong>直接拖曳圖上的 <strong>P 物點</strong> 與 <strong>E 眼睛</strong>；也可用滑桿微調物距／實深。</p>
+  <div class="controls">
+    <label>情境
+      <select id="mode">
+        <option value="mirror">平面鏡</option>
+        <option value="depth">水中視深</option>
+      </select>
+    </label>
+    <div class="control">
+      <label for="distance">物距／實深<output id="distance-out"></output></label>
+      <input id="distance" type="range" min="5" max="60" step="1" value="30">
+    </div>
+  </div>
+  <p class="legend">
+    <span class="key" style="background:#fef08a;color:#854d0e">● P 物點（可拖）</span>
+    <span class="key" style="background:#bbf7d0;color:#166534">● E 眼睛（可拖）</span>
+    <span class="key">I 像點</span>
+  </p>
+  <div class="visual">
+    <svg id="scene" role="img" aria-label="沿著光線找像的位置的互動示意"></svg>
+    <div class="readout" id="result"></div>
+  </div>
+  <p class="note" id="status">拖曳 P、E 觀察光路與虛像位置變化。</p>
+  <div class="question">
+    <b>先想一想：</b>虛線交會的地方，真的有光線經過嗎？
+    <details>
+      <summary>查看解釋</summary>
+      <p>實線表示實際光路，虛線表示反向延長。平面鏡及水中視深的像都是<strong>虛像</strong>：虛線交點處沒有光線真正經過，但眼睛沿虛線方向會以為光從那裡來。</p>
+    </details>
+  </div>
+  <p class="note">水中視深依史涅爾定律（n<sub>水</sub>＝1.33）；兩條折射線反向延長交點為近似虛像，視深約為實深÷1.33。</p>
+</main>
+<script>
+(() => {
+  "use strict";
+  const $ = (id) => document.getElementById(id);
+  const svg = $("scene");
+  const NS = "http://www.w3.org/2000/svg";
+  const C = { blue: "#087fa4", red: "#d52b47", gold: "#ca8a04", green: "#258151", gray: "#92a8b7" };
+  let W = 800;
+  let H = 420;
+  let drag = null;
 
-</style><link rel="stylesheet" href="embed.css"></head><body><script>if(window.parent!==window)document.documentElement.classList.add('is-embed');</script><main><small>國中理化 · 4-2 平面鏡／4-3 水中視深</small><h1>沿著光線找像的位置</h1><p>先找光從哪個物點出發，再沿箭頭追到眼睛受光的位置。紅色虛線只用來反推像的位置。</p><div class="controls"><label>情境 <select id="mode"><option value="mirror">平面鏡</option><option value="depth">水中視深</option></select></label><div class="control"><label for="distance">物距／實深<output id="distance-out"></output></label><input id="distance" type="range" min="5" max="60" step="1" value="30"></div></div><p class="legend"><span class="key">P：光的出發物點</span><span class="key">E：眼睛受光位置</span><span class="key">I：像點</span><br>物點可以自行發光，也可以反射照到它的光；看到物體，是因為光進入眼睛。</p><div class="visual"><svg id="scene" role="img" aria-label="沿著光線找像的位置的互動示意"></svg><div class="readout" id="result"></div></div><div class="controls"><span role="status" aria-live="polite" id="status">可調整條件觀察</span></div><div class="question"><b>先想一想：</b>虛線交會的地方，真的有光線經過嗎？<details><summary>查看解釋</summary><p>實線表示實際光路，虛線表示反向延長。平面鏡及水中視深的像都是<strong>虛像</strong>：虛線交點處沒有光線真正經過，但眼睛沿虛線方向會以為光從那裡來。</p></details></div><p class="note">水中視深的兩條光線依史涅爾定律追跡（n水＝1.33、n空氣＝1），分別到達同一眼睛小瞳孔的兩端；觀察方向接近法線。兩條折射線反向延長的交點是此小光束的近似虛像，視深約為實深÷1.33。眼睛圖示放大；不模擬眼內聚焦。透鏡成像請對照課本光路作圖；此模組不含曲面鏡。</p></main><script>
-(()=>{'use strict';const $=id=>document.getElementById(id),svg=$('scene'),NS='http://www.w3.org/2000/svg';let W=800,H=390,frame=null,last=null,running=false;const C={blue:'#087fa4',red:'#d52b47',gold:'#a66a0a',green:'#258151',gray:'#92a8b7'};
-function n(tag,attrs={},text=''){const node=document.createElementNS(NS,tag);Object.entries(attrs).forEach(([k,v])=>node.setAttribute(k,v));if(text!==undefined)node.textContent=text;svg.append(node);return node}
-function clear(){W=Math.max(260,svg.clientWidth);H=svg.clientHeight||390;svg.setAttribute('viewBox',`0 0 ${W} ${H}`);svg.replaceChildren()}
-function line(x1,y1,x2,y2,color=C.blue,dash=false,width=2){return n('line',{x1,y1,x2,y2,stroke:color,'stroke-width':width,...(dash?{'stroke-dasharray':'5 5'}:{})})}
-function text(x,y,t,anchor='middle',color){return n('text',{x,y,'text-anchor':anchor,...(color?{style:'fill:'+color}:{})},t)}
-function circle(x,y,r,color,fill=color){return n('circle',{cx:x,cy:y,r,stroke:color,fill,'stroke-width':2})}
-function rect(x,y,w,h,fill,stroke='none'){return n('rect',{x,y,width:Math.max(0,w),height:Math.max(0,h),rx:4,fill,stroke})}
-function path(points,color=C.blue,dash=false,width=2){return n('path',{d:points.map((p,i)=>(i?'L':'M')+p.join(' ')).join(' '),fill:'none',stroke:color,'stroke-width':width,...(dash?{'stroke-dasharray':'5 5'}:{})})}
-function arrow(x1,y1,x2,y2,color=C.blue,dash=false){line(x1,y1,x2,y2,color,dash);const a=Math.atan2(y2-y1,x2-x1),l=8;return path([[x2-l*Math.cos(a-.45),y2-l*Math.sin(a-.45)],[x2,y2],[x2-l*Math.cos(a+.45),y2-l*Math.sin(a+.45)]],color)}
-function val(id){return Number($(id).value)}function out(id,v){$(id).textContent=v}function bind(ids,fn){ids.forEach(id=>$(id).addEventListener('input',()=>{stop();fn();draw()}))}
-function stop(msg='已暫停'){running=false;last=null;if($('play'))$('play').textContent='播放';out('status',msg)}
-function playback(update){$('play').addEventListener('click',()=>{if(running){stop();return}running=true;last=null;$('play').textContent='暫停';out('status','播放中')});function tick(t){if(running){if(last!==null)update(Math.min(.1,(t-last)/1000));last=t;draw()}frame=requestAnimationFrame(tick)}frame=requestAnimationFrame(tick)}
-document.addEventListener('visibilitychange',()=>{if(document.hidden)stop('頁面隱藏，已暫停')});
+  const pos = {
+    mirror: { ox: null, py: null, ex: null, ey: null },
+    depth: { px: null, oy: null, ex: null, ey: null }
+  };
 
-function draw(){clear();const mode=$('mode').value,p=val('distance'),cy=H*.5;out('distance-out',p+' cm');
-if(mode==='mirror'){const cx=W*.57,scale=(W*.38)/60,ox=cx-p*scale,ix=cx+p*scale,py=cy+15,ex=Math.max(24,cx-85),ey=75;
-line(cx,45,cx,H-80,C.gray,false,5);arrow(ox,cy+40,ox,py,C.gold);arrow(ix,cy+40,ix,py,C.red,true);
-[ey-5,ey+5].forEach(ry=>{const by=py+(ry-py)*(cx-ix)/(ex-ix);arrow(ox,py,cx,by,C.gold);arrow(cx,by,ex,ry,C.blue);line(cx,by,ix,py,C.red,true)});
-circle(ox,py,5,C.gold);circle(ix,py,5,C.red,'none');n('ellipse',{cx:ex-6,cy:ey,rx:12,ry:20,fill:'white',stroke:C.green,'stroke-width':2});line(ex,ey-6,ex,ey+6,C.green,false,4);text(ex,ey-29,'E 眼睛');text(ox,cy+67,'P 物點');text(Math.min(W-22,ix),cy+67,'I 虛像');text(cx,H-53,'平面鏡');out('result',`P 物點 → 鏡面反射 → E 眼睛 ｜ 物距 ${p} cm＝像距 ${p} cm ｜ 物與像相距 ${2*p} cm ｜ 虛像 I 不發光`);return}
-if(mode==='depth'){
-const surface=H*.35,x=W*.43,scale=(H*.43)/60,D=p*scale,oy=surface+D,eyeY=surface-82,eyeX=x+12,nw=1.33;
-rect(0,surface,W,H-surface,'#e6f5fa');line(0,surface,W,surface,C.blue);text(16,surface-14,'空氣','start');text(16,H-18,'水','start');
-const rays=[eyeX-5,eyeX+5].map(ex=>{let lo=Math.min(x,ex),hi=Math.max(x,ex);for(let k=0;k<70;k++){const bx=(lo+hi)/2;const f=nw*(bx-x)/Math.hypot(bx-x,D)-(ex-bx)/Math.hypot(ex-bx,surface-eyeY);if(f>0)hi=bx;else lo=bx}const bx=(lo+hi)/2;return {ex,bx,m:(ex-bx)/(eyeY-surface)}});
-const dep=(rays[1].bx-rays[0].bx)/(rays[0].m-rays[1].m),ix=rays[0].bx+rays[0].m*dep,iy=surface+dep;
-rays.forEach(r=>{arrow(x,oy,r.bx,surface,C.gold);arrow(r.bx,surface,r.ex,eyeY,C.blue);line(r.bx,surface,ix,iy,C.red,true)});
-line(rays[0].bx,surface-24,rays[0].bx,surface+35,C.gray,true);
-// All real rays end at this pupil, not elsewhere in the air.
-n('ellipse',{cx:eyeX,cy:eyeY-5,rx:22,ry:13,fill:'white',stroke:'#258151','stroke-width':2});line(eyeX-6,eyeY,eyeX+6,eyeY,C.green,false,5);text(eyeX,eyeY-26,'E 眼睛（受光）');
-circle(x,oy,6,C.gold);circle(ix,iy,6,C.red,'none');text(20,H-63,'P：水底物點（光從這裡出發）','start');text(20,H-39,'I：看起來較淺的虛像','start');
-// Leader labels separate nearby object/image points at shallow depths.
-line(x+7,oy,W-45,oy,C.gold,true);text(W-16,Math.min(H-91,oy+6),'P','end',C.gold);line(ix-7,iy,24,iy,C.red,true);text(18,iy+5,'I','start',C.red);
-svg.setAttribute('data-real-depth',p);svg.setAttribute('data-apparent-depth',dep/scale);svg.setAttribute('data-eye-x',eyeX);svg.setAttribute('data-eye-y',eyeY);
-out('result',`P 發出／反射光 → 水面折射 → E 眼睛接收。反向延長才得到 I；I 不是光源。實深 ${p} cm，視深約 ${(dep/scale).toFixed(1)} cm。`);return}
-out('result','請選擇平面鏡或水中視深。');}
-bind(['mode','distance'],()=>{});
+  function n(tag, attrs = {}, text = "") {
+    const node = document.createElementNS(NS, tag);
+    Object.entries(attrs).forEach(([k, v]) => {
+      if (v != null && v !== "") node.setAttribute(k, v);
+    });
+    if (text) node.textContent = text;
+    svg.append(node);
+    return node;
+  }
 
-const initialMode=new URLSearchParams(location.search).get('mode');if(initialMode&&Array.from($('mode').options).some(o=>o.value===initialMode))$('mode').value=initialMode;
-new ResizeObserver(draw).observe(svg);draw();let sent=0;new ResizeObserver(()=>{const height=Math.ceil(document.querySelector('main').getBoundingClientRect().height);if(height!==sent&&window.parent!==window){sent=height;window.parent.postMessage({type:'physics-animation:resize',height},location.origin==='null'?'*':location.origin)}}).observe(document.body);
-})();</script><script src="embed-resize.js"></script></body></html>
+  function clearScene() {
+    W = Math.max(280, svg.clientWidth);
+    H = svg.clientHeight || 420;
+    svg.setAttribute("viewBox", `0 0 ${W} ${H}`);
+    svg.replaceChildren();
+  }
+
+  function clientToSvg(cx, cy) {
+    const r = svg.getBoundingClientRect();
+    return {
+      x: ((cx - r.left) / r.width) * W,
+      y: ((cy - r.top) / r.height) * H
+    };
+  }
+
+  function hitTarget(kind, cx, cy, r = 28) {
+    n("circle", {
+      cx, cy, r,
+      fill: "transparent",
+      stroke: "transparent",
+      "data-drag": kind,
+      style: "cursor: grab; pointer-events: all"
+    });
+  }
+
+  function mirrorGeom() {
+    const cy = H * 0.5;
+    const cx = W * 0.57;
+    const scale = (W * 0.38) / 60;
+    const p = Number($("distance").value);
+    const m = pos.mirror;
+    if (m.ox == null) {
+      m.ox = cx - p * scale;
+      m.py = cy + 15;
+      m.ex = Math.max(36, cx - 85);
+      m.ey = 75;
+    }
+    m.ox = Math.max(28, Math.min(cx - 12, m.ox));
+    m.py = Math.max(52, Math.min(H - 90, m.py));
+    m.ex = Math.max(24, Math.min(cx - 18, m.ex));
+    m.ey = Math.max(40, Math.min(H - 100, m.ey));
+    const pCm = Math.round((cx - m.ox) / scale);
+    $("distance").value = String(Math.max(5, Math.min(60, pCm)));
+    return { cy, cx, scale, ox: m.ox, py: m.py, ex: m.ex, ey: m.ey, ix: cx + (cx - m.ox) };
+  }
+
+  function drawMirror() {
+    const { cy, cx, scale, ox, py, ex, ey, ix } = mirrorGeom();
+    const p = Number($("distance").value);
+    $("distance-out").textContent = p + " cm";
+    n("line", { x1: cx, y1: 45, x2: cx, y2: H - 80, stroke: C.gray, "stroke-width": 5 });
+    const arrow = (x1, y1, x2, y2, color, dash) => {
+      n("line", {
+        x1, y1, x2, y2, stroke: color, "stroke-width": 2,
+        ...(dash ? { "stroke-dasharray": "5 5" } : {})
+      });
+      const a = Math.atan2(y2 - y1, x2 - x1);
+      const L = 8;
+      n("path", {
+        d: `M ${x2} ${y2} L ${x2 - L * Math.cos(a - 0.45)} ${y2 - L * Math.sin(a - 0.45)} L ${x2 - L * Math.cos(a + 0.45)} ${y2 - L * Math.sin(a + 0.45)} Z`,
+        fill: color
+      });
+    };
+    arrow(ox, cy + 40, ox, py, C.gold, false);
+    arrow(ix, cy + 40, ix, py, C.red, true);
+    [ey - 6, ey + 6].forEach((ry) => {
+      const by = py + (ry - py) * (cx - ix) / (ex - ix);
+      arrow(ox, py, cx, by, C.gold, false);
+      arrow(cx, by, ex, ry, C.blue, false);
+      n("line", { x1: cx, y1: by, x2: ix, y2: py, stroke: C.red, "stroke-width": 1.5, "stroke-dasharray": "5 5" });
+    });
+    n("circle", { cx: ox, cy: py, r: 9, fill: C.gold, stroke: "#854d0e", "stroke-width": 2 });
+    n("circle", { cx: ix, cy: py, r: 6, fill: "none", stroke: C.red, "stroke-width": 2 });
+    n("ellipse", { cx: ex - 4, cy: ey, rx: 14, ry: 22, fill: "#fff", stroke: C.green, "stroke-width": 2 });
+    n("line", { x1: ex, y1: ey - 7, x2: ex, y2: ey + 7, stroke: C.green, "stroke-width": 4 });
+    n("text", { x: ex, y: ey - 32 }, "E 眼睛");
+    n("text", { x: ox, y: py - 14, fill: C.gold }, "P 物點");
+    n("text", { x: Math.min(W - 20, ix), y: cy + 62 }, "I 虛像");
+    n("text", { x: cx, y: H - 48, "text-anchor": "middle" }, "平面鏡");
+    hitTarget("mirror-p", ox, py, 32);
+    hitTarget("mirror-e", ex, ey - 4, 36);
+    $("result").textContent =
+      `P → 鏡面反射 → E ｜ 物距 ${p} cm＝像距 ${p} cm ｜ 物與像相距 ${2 * p} cm ｜ 虛像 I 不發光`;
+  }
+
+  function depthGeom() {
+    const surface = H * 0.35;
+    const scale = (H * 0.43) / 60;
+    const p = Number($("distance").value);
+    const d = pos.depth;
+    if (d.px == null) {
+      d.px = W * 0.43;
+      d.oy = surface + p * scale;
+      d.ex = d.px + 12;
+      d.ey = surface - 82;
+    }
+    d.px = Math.max(40, Math.min(W - 40, d.px));
+    d.oy = Math.max(surface + 18, Math.min(H - 24, d.oy));
+    d.ex = Math.max(36, Math.min(W - 36, d.ex));
+    d.ey = Math.max(36, Math.min(surface - 24, d.ey));
+    const pCm = Math.round((d.oy - surface) / scale);
+    $("distance").value = String(Math.max(5, Math.min(60, pCm)));
+    return { surface, scale, px: d.px, oy: d.oy, ex: d.ex, ey: d.ey, D: d.oy - surface };
+  }
+
+  function drawDepth() {
+    const { surface, scale, px, oy, ex, ey, D } = depthGeom();
+    const p = Number($("distance").value);
+    $("distance-out").textContent = p + " cm";
+    const nw = 1.33;
+    n("rect", { x: 0, y: surface, width: W, height: H - surface, fill: "#e6f5fa" });
+    n("line", { x1: 0, y1: surface, x2: W, y2: surface, stroke: C.blue, "stroke-width": 2 });
+    n("text", { x: 16, y: surface - 12, "text-anchor": "start" }, "空氣");
+    n("text", { x: 16, y: H - 14, "text-anchor": "start" }, "水");
+    const eyeXs = [ex - 6, ex + 6];
+    const rays = eyeXs.map((eX) => {
+      let lo = Math.min(px, eX);
+      let hi = Math.max(px, eX);
+      for (let k = 0; k < 70; k++) {
+        const bx = (lo + hi) / 2;
+        const f = nw * (bx - px) / Math.hypot(bx - px, D) - (eX - bx) / Math.hypot(eX - bx, surface - ey);
+        if (f > 0) hi = bx;
+        else lo = bx;
+      }
+      const bx = (lo + hi) / 2;
+      return { ex: eX, bx, m: (eX - bx) / (ey - surface) };
+    });
+    const dep = (rays[1].bx - rays[0].bx) / (rays[0].m - rays[1].m);
+    const ix = rays[0].bx + rays[0].m * dep;
+    const iy = surface + dep;
+    const arrow = (x1, y1, x2, y2, color, dash) => {
+      n("line", {
+        x1, y1, x2, y2, stroke: color, "stroke-width": 2,
+        ...(dash ? { "stroke-dasharray": "5 5" } : {})
+      });
+      const a = Math.atan2(y2 - y1, x2 - x1);
+      const L = 8;
+      n("path", {
+        d: `M ${x2} ${y2} L ${x2 - L * Math.cos(a - 0.45)} ${y2 - L * Math.sin(a - 0.45)} L ${x2 - L * Math.cos(a + 0.45)} ${y2 - L * Math.sin(a + 0.45)} Z`,
+        fill: color
+      });
+    };
+    rays.forEach((r) => {
+      arrow(px, oy, r.bx, surface, C.gold, false);
+      arrow(r.bx, surface, r.ex, ey, C.blue, false);
+      n("line", { x1: r.bx, y1: surface, x2: ix, y2: iy, stroke: C.red, "stroke-width": 1.5, "stroke-dasharray": "5 5" });
+    });
+    n("ellipse", { cx: ex, cy: ey - 4, rx: 24, ry: 14, fill: "#fff", stroke: C.green, "stroke-width": 2 });
+    n("line", { x1: ex - 7, y1: ey, x2: ex + 7, y2: ey, stroke: C.green, "stroke-width": 4 });
+    n("text", { x: ex, y: ey - 28 }, "E 眼睛");
+    n("circle", { cx: px, cy: oy, r: 9, fill: C.gold, stroke: "#854d0e", "stroke-width": 2 });
+    n("text", { x: px + 12, y: oy - 8, fill: C.gold }, "P");
+    n("circle", { cx: ix, cy: iy, r: 6, fill: "none", stroke: C.red, "stroke-width": 2 });
+    n("text", { x: ix + 10, y: iy + 4, fill: C.red }, "I");
+    hitTarget("depth-p", px, oy, 32);
+    hitTarget("depth-e", ex, ey - 4, 36);
+    const app = dep / scale;
+    $("result").textContent =
+      `P → 水面折射 → E ｜ 反向延長得 I ｜ 實深 ${p} cm，視深約 ${app.toFixed(1)} cm`;
+  }
+
+  function draw() {
+    clearScene();
+    if ($("mode").value === "mirror") drawMirror();
+    else if ($("mode").value === "depth") drawDepth();
+    else $("result").textContent = "請選擇平面鏡或水中視深。";
+  }
+
+  function resetPositions(mode) {
+    if (mode === "mirror") pos.mirror = { ox: null, py: null, ex: null, ey: null };
+    else pos.depth = { px: null, oy: null, ex: null, ey: null };
+  }
+
+  function onPointerDown(e) {
+    const t = e.target;
+    if (!t.dataset || !t.dataset.drag) return;
+    drag = { kind: t.dataset.drag, id: e.pointerId };
+    svg.setPointerCapture(e.pointerId);
+    svg.classList.add("is-dragging");
+    e.preventDefault();
+  }
+
+  function onPointerMove(e) {
+    if (!drag || drag.id !== e.pointerId) return;
+    const { x, y } = clientToSvg(e.clientX, e.clientY);
+    const mode = $("mode").value;
+    if (drag.kind === "mirror-p") {
+      pos.mirror.ox = x;
+      pos.mirror.py = y;
+    } else if (drag.kind === "mirror-e") {
+      pos.mirror.ex = x;
+      pos.mirror.ey = y;
+    } else if (drag.kind === "depth-p") {
+      pos.depth.px = x;
+      pos.depth.oy = y;
+    } else if (drag.kind === "depth-e") {
+      pos.depth.ex = x;
+      pos.depth.ey = y;
+    }
+    draw();
+    e.preventDefault();
+  }
+
+  function onPointerUp(e) {
+    if (!drag || drag.id !== e.pointerId) return;
+    drag = null;
+    svg.classList.remove("is-dragging");
+    try { svg.releasePointerCapture(e.pointerId); } catch (err) { /* ignore */ }
+  }
+
+  svg.addEventListener("pointerdown", onPointerDown);
+  svg.addEventListener("pointermove", onPointerMove);
+  svg.addEventListener("pointerup", onPointerUp);
+  svg.addEventListener("pointercancel", onPointerUp);
+
+  $("mode").addEventListener("change", () => {
+    resetPositions($("mode").value);
+    draw();
+  });
+  $("distance").addEventListener("input", () => {
+    const mode = $("mode").value;
+    resetPositions(mode);
+    draw();
+  });
+
+  const initialMode = new URLSearchParams(location.search).get("mode");
+  if (initialMode && Array.from($("mode").options).some((o) => o.value === initialMode)) {
+    $("mode").value = initialMode;
+    resetPositions(initialMode);
+  }
+
+  new ResizeObserver(draw).observe(svg);
+  draw();
+})();
+</script>
+<script src="embed-resize.js"></script>
+</body>
+</html>
