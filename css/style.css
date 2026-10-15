@@ -641,6 +641,17 @@ svg.diagram-practice-mirror,
 .mirror-practice-grid .figure-mirror-practice {
   margin: 0;
 }
+/* 4-2 凹面鏡三種物距：直向堆疊、放大作圖區 */
+.mirror-practice-concave {
+  grid-template-columns: 1fr;
+  gap: 14px;
+  max-width: 640px;
+}
+.mirror-practice-concave svg.diagram-practice-mirror,
+.mirror-practice-concave .figure-mirror-practice svg.diagram {
+  max-height: 420px;
+  width: 100%;
+}
 .mirror-practice-grid .caption {
   font-size: 13px;
   margin: 6px 0 0;
@@ -3723,6 +3734,15 @@ html.is-immersive .brand > span:last-child {
   .mirror-practice-grid svg.diagram-practice-mirror {
     max-height: 82mm !important;
     min-height: 68mm;
+  }
+  .mirror-practice-concave {
+    grid-template-columns: 1fr !important;
+    max-width: none !important;
+    gap: 5mm !important;
+  }
+  .mirror-practice-concave svg.diagram-practice-mirror {
+    max-height: 92mm !important;
+    min-height: 78mm;
   }
   .mirror-body-practice-grid {
     grid-template-columns: 1fr 1fr !important;
