@@ -675,6 +675,26 @@ svg.diagram-practice-lens,
   margin: 6px 0 0;
   text-align: center;
 }
+.prism-practice-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 12px 0 4px;
+  max-width: 640px;
+}
+.figure-prism-practice {
+  margin: 0;
+}
+svg.diagram-practice-prism {
+  width: 100%;
+  max-height: 420px;
+  height: auto;
+}
+.prism-practice-stack .caption {
+  font-size: 13px;
+  margin: 6px 0 0;
+  text-align: center;
+}
 .mirror-practice-grid .caption {
   font-size: 13px;
   margin: 6px 0 0;
@@ -3782,6 +3802,14 @@ html.is-immersive .brand > span:last-child {
   .lens-practice-concave svg.diagram-practice-lens {
     max-height: 92mm !important;
     min-height: 78mm;
+  }
+  .prism-practice-stack {
+    max-width: none !important;
+    gap: 5mm !important;
+  }
+  svg.diagram-practice-prism {
+    max-height: 88mm !important;
+    min-height: 72mm;
   }
   .figure-mirror-body-practice {
     break-inside: avoid;
