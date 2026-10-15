@@ -656,6 +656,9 @@ svg.diagram-practice-mirror,
 .figure-mirror-body-practice {
   margin: 0;
 }
+svg.diagram-mirror-body-wide {
+  max-height: 340px;
+}
 .video-card {
   margin: 12px 0 16px;
   padding: 12px 14px 10px;
