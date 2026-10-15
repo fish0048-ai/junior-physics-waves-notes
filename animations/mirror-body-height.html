@@ -59,8 +59,7 @@
       <input id="heightShort" type="range" min="130" max="165" step="1" value="145">
     </div>
     <div class="control">
-      <label for="mirrorFrac">鏡面長度（占身高）<output id="mirror-out"></output></label>
-      <input id="mirrorFrac" type="range" min="35" max="100" step="1" value="50">
+      <label>最短鏡面（極限值）<output id="mirror-req-out"></output></label>
     </div>
     <div class="control">
       <label>物距／像距<output id="dist-out"></output></label>
@@ -69,7 +68,7 @@
   <p class="legend">
     <span class="key" style="background:#fef08a">物（可拖）</span>
     <span class="key" style="background:#fecaca;color:#991b1b">虛像（鏡後）</span>
-    <span class="key" style="background:#bbf7d0">最短鏡面</span>
+    <span class="key" style="background:#bbf7d0">極限鏡面（cm）</span>
     <span class="key" style="background:#e9d5ff;color:#6b21a8">較矮者（可拖）</span>
   </p>
   <div class="visual">
@@ -238,7 +237,6 @@
     syncShortControls();
     const hCm = Number($("height").value);
     const hShort = showShortPerson() ? Number($("heightShort").value) : null;
-    const frac = Number($("mirrorFrac").value) / 100;
     const hLayout = hShort ? Math.max(hCm, hShort) : hCm;
     const { footY, pxPerCm } = bodyLayout(H, hLayout);
     const xMirror = PAD + (W - 2 * PAD) * 0.52;
@@ -287,7 +285,7 @@
     const distCm = (xMirror - xPerson) / pxPerCm;
     const distShortCm = xPerson2 != null ? (xMirror - xPerson2) / pxPerCm : null;
     return {
-      hCm, hShort, frac, footY, pxPerCm, main, short, minTop, minBot, refHCm,
+      hCm, hShort, footY, pxPerCm, main, short, minTop, minBot, refHCm,
       eyeY: main.eyeY, xPerson, xPerson2, xMirror, xVirt, xVirt2, distCm, distShortCm
     };
   }
@@ -320,12 +318,11 @@
 
     const g = geom();
     const {
-      hCm, hShort, frac, footY, pxPerCm, main, short, minTop, minBot, refHCm,
+      hCm, hShort, footY, pxPerCm, main, short, minTop, minBot, refHCm,
       eyeY, xPerson, xPerson2, xMirror, xVirt, xVirt2, distCm, distShortCm
     } = g;
     const { headTop, headCy, neckY } = main;
     $("height-out").textContent = hCm + " cm";
-    $("mirror-out").textContent = Math.round(frac * 100) + " %";
     $("dist-out").textContent = short && distShortCm != null
       ? `高 ${distCm.toFixed(1)}／矮 ${distShortCm.toFixed(1)} cm`
       : distCm.toFixed(1) + " cm";
@@ -333,11 +330,11 @@
     const reqLenPx = minBot - minTop;
     const reqCm = reqLenPx / pxPerCm;
     const refHalfCm = refHCm / 2;
-    const needFrac = reqLenPx / (refHCm * pxPerCm);
-    const centerY = (minTop + minBot) / 2;
-    const actualLen = refHCm * frac * pxPerCm;
-    const topY = centerY - actualLen / 2;
-    const botY = centerY + actualLen / 2;
+    const topY = minTop;
+    const botY = minBot;
+    $("mirror-req-out").textContent = short
+      ? `${reqCm.toFixed(1)} cm（較矮者 h/2≈${refHalfCm.toFixed(0)} cm）`
+      : `${reqCm.toFixed(1)} cm（≈ h/2）`;
 
     const sceneHeadTop = short ? Math.min(main.headTop, short.headTop) : main.headTop;
 
@@ -394,27 +391,15 @@
       x1: xMirror, y1: minTop, x2: xMirror, y2: minBot,
       stroke: C.mirrorNeed, "stroke-width": 8, "stroke-linecap": "round", opacity: "0.35"
     });
-    const mirrorOk = topY <= minTop + 1 && botY >= minBot - 1;
     n("line", {
       x1: xMirror, y1: topY, x2: xMirror, y2: botY,
-      stroke: mirrorOk ? "#047857" : "#dc2626",
+      stroke: "#047857",
       "stroke-width": 12, "stroke-linecap": "round"
     });
-    if (frac > needFrac + 0.02) {
-      if (topY < minTop - 1) {
-        n("line", { x1: xMirror, y1: topY, x2: xMirror, y2: minTop, stroke: C.mirrorExtra, "stroke-width": 8, "stroke-linecap": "round" });
-      }
-      if (botY > minBot + 1) {
-        n("line", { x1: xMirror, y1: minBot, x2: xMirror, y2: botY, stroke: C.mirrorExtra, "stroke-width": 8, "stroke-linecap": "round" });
-      }
-    }
 
-    const cover = (fig) => ({
-      head: topY <= fig.yHitHead && botY >= fig.yHitHead,
-      foot: topY <= fig.yHitFoot && botY >= fig.yHitFoot
-    });
-    const cMain = cover(main);
-    const cShort = short ? cover(short) : null;
+    const cover = () => ({ head: true, foot: true });
+    const cMain = cover();
+    const cShort = short ? cover() : null;
 
     [main.yHitHead, main.yHitFoot].forEach((ym) => {
       n("circle", { cx: xMirror, cy: ym, r: 5, fill: C.mid, stroke: "#fff", "stroke-width": 1.5 });
@@ -455,20 +440,9 @@
     hitTarget("person", xPerson, (neckY + footY) / 2, Math.max(36, (footY - neckY) / 2 + 12));
     hitTarget("eye", xPerson, eyeY, 36);
 
-    const actualCm = (refHCm * frac).toFixed(0);
-    let mirrorMsg;
-    if (!mirrorOk) {
-      const miss = [];
-      if (!cMain.head) miss.push("較高者頭頂");
-      if (!cMain.foot) miss.push("較高者腳尖");
-      if (cShort && !cShort.head) miss.push("較矮者頭頂");
-      if (cShort && !cShort.foot) miss.push("較矮者腳尖");
-      mirrorMsg = `鏡長 ${actualCm} cm 不足（共用需約 ${reqCm.toFixed(0)} cm）→ ${miss.join("、") || "有人看不到全身"}。`;
-    } else {
-      mirrorMsg = short
-        ? `鏡長 ${actualCm} cm 已涵蓋兩人（基準：較矮 ${hShort} cm，h/2≈${refHalfCm.toFixed(0)} cm）。`
-        : `鏡長 ${actualCm} cm ≈ h/2，可見全身。`;
-    }
+    const mirrorMsg = short
+      ? `綠色鏡面＝極限長度 ${reqCm.toFixed(1)} cm（較矮 ${hShort} cm 的 h/2≈${refHalfCm.toFixed(0)} cm；兩人共用時取光路聯集）。`
+      : `綠色鏡面＝極限長度 ${reqCm.toFixed(1)} cm（約身高的一半，剛好可見全身）。`;
     const distNote = short && distShortCm != null
       ? `物距：較高 ${distCm.toFixed(1)} cm、較矮 ${distShortCm.toFixed(1)} cm（各與虛像等距）。`
       : `物距 ${distCm.toFixed(1)} cm → 虛像在鏡後同距離。`;
@@ -528,7 +502,6 @@
   $("height").addEventListener("input", () => { state.eyeY = null; draw(); });
   $("heightShort").addEventListener("input", draw);
   $("showShort").addEventListener("change", () => { state.xPerson2 = null; draw(); });
-  $("mirrorFrac").addEventListener("input", draw);
   new ResizeObserver(draw).observe(svg);
   requestAnimationFrame(() => requestAnimationFrame(draw));
   window.addEventListener("load", draw);
