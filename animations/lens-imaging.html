@@ -26,6 +26,24 @@
     .legend { font-size: 14px; margin: 10px 0; color: #475569; }
     .key { display: inline-block; padding: 2px 8px; border-radius: 6px; margin: 2px 4px 2px 0; }
     .note { font-size: 13px; color: #64748b; }
+    .ray-toggles {
+      flex: 1 1 100%;
+      margin: 0;
+      padding: 12px 14px;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #fff;
+    }
+    .ray-toggles legend { font-size: 14px; font-weight: 700; padding: 0 6px; }
+    .ray-toggles label {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-height: 44px;
+      font-size: 15px;
+      cursor: pointer;
+    }
+    .ray-toggles input { width: 20px; height: 20px; accent-color: #2563eb; }
   </style>
   <link rel="stylesheet" href="embed.css">
 </head>
@@ -34,7 +52,7 @@
 <main>
   <small>國中理化 · 4-3 透鏡成像</small>
   <h1>凸透鏡與凹透鏡成像</h1>
-  <p>主軸、O、F 與作圖練習相同。拖曳<strong>物體箭頭</strong>改變物距，觀察兩條典型折射線與像的位置。</p>
+  <p>主軸、O、F 與作圖練習相同。拖曳<strong>物體箭頭</strong>改變物距；可勾選要顯示的三條典型折射線（至少兩條才會相交定像）。</p>
   <p class="drag-hint"><strong>平板／手機：</strong>按住橙色箭頭尖端左右拖曳；勿把物體拖進透鏡內。</p>
   <div class="controls">
     <label>透鏡種類
@@ -43,10 +61,18 @@
         <option value="concave">凹透鏡（發散）</option>
       </select>
     </label>
+    <fieldset class="ray-toggles">
+      <legend>顯示光線（可自由切換）</legend>
+      <label><input type="checkbox" id="ray-parallel" checked> ① 平行主軸（凸：折射後過另一側 F；凹：延長線過虛焦點）</label>
+      <label><input type="checkbox" id="ray-focus" checked> ② 通過焦點 F（凸：物側 F 射入→平行；凹：朝另一側 F 射入→平行）</label>
+      <label><input type="checkbox" id="ray-center" checked> ③ 通過鏡心 O（不偏折；可關閉，只留①②兩條與焦點有關的光路）</label>
+    </fieldset>
   </div>
   <p class="legend">
     <span class="key" style="background:#ffedd5;color:#c2410c">● 物體（可拖）</span>
-    <span class="key" style="background:#fef9c3;color:#854d0e">— 折射光</span>
+    <span class="key" style="background:#fef9c3;color:#ca8a04">— ① 平行</span>
+    <span class="key" style="background:#fed7aa;color:#c2410c">— ② 焦點</span>
+    <span class="key" style="background:#bbf7d0;color:#047857">— ③ 光心</span>
     <span class="key" style="background:#e2e8f0;color:#475569">- - 延長線</span>
     <span class="key" style="background:#dbeafe;color:#1d4ed8">像</span>
   </p>
@@ -81,6 +107,21 @@
   let lensType = "convex";
   let objX = 136;
   let drag = false;
+
+  const RAY_COLOR = { parallel: "#ca8a04", focus: "#ea580c", center: "#059669" };
+
+  function rayOn() {
+    return {
+      parallel: $("ray-parallel").checked,
+      focus: $("ray-focus").checked,
+      center: $("ray-center").checked
+    };
+  }
+
+  function yOnVerticalLens(x0, y0, xF, yF) {
+    if (Math.abs(xF - x0) < 1e-9) return y0;
+    return y0 + (OX - x0) * (yF - y0) / (xF - x0);
+  }
 
   function n(tag, attrs = {}, text = "") {
     const el = document.createElementNS(NS, tag);
@@ -222,16 +263,53 @@
     return { x: x1 + t * (x2 - x1), y: y1 + t * (y2 - y1) };
   }
 
-  function imageFromRays(oy) {
-    if (lensType === "convex") {
-      return intersectLines(OX, oy, F_R, AY, objX, oy, OX, AY);
+  /** 各條折射後（或整段）的無限直線，供求像用 */
+  function refractLines(oy) {
+    const lines = [];
+    const r = rayOn();
+    if (r.parallel) {
+      if (lensType === "convex") {
+        lines.push({ id: "parallel", x1: OX, y1: oy, x2: F_R, y2: AY });
+      } else {
+        lines.push({
+          id: "parallel",
+          x1: OX, y1: oy,
+          x2: OX + (OX - F_L), y2: oy + (oy - AY)
+        });
+      }
     }
-    return intersectLines(OX, oy, OX + (OX - F_L), oy + (oy - AY), objX, oy, OX, AY);
+    if (r.focus) {
+      const yHit = lensType === "convex"
+        ? yOnVerticalLens(objX, oy, F_L, AY)
+        : yOnVerticalLens(objX, oy, F_R, AY);
+      lines.push({ id: "focus", x1: OX, y1: yHit, x2: OX + 140, y2: yHit });
+    }
+    if (r.center) {
+      lines.push({ id: "center", x1: objX, y1: oy, x2: OX, y2: AY });
+    }
+    return lines;
+  }
+
+  function imageFromRays(oy) {
+    const lines = refractLines(oy);
+    if (lines.length < 2) return null;
+    for (let i = 0; i < lines.length; i++) {
+      for (let j = i + 1; j < lines.length; j++) {
+        const a = lines[i];
+        const b = lines[j];
+        const p = intersectLines(a.x1, a.y1, a.x2, a.y2, b.x1, b.y1, b.x2, b.y2);
+        if (p && Number.isFinite(p.x) && Number.isFinite(p.y)) return p;
+      }
+    }
+    return null;
   }
 
   function describe(im) {
     if (im.kind === "invalid") return "物體太靠近透鏡，請往左拖一點。";
     if (im.kind === "atF") return "物距 ≈ 焦距：折射後平行主軸，<strong>無法在紙屏上成有限大小的像</strong>。";
+    const r = rayOn();
+    const nOn = (r.parallel ? 1 : 0) + (r.focus ? 1 : 0) + (r.center ? 1 : 0);
+    if (nOn < 2) return "請至少勾選<strong>兩條</strong>光線，折射線才會相交定像。";
     const u = im.u;
     const parts = [];
     parts.push(`物距 <strong>${u.toFixed(0)}</strong>（約 ${(u / F).toFixed(2)} f）`);
@@ -258,66 +336,104 @@
     return parts.join("　｜　");
   }
 
-  function drawRay(x1, y1, x2, y2, solid) {
+  function drawRay(x1, y1, x2, y2, solid, color = "#ca8a04") {
     const seg = clipSeg(x1, y1, x2, y2);
     if (!seg) return;
     svg.append(n("line", {
       x1: seg.x1, y1: seg.y1, x2: seg.x2, y2: seg.y2,
-      stroke: solid ? "#ca8a04" : "#94a3b8",
+      stroke: color,
       "stroke-width": solid ? 2 : 1.6,
       "stroke-dasharray": solid ? null : "6 5",
       "stroke-linecap": "round"
     }));
   }
 
-  /** 沿 (x1,y1)→(x2,y2) 方向延長到 viewBox 邊界 */
-  function drawRayDir(x1, y1, x2, y2, solid) {
+  function drawRayDir(x1, y1, x2, y2, solid, color) {
     const dx = x2 - x1;
     const dy = y2 - y1;
     const len = Math.hypot(dx, dy) || 1;
-    drawRay(x1, y1, x1 + (dx / len) * 900, y1 + (dy / len) * 900, solid);
+    drawRay(x1, y1, x1 + (dx / len) * 900, y1 + (dy / len) * 900, solid, color);
+  }
+
+  function maybeVirtualTail(lx, ly, img, virtual) {
+    if (!virtual || !img) return;
+    drawRay(lx, ly, img.x, img.y, false, "#94a3b8");
+  }
+
+  function isVirtualIm(im) {
+    return lensType === "concave" || (im && im.kind === "ok" && im.virtual);
+  }
+
+  function drawParallelRay(oy, im, img) {
+    const virtual = isVirtualIm(im);
+    const c = RAY_COLOR.parallel;
+    drawRay(objX, oy, OX, oy, true, c);
+    if (lensType === "convex") {
+      if (virtual) {
+        drawRayDir(OX, oy, F_R, AY, true, c);
+        maybeVirtualTail(OX, oy, img, true);
+      } else if (img) {
+        drawRay(OX, oy, img.x, img.y, true, c);
+        drawRayDir(OX, oy, img.x, img.y, true, c);
+      } else {
+        drawRayDir(OX, oy, F_R, AY, true, c);
+      }
+    } else {
+      drawRayDir(OX, oy, OX + (OX - F_L), oy + (oy - AY), true, c);
+      maybeVirtualTail(OX, oy, img, true);
+    }
+  }
+
+  function drawFocusRay(oy, im, img) {
+    const virtual = isVirtualIm(im);
+    const c = RAY_COLOR.focus;
+    const yHit = lensType === "convex"
+      ? yOnVerticalLens(objX, oy, F_L, AY)
+      : yOnVerticalLens(objX, oy, F_R, AY);
+    drawRay(objX, oy, OX, yHit, true, c);
+    if (virtual) {
+      drawRayDir(OX, yHit, OX + 120, yHit, true, c);
+      maybeVirtualTail(OX, yHit, img, true);
+    } else if (img) {
+      drawRay(OX, yHit, img.x, img.y, true, c);
+      drawRayDir(OX, yHit, img.x, img.y, true, c);
+    } else {
+      drawRayDir(OX, yHit, OX + 120, yHit, true, c);
+    }
+  }
+
+  function drawCenterRay(oy, im, img) {
+    const virtual = isVirtualIm(im);
+    const c = RAY_COLOR.center;
+    if (virtual) {
+      drawRay(objX, oy, OX, AY, true, c);
+      drawRayDir(objX, oy, OX, AY, true, c);
+      maybeVirtualTail(OX, AY, img, true);
+    } else if (img) {
+      drawRay(objX, oy, img.x, img.y, true, c);
+      drawRayDir(objX, oy, img.x, img.y, true, c);
+    } else {
+      drawRay(objX, oy, OX, AY, true, c);
+      drawRayDir(objX, oy, OX, AY, true, c);
+    }
   }
 
   function drawRays(im) {
     const oy = im.oy != null ? im.oy : AY - OBJ_H;
+    const r = rayOn();
+    const img = im.kind === "ok" ? { x: im.ix, y: im.iy } : null;
+
     if (im.kind === "atF") {
-      drawRay(objX, oy, OX, oy, true);
-      drawRay(OX, oy, F_R, AY, true);
-      drawRayDir(OX, oy, F_R, AY, true);
-      drawRay(objX, oy, OX, AY, true);
-      drawRayDir(objX, oy, OX, AY, true);
+      if (r.parallel) drawParallelRay(oy, im, null);
+      if (r.focus) drawFocusRay(oy, im, null);
+      if (r.center) drawCenterRay(oy, im, null);
       return;
     }
     if (im.kind !== "ok") return;
 
-    const { ix, iy, virtual } = im;
-    const hitX = virtual ? ix : ix;
-    const hitY = virtual ? iy : iy;
-
-    if (lensType === "convex") {
-      drawRay(objX, oy, OX, oy, true);
-      if (virtual) {
-        drawRay(OX, oy, F_R, AY, true);
-        drawRayDir(OX, oy, F_R, AY, true);
-        drawRay(objX, oy, OX, AY, true);
-        drawRayDir(objX, oy, OX, AY, true);
-        drawRay(OX, oy, hitX, hitY, false);
-        drawRay(OX, AY, hitX, hitY, false);
-      } else {
-        drawRay(OX, oy, hitX, hitY, true);
-        drawRayDir(OX, oy, hitX, hitY, true);
-        drawRay(objX, oy, hitX, hitY, true);
-        drawRayDir(objX, oy, hitX, hitY, true);
-      }
-    } else {
-      drawRay(objX, oy, OX, oy, true);
-      drawRay(OX, oy, OX + (OX - F_L), oy + (oy - AY), true);
-      drawRayDir(OX, oy, OX + (OX - F_L), oy + (oy - AY), true);
-      drawRay(objX, oy, OX, AY, true);
-      drawRayDir(objX, oy, OX, AY, true);
-      drawRay(OX, oy, hitX, hitY, false);
-      drawRay(OX, AY, hitX, hitY, false);
-    }
+    if (r.parallel) drawParallelRay(oy, im, img);
+    if (r.focus) drawFocusRay(oy, im, img);
+    if (r.center) drawCenterRay(oy, im, img);
   }
 
   function clampImageY(iy, inverted) {
@@ -330,6 +446,8 @@
 
   function drawImage(im) {
     if (im.kind !== "ok") return;
+    const r = rayOn();
+    if ((r.parallel ? 1 : 0) + (r.focus ? 1 : 0) + (r.center ? 1 : 0) < 2) return;
     let { ix, iy, virtual, inverted } = im;
     if (ix < 8 || ix > W - 8) return;
     iy = clampImageY(iy, inverted);
@@ -408,6 +526,10 @@
   $("lens-type").addEventListener("change", () => {
     lensType = $("lens-type").value;
     draw();
+  });
+
+  ["ray-parallel", "ray-focus", "ray-center"].forEach((id) => {
+    $(id).addEventListener("change", draw);
   });
 
   svg.addEventListener("pointerdown", onDown);
