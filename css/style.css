@@ -630,6 +630,32 @@ figure {
 }
 .diagram-lg { max-height: 240px; }
 .diagram-sm { max-height: 160px; }
+/* 4-2 球面鏡作圖練習：螢幕略放大 */
+svg.diagram-practice-mirror,
+.figure-mirror-practice svg.diagram {
+  max-height: 320px;
+}
+.mirror-practice-grid {
+  margin: 12px 0 8px;
+}
+.mirror-practice-grid .figure-mirror-practice {
+  margin: 0;
+}
+.mirror-practice-grid .caption {
+  font-size: 13px;
+  margin: 6px 0 0;
+  text-align: center;
+}
+.mirror-body-practice-grid {
+  margin: 10px 0 8px;
+}
+.tips .mirror-body-practice-grid svg.diagram,
+.figure-mirror-body-practice svg.diagram {
+  max-height: 320px;
+}
+.figure-mirror-body-practice {
+  margin: 0;
+}
 .video-card {
   margin: 12px 0 16px;
   padding: 12px 14px 10px;
@@ -1610,6 +1636,11 @@ svg.math-graph text {
 .lab-sheet-tight .sheet-prompt-line .sheet-field-md { min-width: 5.5em; }
 .lab-sheet-tight .sheet-prompt-line .sheet-field-lg { min-width: 9em; }
 .lab-sheet-tight .sheet-prompt-free { margin-top: 10px; }
+.lab-sheet-tight .sheet-prompt-readonly {
+  color: #57534e;
+  font-size: 13px;
+  line-height: 1.5;
+}
 .lab-sheet-tight .sheet-write-summary-short {
   flex: 1;
   min-height: 5.5em;
@@ -3671,6 +3702,39 @@ html.is-immersive .brand > span:last-child {
   }
   .diagram-lg { max-height: 58mm !important; }
   .diagram-sm { max-height: 36mm !important; }
+  svg.diagram-practice-mirror,
+  .figure-mirror-practice svg.diagram {
+    max-height: 95mm !important;
+    min-height: 72mm;
+    padding: 1.5mm !important;
+  }
+  .figure-mirror-practice {
+    margin: 2mm 0 3mm !important;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .mirror-practice-grid {
+    grid-template-columns: 1fr !important;
+    gap: 4mm !important;
+  }
+  .mirror-practice-grid svg.diagram-practice-mirror {
+    max-height: 82mm !important;
+    min-height: 68mm;
+  }
+  .mirror-body-practice-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 3mm !important;
+  }
+  .mirror-body-practice-grid svg.diagram {
+    max-height: 78mm !important;
+    min-height: 62mm;
+    padding: 1.5mm !important;
+    background: #fff !important;
+  }
+  .figure-mirror-body-practice {
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
   svg.math-graph {
     max-height: 48mm !important;
   }
@@ -4125,8 +4189,8 @@ html.is-immersive .brand > span:last-child {
   .lab-sheet-tight #p-d {
     break-before: page;
     page-break-before: always;
-    break-inside: avoid;
-    page-break-inside: avoid;
+    break-inside: auto;
+    page-break-inside: auto;
     display: flex;
     flex-direction: column;
     margin: 0;
@@ -4183,9 +4247,29 @@ html.is-immersive .brand > span:last-child {
   .lab-sheet-tight .sheet-extra-head { font-size: 8.5pt; margin: 0 0 0.5mm; }
   .lab-sheet-tight #p-d .sheet-write-stem { min-height: 11mm; }
   .lab-sheet-tight #p-d .sheet-write-opt { min-height: 7mm; }
-  .lab-sheet-tight #p-d .sheet-mcq-wide-list li { margin: 0.4mm 0; }
-  .lab-sheet-tight #p-d .sheet-explain-grow { min-height: 26mm; }
+  .lab-sheet-tight #p-d .sheet-mcq-wide-list li {
+    margin: 0.4mm 0;
+    break-inside: avoid;
+    page-break-inside: avoid;
+  }
+  .lab-sheet-tight #p-d .lab-record.sheet-answer-line {
+    break-after: avoid;
+    page-break-after: avoid;
+  }
+  .lab-sheet-tight #p-d .sheet-explain-grow {
+    min-height: 26mm;
+    break-before: avoid;
+    page-break-before: avoid;
+    break-inside: auto;
+    page-break-inside: auto;
+  }
   .lab-sheet-tight #p-d .sheet-explain-grow .sheet-write-explain { min-height: 22mm; }
+  .lab-sheet-tight #p-d .sheet-prompt-readonly {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    color: #44403c;
+    font-size: 7.5pt;
+  }
   .lab-sheet-tight .sheet-done,
   .lab-sheet-tight .sheet-done-inline {
     margin: 2mm 0 0;
