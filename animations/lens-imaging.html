@@ -206,11 +206,27 @@
     }
     const v = (u * f) / (u - f);
     const m = -v / u;
+    const ho = AY - oy;
     const ix = OX + v;
-    let iy = AY + m * OBJ_H;
+    const iy = AY - m * ho;
     const virtual = v < 0;
     const inverted = m < 0;
-    return { kind: "ok", u, v, m, ix, iy, oy, virtual, inverted };
+    return { kind: "ok", u, v, m, ix, iy, oy, ho, virtual, inverted };
+  }
+
+  /** 兩直線交點（無限延長） */
+  function intersectLines(x1, y1, x2, y2, x3, y3, x4, y4) {
+    const d = (x1 - x2) * (y3 - y4) - (y1 - y2) * (x3 - x4);
+    if (Math.abs(d) < 1e-9) return null;
+    const t = ((x1 - x3) * (y3 - y4) - (y1 - y3) * (x3 - x4)) / d;
+    return { x: x1 + t * (x2 - x1), y: y1 + t * (y2 - y1) };
+  }
+
+  function imageFromRays(oy) {
+    if (lensType === "convex") {
+      return intersectLines(OX, oy, F_R, AY, objX, oy, OX, AY);
+    }
+    return intersectLines(OX, oy, OX + (OX - F_L), oy + (oy - AY), objX, oy, OX, AY);
   }
 
   function describe(im) {
@@ -254,39 +270,53 @@
     }));
   }
 
+  /** 沿 (x1,y1)→(x2,y2) 方向延長到 viewBox 邊界 */
+  function drawRayDir(x1, y1, x2, y2, solid) {
+    const dx = x2 - x1;
+    const dy = y2 - y1;
+    const len = Math.hypot(dx, dy) || 1;
+    drawRay(x1, y1, x1 + (dx / len) * 900, y1 + (dy / len) * 900, solid);
+  }
+
   function drawRays(im) {
-    const { oy } = im;
-    if (im.kind !== "ok") {
-      if (im.kind === "atF") {
-        drawRay(objX, oy, OX, oy, true);
-        drawRay(OX, oy, W, oy, true);
-        drawRay(objX, oy, W, AY + (oy - AY) * (W - objX) / (OX - objX), true);
-      }
+    const oy = im.oy != null ? im.oy : AY - OBJ_H;
+    if (im.kind === "atF") {
+      drawRay(objX, oy, OX, oy, true);
+      drawRay(OX, oy, F_R, AY, true);
+      drawRayDir(OX, oy, F_R, AY, true);
+      drawRay(objX, oy, OX, AY, true);
+      drawRayDir(objX, oy, OX, AY, true);
       return;
     }
+    if (im.kind !== "ok") return;
+
+    const { ix, iy, virtual } = im;
+    const hitX = virtual ? ix : ix;
+    const hitY = virtual ? iy : iy;
 
     if (lensType === "convex") {
       drawRay(objX, oy, OX, oy, true);
-      const dx = F_R - OX;
-      const dy = AY - oy;
-      const len = Math.hypot(dx, dy) || 1;
-      drawRay(OX, oy, OX + (dx / len) * 400, oy + (dy / len) * 400, true);
-      drawRay(objX, oy, W, AY + (oy - AY) * (W - OX) / (objX - OX), true);
-      if (im.virtual && im.ix >= 0 && im.ix <= W) {
-        drawRay(OX, oy, im.ix, im.iy, false);
-        drawRay(OX, AY, im.ix, im.iy, false);
+      if (virtual) {
+        drawRay(OX, oy, F_R, AY, true);
+        drawRayDir(OX, oy, F_R, AY, true);
+        drawRay(objX, oy, OX, AY, true);
+        drawRayDir(objX, oy, OX, AY, true);
+        drawRay(OX, oy, hitX, hitY, false);
+        drawRay(OX, AY, hitX, hitY, false);
+      } else {
+        drawRay(OX, oy, hitX, hitY, true);
+        drawRayDir(OX, oy, hitX, hitY, true);
+        drawRay(objX, oy, hitX, hitY, true);
+        drawRayDir(objX, oy, hitX, hitY, true);
       }
     } else {
       drawRay(objX, oy, OX, oy, true);
-      const dx = OX - F_L;
-      const dy = oy - AY;
-      const len = Math.hypot(dx, dy) || 1;
-      drawRay(OX, oy, OX + (dx / len) * 380, oy + (dy / len) * 380, true);
-      drawRay(objX, oy, W, AY + (oy - AY) * (W - OX) / (objX - OX), true);
-      if (im.ix >= 0 && im.ix <= W) {
-        drawRay(OX, oy, im.ix, im.iy, false);
-        drawRay(OX, AY, im.ix, im.iy, false);
-      }
+      drawRay(OX, oy, OX + (OX - F_L), oy + (oy - AY), true);
+      drawRayDir(OX, oy, OX + (OX - F_L), oy + (oy - AY), true);
+      drawRay(objX, oy, OX, AY, true);
+      drawRayDir(objX, oy, OX, AY, true);
+      drawRay(OX, oy, hitX, hitY, false);
+      drawRay(OX, AY, hitX, hitY, false);
     }
   }
 
@@ -330,7 +360,13 @@
   function draw() {
     clear();
     drawBase();
-    const im = imaging();
+    let im = imaging();
+    if (im.kind === "ok") {
+      const rayHit = imageFromRays(im.oy);
+      if (rayHit && Number.isFinite(rayHit.x) && Number.isFinite(rayHit.y)) {
+        im = { ...im, ix: rayHit.x, iy: rayHit.y };
+      }
+    }
     drawRays(im);
     drawImage(im);
     drawObject();
