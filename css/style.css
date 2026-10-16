@@ -2440,7 +2440,7 @@ details.is-exam-nav > a { margin-left: 18px; }
 
 .db-scale {
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(86px, 1fr));
   gap: 8px;
   margin: 10px 0 14px;
 }
@@ -3907,7 +3907,7 @@ html.is-immersive .brand > span:last-child {
   .two-col > figure {
     min-width: 0;
   }
-  .db-scale { grid-template-columns: repeat(5, 1fr) !important; }
+  .db-scale { grid-template-columns: repeat(3, 1fr) !important; }
   .blank {
     background: #fff !important;
     color: transparent !important;
