@@ -629,6 +629,10 @@ figure {
   max-height: 190px;
 }
 .diagram-lg { max-height: 240px; }
+.gifted img.diagram-optical-lever {
+  max-height: min(280px, 72vw);
+  object-fit: contain;
+}
 .diagram-sm { max-height: 160px; }
 /* 4-2 球面鏡作圖練習：螢幕略放大 */
 svg.diagram-practice-mirror,
