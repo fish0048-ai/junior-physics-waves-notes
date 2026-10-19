@@ -1,6 +1,9 @@
 import { expect, test } from "@playwright/test";
+import { legacyPwaCacheVersion, readPwaCacheVersion } from "./pwa-cache-version";
 
 test("更新 Service Worker 後採用新樣式，並保留筆記資料", async ({ page }) => {
+  const currentCache = readPwaCacheVersion();
+  const staleCache = legacyPwaCacheVersion(currentCache);
   let release = () => {};
   const gate = new Promise<void>((resolve) => {
     release = resolve;
@@ -15,7 +18,7 @@ test("更新 Service Worker 後採用新樣式，並保留筆記資料", async (
   expect(response?.ok()).toBeTruthy();
   expect(new URL(page.url()).hostname).toBe("127.0.0.1");
 
-  await page.evaluate(async () => {
+  await page.evaluate(async (stale) => {
     const db = await new Promise<IDBDatabase>((resolve, reject) => {
       const request = indexedDB.open("jpwn-ink", 1);
       request.onupgradeneeded = () => {
@@ -33,18 +36,22 @@ test("更新 Service Worker 後採用新樣式，並保留筆記資料", async (
       tx.onerror = () => reject(tx.error);
     });
     db.close();
-    const cache = await caches.open("jpwn-pwa-v2");
+    const cache = await caches.open(stale);
     await cache.put(new Request("/css/style.css"), new Response("OLD-CSS", {
       headers: { "Content-Type": "text/css" },
     }));
-  });
+  }, staleCache);
 
   release();
   await page.evaluate(async () => navigator.serviceWorker.ready);
   await expect.poll(async () => page.evaluate(() => !!navigator.serviceWorker.controller)).toBeTruthy();
 
-  await expect.poll(async () => page.evaluate(async () => (await caches.keys()).includes("jpwn-pwa-v2"))).toBeFalsy();
-  await expect.poll(async () => page.evaluate(async () => (await caches.keys()).includes("jpwn-pwa-v3"))).toBeTruthy();
+  await expect
+    .poll(async () => page.evaluate(async (name) => (await caches.keys()).includes(name), staleCache))
+    .toBeFalsy();
+  await expect
+    .poll(async () => page.evaluate(async (name) => (await caches.keys()).includes(name), currentCache))
+    .toBeTruthy();
 
   const css = await page.evaluate(async () => (await fetch("/css/style.css")).text());
   expect(css).toContain("prefers-reduced-motion");
