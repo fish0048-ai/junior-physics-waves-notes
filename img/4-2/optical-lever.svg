@@ -1,0 +1,34 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 240" role="img" aria-label="????????? ????? ?????? ? ?? ? ? ?">
+  <rect width="400" height="240" rx="8" fill="#fffbeb"/>
+  <text x="18" y="28" font-size="15" fill="#dc2626" font-weight="800" font-family="system-ui,'Microsoft JhengHei',sans-serif">§?????</text>
+  <!-- ???????????? -->
+  <rect x="115" y="162" width="170" height="14" fill="none" stroke="#94a3b8" stroke-width="1.2" stroke-dasharray="6 4" rx="2"/>
+  <!-- ??? -->
+  <line x1="200" y1="169" x2="200" y2="48" stroke="#94a3b8" stroke-width="1.6" stroke-dasharray="5 4"/>
+  <!-- ? ? ?????????18°? -->
+  <line x1="200" y1="169" x2="200" y2="48" stroke="#16a34a" stroke-width="2.2" transform="rotate(18 200 169)"/>
+  <text x="218" y="58" font-size="13" fill="#15803d" font-weight="700" font-family="system-ui,'Microsoft JhengHei',sans-serif">??</text>
+  <!-- ? ? ??????? -->
+  <line x1="119" y1="143" x2="281" y2="195" stroke="#2563eb" stroke-width="7" stroke-linecap="round"/>
+  <!-- ?????? -->
+  <defs>
+    <marker id="ol-arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8 Z" fill="#dc2626"/>
+    </marker>
+  </defs>
+  <line x1="88" y1="58" x2="200" y2="169" stroke="#dc2626" stroke-width="2.4" marker-end="url(#ol-arr)"/>
+  <!-- ??????? -->
+  <path d="M 242 169 A 26 26 0 0 0 258 183" fill="none" stroke="#2563eb" stroke-width="1.4"/>
+  <text x="262" y="188" font-size="14" fill="#1e40af" font-weight="700" font-family="Times New Roman,serif">?</text>
+  <!-- ???????? -->
+  <path d="M 200 62 A 22 22 0 0 1 214 72" fill="none" stroke="#64748b" stroke-width="1.2"/>
+  <text x="216" y="78" font-size="13" fill="#475569" font-weight="700" font-family="Times New Roman,serif">?</text>
+  <!-- ????????? -->
+  <path d="M 200 118 A 34 34 0 0 0 166 136" fill="none" stroke="#dc2626" stroke-width="1.3"/>
+  <text x="154" y="126" font-size="14" fill="#b91c1c" font-weight="700" font-family="Times New Roman,serif">?</text>
+  <!-- ?+????????? -->
+  <path d="M 200 118 A 34 34 0 0 0 158 152" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+  <path d="M 158 152 A 40 40 0 0 0 138 168" fill="none" stroke="#2563eb" stroke-width="1.5"/>
+  <text x="108" y="158" font-size="13" fill="#1d4ed8" font-weight="700" font-family="Times New Roman,serif">?+?</text>
+  <circle cx="200" cy="169" r="3.2" fill="#0f172a"/>
+</svg>
