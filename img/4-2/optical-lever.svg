@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 420 260" role="img" aria-label="optical lever">
   <rect width="420" height="260" fill="#fff"/>
-  <text x="14" y="28" font-size="16" fill="#dc2626" font-weight="800" font-family="system-ui,'Microsoft JhengHei',sans-serif">&#167;&#20809;&#27099;&#26751;&#21407;&#29702;</text>
 
   <!-- P=(235,188)  &#952;=20&#176;  &#945;=38&#176; -->
   <rect x="148" y="180" width="174" height="16" fill="none" stroke="#64748b" stroke-width="1.3" stroke-dasharray="6 4" rx="2"/>
