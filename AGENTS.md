@@ -9,13 +9,14 @@
 1. `.cursor/skills/junior-physics-notes/SKILL.md` — 流程與禁則
 2. `.cursor/skills/junior-physics-notes/workflow.md` — **人工 vs AI 工作流總表**（開做前對表）
 3. `.cursor/skills/junior-physics-notes/inquiry.md` — 探究怎麼寫
-4. `.cursor/skills/junior-physics-notes/html-templates.md` — HTML 樣板
-5. `.cursor/skills/junior-physics-notes/math.md` — 公式與座標圖
-6. `.cursor/skills/junior-physics-notes/extras.md` — 國中程度＋國中資優兩層補充
-7. `.cursor/skills/junior-physics-notes/exams.md` — 題庫
-8. `.cursor/skills/junior-physics-notes/reference.md` — 檔名與 config
-9. `.cursor/skills/junior-physics-notes/labs.md` — 實驗專區（步驟為主）
-10. `.cursor/skills/junior-physics-notes/pages.md` — PDF 頁碼（固定頁底）
+4. `.cursor/skills/junior-physics-notes/thinking-habits.md` — 思考習慣 ↔ 篇寫槽位（4-1／4-2 不改）
+5. `.cursor/skills/junior-physics-notes/html-templates.md` — HTML 樣板
+6. `.cursor/skills/junior-physics-notes/math.md` — 公式與座標圖
+7. `.cursor/skills/junior-physics-notes/extras.md` — 國中程度＋國中資優兩層補充
+8. `.cursor/skills/junior-physics-notes/exams.md` — 題庫
+9. `.cursor/skills/junior-physics-notes/reference.md` — 檔名與 config
+10. `.cursor/skills/junior-physics-notes/labs.md` — 實驗專區（步驟為主）
+11. `.cursor/skills/junior-physics-notes/pages.md` — PDF 頁碼（固定頁底）
 
 規則（Cursor 會依檔案自動套用）：`.cursor/rules/jpwn-*.mdc`  
 - **分工**：`jpwn-workflow.mdc`（人工交原料／AI 組站上線）  
