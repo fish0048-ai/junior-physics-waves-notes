@@ -11,6 +11,7 @@ description: Converts junior-high physics lecture notes into this site's HTML wo
 
 - **人工 vs AI 工作流**：[workflow.md](workflow.md)（開做前先對表）
 - 探究怎麼寫：[inquiry.md](inquiry.md)
+- 思考習慣與篇寫槽位：[thinking-habits.md](thinking-habits.md)（4-1／4-2 凍結；改寫自 4-3 起）
 - HTML 骨架與 class：[html-templates.md](html-templates.md)
 - 公式與圖表：[math.md](math.md)
 - 兩層觀念補充：[extras.md](extras.md)
