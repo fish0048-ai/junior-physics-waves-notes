@@ -1,0 +1,29 @@
+{
+  "title": "樣例預期結果（mock provider）",
+  "students": [
+    {
+      "label": "01-王小明",
+      "hasMarked": true,
+      "hasCorrected": true,
+      "status": "完成"
+    },
+    {
+      "label": "02-李小華",
+      "hasMarked": true,
+      "hasCorrected": false,
+      "status": "未完成"
+    },
+    {
+      "label": "03-陳大同",
+      "hasMarked": false,
+      "hasCorrected": false,
+      "status": "未完成"
+    },
+    {
+      "label": "04-張模糊",
+      "hasMarked": false,
+      "hasCorrected": false,
+      "status": "看不清"
+    }
+  ]
+}
