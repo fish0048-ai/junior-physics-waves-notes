@@ -31,7 +31,7 @@ function mountDock() {
   if (!dock) return;
   dock.innerHTML = ISLANDS.map(
     (island) =>
-      `<button type="button" data-dock="${island.id}"><span>${String(island.index).padStart(2, "0")}</span>${island.shortTitle}</button>`
+      `<button type="button" data-dock="${island.id}" style="box-shadow:inset 4px 0 0 ${island.color}"><span>${String(island.index).padStart(2, "0")}</span>${island.shortTitle}</button>`
   ).join("");
   dock.addEventListener("click", (ev) => {
     const btn = ev.target.closest("[data-dock]");
