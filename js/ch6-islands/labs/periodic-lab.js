@@ -24,6 +24,8 @@ const PTABLE = [
   { z: 16, col: 15, row: 2 },
   { z: 17, col: 16, row: 2 },
   { z: 18, col: 17, row: 2 },
+  { z: 19, col: 0, row: 3 },
+  { z: 20, col: 1, row: 3 },
   { z: 26, col: 7, row: 3, ghost: true },
 ];
 

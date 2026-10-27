@@ -12,7 +12,7 @@ html.islands-page body {
   position: fixed;
   inset: 0;
   display: grid;
-  grid-template-rows: auto 1fr;
+  grid-template-rows: auto auto 1fr;
   font-family: "Noto Sans TC", system-ui, sans-serif;
   color: #0f172a;
 }
@@ -63,6 +63,48 @@ html.islands-page body {
 
 #islands-canvas:active {
   cursor: grabbing;
+}
+
+.islands-dock {
+  display: flex;
+  gap: 6px;
+  z-index: 8;
+  overflow-x: auto;
+  padding: 6px 10px;
+  background: rgba(255, 254, 251, 0.96);
+  border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.islands-dock button {
+  border: 1px solid rgba(15, 23, 42, 0.1);
+  background: #fff;
+  border-radius: 12px;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: 13px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.islands-dock button span {
+  display: block;
+  font-size: 11px;
+  color: #64748b;
+}
+
+.islands-dock button.is-on {
+  border-color: #2563eb;
+  background: #dbeafe;
+}
+
+.islands-dock button.is-done span {
+  color: #047857;
+}
+
+#islands-progress {
+  font-size: 13px;
+  font-weight: 700;
+  color: #047857;
 }
 
 .islands-hint {
@@ -470,6 +512,32 @@ button.is-primary {
   gap: 8px;
   margin: 6px 0;
 }
+
+.mol-stage {
+  min-height: 64px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  background: #f0fdfa;
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.mol-ball {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-weight: 800;
+}
+
+.mol-ball.is-h { background: #94a3b8; }
+.mol-ball.is-c { background: #334155; }
+.mol-ball.is-o { background: #dc2626; }
 
 @media (max-width: 640px) {
   .islands-panel {

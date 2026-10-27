@@ -23,11 +23,13 @@
     <header class="islands-topbar">
       <a id="islands-btn-back" href="../ch6.html">← 第 6 章目錄</a>
       <h1>理化探索群島</h1>
+      <span id="islands-progress">已完成 0／6</span>
       <button type="button" id="islands-btn-reset-view">重設視角</button>
     </header>
+    <nav id="islands-dock" class="islands-dock" aria-label="六座島嶼"></nav>
     <div class="islands-stage">
       <canvas id="islands-canvas" aria-label="3D 六角群島場景，點選島嶼開始探索"></canvas>
-      <p class="islands-hint">拖曳旋轉 · 滾輪或雙指縮放 · 點選島嶼 · 重設視角回全景</p>
+      <p class="islands-hint">拖曳旋轉（不會誤選島） · 滾輪或雙指縮放 · 點島或上方導覽</p>
       <div id="islands-fallback" hidden></div>
 
       <aside id="islands-panel" class="islands-panel" hidden aria-live="polite">
@@ -35,6 +37,7 @@
         <div id="islands-panel-body"></div>
         <div class="islands-panel-actions">
           <button type="button" id="islands-btn-explore" class="is-primary">開始探索</button>
+          <button type="button" id="islands-btn-next">下一座</button>
           <a id="islands-btn-lecture" href="../sections/6-3.html" class="islands-topbar">閱讀講義</a>
           <button type="button" id="islands-btn-close">關閉</button>
         </div>

@@ -91,11 +91,18 @@ export function mountElementsLab(root, handlers) {
       picks[selected] = bin.dataset.bin;
       const card = shell.content.querySelector(`[data-sample="${selected}"]`);
       card?.classList.add("is-placed");
-      const slot = bin.querySelector(".lab-bin-slot");
-      const tag = document.createElement("span");
-      tag.className = "lab-chip";
-      tag.textContent = SAMPLES.find((s) => s.id === selected).label;
-      slot.appendChild(tag);
+      shell.content.querySelectorAll(".lab-bin-slot").forEach((slot) => {
+        slot.innerHTML = "";
+      });
+      SAMPLES.forEach((sample) => {
+        if (!picks[sample.id]) return;
+        const slot = shell.content.querySelector(`[data-slot="${picks[sample.id]}"]`);
+        if (!slot) return;
+        const tag = document.createElement("span");
+        tag.className = "lab-chip";
+        tag.textContent = sample.label;
+        slot.appendChild(tag);
+      });
       selected = null;
       shell.content.querySelectorAll(".lab-card").forEach((c) => {
         c.class.remove("is-selected");

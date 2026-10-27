@@ -8,9 +8,11 @@ export function createPanelController(root) {
   const btnExplore = root.querySelector("#islands-btn-explore");
   const btnLecture = root.querySelector("#islands-btn-lecture");
   const btnClose = root.querySelector("#islands-btn-close");
+  const btnNext = root.querySelector("#islands-btn-next");
 
   let currentId = null;
   let onExplore = null;
+  let onNext = null;
 
   function open(islandId) {
     const island = islandById(islandId);
@@ -28,6 +30,12 @@ export function createPanelController(root) {
     btnLecture.href = island.sectionHref;
     btnExplore.disabled = false;
     btnExplore.textContent = "開始探索";
+    const next = islandById(island.nextIsland);
+    if (btnNext && next) {
+      btnNext.hidden = false;
+      btnNext.textContent = `下一座：${next.shortTitle || next.title}`;
+      btnNext.dataset.next = next.id;
+    }
     panel.hidden = false;
     panel.dataset.island = islandId;
   }
@@ -41,12 +49,17 @@ export function createPanelController(root) {
   btnExplore.addEventListener("click", () => {
     if (currentId && onExplore) onExplore(currentId);
   });
+  btnNext?.addEventListener("click", () => {
+    const nextId = btnNext.dataset.next;
+    if (nextId && onNext) onNext(nextId);
+  });
 
   return {
     open,
     close,
     setHandlers(handlers) {
       onExplore = handlers.onExplore;
+      onNext = handlers.onNext;
     },
   };
 }

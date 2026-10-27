@@ -73,12 +73,46 @@ function createIslandProp(island) {
     const c = b.clone();
     c.position.set(-0.2, 0.42, 0.08);
     g.add(a, b, c);
+  } else if (island.id === "elements") {
+    const gold = new THREE.Mesh(new THREE.SphereGeometry(0.16, 12, 12), new THREE.MeshStandardMaterial({ color: 0xfbbf24, metalness: 0.65, roughness: 0.25 }));
+    gold.position.set(-0.22, 0.28, 0.05);
+    const copper = new THREE.Mesh(new THREE.SphereGeometry(0.14, 12, 12), new THREE.MeshStandardMaterial({ color: 0xb45309, metalness: 0.55, roughness: 0.35 }));
+    copper.position.set(0.05, 0.24, -0.12);
+    const sulfur = new THREE.Mesh(new THREE.DodecahedronGeometry(0.13, 0), new THREE.MeshStandardMaterial({ color: 0xfde047, roughness: 0.8 }));
+    sulfur.position.set(0.24, 0.22, 0.12);
+    g.add(gold, copper, sulfur);
   } else {
-    const block = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.35, 0.45), matLight);
-    block.position.y = 0.25;
-    g.add(block);
+    const colors = [0x2563eb, 0xdc2626, 0x64748b, 0x2563eb];
+    colors.forEach((color, i) => {
+      const ball = new THREE.Mesh(new THREE.SphereGeometry(0.1, 10, 10), new THREE.MeshStandardMaterial({ color, roughness: 0.55 }));
+      ball.position.set(-0.22 + (i % 2) * 0.28, 0.22, -0.1 + Math.floor(i / 2) * 0.24);
+      g.add(ball);
+    });
   }
   return g;
+}
+
+function makeNameSprite(text) {
+  const canvas = document.createElement("canvas");
+  canvas.width = 512;
+  canvas.height = 160;
+  const ctx = canvas.getContext("2d");
+  ctx.fillStyle = "rgba(255,254,251,0.94)";
+  ctx.beginPath();
+  ctx.roundRect(16, 28, 480, 104, 28);
+  ctx.fill();
+  ctx.fillStyle = "#0f172a";
+  ctx.font = "700 64px 'Noto Sans TC', 'Microsoft JhengHei', sans-serif";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  ctx.fillText(text, 256, 80);
+  const tex = new THREE.CanvasTexture(canvas);
+  if (THREE.SRGBColorSpace) tex.colorSpace = THREE.SRGBColorSpace;
+  const sprite = new THREE.Sprite(new THREE.SpriteMaterial({ map: tex, transparent: true, depthWrite: false }));
+  sprite.scale.set(1.7, 0.53, 1);
+  sprite.position.y = 1.45;
+  sprite.raycast = () => {};
+  return sprite;
 }
 
 export class WorldScene {
@@ -157,7 +191,13 @@ export class WorldScene {
       group.position.set(x, 0, z);
       group.userData.islandId = island.id;
 
+      const grass = createHexTop("#86efac");
+      grass.scale.set(1.08, 1, 1.08);
+      grass.position.y = -0.03;
+      group.add(grass);
+
       const top = createHexTop(island.color);
+      top.position.y = 0.02;
       top.receiveShadow = true;
       top.castShadow = true;
       group.add(top);
@@ -171,6 +211,7 @@ export class WorldScene {
 
       const prop = createIslandProp(island);
       group.add(prop);
+      group.add(makeNameSprite(`${String(island.index).padStart(2, "0")} ${island.shortTitle || island.title}`));
 
       this._syncMarkers(group, island, prog);
 
@@ -191,6 +232,16 @@ export class WorldScene {
       plank.lookAt(pb.x, 0.05, pb.z);
       this.scene.add(plank);
     }
+
+    const hub = new THREE.Mesh(
+      new THREE.CylinderGeometry(0.42, 0.52, 0.22, 6),
+      new THREE.MeshStandardMaterial({ color: 0xf8fafc, roughness: 0.8 })
+    );
+    hub.position.y = 0.08;
+    this.scene.add(hub);
+    const hubLabel = makeNameSprite("第6章");
+    hubLabel.position.y = 0.85;
+    this.scene.add(hubLabel);
   }
 
   _syncMarkers(group, island, prog) {
@@ -233,7 +284,16 @@ export class WorldScene {
     this._onResize = () => this._resize();
     window.addEventListener("resize", this._onResize);
 
+    this._down = null;
+    this._onDown = (ev) => {
+      this._down = { x: ev.clientX, y: ev.clientY };
+    };
     this._onPointer = (ev) => {
+      if (!this._down) return;
+      const dx = ev.clientX - this._down.x;
+      const dy = ev.clientY - this._down.y;
+      this._down = null;
+      if (dx * dx + dy * dy > 36) return;
       const rect = this.canvas.getBoundingClientRect();
       this.pointer.x = ((ev.clientX - rect.left) / rect.width) * 2 - 1;
       this.pointer.y = -((ev.clientY - rect.top) / rect.height) * 2 + 1;
@@ -245,6 +305,7 @@ export class WorldScene {
       const id = obj?.userData?.islandId;
       if (id) this.onIslandPick(id);
     };
+    this.canvas.addEventListener("pointerdown", this._onDown);
     this.canvas.addEventListener("pointerup", this._onPointer);
   }
 
@@ -314,6 +375,7 @@ export class WorldScene {
   dispose() {
     this.running = false;
     window.removeEventListener("resize", this._onResize);
+    this.canvas.removeEventListener("pointerdown", this._onDown);
     this.canvas.removeEventListener("pointerup", this._onPointer);
     this.controls.dispose();
     this.renderer.dispose();

@@ -1,4 +1,5 @@
-import { islandById } from "./config.js";
+import { ISLANDS, islandById } from "./config.js";
+import { isCompleted } from "./progress.js";
 import { mountFallback2D } from "./fallback-2d.js";
 import { openIslandLab } from "./labs/index.js";
 import { WorldScene, probeWebGL } from "./scene-world.js";
@@ -13,11 +14,37 @@ const panel = createPanelController(root);
 let world = null;
 let labInstance = null;
 
+function syncChrome(activeId) {
+  const done = ISLANDS.filter((island) => island.taskId && isCompleted(island.taskId)).length;
+  const progress = root.querySelector("#islands-progress");
+  if (progress) progress.textContent = `已完成 ${done}／${ISLANDS.length}`;
+  root.querySelectorAll("[data-dock]").forEach((btn) => {
+    const id = btn.getAttribute("data-dock");
+    const island = islandById(id);
+    btn.classList.toggle("is-on", id === activeId);
+    btn.classList.toggle("is-done", !!(island?.taskId && isCompleted(island.taskId)));
+  });
+}
+
+function mountDock() {
+  const dock = root.querySelector("#islands-dock");
+  if (!dock) return;
+  dock.innerHTML = ISLANDS.map(
+    (island) =>
+      `<button type="button" data-dock="${island.id}"><span>${String(island.index).padStart(2, "0")}</span>${island.shortTitle}</button>`
+  ).join("");
+  dock.addEventListener("click", (ev) => {
+    const btn = ev.target.closest("[data-dock]");
+    if (btn) selectIsland(btn.getAttribute("data-dock"));
+  });
+}
+
 function selectIsland(id) {
   const island = islandById(id);
   if (!island) return;
   if (world) world.highlightIsland(id);
   panel.open(id);
+  syncChrome(id);
   history.replaceState(null, "", `?island=${id}`);
 }
 
@@ -32,11 +59,21 @@ function startExplore(id) {
     },
     onComplete: () => {
       world?.refreshCompletionMarkers();
+      syncChrome(id);
+    },
+    onNext: (nextId) => {
+      labInstance?.close();
+      labInstance = null;
+      world?.setPaused(false);
+      selectIsland(nextId);
     },
   });
 }
 
-panel.setHandlers({ onExplore: startExplore });
+panel.setHandlers({
+  onExplore: startExplore,
+  onNext: (nextId) => selectIsland(nextId),
+});
 
 root.querySelector("#islands-btn-back")?.addEventListener("click", (ev) => {
   ev.preventDefault();
@@ -47,6 +84,9 @@ root.querySelector("#islands-btn-reset-view")?.addEventListener("click", () => {
   world?.resetView();
   panel.close();
 });
+
+mountDock();
+syncChrome(null);
 
 if (!probeWebGL()) {
   canvas?.remove();

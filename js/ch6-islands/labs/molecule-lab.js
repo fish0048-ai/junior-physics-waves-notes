@@ -35,6 +35,11 @@ export function mountMoleculeLab(root, handlers) {
         ).join("")}
         <button type="button" class="lab-chip-btn" data-reset="1">清空</button>
       </div>
+      <div class="mol-stage" aria-hidden="true">
+        ${Array.from({ length: counts.H }, () => '<span class="mol-ball is-h">H</span>').join("")}
+        ${Array.from({ length: counts.C }, () => '<span class="mol-ball is-c">C</span>').join("")}
+        ${Array.from({ length: counts.O }, () => '<span class="mol-ball is-o">O</span>').join("")}
+      </div>
       <p class="lab-readout">目前組成：<strong id="mol-formula">${formulaString()}</strong>
         （H:${counts.H} O:${counts.O} C:${counts.C}）</p>
       <ul class="mol-targets" id="mol-targets">

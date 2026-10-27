@@ -6,6 +6,7 @@ export const ISLANDS = [
   {
     id: "elements",
     index: 1,
+    shortTitle: "元素",
     title: "元素探索島",
     subtitle: "金屬與非金屬",
     sectionId: "6-1",
@@ -27,6 +28,7 @@ export const ISLANDS = [
   {
     id: "periodic",
     index: 2,
+    shortTitle: "週期表",
     title: "週期表城市",
     subtitle: "週期與族",
     sectionId: "6-2",
@@ -48,6 +50,7 @@ export const ISLANDS = [
   {
     id: "atom",
     index: 3,
+    shortTitle: "原子",
     title: "原子研究所",
     subtitle: "質子、中子、電子",
     sectionId: "6-3",
@@ -69,6 +72,7 @@ export const ISLANDS = [
   {
     id: "decompose",
     index: 4,
+    shortTitle: "分解",
     title: "物質分解實驗島",
     subtitle: "化合物 vs 元素",
     sectionId: "6-3",
@@ -90,6 +94,7 @@ export const ISLANDS = [
   {
     id: "molecule",
     index: 5,
+    shortTitle: "分子",
     title: "分子組裝工坊",
     subtitle: "化學式與分子",
     sectionId: "6-4",
@@ -111,6 +116,7 @@ export const ISLANDS = [
   {
     id: "classify",
     index: 6,
+    shortTitle: "分類",
     title: "物質分類挑戰島",
     subtitle: "混合物與純物質",
     sectionId: "6-4",
