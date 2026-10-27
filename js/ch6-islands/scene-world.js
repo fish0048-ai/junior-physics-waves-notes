@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { ISLANDS, axialToWorld } from "./config.js?v=4";
-import { getProgress, isCompleted } from "./progress.js?v=4";
+import { ISLANDS, axialToWorld } from "./config.js?v=5";
+import { getProgress, isCompleted } from "./progress.js?v=5";
 
 const HEX_RADIUS = 1.12;
 
@@ -111,7 +111,9 @@ function createIslandProp(island) {
       [0.18, 0.5, -0.12, 0x64748b, 0.08],
     ];
     atoms.forEach(([x, y, z, color, r]) => {
-      g.add(Object.assign(new THREE.Mesh(new THREE.SphereGeometry(r, 12, 12), matte(color)), { position: new THREE.Vector3(x, y, z) }));
+      const ball = new THREE.Mesh(new THREE.SphereGeometry(r, 12, 12), matte(color));
+      ball.position.set(x, y, z);
+      g.add(ball);
     });
     g.add(house, cap);
   } else if (island.id === "elements") {

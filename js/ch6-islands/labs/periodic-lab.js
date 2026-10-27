@@ -1,6 +1,6 @@
-import { ELEMENTS_Z20 } from "../config.js?v=4";
-import { isCompleted, markCompleted } from "../progress.js?v=4";
-import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=4";
+import { ELEMENTS_Z20 } from "../config.js?v=5";
+import { isCompleted, markCompleted } from "../progress.js?v=5";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=5";
 
 const TASK_ID = "periodic:alkali-vs-iron";
 
