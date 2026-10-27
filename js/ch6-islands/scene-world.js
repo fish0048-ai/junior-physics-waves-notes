@@ -1,19 +1,21 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { ISLANDS, axialToWorld } from "./config.js?v=6";
-import { getProgress, isCompleted } from "./progress.js?v=6";
+import { ISLANDS, axialToWorld } from "./config.js?v=7";
+import { getProgress, isCompleted } from "./progress.js?v=7";
 
 const HEX_RADIUS = 1.12;
 
 const MAT = {
-  sand: new THREE.MeshStandardMaterial({ color: 0xf3d7a1, roughness: 0.92 }),
-  grass: new THREE.MeshStandardMaterial({ color: 0x7dbe6a, roughness: 0.86 }),
+  sand: new THREE.MeshStandardMaterial({ color: 0xf6d7a2, roughness: 0.9 }),
+  grass: new THREE.MeshStandardMaterial({ color: 0x7fbf62, roughness: 0.88 }),
+  grassTop: new THREE.MeshStandardMaterial({ color: 0xb7dc86, roughness: 0.9 }),
+  cliff: new THREE.MeshStandardMaterial({ color: 0x6eae58, roughness: 0.9 }),
   clay: new THREE.MeshStandardMaterial({ color: 0xd7a574, roughness: 0.9 }),
-  wood: new THREE.MeshStandardMaterial({ color: 0xc4844a, roughness: 0.78 }),
-  leaf: new THREE.MeshStandardMaterial({ color: 0x3f8f4e, roughness: 0.8 }),
-  cream: new THREE.MeshStandardMaterial({ color: 0xfff6e8, roughness: 0.72 }),
-  water: new THREE.MeshStandardMaterial({ color: 0x3e9bb5, roughness: 0.35, metalness: 0.08 }),
-  waterDeep: new THREE.MeshStandardMaterial({ color: 0x1f6f8a, roughness: 0.55 }),
+  wood: new THREE.MeshStandardMaterial({ color: 0xe7d3b0, roughness: 0.82 }),
+  leaf: new THREE.MeshStandardMaterial({ color: 0x3f9a55, roughness: 0.78 }),
+  cream: new THREE.MeshStandardMaterial({ color: 0xfff8ee, roughness: 0.74 }),
+  water: new THREE.MeshStandardMaterial({ color: 0x3ec6d6, roughness: 0.42, metalness: 0.04 }),
+  waterDeep: new THREE.MeshStandardMaterial({ color: 0x2eb3c6, roughness: 0.5 }),
 };
 
 function hexShape(radius) {
@@ -35,15 +37,23 @@ function matte(color, extra = {}) {
 
 function tree(x, z, scale = 1) {
   const g = new THREE.Group();
-  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.035 * scale, 0.05 * scale, 0.18 * scale, 5), MAT.wood);
-  trunk.position.y = 0.09 * scale;
-  const crown = new THREE.Mesh(new THREE.ConeGeometry(0.16 * scale, 0.32 * scale, 6), MAT.leaf);
-  crown.position.y = 0.3 * scale;
-  const crown2 = new THREE.Mesh(new THREE.ConeGeometry(0.11 * scale, 0.22 * scale, 6), matte(0x63b56a));
-  crown2.position.y = 0.42 * scale;
-  g.add(trunk, crown, crown2);
-  g.position.set(x, 0.16, z);
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.03 * scale, 0.04 * scale, 0.16 * scale, 5), matte(0xc4a574));
+  trunk.position.y = 0.08 * scale;
+  const crown = new THREE.Mesh(new THREE.SphereGeometry(0.16 * scale, 10, 8), MAT.leaf);
+  crown.position.y = 0.24 * scale;
+  crown.scale.y = 0.82;
+  g.add(trunk, crown);
+  g.position.set(x, 0.4, z);
   return g;
+}
+
+function hexColumn(radius, height, material, y) {
+  const mesh = new THREE.Mesh(new THREE.CylinderGeometry(radius, radius, height, 6), material);
+  mesh.rotation.y = Math.PI / 6;
+  mesh.position.y = y;
+  mesh.castShadow = true;
+  mesh.receiveShadow = true;
+  return mesh;
 }
 
 function pedestal(color, x, z) {
@@ -186,24 +196,24 @@ export class WorldScene {
     if (THREE.SRGBColorSpace) this.renderer.outputColorSpace = THREE.SRGBColorSpace;
 
     this.scene = new THREE.Scene();
-    this.scene.background = new THREE.Color(0xb7ddf0);
-    this.scene.fog = new THREE.Fog(0xf6e7cf, 22, 48);
+    this.scene.background = new THREE.Color(0x7ed8e4);
+    this.scene.fog = new THREE.Fog(0x7ed8e4, 26, 52);
 
-    this.camera = new THREE.PerspectiveCamera(45, 1, 0.1, 120);
-    this.camera.position.set(8, 9, 12);
+    this.camera = new THREE.PerspectiveCamera(32, 1, 0.1, 120);
+    this.camera.position.set(0.4, 13.5, 10.5);
 
     this.controls = new OrbitControls(this.camera, canvas);
     this.controls.enableDamping = true;
     this.controls.dampingFactor = 0.06;
-    this.controls.minDistance = 6;
-    this.controls.maxDistance = 22;
-    this.controls.maxPolarAngle = Math.PI / 2.35;
-    this.controls.minPolarAngle = 0.35;
+    this.controls.minDistance = 8;
+    this.controls.maxDistance = 18;
+    this.controls.maxPolarAngle = 1.05;
+    this.controls.minPolarAngle = 0.55;
     this.controls.target.set(0, 0, 0);
 
-    const hemi = new THREE.HemisphereLight(0xfff1dd, 0x6f8f72, 0.72);
+    const hemi = new THREE.HemisphereLight(0xfffaf2, 0x8fd0c8, 1.05);
     this.scene.add(hemi);
-    const sun = new THREE.DirectionalLight(0xfff4df, 1.15);
+    const sun = new THREE.DirectionalLight(0xfff7ea, 0.85);
     sun.position.set(8, 16, 6);
     sun.castShadow = !reducedMotion;
     if (sun.castShadow) {
@@ -226,19 +236,15 @@ export class WorldScene {
     sea.rotation.x = -Math.PI / 2;
     sea.position.y = -0.12;
     this.scene.add(deep, sea);
-    this.sea = sea;
-
-    for (let i = 0; i < 7; i += 1) {
-      const cloud = new THREE.Group();
-      for (let p = 0; p < 3; p += 1) {
-        const puff = new THREE.Mesh(new THREE.SphereGeometry(0.22 + p * 0.04, 8, 6), matte(0xfffaf3));
-        puff.position.set(p * 0.22, 0, (p % 2) * 0.06);
-        cloud.add(puff);
-      }
-      const angle = (i / 7) * Math.PI * 2;
-      cloud.position.set(Math.cos(angle) * 16, 8.4 + (i % 3) * 0.35, Math.sin(angle) * 16);
-      this.scene.add(cloud);
-    }
+    [[-7.2, 6.4, 0.7], [8.1, -5.6, 0.5], [-4.2, -8.2, 0.42], [6.4, 7.8, 0.36]].forEach(([x, z, r]) => {
+      const islet = hexColumn(r, 0.16, MAT.sand, -0.02);
+      islet.position.x = x;
+      islet.position.z = z;
+      const tuft = tree(0, 0, 0.55);
+      tuft.position.y = 0.08;
+      islet.add(tuft);
+      this.scene.add(islet);
+    });
   }
 
   _buildIslands() {
@@ -249,37 +255,23 @@ export class WorldScene {
       group.position.set(x, 0, z);
       group.userData.islandId = island.id;
 
-      const cliffGeo = new THREE.ExtrudeGeometry(hexShape(HEX_RADIUS), {
-        depth: 0.42,
-        bevelEnabled: true,
-        bevelThickness: 0.05,
-        bevelSize: 0.06,
-        bevelSegments: 1,
-      });
-      cliffGeo.rotateX(-Math.PI / 2);
-      cliffGeo.translate(0, -0.28, 0);
-      const cliff = new THREE.Mesh(cliffGeo, MAT.sand);
-      cliff.castShadow = true;
-      cliff.receiveShadow = true;
-      group.add(cliff);
+      group.add(hexColumn(HEX_RADIUS * 1.12, 0.2, MAT.sand, -0.02));
+      group.add(hexColumn(HEX_RADIUS, 0.28, MAT.cliff, 0.18));
+      group.add(hexColumn(HEX_RADIUS * 0.9, 0.1, MAT.grassTop, 0.34));
 
-      const grassGeo = new THREE.ShapeGeometry(hexShape(HEX_RADIUS * 0.82));
-      grassGeo.rotateX(-Math.PI / 2);
-      const grass = new THREE.Mesh(grassGeo, MAT.grass);
-      grass.position.y = 0.15;
-      grass.receiveShadow = true;
-      group.add(grass);
+      const path = new THREE.Mesh(new THREE.BoxGeometry(1.15, 0.02, 0.16), MAT.cream);
+      path.position.y = 0.4;
+      const path2 = path.clone();
+      path2.rotation.y = Math.PI / 2;
+      group.add(path, path2);
 
-      const rugGeo = new THREE.CircleGeometry(0.34, 6);
-      const rug = new THREE.Mesh(rugGeo, matte(island.color));
-      rug.rotation.x = -Math.PI / 2;
-      rug.position.y = 0.16;
-      group.add(rug);
-
-      group.add(tree(-0.72, 0.15, 0.85));
-      group.add(tree(0.62, -0.55, 0.7));
+      for (let i = 0; i < 6; i += 1) {
+        const a = (Math.PI / 3) * i + Math.PI / 6;
+        group.add(tree(Math.cos(a) * 0.78, Math.sin(a) * 0.78, 0.72 + (i % 2) * 0.18));
+      }
 
       const prop = createIslandProp(island);
+      prop.position.y = 0.28;
       group.add(prop);
       const label = makeNameSprite(`${String(island.index).padStart(2, "0")} ${island.shortTitle || island.title}`, island.accent);
       label.position.y = 1.55;
@@ -404,7 +396,7 @@ export class WorldScene {
     target.y = 0.2;
     const fromTarget = this.controls.target.clone();
     const fromPos = this.camera.position.clone();
-    const offset = new THREE.Vector3(3.2, 4.5, 3.2);
+    const offset = new THREE.Vector3(1.8, 7.4, 1.8);
     const toPos = target.clone().add(offset);
 
     if (this.reducedMotion) {
@@ -421,7 +413,7 @@ export class WorldScene {
       fromTarget: this.controls.target.clone(),
       toTarget: new THREE.Vector3(0, 0, 0),
       fromPos: this.camera.position.clone(),
-      toPos: new THREE.Vector3(8, 9, 12),
+      toPos: new THREE.Vector3(0.4, 13.5, 10.5),
       t: 0,
     };
     this.islandMeshes.forEach((group) => group.scale.set(1, 1, 1));
