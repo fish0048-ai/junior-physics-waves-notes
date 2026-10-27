@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { ISLANDS, axialToWorld } from "./config.js?v=5";
-import { getProgress, isCompleted } from "./progress.js?v=5";
+import { ISLANDS, axialToWorld } from "./config.js?v=6";
+import { getProgress, isCompleted } from "./progress.js?v=6";
 
 const HEX_RADIUS = 1.12;
 
@@ -231,12 +231,12 @@ export class WorldScene {
     for (let i = 0; i < 7; i += 1) {
       const cloud = new THREE.Group();
       for (let p = 0; p < 3; p += 1) {
-        const puff = new THREE.Mesh(new THREE.SphereGeometry(0.45 + p * 0.08, 10, 8), matte(0xfffaf3));
-        puff.position.set(p * 0.45, 0, (p % 2) * 0.12);
+        const puff = new THREE.Mesh(new THREE.SphereGeometry(0.22 + p * 0.04, 8, 6), matte(0xfffaf3));
+        puff.position.set(p * 0.22, 0, (p % 2) * 0.06);
         cloud.add(puff);
       }
       const angle = (i / 7) * Math.PI * 2;
-      cloud.position.set(Math.cos(angle) * 11, 6.2 + (i % 3) * 0.4, Math.sin(angle) * 11);
+      cloud.position.set(Math.cos(angle) * 16, 8.4 + (i % 3) * 0.35, Math.sin(angle) * 16);
       this.scene.add(cloud);
     }
   }

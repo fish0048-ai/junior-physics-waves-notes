@@ -1,4 +1,4 @@
-import { STORAGE_KEY } from "./config.js?v=5";
+import { STORAGE_KEY } from "./config.js?v=6";
 
 function readRaw() {
   try {
