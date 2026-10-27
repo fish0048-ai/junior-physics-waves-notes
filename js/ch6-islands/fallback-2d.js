@@ -1,5 +1,5 @@
-import { ISLANDS } from "./config.js?v=4";
-import { getProgress, isCompleted } from "./progress.js?v=4";
+import { ISLANDS } from "./config.js?v=5";
+import { getProgress, isCompleted } from "./progress.js?v=5";
 
 export function mountFallback2D(host, { onSelect }) {
   const prog = getProgress();

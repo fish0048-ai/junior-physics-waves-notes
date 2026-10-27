@@ -1,9 +1,9 @@
-import { ISLANDS, islandById } from "./config.js?v=4";
-import { isCompleted } from "./progress.js?v=4";
-import { mountFallback2D } from "./fallback-2d.js?v=4";
-import { openIslandLab } from "./labs/index.js?v=4";
-import { WorldScene, probeWebGL } from "./scene-world.js?v=4";
-import { createPanelController } from "./ui-panel.js?v=4";
+import { ISLANDS, islandById } from "./config.js?v=5";
+import { isCompleted } from "./progress.js?v=5";
+import { mountFallback2D } from "./fallback-2d.js?v=5";
+import { openIslandLab } from "./labs/index.js?v=5";
+import { WorldScene, probeWebGL } from "./scene-world.js?v=5";
+import { createPanelController } from "./ui-panel.js?v=5";
 
 const root = document.getElementById("islands-app");
 const canvas = document.getElementById("islands-canvas");
@@ -99,10 +99,16 @@ if (!probeWebGL()) {
   });
 } else {
   fallbackHost.hidden = true;
-  world = new WorldScene(canvas, {
-    reducedMotion,
-    onIslandPick: selectIsland,
-  });
+  try {
+    world = new WorldScene(canvas, {
+      reducedMotion,
+      onIslandPick: selectIsland,
+    });
+  } catch (err) {
+    canvas?.remove();
+    fallbackHost.hidden = false;
+    fallbackHost.innerHTML = `<p class="islands-fallback-lead">3D 場景沒有啟動。請重新整理；仍可從上方島嶼進入任務。${err && err.message ? `（${err.message}）` : ""}</p>`;
+  }
 }
 
 const params = new URLSearchParams(location.search);

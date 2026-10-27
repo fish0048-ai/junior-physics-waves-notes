@@ -1,5 +1,5 @@
-import { islandById } from "./config.js?v=4";
-import { isCompleted, markVisited } from "./progress.js?v=4";
+import { islandById } from "./config.js?v=5";
+import { isCompleted, markVisited } from "./progress.js?v=5";
 
 export function createPanelController(root) {
   const panel = root.querySelector("#islands-panel");
