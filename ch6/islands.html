@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-Hant" class="islands-page">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#b8dce8">
+  <title>國中八年級理化｜第 6 章 理化探索群島</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../css/ch6-islands.css">
+  <script type="importmap">
+  {
+    "imports": {
+      "three": "https://cdn.jsdelivr.net/npm/three@0.170.0/build/three.module.js",
+      "three/addons/": "https://cdn.jsdelivr.net/npm/three@0.170.0/examples/jsm/"
+    }
+  }
+  </script>
+</head>
+<body>
+  <div id="islands-app" class="islands-app">
+    <header class="islands-topbar">
+      <a id="islands-btn-back" href="../ch6.html">← 第 6 章目錄</a>
+      <h1>理化探索群島</h1>
+      <button type="button" id="islands-btn-reset-view">重設視角</button>
+    </header>
+    <div class="islands-stage">
+      <canvas id="islands-canvas" aria-label="3D 六角群島場景，點選島嶼開始探索"></canvas>
+      <p class="islands-hint">拖曳旋轉 · 滾輪或雙指縮放 · 點選島嶼 · 重設視角回全景</p>
+      <div id="islands-fallback" hidden></div>
+
+      <aside id="islands-panel" class="islands-panel" hidden aria-live="polite">
+        <h2 id="islands-panel-title">島嶼</h2>
+        <div id="islands-panel-body"></div>
+        <div class="islands-panel-actions">
+          <button type="button" id="islands-btn-explore" class="is-primary">開始探索</button>
+          <a id="islands-btn-lecture" href="../sections/6-3.html" class="islands-topbar">閱讀講義</a>
+          <button type="button" id="islands-btn-close">關閉</button>
+        </div>
+      </aside>
+
+      <section id="islands-lab" class="islands-lab" hidden aria-labelledby="islands-lab-title">
+        <div class="islands-lab-head">
+          <div>
+            <h2 id="islands-lab-title">互動任務</h2>
+            <p id="islands-lab-lead"></p>
+          </div>
+          <button type="button" id="islands-lab-close">返回群島</button>
+        </div>
+        <div id="islands-lab-content"></div>
+      </section>
+    </div>
+  </div>
+  <script type="module" src="../js/ch6-islands/main.js"></script>
+</body>
+</html>
