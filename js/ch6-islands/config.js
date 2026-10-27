@@ -19,7 +19,9 @@ export const ISLANDS = [
       "比較金屬與非金屬的性質並舉例",
       "用電解水等證據說明「化合物不是元素」",
     ],
-    interactive: false,
+    interactive: true,
+    lab: "elements",
+    taskId: "elements:classify-metals",
     nextIsland: "periodic",
   },
   {
@@ -38,7 +40,9 @@ export const ISLANDS = [
       "說明同族元素性質相近的原因（最外層電子數）",
       "維持週期表正確的行列，不以造型取代排列",
     ],
-    interactive: false,
+    interactive: true,
+    lab: "periodic",
+    taskId: "periodic:alkali-vs-iron",
     nextIsland: "atom",
   },
   {
@@ -59,6 +63,7 @@ export const ISLANDS = [
     ],
     interactive: true,
     lab: "atom",
+    taskId: "atom:neutral-carbon-12",
     nextIsland: "decompose",
   },
   {
@@ -77,7 +82,9 @@ export const ISLANDS = [
       "說明化合物可分解、元素在一般化學變化中不再分解",
       "在模擬中觀察反應物與產物粒子種類",
     ],
-    interactive: false,
+    interactive: true,
+    lab: "decompose",
+    taskId: "decompose:compound-vs-element",
     nextIsland: "molecule",
   },
   {
@@ -96,7 +103,9 @@ export const ISLANDS = [
       "說明分子可以是元素（O₂）或化合物（H₂O）",
       "知道離子化合物不宜只用「分子模型」解釋",
     ],
-    interactive: false,
+    interactive: true,
+    lab: "molecule",
+    taskId: "molecule:build-three",
     nextIsland: "classify",
   },
   {
@@ -115,7 +124,9 @@ export const ISLANDS = [
       "區分單原子元素、雙原子分子與化合物",
       "完成預測→操作→解釋流程",
     ],
-    interactive: false,
+    interactive: true,
+    lab: "classify",
+    taskId: "classify:particle-diagrams",
     nextIsland: "elements",
   },
 ];

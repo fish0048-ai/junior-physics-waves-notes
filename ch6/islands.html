@@ -40,35 +40,15 @@
         </div>
       </aside>
 
-      <section id="islands-lab" class="islands-lab" hidden aria-labelledby="atom-lab-title">
+      <section id="islands-lab" class="islands-lab" hidden aria-labelledby="islands-lab-title">
         <div class="islands-lab-head">
           <div>
-            <h2 id="atom-lab-title">原子研究所 · 互動任務</h2>
-            <p>先預測：中性碳原子需要幾個質子、電子、中子？再操作模型驗證（對照 6-3 講義）。</p>
+            <h2 id="islands-lab-title">互動任務</h2>
+            <p id="islands-lab-lead"></p>
           </div>
-          <button type="button" id="atom-lab-close">返回群島</button>
+          <button type="button" id="islands-lab-close">返回群島</button>
         </div>
-        <div class="atom-controls">
-          <div class="atom-part">
-            <strong>質子</strong>
-            <button type="button" data-part="p" data-delta="-1" aria-label="減少質子">−</button>
-            <button type="button" data-part="p" data-delta="1" aria-label="增加質子">＋</button>
-          </div>
-          <div class="atom-part">
-            <strong>中子</strong>
-            <button type="button" data-part="n" data-delta="-1" aria-label="減少中子">−</button>
-            <button type="button" data-part="n" data-delta="1" aria-label="增加中子">＋</button>
-          </div>
-          <div class="atom-part">
-            <strong>電子</strong>
-            <button type="button" data-part="e" data-delta="-1" aria-label="減少電子">−</button>
-            <button type="button" data-part="e" data-delta="1" aria-label="增加電子">＋</button>
-          </div>
-        </div>
-        <canvas id="atom-mini-canvas" width="280" height="180" aria-hidden="true"></canvas>
-        <div id="atom-readout"></div>
-        <p id="atom-feedback"></p>
-        <button type="button" id="atom-btn-check" class="is-primary" style="margin-top:8px;padding:8px 14px;border-radius:999px;border:1px solid #1d4ed8;">檢查：是否為中性碳-12？</button>
+        <div id="islands-lab-content"></div>
       </section>
     </div>
   </div>

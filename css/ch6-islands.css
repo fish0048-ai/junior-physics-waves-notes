@@ -282,10 +282,193 @@ button.is-primary {
   color: #b45309;
 }
 
-#atom-feedback {
+.lab-feedback,
+.lab-readout {
   font-size: 14px;
   line-height: 1.55;
-  min-height: 2.5em;
+  margin: 10px 0;
+}
+
+.lab-step {
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.lab-check-btn {
+  margin-top: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #fff;
+  font: inherit;
+  cursor: pointer;
+}
+
+.lab-chip-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 10px 0;
+}
+
+.lab-chip-btn {
+  padding: 8px 12px;
+  border-radius: 999px;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  font: inherit;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+.lab-chip-btn.is-on,
+.lab-card.is-selected {
+  border-color: #2563eb;
+  background: #dbeafe;
+}
+
+.lab-card-row {
+  display: grid;
+  gap: 8px;
+  margin: 12px 0;
+}
+
+.lab-card {
+  text-align: left;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid #e2e8f0;
+  background: #fff;
+  cursor: pointer;
+  font: inherit;
+}
+
+.lab-card.is-placed {
+  opacity: 0.55;
+}
+
+.lab-bin-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 8px;
+}
+
+.lab-bin {
+  background: #f1f5f9;
+  border-radius: 12px;
+  padding: 10px;
+  min-height: 72px;
+  cursor: pointer;
+}
+
+.lab-bin-slot {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.lab-chip {
+  display: inline-block;
+  padding: 2px 8px;
+  background: #fff;
+  border-radius: 999px;
+  font-size: 12px;
+  border: 1px solid #cbd5e1;
+}
+
+.lab-field {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.lab-field select {
+  display: block;
+  margin-top: 4px;
+  width: 100%;
+  padding: 8px;
+  font: inherit;
+}
+
+.islands-done {
+  color: #047857;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.ptable-wrap {
+  display: grid;
+  gap: 10px;
+}
+
+@media (min-width: 640px) {
+  .ptable-wrap {
+    grid-template-columns: 1fr 180px;
+  }
+}
+
+.ptable-grid {
+  display: grid;
+  grid-template-columns: repeat(18, minmax(0, 1fr));
+  grid-template-rows: repeat(4, 36px);
+  gap: 3px;
+}
+
+.pt-cell {
+  font: inherit;
+  font-size: 11px;
+  padding: 2px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  background: #fff;
+  cursor: pointer;
+}
+
+.pt-cell.is-ghost {
+  background: #fef3c7;
+}
+
+.pt-z {
+  display: block;
+  font-size: 9px;
+  color: #64748b;
+}
+
+.pt-sym {
+  font-weight: 800;
+}
+
+.ptable-info {
+  font-size: 13px;
+  background: #f8fafc;
+  padding: 10px;
+  border-radius: 10px;
+}
+
+.classify-row {
+  margin-bottom: 14px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.lab-mini-svg {
+  width: 120px;
+  height: 60px;
+  vertical-align: middle;
+  margin-right: 8px;
+}
+
+.mol-targets {
+  list-style: none;
+  padding: 0;
+}
+
+.mol-targets li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 6px 0;
 }
 
 @media (max-width: 640px) {

@@ -1,5 +1,5 @@
 import { ISLANDS } from "./config.js";
-import { getProgress } from "./progress.js";
+import { getProgress, isCompleted } from "./progress.js";
 
 export function mountFallback2D(host, { onSelect }) {
   const prog = getProgress();
@@ -17,7 +17,7 @@ export function mountFallback2D(host, { onSelect }) {
                 <strong>${island.title}</strong>
                 <small>${island.subtitle}</small>
               </span>
-              ${prog.completed.some((t) => t.startsWith(island.id)) ? '<span class="islands-done" aria-label="已有完成紀錄">✓</span>' : ""}
+              ${island.taskId && isCompleted(island.taskId) ? '<span class="islands-done" aria-label="任務已完成">✓</span>' : ""}
             </button>
           </li>`
         ).join("")}

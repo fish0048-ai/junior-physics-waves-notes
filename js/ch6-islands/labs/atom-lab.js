@@ -1,5 +1,6 @@
 import { ELEMENTS_Z20 } from "../config.js";
 import { isCompleted, markCompleted } from "../progress.js";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js";
 
 const TASK_ID = "atom:neutral-carbon-12";
 
@@ -11,30 +12,47 @@ function describeSpecies(p, e) {
   const z = p;
   const charge = p - e;
   if (z < 1 || z > 20) {
-    return { label: "超出國中常用範例（Z＞20）", sym: "?", name: "—" };
+    return { label: "超出國中常用範例（Z＞20）", sym: "?" };
   }
   const el = ELEMENTS_Z20[z];
-  if (charge === 0) return { label: `中性${el.name}原子`, sym: el.sym, name: el.name };
-  if (charge > 0) return { label: `${el.name}正離子（失去 ${charge} 個電子）`, sym: `${el.sym}${charge > 1 ? charge : ""}+`, name: el.name };
+  if (charge === 0) return { label: `中性${el.name}原子`, sym: el.sym };
+  if (charge > 0) return { label: `${el.name}正離子（失去 ${charge} 個電子）`, sym: `${el.sym}${charge > 1 ? charge : ""}+` };
   const c = Math.abs(charge);
-  return { label: `${el.name}負離子（得到 ${c} 個電子）`, sym: `${el.sym}${c > 1 ? c : ""}−`, name: el.name };
+  return { label: `${el.name}負離子（得到 ${c} 個電子）`, sym: `${el.sym}${c > 1 ? c : ""}−` };
 }
 
-export function mountAtomLab(root, { onClose }) {
-  const overlay = root.querySelector("#islands-lab");
-  const readout = root.querySelector("#atom-readout");
-  const feedback = root.querySelector("#atom-feedback");
-  const btnClose = root.querySelector("#atom-lab-close");
-  const btnCheck = root.querySelector("#atom-btn-check");
-  const canvasMini = root.querySelector("#atom-mini-canvas");
+export function mountAtomLab(root, handlers) {
+  const shell = mountLabShell(root, {
+    title: "原子研究所 · 互動任務",
+    lead: "先預測：中性碳原子需要幾個質子、電子、中子？再操作模型驗證（對照 6-3）。",
+    onClose: handlers.onClose,
+  });
 
-  let p = 6;
-  let n = 6;
-  let e = 6;
+  const state = { p: 6, n: 6, e: 6 };
 
-  const state = { p, n, e };
+  shell.content.innerHTML = `
+    <div class="atom-controls">
+      <div class="atom-part"><strong>質子</strong>
+        <button type="button" data-part="p" data-delta="-1">−</button>
+        <button type="button" data-part="p" data-delta="1">＋</button></div>
+      <div class="atom-part"><strong>中子</strong>
+        <button type="button" data-part="n" data-delta="-1">−</button>
+        <button type="button" data-part="n" data-delta="1">＋</button></div>
+      <div class="atom-part"><strong>電子</strong>
+        <button type="button" data-part="e" data-delta="-1">−</button>
+        <button type="button" data-part="e" data-delta="1">＋</button></div>
+    </div>
+    <canvas id="atom-mini-canvas" width="280" height="180" aria-hidden="true"></canvas>
+    <div id="atom-readout"></div>
+    <div id="atom-feedback"></div>
+    <button type="button" class="is-primary lab-check-btn" id="atom-btn-check">檢查：是否為中性碳-12？</button>
+    <p class="atom-model-note">⚠ 電子環為示意，不是真實軌道；中性時質子數＝電子數。</p>`;
 
-  overlay.addEventListener("click", (ev) => {
+  const canvasMini = shell.content.querySelector("#atom-mini-canvas");
+  const readout = shell.content.querySelector("#atom-readout");
+  const feedback = shell.content.querySelector("#atom-feedback");
+
+  shell.content.addEventListener("click", (ev) => {
     const btn = ev.target.closest("[data-part]");
     if (!btn) return;
     const part = btn.dataset.part;
@@ -44,33 +62,6 @@ export function mountAtomLab(root, { onClose }) {
     if (part === "e") state.e = clamp(state.e + delta, 0, 22);
     render();
   });
-
-  function renderReadout() {
-    const z = state.p;
-    const a = state.p + state.n;
-    const charge = state.p - state.e;
-    const sp = describeSpecies(state.p, state.e);
-    readout.innerHTML = `
-      <dl class="atom-readout-grid">
-        <div><dt>質子數 p</dt><dd>${state.p}</dd></div>
-        <div><dt>中子數 n</dt><dd>${state.n}</dd></div>
-        <div><dt>電子數 e</dt><dd>${state.e}</dd></div>
-        <div><dt>原子序 Z</dt><dd>${z}</dd></div>
-        <div><dt>質量數 A</dt><dd>${a}</dd></div>
-        <div><dt>電荷</dt><dd>${charge === 0 ? "0（中性）" : charge > 0 ? `+${charge}` : charge}</dd></div>
-        <div class="atom-readout-wide"><dt>粒子種類</dt><dd>${sp.label}（${sp.sym}）</dd></div>
-      </dl>
-      <p class="atom-model-note">⚠ 教學模型：電子環為示意位置，<strong>不是</strong>電子的真實運動軌跡；中性原子時質子數＝電子數。</p>`;
-    drawMini(state.p, state.n, state.e);
-  }
-
-  function render() {
-    renderReadout();
-    feedback.textContent = "";
-    if (isCompleted(TASK_ID)) {
-      feedback.innerHTML = "<span class=\"atom-ok\">你已完成此任務（紀錄已存於本機）。可調整粒子再觀察離子與同位素。</span>";
-    }
-  }
 
   function drawMini(protons, neutrons, electrons) {
     const ctx = canvasMini.getContext("2d");
@@ -89,12 +80,7 @@ export function mountAtomLab(root, { onClose }) {
     ctx.font = "10px sans-serif";
     ctx.textAlign = "center";
     ctx.fillText(`p${protons}`, cx, cy + 3);
-    if (neutrons > 0) {
-      ctx.fillStyle = "#64748b";
-      ctx.font = "9px sans-serif";
-      ctx.fillText(`+n${neutrons}`, cx, cy + 16);
-    }
-    const rings = Math.min(3, Math.ceil(electrons / 2));
+    const rings = Math.min(3, Math.ceil(electrons / 2) || 1);
     for (let r = 0; r < rings; r += 1) {
       const radius = 28 + r * 16;
       ctx.strokeStyle = "#3b82f6";
@@ -102,7 +88,7 @@ export function mountAtomLab(root, { onClose }) {
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
       ctx.stroke();
-      const count = r === rings - 1 ? electrons - (rings - 1) * 2 : 2;
+      const count = r === rings - 1 ? Math.max(0, electrons - (rings - 1) * 2) : 2;
       for (let i = 0; i < count; i += 1) {
         const ang = (i / Math.max(count, 1)) * Math.PI * 2 + r;
         ctx.fillStyle = "#2563eb";
@@ -113,40 +99,45 @@ export function mountAtomLab(root, { onClose }) {
     }
   }
 
-  btnCheck.addEventListener("click", () => {
+  function render() {
+    const z = state.p;
+    const a = state.p + state.n;
+    const charge = state.p - state.e;
+    const sp = describeSpecies(state.p, state.e);
+    readout.innerHTML = `
+      <dl class="atom-readout-grid">
+        <div><dt>質子數 p</dt><dd>${state.p}</dd></div>
+        <div><dt>中子數 n</dt><dd>${state.n}</dd></div>
+        <div><dt>電子數 e</dt><dd>${state.e}</dd></div>
+        <div><dt>原子序 Z</dt><dd>${z}</dd></div>
+        <div><dt>質量數 A</dt><dd>${a}</dd></div>
+        <div><dt>電荷</dt><dd>${charge === 0 ? "0（中性）" : charge > 0 ? `+${charge}` : charge}</dd></div>
+        <div class="atom-readout-wide"><dt>粒子種類</dt><dd>${sp.label}（${sp.sym}）</dd></div>
+      </dl>`;
+    drawMini(state.p, state.n, state.e);
+    if (isCompleted(TASK_ID)) {
+      feedback.innerHTML = feedbackHtml("ok", "任務已完成。可繼續調整觀察離子。");
+    }
+  }
+
+  shell.content.querySelector("#atom-btn-check").addEventListener("click", () => {
     const ok = state.p === 6 && state.e === 6 && state.n === 6;
     if (ok) {
       markCompleted(TASK_ID);
-      feedback.innerHTML =
-        "<span class=\"atom-ok\">正確！中性碳原子：6 質子、6 電子（Z＝6），質量數 12（6 個中子）。這對應講義 6-3 的 Z＝p、A＝p＋n。</span>";
+      feedback.innerHTML = feedbackHtml(
+        "ok",
+        "正確！中性碳-12：Z＝6，A＝12。質子數＝電子數＝6。"
+      );
+      handlers.onComplete?.();
     } else if (state.p !== state.e) {
-      feedback.innerHTML =
-        "<span class=\"atom-warn\">目前不是中性粒子：質子數與電子數不相等，這是離子。若要完成任務，請調成<strong>中性碳</strong>（6 p、6 e）；中子數也請設為 6 以對應碳-12。</span>";
+      feedback.innerHTML = feedbackHtml("warn", "目前是離子（p≠e）。任務要求中性碳：6 p、6 e、6 n。");
     } else if (state.p !== 6) {
-      feedback.innerHTML =
-        "<span class=\"atom-warn\">你做的是中性原子，但原子序不是 6。碳應有 6 個質子。提示：週期表上碳的原子序是 6。</span>";
+      feedback.innerHTML = feedbackHtml("warn", "中性但原子序不是 6。碳應有 6 個質子。");
     } else {
-      feedback.innerHTML =
-        "<span class=\"atom-warn\">質子與電子已是 6，但中子數還不對。任務要求碳-12：中子數也應為 6（A＝12）。</span>";
+      feedback.innerHTML = feedbackHtml("warn", "中子數應為 6（碳-12）。");
     }
   });
 
-  btnClose.addEventListener("click", () => {
-    overlay.hidden = true;
-    onClose?.();
-  });
-
-  overlay.hidden = false;
   render();
-
-  return {
-    close() {
-      overlay.hidden = true;
-    },
-  };
-}
-
-export function openAtomLabIfNeeded(root, islandId, handlers) {
-  if (islandId !== "atom") return null;
-  return mountAtomLab(root, handlers);
+  return { close: shell.close };
 }

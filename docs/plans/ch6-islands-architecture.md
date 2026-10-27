@@ -1,7 +1,7 @@
 # 第六章「理化探索群島」— Phase 1 架構與開發計畫
 
 > 更新：2026-10-27  
-> 狀態：Phase 2 MVP ＋「原子研究所」示範互動已著手實作（見 `ch6/islands.html`）
+> 狀態：**Phase 2–4 完成** — 六座島均有互動任務；Phase 5 持續優化（PWA 快取、進階 a11y）。
 
 ## 1. 現有第六章知識架構（依站內教材，非臆造）
 
@@ -86,8 +86,20 @@
 - 擴充：`?island=atom` 開啟任務 UI；localStorage 寫入 completed。
 - WebGL：依賴 CI Chromium；失敗路徑以 mock 或強制 fallback 選測。
 
-## 9. 已知限制（MVP）
+## 9. 已知限制
 
-- 僅 `atom` 具完整互動；其餘島可選取、看目標、連講義（Phase 4 補任務）。
-- Three.js 走 CDN，離線 PWA 未預快取群島 bundle（可後續加入 `sw-main` 選快取）。
+- 週期表互動為 Z 1–18 示意＋第 1 族任務；過渡金屬僅列 Fe 對照。
+- 分解／通電為概念模擬，非定量實驗。
+- Three.js 走 CDN，離線 PWA 未預快取群島 bundle。
 - 未接題庫／Gist 同步。
+
+## 10. 任務 ID（localStorage `completed`）
+
+| 島嶼 | taskId |
+|------|--------|
+| elements | `elements:classify-metals` |
+| periodic | `periodic:alkali-vs-iron` |
+| atom | `atom:neutral-carbon-12` |
+| decompose | `decompose:compound-vs-element` |
+| molecule | `molecule:build-three` |
+| classify | `classify:particle-diagrams` |

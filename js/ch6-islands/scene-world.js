@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { ISLANDS, axialToWorld } from "./config.js";
-import { getProgress } from "./progress.js";
+import { getProgress, isCompleted } from "./progress.js";
 
 const HEX_RADIUS = 1.05;
 
@@ -92,6 +92,8 @@ export class WorldScene {
     this.raycaster = new THREE.Raycaster();
     this.pointer = new THREE.Vector2();
     this.running = true;
+    this.paused = false;
+    this.markerGroups = new Map();
 
     this.renderer = new THREE.WebGLRenderer({
       canvas,
@@ -170,14 +172,7 @@ export class WorldScene {
       const prop = createIslandProp(island);
       group.add(prop);
 
-      if (prog.visited.includes(island.id)) {
-        const flag = new THREE.Mesh(
-          new THREE.ConeGeometry(0.08, 0.2, 4),
-          new THREE.MeshStandardMaterial({ color: 0xfbbf24 })
-        );
-        flag.position.set(0.55, 0.55, 0.35);
-        group.add(flag);
-      }
+      this._syncMarkers(group, island, prog);
 
       this.scene.add(group);
       this.islandMeshes.set(island.id, group);
@@ -196,6 +191,42 @@ export class WorldScene {
       plank.lookAt(pb.x, 0.05, pb.z);
       this.scene.add(plank);
     }
+  }
+
+  _syncMarkers(group, island, prog) {
+    const old = this.markerGroups.get(island.id);
+    if (old) group.remove(old);
+    const markers = new THREE.Group();
+    if (prog.visited.includes(island.id)) {
+      const flag = new THREE.Mesh(
+        new THREE.ConeGeometry(0.08, 0.2, 4),
+        new THREE.MeshStandardMaterial({ color: 0xfbbf24 })
+      );
+      flag.position.set(0.55, 0.55, 0.35);
+      markers.add(flag);
+    }
+    if (island.taskId && isCompleted(island.taskId)) {
+      const star = new THREE.Mesh(
+        new THREE.OctahedronGeometry(0.12, 0),
+        new THREE.MeshStandardMaterial({ color: 0x22c55e, emissive: 0x14532d, emissiveIntensity: 0.35 })
+      );
+      star.position.set(-0.45, 0.75, 0.35);
+      markers.add(star);
+    }
+    group.add(markers);
+    this.markerGroups.set(island.id, markers);
+  }
+
+  refreshCompletionMarkers() {
+    const prog = getProgress();
+    ISLANDS.forEach((island) => {
+      const group = this.islandMeshes.get(island.id);
+      if (group) this._syncMarkers(group, island, prog);
+    });
+  }
+
+  setPaused(value) {
+    this.paused = value;
   }
 
   _bindEvents() {
@@ -266,6 +297,7 @@ export class WorldScene {
   _animate() {
     if (!this.running) return;
     requestAnimationFrame(() => this._animate());
+    if (this.paused) return;
 
     if (this.focusTarget) {
       this.focusTarget.t = Math.min(1, this.focusTarget.t + 0.035);
