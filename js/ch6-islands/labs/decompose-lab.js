@@ -101,7 +101,9 @@ export function mountDecomposeLab(root, handlers) {
     } else {
       text = "✗ 此處理方式與課文範例不符。提示：氧化汞用照光；水用通電。";
     }
-    readout.innerHTML = `<p>${text}</p>`;
+    const before = sub.type === "compound" ? "一種分子" : "同一種原子";
+    const after = sub.type === "compound" && sub.okMethods.includes(methodId) ? "拆成兩種較簡單物質" : before;
+    readout.innerHTML = `<p>${text}</p><p class="lab-step">粒子變化：${before} → ${after}</p>`;
   }
 
   function checkQuiz() {
