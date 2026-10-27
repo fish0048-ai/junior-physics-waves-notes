@@ -1,9 +1,9 @@
-import { ISLANDS, islandById } from "./config.js";
-import { isCompleted } from "./progress.js";
-import { mountFallback2D } from "./fallback-2d.js";
-import { openIslandLab } from "./labs/index.js";
-import { WorldScene, probeWebGL } from "./scene-world.js";
-import { createPanelController } from "./ui-panel.js";
+import { ISLANDS, islandById } from "./config.js?v=4";
+import { isCompleted } from "./progress.js?v=4";
+import { mountFallback2D } from "./fallback-2d.js?v=4";
+import { openIslandLab } from "./labs/index.js?v=4";
+import { WorldScene, probeWebGL } from "./scene-world.js?v=4";
+import { createPanelController } from "./ui-panel.js?v=4";
 
 const root = document.getElementById("islands-app");
 const canvas = document.getElementById("islands-canvas");

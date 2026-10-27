@@ -1,6 +1,6 @@
-import { ELEMENTS_Z20 } from "../config.js";
-import { isCompleted, markCompleted } from "../progress.js";
-import { feedbackHtml, mountLabShell } from "./lab-shell.js";
+import { ELEMENTS_Z20 } from "../config.js?v=4";
+import { isCompleted, markCompleted } from "../progress.js?v=4";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=4";
 
 const TASK_ID = "atom:neutral-carbon-12";
 
