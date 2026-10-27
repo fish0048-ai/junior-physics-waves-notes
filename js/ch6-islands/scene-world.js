@@ -1,7 +1,7 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
-import { ISLANDS, axialToWorld } from "./config.js";
-import { getProgress, isCompleted } from "./progress.js";
+import { ISLANDS, axialToWorld } from "./config.js?v=4";
+import { getProgress, isCompleted } from "./progress.js?v=4";
 
 const HEX_RADIUS = 1.12;
 

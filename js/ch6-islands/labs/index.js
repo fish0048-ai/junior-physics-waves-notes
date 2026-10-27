@@ -1,10 +1,10 @@
-import { islandById } from "../config.js";
-import { mountAtomLab } from "./atom-lab.js";
-import { mountClassifyLab } from "./classify-lab.js";
-import { mountDecomposeLab } from "./decompose-lab.js";
-import { mountElementsLab } from "./elements-lab.js";
-import { mountMoleculeLab } from "./molecule-lab.js";
-import { mountPeriodicLab } from "./periodic-lab.js";
+import { islandById } from "../config.js?v=4";
+import { mountAtomLab } from "./atom-lab.js?v=4";
+import { mountClassifyLab } from "./classify-lab.js?v=4";
+import { mountDecomposeLab } from "./decompose-lab.js?v=4";
+import { mountElementsLab } from "./elements-lab.js?v=4";
+import { mountMoleculeLab } from "./molecule-lab.js?v=4";
+import { mountPeriodicLab } from "./periodic-lab.js?v=4";
 
 const MOUNTERS = {
   elements: mountElementsLab,

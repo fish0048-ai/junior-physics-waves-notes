@@ -1,5 +1,5 @@
-import { feedbackHtml, mountLabShell } from "./lab-shell.js";
-import { isCompleted, markCompleted } from "../progress.js";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=4";
+import { isCompleted, markCompleted } from "../progress.js?v=4";
 
 const TASK_ID = "molecule:build-three";
 

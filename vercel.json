@@ -19,6 +19,24 @@
       ]
     },
     {
+      "source": "/js/ch6-islands/(.*)",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/css/ch6-islands.css",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
+      "source": "/ch6/islands",
+      "headers": [
+        { "key": "Cache-Control", "value": "public, max-age=0, must-revalidate" }
+      ]
+    },
+    {
       "source": "/sw-main.js",
       "headers": [
         { "key": "Cache-Control", "value": "no-cache" },
