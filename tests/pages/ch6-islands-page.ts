@@ -21,7 +21,7 @@ export class Ch6IslandsPage {
 
   constructor(private readonly page: Page) {
     this.heading = page.getByRole('heading', { level: 1, name: '理化探索群島' });
-    this.stars = page.getByRole('status').filter({ hasText: '／6' });
+    this.stars = page.getByRole('status', { name: /已點亮 \d+ 顆星/ });
     this.lab = page.getByRole('dialog').filter({ has: page.getByRole('button', { name: '返回群島' }) });
     this.panel = page.getByRole('complementary');
     this.fallback = page.getByText('改用島嶼清單');

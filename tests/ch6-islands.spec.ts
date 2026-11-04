@@ -45,7 +45,7 @@ test('首次進入顯示操作說明，略過後不再出現', { tag: '@basic' }
   await expect(tutorial).toBeVisible({ timeout: 30_000 });
   await page.getByRole('button', { name: '略過' }).click();
   await expect(tutorial).toBeHidden();
-  await page.reload();
+  await page.reload({ waitUntil: 'domcontentloaded' });
   await expect(islands.heading).toBeVisible();
   await expect(page.getByRole('dialog', { name: '歡迎來到理化探索群島' })).toBeHidden();
   await expectNoMajorErrors(errors);
