@@ -325,11 +325,19 @@ async function boot() {
   syncChrome();
 
   const initial = islandById(params.get("island")) ? params.get("island") : null;
-  const autoStart = params.get("start") === "1";
+  const autoStart = !!initial && params.get("start") === "1";
+  const want3D = params.get("mode") !== "2d" && probeWebGL();
+  if (!want3D) useFallback(false);
 
-  if (params.get("mode") === "2d" || !probeWebGL()) {
-    useFallback(false);
-  } else {
+  // 任務與教學不依賴 3D：深層連結立刻開任務，首次進入邊載入邊看說明
+  if (autoStart) {
+    hideLoading();
+    startExplore(initial);
+  } else if (!initial && readFlag(TUTORIAL_KEY) !== "done") {
+    showTutorial(0);
+  }
+
+  if (want3D) {
     try {
       setLoading(30, "載入 3D 引擎…");
       const mod = await withTimeout(import("./scene-world.js?v=8"), 20000);
@@ -342,6 +350,10 @@ async function boot() {
         onHubPick: resetView,
         onFirstInteract: hideHint,
       });
+      if (lab && activeId) {
+        world.focus(activeId, { instant: true });
+        world.setPaused(true);
+      }
       setLoading(100, "準備出航！");
     } catch (err) {
       console.warn("[理化探索群島] 3D 無法啟動，改用 2D 清單：", err);
@@ -354,12 +366,7 @@ async function boot() {
   await delay(reducedMotion ? 0 : 300);
   hideLoading();
 
-  if (initial) {
-    selectIsland(initial, { instant: true, silent: true });
-    if (autoStart) startExplore(initial);
-  } else if (readFlag(TUTORIAL_KEY) !== "done") {
-    showTutorial(0);
-  }
+  if (initial && !autoStart) selectIsland(initial, { instant: true, silent: true });
   setTimeout(hideHint, 12000);
 }
 
