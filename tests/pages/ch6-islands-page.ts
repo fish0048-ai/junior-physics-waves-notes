@@ -12,19 +12,22 @@ export const ISLAND_TITLES: Record<IslandId, string> = {
   classify: '物質分類挑戰島',
 };
 
+/** 6 個探索任務 + 2 個實驗站 + 6 組挑戰題 */
+export const TOTAL_STARS = 14;
+
 export class Ch6IslandsPage {
   readonly heading: Locator;
   readonly stars: Locator;
   readonly lab: Locator;
-  readonly panel: Locator;
   readonly fallback: Locator;
+  readonly mistakesButton: Locator;
 
   constructor(private readonly page: Page) {
     this.heading = page.getByRole('heading', { level: 1, name: '理化探索群島' });
     this.stars = page.getByRole('status', { name: /已點亮 \d+ 顆星/ });
     this.lab = page.getByRole('dialog').filter({ has: page.getByRole('button', { name: '返回群島' }) });
-    this.panel = page.getByRole('complementary');
     this.fallback = page.getByText('改用島嶼清單');
+    this.mistakesButton = page.getByRole('button', { name: '錯題本' });
   }
 
   async open(testInfo: TestInfo, query = ''): Promise<string[]> {
@@ -33,16 +36,16 @@ export class Ch6IslandsPage {
     return errors;
   }
 
-  dockCard(id: IslandId): Locator {
-    return this.page.getByRole('navigation', { name: '六座島嶼' }).getByRole('button', { name: new RegExp(ISLAND_TITLES[id]) });
-  }
-
-  async startExplore(): Promise<void> {
-    await this.page.getByRole('button', { name: /開始探索|再玩一次/ }).click();
+  async expectStars(done: number): Promise<void> {
+    await expect(this.page.getByRole('status', { name: `已點亮 ${done} 顆星，共 ${TOTAL_STARS} 顆` })).toBeVisible();
   }
 
   labHeading(id: IslandId): Locator {
     return this.page.getByRole('heading', { level: 2, name: new RegExp(ISLAND_TITLES[id]) });
+  }
+
+  async startExplore(): Promise<void> {
+    await this.page.getByRole('button', { name: /開始探索|再玩一次|繼續：/ }).click();
   }
 
   async adjustAtom(part: '質子' | '中子' | '電子', times: number): Promise<void> {
@@ -52,5 +55,18 @@ export class Ch6IslandsPage {
 
   async checkAtom(): Promise<void> {
     await this.page.getByRole('button', { name: '檢查：是否為中性碳-12？' }).click();
+  }
+
+  /** 每題都選第一個選項，回傳答對題數 */
+  async answerAllWithFirstChoice(count: number): Promise<number> {
+    for (let i = 0; i < count; i += 1) {
+      await expect(this.page.getByText(`第 ${i + 1}／${count} 題`)).toBeVisible({ timeout: 20_000 });
+      await this.page.getByRole('group', { name: '選項' }).getByRole('button').first().click();
+      await this.page.getByRole('button', { name: i + 1 < count ? '下一題' : '看結果' }).click();
+    }
+    const ring = this.page.getByRole('img', { name: new RegExp(`答對 \\d+ 題，共 ${count} 題`) });
+    await expect(ring).toBeVisible();
+    const label = (await ring.getAttribute('aria-label')) || '';
+    return Number(label.match(/答對 (\d+) 題/)?.[1] ?? -1);
   }
 }

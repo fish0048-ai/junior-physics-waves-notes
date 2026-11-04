@@ -20,6 +20,7 @@ export const ICONS = {
   decompose: svg('<path d="M9 3h6M10 3v5.5L4.5 18.2A2 2 0 0 0 6.3 21h11.4a2 2 0 0 0 1.8-2.8L14 8.5V3"/><path d="m12.5 11-2 3.5h3l-2 3.5"/>'),
   molecule: svg('<circle cx="12" cy="8" r="3.2"/><circle cx="5.5" cy="17" r="2.5"/><circle cx="18.5" cy="17" r="2.5"/><path d="m10.2 10.6-3 4.4M13.8 10.6l3 4.4"/>'),
   classify: svg('<path d="M3 5h18l-7 8.5V19l-4 2v-7.5z"/>'),
+  lighthouse: svg('<path d="M10 2h4l1 4H9z"/><path d="M9 6h6l2 15H7z"/><path d="M8 11h8M7.5 16h9"/><path d="M3 4l4 1M21 4l-4 1"/>'),
 };
 
 export const UI = {
@@ -32,6 +33,9 @@ export const UI = {
   arrow: svg('<path d="M5 12h14M13 6l6 6-6 6"/>'),
   book: svg('<path d="M5 4h11a3 3 0 0 1 3 3v13H8a3 3 0 0 1-3-3z"/><path d="M5 17a3 3 0 0 1 3-3h11"/>'),
   check: svg('<path d="m5 12 4.5 4.5L19 7"/>'),
+  flask: svg('<path d="M9 3h6M10 3v6L5 19a1.5 1.5 0 0 0 1.3 2h11.4A1.5 1.5 0 0 0 19 19l-5-10V3"/><path d="M7.5 15h9"/>'),
+  quiz: svg('<rect x="4" y="3" width="16" height="18" rx="2"/><path d="M8 8h8M8 12h8M8 16h5"/>'),
+  notebook: svg('<path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M4 7h4M4 12h4M4 17h4M11 8h5M11 12h5"/>'),
   drag: svg('<path d="M12 3v18M3 12h18M12 3 9.5 5.5M12 3l2.5 2.5M12 21l-2.5-2.5M12 21l2.5-2.5M3 12l2.5-2.5M3 12l2.5 2.5M21 12l-2.5-2.5M21 12l-2.5 2.5"/>'),
   tap: svg('<path d="M9 11V5.5a1.5 1.5 0 0 1 3 0V10"/><path d="M12 9.5a1.5 1.5 0 0 1 3 0V11"/><path d="M15 10.5a1.5 1.5 0 0 1 3 0V15a6 6 0 0 1-6 6h-.5a6 6 0 0 1-5-2.7L4 15a1.5 1.5 0 0 1 2.5-1.6L9 16"/>'),
   star: `<svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="${STAR_PATH}"/></svg>`,

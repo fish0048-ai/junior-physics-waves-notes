@@ -155,6 +155,66 @@ export const ISLANDS = [
   },
 ];
 
+function quizStage(section, topic) {
+  return {
+    id: "quiz",
+    kind: "quiz",
+    title: "挑戰題",
+    desc: `從 ${section} 隨堂練習題庫抽 5 題，答對 4 題點亮星星。`,
+    section,
+    topic,
+  };
+}
+
+/** 探索任務之後的關卡：實驗內容取自講義，題目取自 exam-ch6-sections.js */
+const STAGE_PLAN = {
+  elements: [
+    {
+      id: "exp",
+      kind: "lab",
+      lab: "exp61",
+      title: "實驗 6-1 元素性質的探索與分類",
+      desc: "用砂紙、燈泡、鐵鎚檢驗五種樣品，再依結果分類。",
+      source: "../sections/6-1.html#exp",
+    },
+    quizStage("6-1", "金屬|非金屬|元素|符號|汞|溴|石墨|光澤|導電|延展|波以耳|拉瓦節"),
+  ],
+  periodic: [
+    {
+      id: "exp",
+      kind: "lab",
+      lab: "alkali",
+      title: "鈉、鉀、鐵的比較（模擬）",
+      desc: "觀察質地、放入水中、滴酚酞，比較三種金屬的性質。",
+      source: "../sections/6-2.html#p1",
+    },
+    quizStage("6-2", "週期|族|鹼|鈍氣|門得列夫|鈉|鉀|鹵素"),
+  ],
+  atom: [quizStage("6-3", "質子|中子|電子|原子序|質量數|同位素|原子核|離子|拉塞福|湯姆森|查兌克")],
+  decompose: [quizStage("6-3", "分解|化合物|氧化汞|道耳頓|原子說|電解|拉瓦節|普利士利|元素")],
+  molecule: [quizStage("6-4", "化學式|分子|下標|原子數|亞佛加厥")],
+  classify: [quizStage("6-4", "混合物|純物質|化合物|元素|粒子")],
+};
+
+ISLANDS.forEach((island) => {
+  island.stages = [
+    { id: "task", kind: "lab", lab: island.lab, title: "探索任務", desc: island.mission, taskId: island.taskId },
+    ...STAGE_PLAN[island.id].map((stage) => ({ ...stage, taskId: `${island.id}:${stage.id}` })),
+  ];
+});
+
+export const ALL_STAGES = ISLANDS.flatMap((island) => island.stages);
+
+export const LIGHTHOUSE = {
+  title: "燈塔總挑戰",
+  sections: ["6-1", "6-2", "6-3", "6-4"],
+  count: 10,
+};
+
+export function stageById(island, stageId) {
+  return island?.stages.find((s) => s.id === stageId) || null;
+}
+
 export const ELEMENTS_Z20 = {
   1: { sym: "H", name: "氫" },
   2: { sym: "He", name: "氦" },

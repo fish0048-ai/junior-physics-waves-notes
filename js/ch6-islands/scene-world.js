@@ -2,9 +2,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { CSS2DRenderer, CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { ISLANDS, axialToWorld } from "./config.js?v=8";
-import { isCompleted } from "./progress.js?v=8";
-import { UI } from "./icons.js?v=8";
+import { ISLANDS, axialToWorld } from "./config.js?v=9";
+import { islandProgress } from "./progress.js?v=9";
+import { ICONS, UI } from "./icons.js?v=9";
 
 const COS30 = Math.cos(Math.PI / 6);
 const R = 1.3;
@@ -765,7 +765,7 @@ export class WorldScene {
     btn.dataset.island = island.id;
     btn.style.setProperty("--isl", island.color);
     btn.setAttribute("aria-label", `${island.index}. ${island.title}`);
-    btn.innerHTML = `<span class="isl-tag-num">${pad(island.index)}</span><span class="isl-tag-text"><b>${island.title}</b><small>${island.subtitle}</small></span><span class="isl-tag-star">${UI.star}</span>`;
+    btn.innerHTML = `<span class="isl-tag-num">${pad(island.index)}</span><span class="isl-tag-text"><b>${island.title}</b><small>${island.subtitle}</small></span><span class="isl-tag-prog"></span><span class="isl-tag-star">${UI.star}</span>`;
     btn.addEventListener("click", (ev) => {
       ev.stopPropagation();
       this.opts.onIslandPick?.(island.id);
@@ -952,8 +952,8 @@ export class WorldScene {
     btn.type = "button";
     btn.tabIndex = -1;
     btn.className = "isl-tag is-hub";
-    btn.innerHTML = '<span class="isl-tag-text"><b>第 6 章</b><small>探索物質組成</small></span>';
-    btn.setAttribute("aria-label", "回到全景");
+    btn.innerHTML = `<span class="isl-tag-num is-light">${ICONS.lighthouse}</span><span class="isl-tag-text"><b>燈塔總挑戰</b><small class="isl-hub-note">混合 10 題</small></span>`;
+    btn.setAttribute("aria-label", "燈塔總挑戰");
     btn.addEventListener("click", (ev) => {
       ev.stopPropagation();
       this.opts.onHubPick?.();
@@ -963,6 +963,7 @@ export class WorldScene {
     obj.position.set(0, TOP + 1.05, 0);
     g.add(obj);
     this.hubLabel = btn;
+    this.hubNote = btn.querySelector(".isl-hub-note");
   }
 
   _buildBridges() {
@@ -1257,11 +1258,16 @@ export class WorldScene {
 
   refreshStatus() {
     this.islands.forEach((e) => {
-      const done = isCompleted(e.island.taskId);
-      e.label.classList.toggle("is-done", done);
-      e.flagCloth.material = done ? this.flagGold : this.flagGray;
-      e.flagStar.visible = done;
+      const prog = islandProgress(e.island);
+      e.label.classList.toggle("is-done", prog.complete);
+      e.label.querySelector(".isl-tag-prog").textContent = prog.complete ? "" : `${prog.done}/${prog.total}`;
+      e.flagCloth.material = prog.complete ? this.flagGold : this.flagGray;
+      e.flagStar.visible = prog.complete;
     });
+  }
+
+  setHubNote(text) {
+    if (this.hubNote) this.hubNote.textContent = text;
   }
 
   setPaused(value) {
