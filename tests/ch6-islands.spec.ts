@@ -1,4 +1,4 @@
-import { expect, test } from '@playwright/test';
+import { expect, test, type Page } from '@playwright/test';
 import { expectNoMajorErrors, openLocal } from './helpers';
 import { Ch6IslandsPage, ISLAND_TITLES, type IslandId } from './pages/ch6-islands-page';
 
@@ -8,7 +8,7 @@ test.beforeEach(() => {
 });
 
 /** 跳過首次教學，避免遮住要測的畫面 */
-async function skipTutorial(page: import('@playwright/test').Page): Promise<void> {
+async function skipTutorial(page: Page): Promise<void> {
   await page.addInitScript(() => {
     try {
       localStorage.setItem('jpwn.ch6islands.tutorial', 'done');
@@ -23,7 +23,7 @@ test('第 6 章群島頁可載入，3D 或 2D 至少一種可用', { tag: '@basi
   const islands = new Ch6IslandsPage(page);
   const errors = await islands.open(testInfo);
   await expect(page.getByRole('navigation', { name: '六座島嶼' }).or(islands.fallback)).toBeVisible();
-  await expect(islands.stars).toContainText('0');
+  await islands.expectStars(0);
   await expectNoMajorErrors(errors);
 });
 
@@ -44,7 +44,6 @@ for (const id of Object.keys(ISLAND_TITLES) as IslandId[]) {
 }
 
 test('首次進入顯示操作說明，略過後不再出現', { tag: '@basic' }, async ({ page }, testInfo) => {
-  test.slow();
   const islands = new Ch6IslandsPage(page);
   const errors = await islands.open(testInfo);
   const tutorial = page.getByRole('dialog', { name: '歡迎來到理化探索群島' });
@@ -64,7 +63,7 @@ test('原子研究所：答錯給具體原因且不加星，答對才點亮星�
 
   await islands.checkAtom();
   await expect(page.getByText(/原子序不是 6/)).toBeVisible();
-  await expect(islands.stars).toContainText('0');
+  await islands.expectStars(0);
 
   await islands.adjustAtom('質子', 5);
   await islands.checkAtom();
@@ -75,8 +74,8 @@ test('原子研究所：答錯給具體原因且不加星，答對才點亮星�
   await expect(page.getByText('中性碳原子（C）')).toBeVisible();
   await islands.checkAtom();
   await expect(page.getByText(/正確！中性碳-12/)).toBeVisible();
-  await expect(islands.stars).toContainText('1');
-  await expect(page.getByRole('button', { name: /前往下一座：物質分解實驗島/ })).toBeVisible();
+  await islands.expectStars(1);
+  await expect(page.getByRole('button', { name: '下一關：挑戰題' })).toBeVisible();
   await expectNoMajorErrors(errors);
 });
 
@@ -86,6 +85,109 @@ test('原子研究所：粒子數不能減到不合理的負值', { tag: '@full'
   await islands.adjustAtom('質子', -3);
   await islands.adjustAtom('中子', -3);
   await expect(page.getByText('中性氫原子（H）')).toBeVisible();
+  await expectNoMajorErrors(errors);
+});
+
+test('實驗 6-1：器材沒核對完不能開始，石墨誤判有具體說明，分類正確才過關', { tag: '@full' }, async ({ page }, testInfo) => {
+  const islands = new Ch6IslandsPage(page);
+  const errors = await islands.open(testInfo, '?island=elements&start=1&stage=exp');
+  const go = page.getByRole('button', { name: '器材到齊，開始實驗' });
+  const kit = ['鐵片', '鋅片', '銅片', '硫', '石墨棒', '1.5 V 電池', '小燈泡附燈座', '附夾子的導線', '砂紙', '鐵鎚'];
+  for (const item of kit.slice(0, -1)) await page.getByRole('checkbox', { name: item, exact: true }).check();
+  await expect(go).toBeDisabled();
+  await page.getByRole('checkbox', { name: '鐵鎚' }).check();
+  await go.click();
+
+  await page.getByRole('button', { name: '接電池與燈泡' }).click();
+  await expect(page.getByText('先選一種樣品，再做檢驗。')).toBeVisible();
+
+  for (const sample of ['鐵片', '鋅片', '銅片', '石墨棒', '硫棒']) {
+    await page.getByRole('button', { name: sample, exact: true }).click();
+    for (const testName of ['砂紙摩擦', '接電池與燈泡', '鐵鎚敲打']) await page.getByRole('button', { name: testName }).click();
+  }
+  await expect(page.getByRole('cell', { name: '黑，無光澤' })).toBeVisible();
+  await expect(page.getByRole('cell', { name: '不亮' })).toBeVisible();
+
+  const metal = page.getByRole('button', { name: '金屬', exact: true });
+  const nonmetal = page.getByRole('button', { name: '非金屬', exact: true });
+  for (const i of [0, 1, 2, 3]) await metal.nth(i).click();
+  await nonmetal.nth(4).click();
+  await page.getByRole('button', { name: '光澤、導電、延展三項一起看' }).click();
+  await page.getByRole('button', { name: '檢查分類' }).click();
+  await expect(page.getByText(/只看燈會把石墨判成金屬/)).toBeVisible();
+  await islands.expectStars(0);
+
+  await nonmetal.nth(3).click();
+  await page.getByRole('button', { name: '檢查分類' }).click();
+  await expect(page.getByText(/分類正確！/)).toBeVisible();
+  await islands.expectStars(1);
+  await expectNoMajorErrors(errors);
+});
+
+test('鈉鉀鐵模擬：有安全提醒，沒放入水中不能滴酚酞，選錯組合會說明', { tag: '@full' }, async ({ page }, testInfo) => {
+  const islands = new Ch6IslandsPage(page);
+  const errors = await islands.open(testInfo, '?island=periodic&start=1&stage=exp');
+  await expect(page.getByText(/學生不可自行操作/)).toBeVisible();
+  await page.getByRole('button', { name: '鈉', exact: true }).click();
+  await page.getByRole('button', { name: '滴入酚酞' }).click();
+  await expect(page.getByText('先把鈉放入水中，才有水溶液可以用酚酞檢測。')).toBeVisible();
+
+  for (const metalName of ['鈉', '鉀', '鐵']) {
+    await page.getByRole('button', { name: metalName, exact: true }).click();
+    for (const action of ['觀察質地', '放入水中', '滴入酚酞']) await page.getByRole('button', { name: action }).click();
+  }
+  await page.getByRole('button', { name: '鈉和鐵' }).click();
+  await page.getByRole('button', { name: '確認答案' }).click();
+  await expect(page.getByText(/鐵堅硬、沉入水底/)).toBeVisible();
+  await page.getByRole('button', { name: '鈉和鉀' }).click();
+  await page.getByRole('button', { name: '確認答案' }).click();
+  await expect(page.getByText(/第 1 族（鹼金屬）/)).toBeVisible();
+  await islands.expectStars(1);
+  await expectNoMajorErrors(errors);
+});
+
+test('挑戰題：題目取自題庫、答錯收進錯題本、沒過關不加星', { tag: '@full' }, async ({ page }, testInfo) => {
+  const islands = new Ch6IslandsPage(page);
+  const errors = await islands.open(testInfo, '?island=molecule&start=1&stage=quiz');
+  await expect(page.getByText('題庫 6-4')).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText(/[A-Z][a-z]? \d(?!\d)/)).toHaveCount(0);
+
+  const score = await islands.answerAllWithFirstChoice(5);
+  expect(score).toBeGreaterThanOrEqual(0);
+  const wrong = 5 - score;
+  await islands.expectStars(score >= 4 ? 1 : 0);
+  if (wrong > 0) {
+    await expect(islands.mistakesButton).toContainText(String(wrong));
+    await page.getByRole('button', { name: '打開錯題本' }).click();
+    const notebook = page.getByRole('dialog', { name: '錯題本' });
+    await expect(notebook).toBeVisible();
+    await expect(notebook.getByText(/正確答案（[ABCD]）/)).toHaveCount(wrong);
+    await notebook.getByRole('button', { name: '我會了，移除' }).first().click();
+    await expect(notebook.getByText(/正確答案（[ABCD]）/)).toHaveCount(wrong - 1);
+  }
+  await expectNoMajorErrors(errors);
+});
+
+test('錯題本是空的時候不能練習', { tag: '@full' }, async ({ page }, testInfo) => {
+  await skipTutorial(page);
+  const islands = new Ch6IslandsPage(page);
+  const errors = await islands.open(testInfo, '?mode=2d');
+  await islands.mistakesButton.click();
+  const notebook = page.getByRole('dialog', { name: '錯題本' });
+  await expect(notebook.getByText('目前沒有錯題。')).toBeVisible();
+  await expect(notebook.getByRole('button', { name: '練習錯題' })).toBeDisabled();
+  await expectNoMajorErrors(errors);
+});
+
+test('燈塔總挑戰：數字鍵 7 開啟，混合四節共 10 題', { tag: '@full' }, async ({ page }, testInfo) => {
+  await skipTutorial(page);
+  const islands = new Ch6IslandsPage(page);
+  const errors = await islands.open(testInfo, '?mode=2d');
+  await page.keyboard.press('7');
+  await expect(page.getByRole('heading', { level: 2, name: '燈塔總挑戰' })).toBeVisible();
+  const score = await islands.answerAllWithFirstChoice(10);
+  await expect(page.getByText(`燈塔新紀錄：${score}／10`)).toBeVisible();
+  await islands.expectStars(0);
   await expectNoMajorErrors(errors);
 });
 
@@ -110,13 +212,14 @@ test('不存在的島嶼參數不會開啟面板也不報錯', { tag: '@full' },
   await expectNoMajorErrors(errors);
 });
 
-test('2D 後備模式：清單選島、開任務、進度共用', { tag: '@basic' }, async ({ page }, testInfo) => {
+test('2D 後備模式：清單選島、看到關卡、開任務', { tag: '@basic' }, async ({ page }, testInfo) => {
   await skipTutorial(page);
   const islands = new Ch6IslandsPage(page);
   const errors = await islands.open(testInfo, '?mode=2d');
   await expect(islands.fallback).toBeVisible();
   await expect(page.getByRole('navigation', { name: '六座島嶼' })).toBeHidden();
   await page.getByRole('button', { name: /分子組裝工坊/ }).click();
+  await expect(page.getByRole('button', { name: '開始：挑戰題' })).toBeVisible();
   await islands.startExplore();
   await expect(islands.labHeading('molecule')).toBeVisible();
   await expectNoMajorErrors(errors);
