@@ -1,5 +1,5 @@
-import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=7";
-import { isCompleted, markCompleted } from "../progress.js?v=7";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=8";
+import { isCompleted, markCompleted } from "../progress.js?v=8";
 
 const TASK_ID = "elements:classify-metals";
 
@@ -74,7 +74,7 @@ export function mountElementsLab(root, handlers) {
     if (!card) return;
     selected = card.dataset.sample;
     shell.content.querySelectorAll(".lab-card").forEach((c) => {
-      c.class.toggle("is-selected", c.dataset.sample === selected);
+      c.classList.toggle("is-selected", c.dataset.sample === selected);
       c.setAttribute("aria-pressed", c.dataset.sample === selected ? "true" : "false");
     });
   });
@@ -105,7 +105,7 @@ export function mountElementsLab(root, handlers) {
       });
       selected = null;
       shell.content.querySelectorAll(".lab-card").forEach((c) => {
-        c.class.remove("is-selected");
+        c.classList.remove("is-selected");
         c.setAttribute("aria-pressed", "false");
       });
     });
@@ -126,7 +126,7 @@ export function mountElementsLab(root, handlers) {
           ? "水通電得氫、氧，可再分解，是化合物不是元素。"
           : w.category === "metal"
             ? "這個樣本具金屬元素常見性質（光澤、延展、導電等）。"
-            : "這是非金屬元素（硫黃色固体、脆等）。";
+            : "這是非金屬元素（硫是黃色固體、脆等）。";
       fb.innerHTML = feedbackHtml("warn", `「${w.label}」分類不對。${reason}`);
       return;
     }

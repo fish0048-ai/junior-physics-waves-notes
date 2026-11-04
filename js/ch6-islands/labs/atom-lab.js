@@ -1,6 +1,6 @@
-import { ELEMENTS_Z20 } from "../config.js?v=7";
-import { isCompleted, markCompleted } from "../progress.js?v=7";
-import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=7";
+import { ELEMENTS_Z20 } from "../config.js?v=8";
+import { isCompleted, markCompleted } from "../progress.js?v=8";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=8";
 
 const TASK_ID = "atom:neutral-carbon-12";
 
@@ -28,19 +28,19 @@ export function mountAtomLab(root, handlers) {
     onClose: handlers.onClose,
   });
 
-  const state = { p: 6, n: 6, e: 6 };
+  const state = { p: 1, n: 0, e: 1 };
 
   shell.content.innerHTML = `
     <div class="atom-controls">
       <div class="atom-part"><strong>質子</strong>
-        <button type="button" data-part="p" data-delta="-1">−</button>
-        <button type="button" data-part="p" data-delta="1">＋</button></div>
+        <button type="button" data-part="p" data-delta="-1" aria-label="減少質子">−</button>
+        <button type="button" data-part="p" data-delta="1" aria-label="增加質子">＋</button></div>
       <div class="atom-part"><strong>中子</strong>
-        <button type="button" data-part="n" data-delta="-1">−</button>
-        <button type="button" data-part="n" data-delta="1">＋</button></div>
+        <button type="button" data-part="n" data-delta="-1" aria-label="減少中子">−</button>
+        <button type="button" data-part="n" data-delta="1" aria-label="增加中子">＋</button></div>
       <div class="atom-part"><strong>電子</strong>
-        <button type="button" data-part="e" data-delta="-1">−</button>
-        <button type="button" data-part="e" data-delta="1">＋</button></div>
+        <button type="button" data-part="e" data-delta="-1" aria-label="減少電子">−</button>
+        <button type="button" data-part="e" data-delta="1" aria-label="增加電子">＋</button></div>
     </div>
     <canvas id="atom-mini-canvas" width="280" height="180" aria-hidden="true"></canvas>
     <div id="atom-readout"></div>
@@ -77,18 +77,27 @@ export function mountAtomLab(root, handlers) {
     ctx.arc(cx, cy, 14, 0, Math.PI * 2);
     ctx.fill();
     ctx.fillStyle = "#1e293b";
-    ctx.font = "10px sans-serif";
+    ctx.font = "bold 9px sans-serif";
     ctx.textAlign = "center";
-    ctx.fillText(`p${protons}`, cx, cy + 3);
-    const rings = Math.min(3, Math.ceil(electrons / 2) || 1);
-    for (let r = 0; r < rings; r += 1) {
-      const radius = 28 + r * 16;
+    ctx.fillStyle = "#ffffff";
+    ctx.fillText(`${protons}p`, cx, cy - 1);
+    ctx.fillText(`${neutrons}n`, cx, cy + 9);
+    const capacity = [2, 8, 8, 4];
+    const shells = [];
+    let left = electrons;
+    capacity.forEach((cap) => {
+      if (left <= 0) return;
+      shells.push(Math.min(cap, left));
+      left -= cap;
+    });
+    if (!shells.length) shells.push(0);
+    shells.forEach((count, r) => {
+      const radius = 26 + r * 15;
       ctx.strokeStyle = "#3b82f6";
       ctx.lineWidth = 1.5;
       ctx.beginPath();
       ctx.arc(cx, cy, radius, 0, Math.PI * 2);
       ctx.stroke();
-      const count = r === rings - 1 ? Math.max(0, electrons - (rings - 1) * 2) : 2;
       for (let i = 0; i < count; i += 1) {
         const ang = (i / Math.max(count, 1)) * Math.PI * 2 + r;
         ctx.fillStyle = "#2563eb";
@@ -96,7 +105,7 @@ export function mountAtomLab(root, handlers) {
         ctx.arc(cx + Math.cos(ang) * radius, cy + Math.sin(ang) * radius, 4, 0, Math.PI * 2);
         ctx.fill();
       }
-    }
+    });
   }
 
   function render() {

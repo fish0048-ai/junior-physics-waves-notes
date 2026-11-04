@@ -1,5 +1,5 @@
-import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=7";
-import { isCompleted, markCompleted } from "../progress.js?v=7";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=8";
+import { isCompleted, markCompleted } from "../progress.js?v=8";
 
 const TASK_ID = "molecule:build-three";
 
@@ -18,6 +18,7 @@ export function mountMoleculeLab(root, handlers) {
 
   const counts = { H: 0, O: 0, C: 0 };
   const done = new Set();
+  let message = isCompleted(TASK_ID) ? feedbackHtml("ok", "此任務已完成。") : "";
 
   function formulaString() {
     const parts = [];
@@ -49,7 +50,7 @@ export function mountMoleculeLab(root, handlers) {
             <span>${done.has(t.id) ? "✓" : ""}</span></li>`
         ).join("")}
       </ul>
-      <div id="mol-feedback"></div>`;
+      <div id="mol-feedback">${message}</div>`;
 
     shell.content.querySelectorAll("[data-add]").forEach((btn) => {
       btn.addEventListener("click", () => {
@@ -73,29 +74,28 @@ export function mountMoleculeLab(root, handlers) {
 
   function checkTarget(id) {
     const t = TARGETS.find((x) => x.id === id);
-    const fb = shell.content.querySelector("#mol-feedback");
-    if (matches(t.need)) {
-      done.add(id);
-      fb.innerHTML = feedbackHtml("ok", `正確！${t.formula} 是${t.kind}。下標表示原子個數。`);
-      if (done.size === TARGETS.length) {
-        markCompleted(TASK_ID);
-        fb.innerHTML += feedbackHtml("ok", "三種分子都組裝成功！任務完成。");
-        handlers.onComplete?.();
-      }
-      render();
-    } else {
-      fb.innerHTML = feedbackHtml(
+    if (!matches(t.need)) {
+      message = feedbackHtml(
         "warn",
         `原子數不符合 ${t.formula}。需要：${Object.entries(t.need)
           .map(([k, v]) => `${v} 個 ${k}`)
           .join("、")}。`
       );
+      render();
+      return;
+    }
+    done.add(id);
+    const finished = done.size === TARGETS.length;
+    message =
+      feedbackHtml("ok", `正確！${t.formula} 是${t.kind}。下標表示原子個數。`) +
+      (finished ? feedbackHtml("ok", "三種分子都組裝成功！任務完成。") : "");
+    render();
+    if (finished) {
+      markCompleted(TASK_ID);
+      handlers.onComplete?.();
     }
   }
 
   render();
-  if (isCompleted(TASK_ID)) {
-    shell.content.insertAdjacentHTML("beforeend", feedbackHtml("ok", "此任務已完成。"));
-  }
   return { close: shell.close };
 }

@@ -1,10 +1,10 @@
-import { islandById } from "../config.js?v=7";
-import { mountAtomLab } from "./atom-lab.js?v=7";
-import { mountClassifyLab } from "./classify-lab.js?v=7";
-import { mountDecomposeLab } from "./decompose-lab.js?v=7";
-import { mountElementsLab } from "./elements-lab.js?v=7";
-import { mountMoleculeLab } from "./molecule-lab.js?v=7";
-import { mountPeriodicLab } from "./periodic-lab.js?v=7";
+import { islandById } from "../config.js?v=8";
+import { mountAtomLab } from "./atom-lab.js?v=8";
+import { mountClassifyLab } from "./classify-lab.js?v=8";
+import { mountDecomposeLab } from "./decompose-lab.js?v=8";
+import { mountElementsLab } from "./elements-lab.js?v=8";
+import { mountMoleculeLab } from "./molecule-lab.js?v=8";
+import { mountPeriodicLab } from "./periodic-lab.js?v=8";
 
 const MOUNTERS = {
   elements: mountElementsLab,
@@ -23,8 +23,8 @@ function offerNext(root, islandId, handlers) {
   const btn = document.createElement("button");
   btn.type = "button";
   btn.dataset.nextIsland = next.id;
-  btn.className = "is-primary lab-check-btn";
-  btn.textContent = `下一座：${next.title}`;
+  btn.className = "isl-btn is-primary lab-next-btn";
+  btn.textContent = `前往下一座：${next.title}`;
   btn.addEventListener("click", () => handlers.onNext?.(next.id));
   content.appendChild(btn);
 }
