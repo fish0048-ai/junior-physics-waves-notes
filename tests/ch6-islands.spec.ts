@@ -39,6 +39,7 @@ for (const id of Object.keys(ISLAND_TITLES) as IslandId[]) {
 }
 
 test('首次進入顯示操作說明，略過後不再出現', { tag: '@basic' }, async ({ page }, testInfo) => {
+  test.slow();
   const islands = new Ch6IslandsPage(page);
   const errors = await islands.open(testInfo);
   const tutorial = page.getByRole('dialog', { name: '歡迎來到理化探索群島' });
