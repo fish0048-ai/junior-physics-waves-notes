@@ -1271,6 +1271,10 @@ html.islands-page body {
   animation: isl-fade 0.25s ease-out;
 }
 
+#islands-tutorial {
+  z-index: 65;
+}
+
 .isl-modal-card {
   width: min(430px, 100%);
   padding: 26px 24px 22px;
