@@ -27,7 +27,7 @@ export class Ch6IslandsPage {
     this.stars = page.getByRole('status', { name: /已點亮 \d+ 顆星/ });
     this.lab = page.getByRole('dialog').filter({ has: page.getByRole('button', { name: '返回群島' }) });
     this.fallback = page.getByText('改用島嶼清單');
-    this.mistakesButton = page.getByRole('button', { name: '錯題本' });
+    this.mistakesButton = page.getByRole('button', { name: '錯題本', exact: true });
   }
 
   async open(testInfo: TestInfo, query = ''): Promise<string[]> {
