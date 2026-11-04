@@ -1,5 +1,5 @@
-import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=7";
-import { isCompleted, markCompleted } from "../progress.js?v=7";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=8";
+import { isCompleted, markCompleted } from "../progress.js?v=8";
 
 const TASK_ID = "classify:particle-diagrams";
 

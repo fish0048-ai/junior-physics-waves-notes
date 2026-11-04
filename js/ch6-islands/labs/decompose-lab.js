@@ -1,5 +1,5 @@
-import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=7";
-import { isCompleted, markCompleted } from "../progress.js?v=7";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=8";
+import { isCompleted, markCompleted } from "../progress.js?v=8";
 
 const TASK_ID = "decompose:compound-vs-element";
 
@@ -101,8 +101,8 @@ export function mountDecomposeLab(root, handlers) {
     } else {
       text = "✗ 此處理方式與課文範例不符。提示：氧化汞用照光；水用通電。";
     }
-    const before = sub.type === "compound" ? "一種分子" : "同一種原子";
-    const after = sub.type === "compound" && sub.okMethods.includes(methodId) ? "拆成兩種較簡單物質" : before;
+    const before = sub.type === "compound" ? "一種化合物" : "一種元素";
+    const after = sub.type === "compound" && sub.okMethods.includes(methodId) ? "兩種元素" : `仍是${before}`;
     readout.innerHTML = `<p>${text}</p><p class="lab-step">粒子變化：${before} → ${after}</p>`;
   }
 
