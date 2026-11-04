@@ -2,6 +2,11 @@ import { expect, test } from '@playwright/test';
 import { expectNoMajorErrors, openLocal } from './helpers';
 import { Ch6IslandsPage, ISLAND_TITLES, type IslandId } from './pages/ch6-islands-page';
 
+// CI 以軟體繪製 3D，群島頁比一般講義重
+test.beforeEach(() => {
+  test.slow();
+});
+
 /** 跳過首次教學，避免遮住要測的畫面 */
 async function skipTutorial(page: import('@playwright/test').Page): Promise<void> {
   await page.addInitScript(() => {
