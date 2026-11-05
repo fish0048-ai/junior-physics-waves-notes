@@ -1,5 +1,5 @@
 ---
-description: Worktree 分工（單人維護）；常規 push origin main，禁止跨區與 force push。
+description: Worktree 分工（單人維護）；功能分支＋PR 上線，main 受 Ruleset 保護，禁止跨區與 force push。
 alwaysApply: true
 ---
 
@@ -11,23 +11,23 @@ alwaysApply: true
 
 | 用途 | 路徑 | 預設分支 |
 |------|------|----------|
-| 講義／題庫／動畫（**push main 主入口**） | `C:\Users\chunhsinkuo\junior-physics-lecture` | **`main`** |
-| 測試／workflow | `C:\Users\chunhsinkuo\junior-physics-testing` | `test/site-quality` |
+| 講義／題庫／動畫（**主入口**） | `C:\Users\chunhsinkuo\junior-physics-lecture` | `main`（同步用）；改動開功能分支 |
+| 測試／workflow | `C:\Users\chunhsinkuo\junior-physics-testing` | `test/site-quality` 或新功能分支 |
 | 歷史（勿新開發） | `C:\Users\chunhsinkuo\junior-physics-waves-notes` | — |
 
 - **禁止**跨 Worktree 修改  
 - **禁止** force push、刪 stash（除非使用者明確要求）、覆蓋他人未提交修改  
-- 同一時間僅一 worktree 可 checkout `main`；**遠端更新**以 `git push origin main` 為準（通常在 lecture worktree）
+- 同一時間僅一 worktree 可 checkout `main`；**遠端 `main` 只能經由 PR 合併更新**
 
 ## 與 GitHub 規則
 
-- 常規：**`jpwn-github.mdc`** — commit + push `main`，不需 PR  
-- push 被拒 → 回報 branch protection，不繞過  
+- 常規：**`jpwn-github.mdc`** — 功能分支 commit → push 分支 → PR → 必要檢查通過後合併  
+- 推送或合併被拒 → 回報 Ruleset 擋下的原因，不繞過、不改 Ruleset  
 
 ## 分工（摘要）
 
 - **講義區**：`sections/`、`exams/`、`animations/`、題庫  
-- **測試區**：`tests/`、`.github/workflows/`；完成後合入 `main` 再 push  
+- **測試區**：`tests/`、`.github/workflows/`；完成後同樣開 PR 合入 `main`  
 
 ## 高衝突檔
 
