@@ -20,4 +20,4 @@
 
 規則（Cursor 會依檔案自動套用）：`.cursor/rules/jpwn-*.mdc`  
 - **分工**：`jpwn-workflow.mdc`（人工交原料／AI 組站上線）  
-**GitHub**：每次改完依 `jpwn-github.mdc` 自動 commit＋push（繁中 `<type>: <主旨>`）。
+**GitHub**：每次改完依 `jpwn-github.mdc` 在功能分支 commit、開 PR，必要檢查通過後合併（繁中 `<type>: <主旨>`）。`main` 受 Ruleset 保護，不可直推。

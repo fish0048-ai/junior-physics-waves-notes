@@ -1,27 +1,27 @@
 ---
-description: 口語指令驅動：修改、檢查、commit、push main、CI／部署驗證；單人維護，不需 PR。
+description: 口語指令驅動：修改、檢查、commit、開 PR、必要檢查通過後合併、CI／部署驗證；main 受 Ruleset 保護。
 alwaysApply: true
 ---
 
 # 口語驅動自動化（不可破）
 
-完整流程見 `docs/voice-driven-automation.md`。使用者用自然語言描述需求時，Agent **自行**完成工程步驟，勿要求逐步下 Git／CI 指令，**勿**為常規任務詢問是否 push。
+完整流程見 `docs/voice-driven-automation.md`。使用者用自然語言描述需求時，Agent **自行**完成工程步驟，勿要求逐步下 Git／CI 指令，**勿**為常規任務詢問是否上傳或合併。
 
 ## 任務路由
 
-- **講義／題目／動畫** → Worktree `C:\Users\chunhsinkuo\junior-physics-lecture`，分支 **`main`**
-- **Playwright／Actions／a11y** → Worktree `C:\Users\chunhsinkuo\junior-physics-testing`（改完合入 `main` 並在 lecture worktree **push origin main**，見 `agent-cooperation.md`）
+- **講義／題目／動畫** → Worktree `C:\Users\chunhsinkuo\junior-physics-lecture`（從 `origin/main` 開功能分支）
+- **Playwright／Actions／a11y** → Worktree `C:\Users\chunhsinkuo\junior-physics-testing`（同樣開分支、開 PR，見 `agent-cooperation.md`）
 - **禁止**跨 Worktree 改檔
 
 ## 預設自動（常規）
 
-靜態／教學自查 → `commit` → 推送前 `fetch`／`pull --ff-only` → **`push origin main`** → 監看 push 觸發的 Actions → 確認 Vercel。
+靜態／教學自查 → 功能分支 `commit` → `push -u origin <分支>` → 開 PR → 等 `Chromium` 與 `a11y-phase1` 通過 → `gh pr merge --squash --delete-branch` → 確認 `main` 的 Actions 與 Vercel。
 
-使用者「先不要 push／commit」或高風險清單 → **停止 push**。
+使用者「先不要上傳／合併」或高風險清單 → **停在 PR，不合併**。
 
-## 推送後必查
+## 合併前必查
 
-必要 Actions 對**本次 push SHA** success；部署成功。證據不足或 CI 失敗 → 不合併式假裝完成、不繼續堆修改（先修或回報）。
+必要檢查對**PR 最新 commit** success。證據不足或 CI 失敗 → 不合併、不假裝完成、不繼續堆修改（先修或回報）。
 
 ## 本機
 
@@ -29,9 +29,9 @@ alwaysApply: true
 
 ## 回報
 
-成功：改動、正確性、測試／部署、連結。失敗或未跑完 CI：SHA、run、風險說明。
+成功：改動、正確性、PR 連結、測試／部署、正式站連結。失敗或未跑完 CI：SHA、PR、run、風險說明。
 
 ## 與其他規則
 
-- `jpwn-github.mdc`：push main、禁止 force  
+- `jpwn-github.mdc`：PR 流程、禁止直推 `main` 與 force  
 - `jpwn-workflow.mdc`：**人工必交**原料仍不可代替  

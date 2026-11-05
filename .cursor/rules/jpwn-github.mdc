@@ -1,37 +1,43 @@
 ---
-description: 完成修改後 commit 並 push origin main（單人維護）；推送前檢查與推送後 CI／部署驗證。
+description: 完成修改後開功能分支、推送並開 PR，必要檢查通過後合併；main 受 GitHub Ruleset 保護，禁止直推與 force push。
 alwaysApply: true
 ---
 
 # GitHub 上傳（不可破）
 
-改完講義／CSS／JS／規則／技能／測試後，**自動** `commit` 並 **`push origin main`**，不必等使用者說「上傳」。**不**建立 PR（除非使用者明確要求）。
+`main` 受 GitHub Ruleset 保護：**只能經由 Pull Request 修改**，且必須通過必要檢查 `Chromium`（`playwright.yml`）與 `a11y-phase1`（`a11y-phase1.yml`）。直接 `push origin main` 會被拒絕。
+
+改完講義／CSS／JS／規則／技能／測試後，**自動**完成下列流程，不必等使用者說「上傳」。
 
 ## 流程（任務收尾）
 
 1. `git status`／`git diff`／`git log` — 確認無他人未提交 WIP、變更合理  
-2. `git fetch origin` — 落後則 `git pull --ff-only origin main`（衝突則停）  
+2. `git fetch origin`，從最新的 `origin/main` 開功能分支（`feat/…`、`fix/…`、`docs/…`、`test/…`）；不要在 `main` 上直接 commit  
 3. `git add`（排除 `_bank_extract/`、密鑰、`.env`）  
 4. `git commit` — `<type>: <主旨>`（**繁體中文**）；保留完整 commit 歷史，方便回復  
-5. **`git push origin main`**（**禁止** force push）  
-6. 若 push 被 branch protection 拒絕 → **停**，回報須調整的 GitHub 設定，不得繞過  
-7. 監看 **本次 SHA** 的 GitHub Actions；失敗最多 **3 輪**修正再 push  
-8. 確認 Vercel 部署；失敗或未驗證 → 不得假稱成功  
+5. `git push -u origin <分支>`（**禁止** force push、禁止推 `main`）  
+6. `gh pr create --base main --head <分支> --title "<commit 主旨>" --body "<繁中：改了什麼、驗證結果>"`  
+7. 等必要檢查：PR 剛建立時檢查還沒排上，先每 10 秒查一次 `gh pr checks <分支>`，看到 `Chromium` 與 `a11y-phase1` 後再 `gh pr checks <分支> --watch --interval 15`  
+8. 全部通過 → `gh pr merge <分支> --squash --delete-branch`；被規則擋下時**不得**用 `--admin` 或改 Ruleset 硬合併  
+9. 失敗 → `gh run view <run-id> --log-failed` 找原因，修正後推同一分支；最多 **3 輪**  
+10. 合併後：`git checkout main`、`git pull --ff-only origin main`、刪本機舊分支；確認 `main` 的 Actions 與 Vercel 部署  
 
 ## 推送前無法跑 CI 時
 
-本機禁止 Node → 須在回報中**清楚標明**：推送前未跑 Playwright，依 push 後 Actions 為準。
+本機禁止 Node → 須在回報中**清楚標明**：推送前未跑 Playwright，依 PR 上的 Actions 為準。
 
 ## 例外
 
-- 使用者明確：不要 push／commit  
-- 半成品 → 先問是否暫存 commit  
+- 使用者明確：不要 push／commit／合併  
+- 半成品 → 先問是否暫存 commit（仍推到功能分支，不推 `main`）  
 - 密鑰／憑證 → 排除並警告  
-- 高風險變更 → 先問使用者（見 `voice-driven-automation.md`）  
+- 高風險變更 → 開 PR 後先問使用者再合併（見 `voice-driven-automation.md`）  
 
 ## 禁止
 
-- 改 `git config`、force push、`--no-verify`、未授權 amend  
+- 直接 `push origin main`、force push、`--no-verify`、未授權 amend、改 `git config`  
+- 修改或停用 GitHub Ruleset、`gh pr merge --admin`  
+- 刪測試或放寬斷言換綠燈  
 - 刪 stash（除非使用者明確要求）  
 - 覆蓋其他 worktree 未提交修改  
 

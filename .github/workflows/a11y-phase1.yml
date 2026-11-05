@@ -9,6 +9,7 @@ permissions:
 
 jobs:
   playwright:
+    name: a11y-phase1
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
