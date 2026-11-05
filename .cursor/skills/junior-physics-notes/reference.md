@@ -58,7 +58,6 @@ window.APP_CONFIG = {
   githubRepo: "https://github.com/fish0048-ai/junior-physics-waves-notes",
   githubPages: "https://fish0048-ai.github.io/junior-physics-waves-notes/",
   siteUrl: "https://junior-physics-waves-notes.vercel.app/",
-  seatingChart: "https://fish0048-ai.github.io/class-seating-chart/",
   chapter: { id: "N", mark: "一字", title: "章名", grade: "國中八年級理化" },
   home: "chN.html",
   chapters: [
