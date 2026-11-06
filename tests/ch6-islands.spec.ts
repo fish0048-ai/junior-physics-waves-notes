@@ -75,7 +75,85 @@ test('原子研究所：答錯給具體原因且不加星，答對才點亮星�
   await islands.checkAtom();
   await expect(page.getByText(/正確！中性碳-12/)).toBeVisible();
   await islands.expectStars(1);
-  await expect(page.getByRole('button', { name: '下一關：挑戰題' })).toBeVisible();
+  await expect(page.getByRole('button', { name: '下一關：配對挑戰' })).toBeVisible();
+  await expectNoMajorErrors(errors);
+});
+
+test('配對挑戰：沒先選左邊會提醒，配錯說明那個特徵屬於誰，全部配完點亮星星', { tag: '@full' }, async ({ page }, testInfo) => {
+  const islands = new Ch6IslandsPage(page);
+  const errors = await islands.open(testInfo, '?island=atom&start=1&stage=match');
+  await expect(page.getByRole('heading', { level: 2, name: '原子研究所 · 配對挑戰' })).toBeVisible();
+  const features = page.getByRole('group', { name: '特徵' });
+  await features.getByRole('button', { name: '發現中子' }).click();
+  await expect(page.getByText('先選左邊的一個詞，再點右邊。')).toBeVisible();
+
+  await page.getByRole('group', { name: '名詞' }).getByRole('button', { name: '道耳頓' }).click();
+  await features.getByRole('button', { name: '發現電子' }).click();
+  await expect(page.getByText('「發現電子」說的是「湯姆森」')).toBeVisible();
+  await expect(page.getByText('錯誤 1')).toBeVisible();
+
+  await islands.matchPairs([['道耳頓', '提出原子說'], ['湯姆森', '發現電子'], ['拉塞福', '發現原子核'], ['查兌克', '發現中子']]);
+  await expect(page.getByRole('heading', { level: 3, name: '原子裡的粒子' })).toBeVisible();
+  await islands.matchPairs([['質子', '帶正電'], ['中子', '不帶電'], ['電子', '帶負電'], ['原子序', '等於質子數']]);
+  await expect(page.getByRole('heading', { name: '配對完成！' })).toBeVisible();
+  await islands.expectStars(1);
+  // 全新進度時探索任務還沒做，下一關會回到它
+  await expect(page.getByRole('button', { name: '下一關：探索任務' })).toBeVisible();
+  await expectNoMajorErrors(errors);
+});
+
+test('配對挑戰：錯誤超過 3 次不給星星，可以重來', { tag: '@full' }, async ({ page }, testInfo) => {
+  const islands = new Ch6IslandsPage(page);
+  const errors = await islands.open(testInfo, '?island=decompose&start=1&stage=match');
+  await page.getByRole('group', { name: '名詞' }).getByRole('button', { name: '氧化汞' }).click();
+  const wrong = page.getByRole('group', { name: '特徵' }).getByRole('button', { name: '通電分解成氫和氧' });
+  for (let i = 0; i < 4; i += 1) await wrong.click();
+  await expect(page.getByText('錯誤 4')).toBeVisible();
+  await islands.matchPairs([
+    ['氧化汞', '照光分解成汞和氧'],
+    ['水', '通電分解成氫和氧'],
+    ['化合物', '可用加熱、光照或通電再分解'],
+    ['元素', '不能用一般化學方法再分解'],
+    ['拉瓦節', '把這種氣體命名為氧'],
+  ]);
+  await expect(page.getByRole('heading', { name: '全部配完了' })).toBeVisible();
+  await islands.expectStars(0);
+  await page.getByRole('button', { name: '再挑戰一次' }).click();
+  await expect(page.getByText('錯誤 0')).toBeVisible();
+  await expectNoMajorErrors(errors);
+});
+
+test('島嶼事件與考前速記讀自講義，公式已排版', { tag: '@full' }, async ({ page }, testInfo) => {
+  await skipTutorial(page);
+  const islands = new Ch6IslandsPage(page);
+  const errors = await islands.open(testInfo, '?mode=2d&island=atom');
+  await expect(page.getByRole('heading', { level: 3, name: '島嶼事件' })).toBeVisible();
+  await expect(page.getByText('如果原子質量幾乎都在正中央那顆很小的核')).toBeVisible();
+  await page.getByText('讀重點：6-3 考前速記').click();
+  await expect(page.getByText('同位素：同質子數、不同中子數。')).toBeVisible();
+  await expect(page.getByText(/\\\(/)).toHaveCount(0);
+  await expectNoMajorErrors(errors);
+});
+
+test('會考小船：只用會考題型、答對八成給徽章；學習檔案記錄答題', { tag: '@full' }, async ({ page }, testInfo) => {
+  await skipTutorial(page);
+  const islands = new Ch6IslandsPage(page);
+  const errors = await islands.open(testInfo, '?mode=2d');
+  await page.keyboard.press('8');
+  await expect(page.getByRole('heading', { level: 2, name: '會考小船' })).toBeVisible();
+  await expect(page.getByText(/[〔［][^〕］]*(會考|基測)/)).toBeVisible({ timeout: 20_000 });
+  await expect(page.getByText(/&#\d+;/)).toHaveCount(0);
+  const score = await islands.answerAllWithFirstChoice(5);
+  await expect(page.getByText(score >= 4 ? '拿到會考徽章了！' : /答對 \d+ 題以上就能拿到會考徽章/)).toBeVisible();
+  await islands.expectStars(0);
+
+  await page.getByRole('button', { name: '返回群島' }).click();
+  await page.getByRole('button', { name: '學習檔案' }).click();
+  const profile = page.getByRole('dialog', { name: '學習檔案' });
+  await expect(profile).toBeVisible();
+  await expect(profile.getByText(`0／20`)).toBeVisible();
+  await expect(profile.getByText(score >= 4 ? '已取得' : '未取得')).toBeVisible();
+  await expect(profile.getByText(/答對 \d+%/).first()).toBeVisible();
   await expectNoMajorErrors(errors);
 });
 

@@ -1,5 +1,5 @@
-import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=9";
-import { markCompleted } from "../progress.js?v=9";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=10";
+import { markCompleted } from "../progress.js?v=10";
 
 const TASK_ID = "periodic:exp";
 

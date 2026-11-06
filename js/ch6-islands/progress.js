@@ -1,4 +1,4 @@
-import { ALL_STAGES, STORAGE_KEY } from "./config.js?v=9";
+import { ALL_STAGES, STORAGE_KEY } from "./config.js?v=10";
 
 const MISTAKE_KEY = "jpwn.ch6islands.mistakes.v1";
 const LIGHTHOUSE_KEY = "jpwn.ch6islands.lighthouse.v1";
@@ -94,9 +94,42 @@ export function recordLighthouse(score, total) {
   if (!best || score > best.score) writeJson(LIGHTHOUSE_KEY, { score, total, at: Date.now() });
 }
 
+const ANSWER_KEY = "jpwn.ch6islands.answers.v1";
+const EXAM_KEY = "jpwn.ch6islands.exam.v1";
+
+/** 只記各節作答數與答對數，給學習檔案用 */
+export function logAnswer(section, ok) {
+  const stats = getAnswerStats();
+  const row = stats[section] || { n: 0, ok: 0 };
+  row.n += 1;
+  if (ok) row.ok += 1;
+  stats[section] = row;
+  writeJson(ANSWER_KEY, stats);
+}
+
+export function getAnswerStats() {
+  const stats = readJson(ANSWER_KEY, {});
+  return stats && typeof stats === "object" ? stats : {};
+}
+
+export function getExamBest() {
+  const best = readJson(EXAM_KEY, null);
+  return best && typeof best.score === "number" ? best : null;
+}
+
+/** 回傳這次是否第一次拿到會考徽章 */
+export function recordExam(score, total, passed) {
+  const best = getExamBest();
+  const badge = !!best?.badge || passed;
+  if (!best || score > best.score || badge !== !!best.badge) {
+    writeJson(EXAM_KEY, { score: Math.max(score, best?.score || 0), total, badge, at: Date.now() });
+  }
+  return passed && !best?.badge;
+}
+
 export function resetAllProgress() {
   try {
-    [STORAGE_KEY, MISTAKE_KEY, LIGHTHOUSE_KEY, "jpwn.ch6islands.finale"].forEach((k) => localStorage.removeItem(k));
+    [STORAGE_KEY, MISTAKE_KEY, LIGHTHOUSE_KEY, ANSWER_KEY, EXAM_KEY, "jpwn.ch6islands.finale"].forEach((k) => localStorage.removeItem(k));
   } catch {
     /* ignore */
   }

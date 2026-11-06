@@ -1,6 +1,6 @@
-import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=9";
-import { addMistake, markCompleted, removeMistake } from "../progress.js?v=9";
-import { sfx } from "../sfx.js?v=9";
+import { feedbackHtml, mountLabShell } from "./lab-shell.js?v=10";
+import { addMistake, logAnswer, markCompleted, removeMistake } from "../progress.js?v=10";
+import { sfx } from "../sfx.js?v=10";
 
 const LETTERS = ["A", "B", "C", "D"];
 
@@ -54,6 +54,7 @@ export function mountQuiz(root, opts, handlers) {
       </div>
       <p class="quiz-source">題庫 ${q.section}</p>
       <p class="quiz-q">${q.q}</p>
+      ${q.img ? `<figure class="quiz-fig"><img src="${q.img}" alt="題目附圖" loading="lazy"></figure>` : ""}
       <div class="quiz-choices" role="group" aria-label="選項">
         ${q.choices
           .map(
@@ -70,6 +71,7 @@ export function mountQuiz(root, opts, handlers) {
     state.locked = true;
     const q = state.list[state.i];
     const ok = k === q.ans;
+    logAnswer(q.section, ok);
     shell.content.querySelectorAll("[data-choice]").forEach((btn) => {
       const idx = Number(btn.dataset.choice);
       btn.disabled = true;
@@ -97,13 +99,14 @@ export function mountQuiz(root, opts, handlers) {
 
   function finish() {
     const total = state.list.length;
-    const pass = opts.passAt != null && state.score >= opts.passAt;
+    const need = opts.passAt ?? (opts.passRate ? Math.ceil(total * opts.passRate) : null);
+    const pass = need != null && state.score >= need;
     if (pass && opts.taskId) markCompleted(opts.taskId);
-    opts.onFinish?.(state.score, total);
+    opts.onFinish?.(state.score, total, pass);
     const headline = pass
       ? "挑戰成功！"
-      : opts.passAt != null
-        ? `再答對 ${opts.passAt - state.score} 題就過關`
+      : need != null
+        ? `再答對 ${need - state.score} 題就過關`
         : state.score === total
           ? "全部答對！"
           : "完成作答";
@@ -111,7 +114,13 @@ export function mountQuiz(root, opts, handlers) {
       <div class="quiz-result ${pass ? "is-pass" : ""}">
         <div class="quiz-ring" role="img" aria-label="答對 ${state.score} 題，共 ${total} 題" style="--p:${Math.round((state.score / total) * 100)}"><b aria-hidden="true">${state.score}</b><span aria-hidden="true">／${total}</span></div>
         <h3>${headline}</h3>
-        <p>${pass ? "已點亮這一關的星星。" : opts.passAt != null ? `答對 ${opts.passAt} 題以上就能點亮星星，可以再挑戰一次（會重新抽題）。` : "成績已記錄。"}</p>
+        <p>${
+          pass
+            ? opts.passText || "已點亮這一關的星星。"
+            : need != null
+              ? `答對 ${need} 題以上就能${opts.rewardText || "點亮星星"}，可以再挑戰一次（會重新抽題）。`
+              : "成績已記錄。"
+        }</p>
       </div>
       ${
         state.wrong.length

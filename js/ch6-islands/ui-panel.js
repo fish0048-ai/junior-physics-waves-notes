@@ -1,8 +1,32 @@
-import { islandById } from "./config.js?v=9";
-import { isCompleted, islandProgress, markVisited, nextOpenStage } from "./progress.js?v=9";
-import { ICONS, UI } from "./icons.js?v=9";
+import { islandById } from "./config.js?v=10";
+import { isCompleted, islandProgress, markVisited, nextOpenStage } from "./progress.js?v=10";
+import { ICONS, UI } from "./icons.js?v=10";
+import { islandEvent, renderMath, sectionMemo } from "./lecture-source.js?v=10";
 
-const STAGE_ICON = { task: UI.tap, exp: UI.flask, quiz: UI.quiz };
+const STAGE_ICON = { task: UI.tap, exp: UI.flask, match: UI.link, quiz: UI.quiz };
+
+function fillFromLecture(panel, island, isCurrent) {
+  const eventSlot = panel.querySelector('[data-slot="event"]');
+  islandEvent(island)
+    .then((ev) => {
+      if (!isCurrent() || !ev) throw new Error("no event");
+      eventSlot.innerHTML = `<p class="isl-event-title">${ev.title}</p><p class="isl-event-clue">${ev.clue}</p>`;
+      renderMath(eventSlot);
+    })
+    .catch(() => {
+      if (isCurrent()) eventSlot.innerHTML = `<p class="isl-event-clue">${island.ask}</p>`;
+    });
+  const memo = panel.querySelector('[data-slot="memo"]');
+  sectionMemo(island.sectionId)
+    .then((items) => {
+      if (!isCurrent()) return;
+      memo.innerHTML = items.length ? items.map((t) => `<li>${t}</li>`).join("") : "<li>這一節沒有考前速記。</li>";
+      renderMath(memo);
+    })
+    .catch(() => {
+      if (isCurrent()) memo.innerHTML = `<li>講義暫時讀不到，請按下方「講義 ${island.sectionId}」直接閱讀。</li>`;
+    });
+}
 
 export function createPanelController(root) {
   const panel = root.querySelector("#islands-panel");
@@ -34,9 +58,10 @@ export function createPanelController(root) {
           <span>${prog.complete ? UI.star : UI.starOutline}${prog.complete ? "整座島已點亮" : `已完成 ${prog.done}／${prog.total} 關`}</span>
           <span class="isl-panel-bar" aria-hidden="true"><i style="width:${(prog.done / prog.total) * 100}%"></i></span>
         </p>
-        <section class="isl-panel-card">
-          <h3>探究問題</h3>
-          <p>${island.ask}</p>
+        <section class="isl-event">
+          <h3>${UI.event}島嶼事件</h3>
+          <div data-slot="event"><p class="isl-event-clue">正在讀取講義…</p></div>
+          <p class="isl-event-task"><b>任務：</b>${island.mission}</p>
         </section>
         <section class="isl-stages">
           <h3>關卡</h3>
@@ -55,6 +80,10 @@ export function createPanelController(root) {
           <h3>學習目標</h3>
           <ul>${island.goals.map((g) => `<li>${UI.check}<span>${g}</span></li>`).join("")}</ul>
         </section>
+        <details class="isl-memo">
+          <summary>${UI.book}讀重點：${island.sectionId} 考前速記</summary>
+          <ul data-slot="memo"><li>正在讀取講義…</li></ul>
+        </details>
       </div>
       <div class="isl-panel-actions">
         <button type="button" class="isl-btn is-primary" data-act="explore" id="islands-btn-explore">${
@@ -65,6 +94,7 @@ export function createPanelController(root) {
           ${next ? `<button type="button" class="isl-btn is-ghost" data-act="next" id="islands-btn-next">下一座：${next.shortTitle}</button>` : ""}
         </div>
       </div>`;
+    fillFromLecture(panel, island, () => currentId === islandId);
     panel.hidden = false;
     panel.querySelector(".isl-panel-body").scrollTop = 0;
     requestAnimationFrame(() => panel.classList.add("is-open"));

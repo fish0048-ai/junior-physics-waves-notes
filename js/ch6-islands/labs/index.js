@@ -1,15 +1,16 @@
-import { islandById } from "../config.js?v=9";
-import { isCompleted } from "../progress.js?v=9";
-import { pickForSection } from "../quiz-bank.js?v=9";
-import { mountAlkaliLab } from "./alkali-lab.js?v=9";
-import { mountAtomLab } from "./atom-lab.js?v=9";
-import { mountClassifyLab } from "./classify-lab.js?v=9";
-import { mountDecomposeLab } from "./decompose-lab.js?v=9";
-import { mountElementsLab } from "./elements-lab.js?v=9";
-import { mountExp61Lab } from "./exp61-lab.js?v=9";
-import { mountMoleculeLab } from "./molecule-lab.js?v=9";
-import { mountPeriodicLab } from "./periodic-lab.js?v=9";
-import { mountQuiz } from "./quiz-lab.js?v=9";
+import { islandById } from "../config.js?v=10";
+import { isCompleted } from "../progress.js?v=10";
+import { pickForSection } from "../quiz-bank.js?v=10";
+import { mountAlkaliLab } from "./alkali-lab.js?v=10";
+import { mountAtomLab } from "./atom-lab.js?v=10";
+import { mountClassifyLab } from "./classify-lab.js?v=10";
+import { mountDecomposeLab } from "./decompose-lab.js?v=10";
+import { mountElementsLab } from "./elements-lab.js?v=10";
+import { mountExp61Lab } from "./exp61-lab.js?v=10";
+import { mountMatchLab } from "./match-lab.js?v=10";
+import { mountMoleculeLab } from "./molecule-lab.js?v=10";
+import { mountPeriodicLab } from "./periodic-lab.js?v=10";
+import { mountQuiz } from "./quiz-lab.js?v=10";
 
 const MOUNTERS = {
   elements: mountElementsLab,
@@ -50,6 +51,7 @@ export function openStage(root, island, stage, handlers) {
       followUp(root, island, stage, handlers);
     },
   };
+  if (stage.kind === "match") return mountMatchLab(root, { island, stage }, wrapped);
   if (stage.kind === "quiz") {
     return mountQuiz(
       root,

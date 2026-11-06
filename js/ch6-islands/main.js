@@ -1,26 +1,31 @@
-import { ISLANDS, LIGHTHOUSE, islandById, stageById } from "./config.js?v=9";
+import { ALL_STAGES, EXAM_BOAT, ISLANDS, LIGHTHOUSE, islandById, stageById } from "./config.js?v=10";
 import {
+  getAnswerStats,
+  getExamBest,
   getLighthouseBest,
   getMistakes,
+  isCompleted,
   islandProgress,
   nextOpenStage,
+  recordExam,
   recordLighthouse,
   removeMistake,
   resetAllProgress,
   starCount,
-} from "./progress.js?v=9";
-import { mountFallback2D } from "./fallback-2d.js?v=9";
-import { openStage } from "./labs/index.js?v=9";
-import { mountQuiz } from "./labs/quiz-lab.js?v=9";
-import { pickMixed, questionsFor } from "./quiz-bank.js?v=9";
-import { createPanelController } from "./ui-panel.js?v=9";
-import { ICONS, UI } from "./icons.js?v=9";
-import { sfx } from "./sfx.js?v=9";
-import { burst } from "./fx.js?v=9";
+} from "./progress.js?v=10";
+import { mountFallback2D } from "./fallback-2d.js?v=10";
+import { openStage } from "./labs/index.js?v=10";
+import { mountQuiz } from "./labs/quiz-lab.js?v=10";
+import { pickExamStyle, pickMixed, questionsFor } from "./quiz-bank.js?v=10";
+import { createPanelController } from "./ui-panel.js?v=10";
+import { ICONS, UI } from "./icons.js?v=10";
+import { sfx } from "./sfx.js?v=10";
+import { burst } from "./fx.js?v=10";
 
 const TUTORIAL_KEY = "jpwn.ch6islands.tutorial";
 const FINALE_KEY = "jpwn.ch6islands.finale";
 const LIGHTHOUSE_COLOR = { color: "#ff7043", accent: "#d9532c" };
+const BOAT_COLOR = { color: "#0ea5e9", accent: "#0369a1" };
 
 const root = document.getElementById("islands-app");
 const canvas = document.getElementById("islands-canvas");
@@ -29,6 +34,7 @@ const labOverlay = document.getElementById("islands-lab");
 const tutorialHost = document.getElementById("islands-tutorial");
 const finaleHost = document.getElementById("islands-finale");
 const mistakesHost = document.getElementById("islands-mistakes");
+const profileHost = document.getElementById("islands-profile");
 const starsEl = document.getElementById("islands-progress");
 const hintEl = document.getElementById("islands-hint");
 const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -79,8 +85,14 @@ function syncChrome() {
     btn.classList.toggle("is-done", prog.complete);
     btn.querySelector(".dock-prog").textContent = `${prog.done}/${prog.total}`;
   });
-  const lh = root.querySelector("[data-lighthouse] .dock-prog");
+  const lh = root.querySelector("#islands-dock [data-lighthouse] .dock-prog");
   if (lh) lh.textContent = lighthouseText();
+  const boat = root.querySelector("#islands-dock [data-examboat]");
+  if (boat) {
+    const exam = getExamBest();
+    boat.classList.toggle("is-done", !!exam?.badge);
+    boat.querySelector(".dock-prog").textContent = exam ? `最佳 ${exam.score}／${exam.total}` : "會考題型";
+  }
   const count = getMistakes().length;
   const badge = root.querySelector("#islands-mistake-count");
   badge.textContent = String(count);
@@ -104,10 +116,19 @@ function mountDock() {
     `<button type="button" class="dock-card is-lighthouse" data-lighthouse style="--isl:${LIGHTHOUSE_COLOR.color};--isl-deep:${LIGHTHOUSE_COLOR.accent}" aria-label="7. ${LIGHTHOUSE.title}">
       <span class="dock-icon">${ICONS.lighthouse}</span>
       <span class="dock-text"><span class="dock-num">總挑戰<span class="dock-prog"></span></span><span class="dock-name">燈塔</span></span>
+    </button>
+    <button type="button" class="dock-card is-boat" data-examboat style="--isl:${BOAT_COLOR.color};--isl-deep:${BOAT_COLOR.accent}" aria-label="8. ${EXAM_BOAT.title}">
+      <span class="dock-icon">${UI.boat}</span>
+      <span class="dock-text"><span class="dock-num">徽章<span class="dock-prog"></span></span><span class="dock-name">會考小船</span></span>
+      <span class="dock-star">${UI.star}</span>
     </button>`;
   dock.addEventListener("click", (ev) => {
     if (ev.target.closest("[data-lighthouse]")) {
       startLighthouse();
+      return;
+    }
+    if (ev.target.closest("[data-examboat]")) {
+      startExamBoat();
       return;
     }
     const btn = ev.target.closest("[data-dock]");
@@ -255,6 +276,92 @@ function startLighthouse() {
   );
 }
 
+function startExamBoat() {
+  if (lab) return;
+  openOverlay({ ...BOAT_COLOR, icon: UI.boat, islandId: null, handlers: {} }, (h) =>
+    mountQuiz(
+      root,
+      {
+        title: EXAM_BOAT.title,
+        lead: "題目都取自題庫中註明出自會考或基測的題目。答對八成以上，就能拿到會考徽章。",
+        load: () => pickExamStyle(EXAM_BOAT.count),
+        passRate: EXAM_BOAT.passRate,
+        passText: "拿到會考徽章了！",
+        rewardText: "拿到會考徽章",
+        emptyText: "題庫裡暫時沒有可用的會考題型題目。",
+        links: [{ href: "../review-ch6.html", label: "第 6 章章末評量" }],
+        onFinish: (score, total, passed) => {
+          const first = recordExam(score, total, passed);
+          if (first) {
+            sfx.play("complete");
+            burst(root, ["#0ea5e9", "#f5b301", "#ffffff", "#22c55e"]);
+            toast(`${UI.boat}<span>取得會考徽章！</span>`);
+          }
+          syncChrome();
+        },
+      },
+      h
+    )
+  );
+}
+
+function stageTally(kind) {
+  const list = ALL_STAGES.filter((s) => s.id === kind);
+  return { done: list.filter((s) => isCompleted(s.taskId)).length, total: list.length };
+}
+
+function showProfile() {
+  const stars = starCount();
+  const flags = ISLANDS.filter((i) => islandProgress(i).complete).length;
+  const exam = getExamBest();
+  const light = getLighthouseBest();
+  const answers = getAnswerStats();
+  const rows = [
+    ["task", "探索任務"],
+    ["exp", "實驗站"],
+    ["match", "配對挑戰"],
+    ["quiz", "挑戰題"],
+  ];
+  const sections = ["6-1", "6-2", "6-3", "6-4"];
+  profileHost.innerHTML = `
+    <div class="isl-modal-card is-wide">
+      <span class="isl-modal-icon is-blue">${UI.chart}</span>
+      <h2 id="isl-profile-title">學習檔案</h2>
+      <p>資料只存在這台裝置的瀏覽器，不會上傳。</p>
+      <div class="isl-profile-grid">
+        <div><b>${stars.done}／${stars.total}</b><span>星星</span></div>
+        <div><b>${flags}／${ISLANDS.length}</b><span>島嶼金旗</span></div>
+        <div><b>${exam?.badge ? "已取得" : "未取得"}</b><span>會考徽章${exam ? `（最佳 ${exam.score}／${exam.total}）` : ""}</span></div>
+        <div><b>${light ? `${light.score}／${light.total}` : "—"}</b><span>燈塔最佳</span></div>
+      </div>
+      <h3>各類關卡</h3>
+      <ul class="isl-profile-bars">${rows
+        .map(([id, label]) => {
+          const t = stageTally(id);
+          return `<li><span>${label}</span><i><em style="width:${t.total ? (t.done / t.total) * 100 : 0}%"></em></i><b>${t.done}／${t.total}</b></li>`;
+        })
+        .join("")}</ul>
+      <h3>各節答題</h3>
+      <ul class="isl-profile-bars">${sections
+        .map((sec) => {
+          const a = answers[sec];
+          const rate = a?.n ? Math.round((a.ok / a.n) * 100) : null;
+          return `<li><span>${sec}</span><i><em style="width:${rate ?? 0}%"></em></i><b>${a?.n ? `答對 ${rate}%（${a.ok}／${a.n}）` : "還沒作答"}</b></li>`;
+        })
+        .join("")}</ul>
+      <div class="isl-modal-actions">
+        <button type="button" class="isl-btn is-ghost" data-profile="close">關閉</button>
+        <button type="button" class="isl-btn is-primary" data-profile="mistakes">錯題本（${getMistakes().length} 題）</button>
+      </div>
+    </div>`;
+  profileHost.hidden = false;
+  profileHost.querySelector('[data-profile="close"]').focus();
+}
+
+function closeProfile() {
+  profileHost.hidden = true;
+}
+
 function startMistakeQuiz() {
   if (lab) return;
   openOverlay({ color: "#7c3aed", accent: "#5b21b6", icon: UI.notebook, islandId: null, handlers: {} }, (h) =>
@@ -298,6 +405,7 @@ async function showMistakes() {
       .map(
         (q) => `<li>
           <p class="mk-q"><small>${q.section}</small>${q.q}</p>
+          ${q.img ? `<figure class="quiz-fig"><img src="${q.img}" alt="題目附圖" loading="lazy"></figure>` : ""}
           <p class="mk-a">正確答案（${q.letter}）${q.choices[q.ans]}</p>
           ${q.explain ? `<p class="mk-e">${q.explain}</p>` : ""}
           <div class="mk-actions">
@@ -343,7 +451,7 @@ const STEPS = [
   {
     icon: UI.star,
     title: "點亮全部星星",
-    text: "每過一關點亮一顆星；答錯的題目會收進錯題本。中央燈塔是混合題總挑戰。進度只存在這台裝置。",
+    text: "每過一關點亮一顆星，整座島點亮就升起金旗。中央燈塔是混合題總挑戰，海上的會考小船能拿會考徽章；答錯的題目收進錯題本，學習檔案看得到各節答對率。進度只存在這台裝置。",
     reset: true,
   },
 ];
@@ -407,6 +515,15 @@ function bindHud() {
   root.querySelector("#islands-btn-reset-view").addEventListener("click", resetView);
   root.querySelector("#islands-btn-help").addEventListener("click", () => showTutorial(0));
   root.querySelector("#islands-btn-mistakes").addEventListener("click", () => showMistakes());
+  root.querySelector("#islands-btn-profile").addEventListener("click", () => showProfile());
+  profileHost.addEventListener("click", (ev) => {
+    const act = ev.target.closest("[data-profile]")?.dataset.profile;
+    if (act === "close") closeProfile();
+    else if (act === "mistakes") {
+      closeProfile();
+      showMistakes();
+    }
+  });
   root.querySelector("#islands-btn-sound").addEventListener("click", () => {
     sfx.setOn(!sfx.isOn());
     syncSoundButton();
@@ -456,14 +573,19 @@ function bindHud() {
       if (!tutorialHost.hidden) closeTutorial();
       else if (!finaleHost.hidden) closeFinale();
       else if (!mistakesHost.hidden) closeMistakes();
+      else if (!profileHost.hidden) closeProfile();
       else if (lab) lab.close();
       else closePanel();
       return;
     }
-    const modalOpen = !tutorialHost.hidden || !finaleHost.hidden || !mistakesHost.hidden;
+    const modalOpen = !tutorialHost.hidden || !finaleHost.hidden || !mistakesHost.hidden || !profileHost.hidden;
     if (lab || modalOpen || ev.ctrlKey || ev.metaKey || ev.altKey) return;
     if (ev.key === "7") {
       startLighthouse();
+      return;
+    }
+    if (ev.key === "8") {
+      startExamBoat();
       return;
     }
     const island = ISLANDS.find((i) => String(i.index) === ev.key);
@@ -486,6 +608,7 @@ function useFallback(failed) {
   fallback = mountFallback2D(fallbackHost, {
     onSelect: (id) => selectIsland(id),
     onLighthouse: startLighthouse,
+    onExamBoat: startExamBoat,
     failed,
   });
 }
@@ -530,7 +653,7 @@ async function boot() {
   if (want3D) {
     try {
       setLoading(30, "載入 3D 引擎…");
-      const mod = await withTimeout(import("./scene-world.js?v=9"), 20000);
+      const mod = await withTimeout(import("./scene-world.js?v=10"), 20000);
       setLoading(70, "建造島嶼與海面…");
       await nextFrame();
       world = new mod.WorldScene(canvas, {
@@ -538,6 +661,7 @@ async function boot() {
         intro: !initial,
         onIslandPick: (id) => selectIsland(id),
         onHubPick: startLighthouse,
+        onBoatPick: startExamBoat,
         onFirstInteract: hideHint,
       });
       if (lab && activeId) {

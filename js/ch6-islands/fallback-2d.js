@@ -1,8 +1,8 @@
-import { ISLANDS, LIGHTHOUSE } from "./config.js?v=9";
-import { islandProgress } from "./progress.js?v=9";
-import { ICONS, UI } from "./icons.js?v=9";
+import { ISLANDS, LIGHTHOUSE } from "./config.js?v=10";
+import { islandProgress } from "./progress.js?v=10";
+import { ICONS, UI } from "./icons.js?v=10";
 
-export function mountFallback2D(host, { onSelect, onLighthouse, failed = false }) {
+export function mountFallback2D(host, { onSelect, onLighthouse, onExamBoat, failed = false }) {
   host.hidden = false;
   const render = () => {
     host.innerHTML = `
@@ -34,6 +34,16 @@ export function mountFallback2D(host, { onSelect, onLighthouse, failed = false }
               </span>
             </button>
           </li>
+          <li>
+            <button type="button" class="isl-fallback-card" data-examboat style="--isl:#0ea5e9;--isl-deep:#0369a1">
+              <span class="isl-fallback-icon">${UI.boat}</span>
+              <span class="isl-fallback-text">
+                <small>會考徽章　6-1～6-4</small>
+                <strong>會考小船</strong>
+                <span>題庫中註明出自會考或基測的題目，答對八成拿徽章。</span>
+              </span>
+            </button>
+          </li>
         </ul>
       </div>`;
   };
@@ -41,6 +51,10 @@ export function mountFallback2D(host, { onSelect, onLighthouse, failed = false }
   host.addEventListener("click", (ev) => {
     if (ev.target.closest("[data-lighthouse]")) {
       onLighthouse?.();
+      return;
+    }
+    if (ev.target.closest("[data-examboat]")) {
+      onExamBoat?.();
       return;
     }
     const btn = ev.target.closest("[data-id]");
