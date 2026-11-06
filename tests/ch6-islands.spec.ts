@@ -97,7 +97,8 @@ test('配對挑戰：沒先選左邊會提醒，配錯說明那個特徵屬於�
   await islands.matchPairs([['質子', '帶正電'], ['中子', '不帶電'], ['電子', '帶負電'], ['原子序', '等於質子數']]);
   await expect(page.getByRole('heading', { name: '配對完成！' })).toBeVisible();
   await islands.expectStars(1);
-  await expect(page.getByRole('button', { name: '下一關：挑戰題' })).toBeVisible();
+  // 全新進度時探索任務還沒做，下一關會回到它
+  await expect(page.getByRole('button', { name: '下一關：探索任務' })).toBeVisible();
   await expectNoMajorErrors(errors);
 });
 
@@ -143,7 +144,7 @@ test('會考小船：只用會考題型、答對八成給徽章；學習檔案�
   await expect(page.getByText(/[〔［][^〕］]*(會考|基測)/)).toBeVisible({ timeout: 20_000 });
   await expect(page.getByText(/&#\d+;/)).toHaveCount(0);
   const score = await islands.answerAllWithFirstChoice(5);
-  await expect(page.getByText(score >= 4 ? '拿到會考徽章了！' : /就能拿到會考徽章/)).toBeVisible();
+  await expect(page.getByText(score >= 4 ? '拿到會考徽章了！' : /答對 \d+ 題以上就能拿到會考徽章/)).toBeVisible();
   await islands.expectStars(0);
 
   await page.getByRole('button', { name: '返回群島' }).click();
