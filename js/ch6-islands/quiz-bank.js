@@ -1,5 +1,5 @@
 /** 群島挑戰題：直接讀講義站的第 6 章隨堂題庫，不另存題目 */
-const SOURCES = ["../js/exam-ch6-sections.js?v=9", "../js/exam-ch6-keys.js?v=9"];
+const SOURCES = ["../js/exam-ch6-sections.js?v=10", "../js/exam-ch6-keys.js?v=10"];
 const LETTERS = ["A", "B", "C", "D"];
 const ELEMENT_SYMBOLS = new Set(
   "H He Li Be B C N O F Ne Na Mg Al Si P S Cl Ar K Ca Sc Ti V Cr Mn Fe Co Ni Cu Zn As Se Br Kr Rb Sr Ag Sn I Xe Cs Ba W Pt Au Hg Pb Rn Ra U".split(" ")
@@ -32,10 +32,19 @@ export function loadBank() {
   return loading;
 }
 
-function clean(s) {
-  return String(s || "")
-    .replace(/<[^>]+>/g, " ")
+function decodeEntities(s) {
+  return s
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
     .replace(/&nbsp;/gi, " ")
+    .replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, '"')
+    .replace(/&amp;/g, "&");
+}
+
+function clean(s) {
+  return decodeEntities(String(s || "").replace(/<[^>]+>/g, " "))
     .replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, "")
     .replace(/[ \t\u00a0]+/g, " ")
     .replace(/\s+([，。、；：！？])/g, "$1")
@@ -70,13 +79,37 @@ export function formatText(s) {
   return chem(escapeHtml(stripLeak(clean(s))));
 }
 
-const NEEDS_FIGURE = /如圖|附圖|附表|下圖|右圖|左圖|上圖|下表|右表|甲圖|乙圖|題組|承上|本文|文章|上文|上述|短文|閱讀/;
+const NEEDS_FIGURE = /如圖|附圖|附表|下圖|右圖|左圖|上圖|下表|右表|甲圖|乙圖/;
+const NEEDS_PASSAGE = /題組|承上|本文|文章|上文|短文|閱讀/;
 /** 題組的第 2、3 小題沒有存閱讀文章，單獨出現會看不懂 */
 const GROUP_SUBITEM = /^[（(]\s*[）)]\s*[（(]\s*[0-9０-９]+\s*[）)]|^[（(]\s*[0-9０-９]+\s*[）)]/;
 const NEEDS_MATH = /cm\s*3|g\s*\/|10\s*[－-]\s*\d|℃|°|kg|mL/;
 
-function flatCount(v) {
-  return Array.isArray(v) ? v.flat(3).filter(Boolean).length : v ? 1 : 0;
+function flat(v) {
+  return (Array.isArray(v) ? v.flat(3) : [v]).filter(Boolean).map(String);
+}
+
+const imageNum = (p) => Number((p.match(/image(\d+)/i) || [])[1] ?? -1);
+
+/** Word 會把同一張圖輸出成 png 與下一號 jpg，只留 png */
+function dedupeImages(list) {
+  const out = [];
+  for (let i = 0; i < list.length; i += 1) {
+    const cur = list[i];
+    const nxt = list[i + 1];
+    if (nxt && imageNum(nxt) === imageNum(cur) + 1 && /\.png$/i.test(cur) && /\.(jpe?g|gif)$/i.test(nxt)) {
+      out.push(cur);
+      i += 1;
+    } else {
+      out.push(cur);
+    }
+  }
+  return out;
+}
+
+function stemImage(item) {
+  const list = dedupeImages(flat(item.imgs));
+  return list.length === 1 ? list[0] : null;
 }
 
 function eligible(item) {
@@ -85,9 +118,12 @@ function eligible(item) {
   const choices = (item.choices || []).map((c) => stripLeak(clean(c)));
   if (q.length < 10 || q.length > 230) return false;
   if (/^(基測|會考|補考)/.test(q) && q.length < 28) return false;
-  if (flatCount(item.imgs) || flatCount(item.choiceImgs)) return false;
+  if (flat(item.choiceImgs).length) return false;
+  const imgs = dedupeImages(flat(item.imgs));
+  if (imgs.length > 1) return false;
   if (clean(item.lead) || clean(item.group)) return false;
-  if (NEEDS_FIGURE.test(q) || NEEDS_MATH.test(q + choices.join(""))) return false;
+  if (NEEDS_PASSAGE.test(q) || NEEDS_MATH.test(q + choices.join(""))) return false;
+  if (NEEDS_FIGURE.test(q) && !imgs.length) return false;
   if (choices.length !== 4 || choices.some((c) => !c || c.length > 90 || /如圖/.test(c))) return false;
   return Number.isInteger(item.ans) && item.ans >= 0 && item.ans <= 3;
 }
@@ -107,6 +143,7 @@ function toQuestion(section, index, item) {
     section,
     index,
     q: formatText(item.q),
+    img: stemImage(item) ? `../${stemImage(item)}` : null,
     choices: item.choices.slice(0, 4).map(formatText),
     ans: item.ans,
     letter: LETTERS[item.ans],
@@ -138,6 +175,19 @@ export async function pickMixed(sections, count) {
       .map(({ item, index }) => toQuestion(sec, index, item))
   );
   return shuffle(picked).slice(0, count);
+}
+
+/** 會考小船：題幹註明出自會考或基測的題目 */
+export async function pickExamStyle(count) {
+  const bank = await loadBank();
+  const list = ["6-1", "6-2", "6-3", "6-4"].flatMap((sec) =>
+    (bank[sec] || [])
+      .map((item, index) => ({ sec, item, index }))
+      .filter(({ item }) => /會考|基測/.test(String(item.q || "")) && eligible(item))
+  );
+  return shuffle(list)
+    .slice(0, count)
+    .map(({ sec, item, index }) => toQuestion(sec, index, item));
 }
 
 export async function questionsFor(refs) {

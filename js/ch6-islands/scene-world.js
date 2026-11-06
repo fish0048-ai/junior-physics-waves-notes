@@ -2,9 +2,9 @@ import * as THREE from "three";
 import { OrbitControls } from "three/addons/controls/OrbitControls.js";
 import { CSS2DRenderer, CSS2DObject } from "three/addons/renderers/CSS2DRenderer.js";
 import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
-import { ISLANDS, axialToWorld } from "./config.js?v=9";
-import { islandProgress } from "./progress.js?v=9";
-import { ICONS, UI } from "./icons.js?v=9";
+import { ISLANDS, axialToWorld } from "./config.js?v=10";
+import { islandProgress } from "./progress.js?v=10";
+import { ICONS, UI } from "./icons.js?v=10";
 
 const COS30 = Math.cos(Math.PI / 6);
 const R = 1.3;
@@ -1031,13 +1031,36 @@ export class WorldScene {
 
   _buildBoats() {
     [
-      { r: 9.2, speed: 0.045, phase: 0.4, sail: 0xff7043 },
+      { r: 9.2, speed: 0.045, phase: 0.4, sail: 0x0ea5e9, exam: true },
       { r: 10.4, speed: -0.035, phase: 2.6, sail: 0xffffff },
       { r: 8.4, speed: 0.03, phase: 4.4, sail: 0xffd166 },
     ].forEach((s) => {
       const g = sailboat(s.sail);
-      g.scale.setScalar(1.5);
+      g.scale.setScalar(s.exam ? 1.9 : 1.5);
       this.scene.add(g);
+      if (s.exam) {
+        const pickBox = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.8, 0.4), this.pickMat);
+        pickBox.position.y = 0.3;
+        pickBox.userData.islandId = "__boat";
+        g.add(pickBox);
+        this.pickables.push(pickBox);
+        const anchor = document.createElement("div");
+        anchor.className = "isl-anchor";
+        anchor.setAttribute("aria-hidden", "true");
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.tabIndex = -1;
+        btn.className = "isl-tag is-boat";
+        btn.innerHTML = `<span class="isl-tag-num is-boat">${UI.boat}</span><span class="isl-tag-text"><b>會考小船</b><small>會考題型</small></span>`;
+        btn.addEventListener("click", (ev) => {
+          ev.stopPropagation();
+          this.opts.onBoatPick?.();
+        });
+        anchor.appendChild(btn);
+        const label = new CSS2DObject(anchor);
+        label.position.set(0, 0.75, 0);
+        g.add(label);
+      }
       const place = (t) => {
         const a = s.phase + t * s.speed;
         g.position.set(Math.cos(a) * s.r, 0.02 + Math.sin(t * 1.6 + s.phase) * 0.025, Math.sin(a) * s.r);
@@ -1110,7 +1133,8 @@ export class WorldScene {
       if (!d) return;
       if (Math.hypot(e.clientX - d.x, e.clientY - d.y) > 7 || performance.now() - d.t > 650) return;
       const id = this._pick(e.clientX, e.clientY);
-      if (id) this.opts.onIslandPick?.(id);
+      if (id === "__boat") this.opts.onBoatPick?.();
+      else if (id) this.opts.onIslandPick?.(id);
     };
     this._onMove = (e) => {
       if (e.pointerType === "touch") return;

@@ -196,12 +196,77 @@ const STAGE_PLAN = {
   classify: [quizStage("6-4", "混合物|純物質|化合物|元素|粒子")],
 };
 
+/** 島嶼事件取自該重點卡的「探究線索」（執行時從講義讀取） */
+const EVENTS = {
+  elements: { section: "6-1", card: "#p1" },
+  periodic: { section: "6-2", card: "#p1" },
+  atom: { section: "6-3", card: "#p2" },
+  decompose: { section: "6-3", card: "#p1" },
+  molecule: { section: "6-4", card: "#p2" },
+  classify: { section: "6-4", card: "#p1" },
+};
+
+/** 配對內容皆對照講義原文；ref 為講義錨點 */
+const PAIRS = {
+  elements: [
+    { title: "元素名稱與符號", ref: "../sections/6-1.html#p3", pairs: [["金", "Au"], ["銀", "Ag"], ["銅", "Cu"], ["鐵", "Fe"], ["汞", "Hg"]] },
+    { title: "特別的元素", ref: "../sections/6-1.html#p2", pairs: [["液態金屬", "汞"], ["液態非金屬", "溴"], ["能導電的非金屬", "石墨"], ["導電性最好的金屬", "銀"]] },
+  ],
+  periodic: [
+    { title: "週期表怎麼排", ref: "../sections/6-2.html#p2", pairs: [["橫列", "週期"], ["直行", "族"], ["門得列夫", "依質量排出週期表"]] },
+    { title: "族的名稱", ref: "../sections/6-2.html#p2", pairs: [["第 1 族（氫除外）", "鹼金屬"], ["第 2 族", "鹼土金屬"], ["第 18 族", "鈍氣"]] },
+  ],
+  atom: [
+    { title: "科學家與發現", ref: "../sections/6-3.html#p2", pairs: [["道耳頓", "提出原子說"], ["湯姆森", "發現電子"], ["拉塞福", "發現原子核"], ["查兌克", "發現中子"]] },
+    { title: "原子裡的粒子", ref: "../sections/6-3.html#p2", pairs: [["質子", "帶正電"], ["中子", "不帶電"], ["電子", "帶負電"], ["原子序", "等於質子數"]] },
+  ],
+  decompose: [
+    {
+      title: "分解與定義",
+      ref: "../sections/6-3.html#p1",
+      pairs: [
+        ["氧化汞", "照光分解成汞和氧"],
+        ["水", "通電分解成氫和氧"],
+        ["化合物", "可用加熱、光照或通電再分解"],
+        ["元素", "不能用一般化學方法再分解"],
+        ["拉瓦節", "把這種氣體命名為氧"],
+      ],
+    },
+  ],
+  molecule: [
+    { title: "物質與化學式", ref: "../sections/6-4.html#p1", pairs: [["氧氣", "O<sub>2</sub>"], ["臭氧", "O<sub>3</sub>"], ["水", "H<sub>2</sub>O"], ["二氧化碳", "CO<sub>2</sub>"], ["氦氣", "He"]] },
+    { title: "分子與化學式", ref: "../sections/6-4.html#p2", pairs: [["亞佛加厥", "提出分子的概念"], ["分子", "能表現純物質化學性質的最小粒子"], ["化學式的下標", "表示原子數（1 可省略）"]] },
+  ],
+  classify: [
+    { title: "這是哪一類？", ref: "../sections/6-4.html#p1", pairs: [["空氣", "混合物"], ["氧氣", "元素"], ["二氧化碳", "化合物"], ["氦氣", "以單原子存在的元素"]] },
+    { title: "分類的定義", ref: "../sections/6-4.html#p1", pairs: [["混合物", "兩種以上純物質混合"], ["元素", "同一種原子組成的純物質"], ["化合物", "不同種原子以固定比例結合"]] },
+  ],
+};
+
 ISLANDS.forEach((island) => {
+  island.event = EVENTS[island.id];
+  const [first, ...rest] = STAGE_PLAN[island.id];
+  const quiz = rest.length ? rest[rest.length - 1] : first;
+  const middle = rest.length ? [first, ...rest.slice(0, -1)] : [];
   island.stages = [
     { id: "task", kind: "lab", lab: island.lab, title: "探索任務", desc: island.mission, taskId: island.taskId },
-    ...STAGE_PLAN[island.id].map((stage) => ({ ...stage, taskId: `${island.id}:${stage.id}` })),
-  ];
+    ...middle,
+    {
+      id: "match",
+      kind: "match",
+      title: "配對挑戰",
+      desc: "把名詞和特徵配成一對，錯誤 3 次以內點亮星星。",
+      groups: PAIRS[island.id],
+    },
+    quiz,
+  ].map((stage) => (stage.taskId ? stage : { ...stage, taskId: `${island.id}:${stage.id}` }));
 });
+
+export const EXAM_BOAT = {
+  title: "會考小船",
+  count: 5,
+  passRate: 0.8,
+};
 
 export const ALL_STAGES = ISLANDS.flatMap((island) => island.stages);
 

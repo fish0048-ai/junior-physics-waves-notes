@@ -345,16 +345,18 @@ html.islands-page body {
 /* ───────── 底部島卡 ───────── */
 .hud-dock {
   position: absolute;
-  left: 50%;
+  left: 12px;
+  right: 12px;
   bottom: max(14px, env(safe-area-inset-bottom));
   z-index: 10;
   display: flex;
   gap: 8px;
-  max-width: calc(100vw - 24px);
+  width: max-content;
+  max-width: calc(100% - 24px);
+  margin-inline: auto;
   padding: 8px;
   overflow-x: auto;
   scrollbar-width: none;
-  transform: translateX(-50%);
   background: var(--paper);
   -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(12px);
@@ -1834,6 +1836,21 @@ html.islands-page body {
   line-height: 1.75;
 }
 
+.quiz-fig {
+  margin: 0 0 14px;
+  padding: 10px;
+  border-radius: 14px;
+  background: #fff;
+  box-shadow: 0 0 0 1px var(--line);
+  text-align: center;
+}
+
+.quiz-fig img {
+  max-width: 100%;
+  max-height: 260px;
+  object-fit: contain;
+}
+
 .quiz-choices {
   display: grid;
   gap: 10px;
@@ -2373,7 +2390,308 @@ html.islands-page body {
   transform: none;
 }
 
+/* ───────── 島嶼事件與考前速記 ───────── */
+.isl-event {
+  margin: 12px 0 0;
+  padding: 12px 14px;
+  border-radius: 15px;
+  border: 2px dashed color-mix(in srgb, var(--isl) 55%, #fff);
+  background: #fffdf8;
+}
+
+.isl-event h3 {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 0 6px;
+  font-size: 12px;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  color: #c2410c;
+}
+
+.isl-event h3 svg {
+  width: 16px;
+  height: 16px;
+}
+
+.isl-event-title {
+  margin: 0;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--ink-soft);
+}
+
+.isl-event-clue {
+  margin: 4px 0 0;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.isl-event-task {
+  margin: 8px 0 0;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+.isl-event-task b {
+  color: var(--isl-deep);
+}
+
+.isl-memo {
+  margin-top: 14px;
+  border-radius: 15px;
+  background: #fff;
+  border: 1px solid var(--line);
+}
+
+.isl-memo summary {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  font-weight: 900;
+  font-size: 14px;
+  cursor: pointer;
+  list-style: none;
+}
+
+.isl-memo summary::-webkit-details-marker {
+  display: none;
+}
+
+.isl-memo summary svg {
+  width: 18px;
+  height: 18px;
+  color: var(--isl-deep);
+}
+
+.isl-memo summary::after {
+  content: "展開";
+  margin-left: auto;
+  font-size: 12px;
+  color: var(--ink-soft);
+}
+
+.isl-memo[open] summary::after {
+  content: "收合";
+}
+
+.isl-memo ul {
+  margin: 0;
+  padding: 0 16px 14px 32px;
+  display: grid;
+  gap: 6px;
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+.memo-blank {
+  padding: 0 4px;
+  border-radius: 4px;
+  background: #fef3c7;
+  color: #92400e;
+}
+
+/* ───────── 配對挑戰 ───────── */
+.match-errors {
+  color: #c2410c;
+}
+
+.match-errors.is-over {
+  color: #b91c1c;
+}
+
+.match-board {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 10px;
+}
+
+.match-col {
+  display: grid;
+  gap: 8px;
+  align-content: start;
+}
+
+.match-item {
+  min-height: 52px;
+  padding: 10px 14px;
+  border: 2px solid transparent;
+  border-radius: 14px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: left;
+  cursor: pointer;
+  box-shadow: inset 0 -4px 0 rgba(15, 23, 42, 0.08), 0 0 0 1px var(--line);
+  transition: transform 0.12s, border-color 0.15s, background 0.15s, opacity 0.2s;
+}
+
+.match-item:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.match-item.is-on {
+  border-color: var(--isl);
+  background: #eef4ff;
+  background: color-mix(in srgb, var(--isl) 14%, #fff);
+}
+
+.match-item.is-matched {
+  border-color: #22c55e;
+  background: #e9f9ef;
+  color: #166534;
+  cursor: default;
+  opacity: 0.75;
+}
+
+.match-item.is-wrong {
+  border-color: #f97316;
+  animation: match-shake 0.4s ease-in-out;
+}
+
+@keyframes match-shake {
+  20%, 60% { transform: translateX(-5px); }
+  40%, 80% { transform: translateX(5px); }
+}
+
+.match-msg {
+  min-height: 2.4em;
+  margin-top: 12px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.match-ref {
+  display: inline-block;
+  margin-top: 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--teal);
+}
+
+/* ───────── 會考小船與學習檔案 ───────── */
+.dock-card.is-boat {
+  background: #eef9ff;
+}
+
+.isl-tag.is-boat {
+  background: #e0f2fe;
+}
+
+.isl-tag-num.is-boat {
+  background: #0ea5e9;
+}
+
+.isl-modal-icon.is-blue {
+  background: linear-gradient(135deg, #38bdf8, #0369a1);
+  box-shadow: inset 0 -4px 0 #075985;
+}
+
+.isl-profile-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 8px;
+  margin: 14px 0 6px;
+}
+
+.isl-profile-grid div {
+  display: grid;
+  gap: 2px;
+  padding: 12px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid var(--line);
+  text-align: center;
+}
+
+.isl-profile-grid b {
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.isl-profile-grid span {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.isl-modal-card.is-wide h3 {
+  margin: 14px 0 6px;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.isl-profile-bars {
+  list-style: none;
+  margin: 0 0 6px;
+  padding: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.isl-profile-bars li {
+  display: grid;
+  grid-template-columns: 5.5em 1fr auto;
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
+}
+
+.isl-profile-bars i {
+  height: 10px;
+  overflow: hidden;
+  border-radius: 99px;
+  background: #e5e7eb;
+}
+
+.isl-profile-bars em {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, #38bdf8, #22c55e);
+}
+
+.isl-profile-bars b {
+  font-size: 13px;
+  white-space: nowrap;
+}
+
 /* ───────── 平板與手機 ───────── */
+@media (max-width: 1180px) {
+  .hud-dock {
+    gap: 6px;
+    padding: 6px;
+  }
+
+  .dock-card {
+    min-width: 0;
+    gap: 7px;
+    padding: 6px 10px 6px 6px;
+  }
+
+  .dock-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 11px;
+  }
+
+  .dock-icon svg {
+    width: 19px;
+    height: 19px;
+  }
+
+  .dock-name {
+    font-size: 14px;
+  }
+}
+
 @media (max-width: 760px) {
   .hud-brand {
     padding-right: 12px;
@@ -2457,6 +2775,17 @@ html.islands-page body {
 
   .isl-tag-text small {
     display: none;
+  }
+
+  .match-board {
+    grid-template-columns: 1fr 1.3fr;
+    gap: 6px;
+  }
+
+  .match-item {
+    min-height: 44px;
+    padding: 8px 10px;
+    font-size: 13px;
   }
 
   .isl-tag-text b {

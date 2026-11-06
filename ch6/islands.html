@@ -9,7 +9,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="../css/ch6-islands.css?v=9">
+  <link rel="stylesheet" href="../css/ch6-islands.css?v=10">
   <script type="importmap">
   {
     "imports": {
@@ -36,6 +36,7 @@
         <div id="islands-progress" class="hud-stars" role="status" aria-live="polite"></div>
         <button type="button" id="islands-btn-reset-view" class="hud-btn" aria-label="回到全景"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg><span class="lbl">全景</span></button>
         <button type="button" id="islands-btn-mistakes" class="hud-btn" aria-label="錯題本"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h11a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6z"/><path d="M6 3v18M4 7h4M4 12h4M4 17h4M11 8h5M11 12h5"/></svg><span class="lbl">錯題本</span><span id="islands-mistake-count" class="hud-badge" hidden>0</span></button>
+        <button type="button" id="islands-btn-profile" class="hud-btn" aria-label="學習檔案"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3"/></svg><span class="lbl">學習檔案</span></button>
         <button type="button" id="islands-btn-sound" class="hud-btn" aria-pressed="false" aria-label="音效開關"></button>
         <button type="button" id="islands-btn-help" class="hud-btn" aria-label="操作說明"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M9.5 9.5a2.5 2.5 0 1 1 3.5 2.3c-.7.3-1 .9-1 1.7"/><path d="M12 17h.01"/></svg><span class="lbl">說明</span></button>
       </div>
@@ -63,6 +64,7 @@
     <div id="islands-tutorial" class="isl-modal" hidden role="dialog" aria-modal="true" aria-labelledby="isl-tut-title"></div>
     <div id="islands-finale" class="isl-modal" hidden role="dialog" aria-modal="true" aria-labelledby="isl-finale-title"></div>
     <div id="islands-mistakes" class="isl-modal" hidden role="dialog" aria-modal="true" aria-labelledby="isl-mistakes-title"></div>
+    <div id="islands-profile" class="isl-modal" hidden role="dialog" aria-modal="true" aria-labelledby="isl-profile-title"></div>
 
     <div id="islands-loading" class="isl-loading">
       <div class="isl-loading-inner">
@@ -78,7 +80,7 @@
     </div>
   </div>
   <noscript><p style="padding:24px;font-size:18px">需要開啟 JavaScript 才能使用群島。請改看 <a href="../ch6.html">第 6 章講義</a>。</p></noscript>
-  <script type="module" src="../js/ch6-islands/main.js?v=9"></script>
+  <script type="module" src="../js/ch6-islands/main.js?v=10"></script>
   <script>
     setTimeout(function () {
       var el = document.getElementById("islands-loading");

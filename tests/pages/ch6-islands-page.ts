@@ -12,8 +12,8 @@ export const ISLAND_TITLES: Record<IslandId, string> = {
   classify: '物質分類挑戰島',
 };
 
-/** 6 個探索任務 + 2 個實驗站 + 6 組挑戰題 */
-export const TOTAL_STARS = 14;
+/** 6 個探索任務 + 2 個實驗站 + 6 組配對挑戰 + 6 組挑戰題 */
+export const TOTAL_STARS = 20;
 
 export class Ch6IslandsPage {
   readonly heading: Locator;
@@ -55,6 +55,14 @@ export class Ch6IslandsPage {
 
   async checkAtom(): Promise<void> {
     await this.page.getByRole('button', { name: '檢查：是否為中性碳-12？' }).click();
+  }
+
+  /** 先點左邊再點右邊，完成一整組配對 */
+  async matchPairs(pairs: Array<[string, string]>): Promise<void> {
+    for (const [left, right] of pairs) {
+      await this.page.getByRole('group', { name: '名詞' }).getByRole('button', { name: left, exact: true }).click();
+      await this.page.getByRole('group', { name: '特徵' }).getByRole('button', { name: right, exact: true }).click();
+    }
   }
 
   /** 每題都選第一個選項，回傳答對題數 */
