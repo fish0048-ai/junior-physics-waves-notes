@@ -27,6 +27,7 @@ window.APP_CONFIG = {
       title: "質量與體積的關係",
       file: "sections/lab-1-2.html",
       ready: true,
+      sheet: "sections/lab-1-2-sheet.html",
       ask: "同樣一杯，水和酒精的質量會一樣嗎？未知金屬塊要怎麼認？",
       summary: "天平、量筒、水 m–V 圖、金屬塊、淨水器（酒精本課略）"
     },
@@ -51,6 +52,7 @@ window.APP_CONFIG = {
       title: "透鏡的成像觀察",
       file: "sections/lab-4-3.html",
       ready: true,
+      sheet: "sections/lab-4-3-sheet.html",
       ask: "紙屏接得到的是實像還虛像？物體靠近時，像會變大還變小？",
       summary: "焦距、物距像距、凸透鏡凹透鏡成像"
     },

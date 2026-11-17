@@ -588,6 +588,7 @@
           ${s.ask ? `<p class="section-card-ask">${s.ask}</p>` : ""}
           <p>${s.summary || ""}</p>
         </a>
+        ${s.sheet ? `<a class="section-card-exam" href="${url(s.sheet)}">實驗學習單</a>` : ""}
         ${s.exam ? `<a class="section-card-exam" href="${appendPracticeMode(url(s.exam))}">段考前練習</a>` : ""}
       </div>
     `).join("") + ((cfg.sections || []).some((s) => s.exam) ? `
