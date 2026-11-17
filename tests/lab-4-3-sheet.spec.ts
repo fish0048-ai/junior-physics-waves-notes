@@ -5,7 +5,7 @@ import path from "node:path";
 const SHEET = "/sections/lab-4-3-sheet.html";
 
 /** 本頁關鍵教學標記（隨內容演進可調整；CI 測的是 checkout 當版） */
-const LAB_SHEET_MARKERS = ["必交", "誤差提醒", "最小、最亮", "如果你是老師"];
+const LAB_SHEET_MARKERS = ["必交", "誤差提醒", "最小、最亮", "如果你是老師", "拍照／上傳"];
 
 const viewports = [
   { name: "手機375", width: 375, height: 812 },
@@ -29,9 +29,13 @@ async function waitForSheetReady(page: Page) {
     await expect(page.getByText(text, { exact: false }).first()).toBeVisible({ timeout: 12_000 });
   }
   await page.waitForFunction(() => {
-    const imgs = Array.from(document.querySelectorAll<HTMLImageElement>(".lab-sheet img"));
-    return imgs.every((img) => img.complete && img.naturalWidth > 0);
+    const imgs = Array.from(document.querySelectorAll<HTMLImageElement>(".lab-sheet img")).filter(
+      (img) => img.getAttribute("src") && !img.classList.contains("sheet-photo-preview")
+    );
+    return imgs.length > 0 && imgs.every((img) => img.complete && img.naturalWidth > 0);
   });
+  await expect(page.locator(".sheet-result").first()).toBeVisible();
+  await expect(page.locator(".sheet-photo[data-photo-id]").first()).toBeVisible();
 }
 
 function pdfPageCount(buffer: Buffer): number {
@@ -118,9 +122,9 @@ test.describe("4-3 實驗學習單", { tag: "@lecture" }, () => {
     const b4 = await attachPdf(testInfo, "lab-4-3-sheet-b4.pdf", Buffer.from(b4Buf));
 
     expect(a4.pages).toBeGreaterThanOrEqual(2);
-    expect(a4.pages).toBeLessThanOrEqual(6);
+    expect(a4.pages).toBeLessThanOrEqual(8);
     expect(b4.pages).toBeGreaterThanOrEqual(2);
-    expect(b4.pages).toBeLessThanOrEqual(5);
+    expect(b4.pages).toBeLessThanOrEqual(7);
 
     const metrics = {
       sheet: SHEET,
@@ -139,6 +143,30 @@ test.describe("4-3 實驗學習單", { tag: "@lecture" }, () => {
     test.info().annotations.push({ type: "B4 pages", description: String(b4.pages) });
   });
 
+  test("拍照上傳：預覽出現且清除後恢復占位", async ({ page }) => {
+    await waitForSheetReady(page);
+    const slot = page.locator('.sheet-photo[data-photo-id="4-3-convex-gt2f"]');
+    const input = slot.locator('input[type="file"]');
+    const preview = slot.locator(".sheet-photo-preview");
+    const placeholder = slot.locator(".sheet-photo-placeholder");
+    await expect(placeholder).toBeVisible();
+    await expect(preview).toBeHidden();
+
+    // 1×1 PNG
+    const png = Buffer.from(
+      "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mP8z8BQDwAEhQGAhKmMIQAAAABJRU5ErkJggg==",
+      "base64"
+    );
+    await input.setInputFiles({ name: "sample.png", mimeType: "image/png", buffer: png });
+    await expect.poll(async () => preview.getAttribute("src")).toMatch(/^data:image\//);
+    await expect(preview).toBeVisible();
+    await expect(slot).toHaveClass(/has-photo/);
+
+    await slot.getByRole("button", { name: "清除" }).click();
+    await expect(preview).toBeHidden();
+    await expect(placeholder).toBeVisible();
+  });
+
   for (const vp of viewports) {
     test(`RWD ${vp.name}：無水平溢出、組員表與 #p-d 可見`, async ({ page }, testInfo) => {
       await page.setViewportSize({ width: vp.width, height: vp.height });
@@ -152,6 +180,7 @@ test.describe("4-3 實驗學習單", { tag: "@lecture" }, () => {
       await expect(page.locator(".sheet-members")).toBeVisible();
       await expect(page.locator("#p-d")).toBeVisible();
       await expect(page.locator("#p-a .diagram")).toBeVisible();
+      await expect(page.locator(".sheet-result-grid")).toBeVisible();
       const shot = await page.screenshot({ fullPage: true });
       await testInfo.attach(`rwd-${vp.name}.png`, { body: shot, contentType: "image/png" });
       fs.writeFileSync(path.join(ensureArtifactDir(testInfo), `rwd-${vp.name}.png`), shot);

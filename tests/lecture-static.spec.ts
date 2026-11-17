@@ -46,6 +46,8 @@ const LAB_SHEET_SCIENCE: Array<{ file: string; mustInclude: string[] }> = [
       "最小、最亮",
       "如果你是老師",
       "正立縮小虛像",
+      "拍照／上傳",
+      "data-photo-id",
     ],
   },
 ];
