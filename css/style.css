@@ -239,6 +239,9 @@ html.is-proj .video-card {
   position: relative;
   width: min(880px, calc(100% - 24px));
   margin: 16px auto 48px;
+  /* 避免 lab-kit 等寬表把整頁横向撐開（手機 CI） */
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 .hero-practice {
@@ -472,6 +475,9 @@ html.is-proj .video-card {
   border-radius: 16px;
   padding: 14px 16px 14px 62px;
   box-shadow: 0 1px 0 rgba(21, 128, 61, 0.08);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .lab-step::before {
   counter-increment: labstep;
@@ -529,8 +535,9 @@ html.is-proj .video-card {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin: 8px 0 12px;
-  max-width: 100%;
   width: 100%;
+  max-width: min(100%, calc(100vw - 48px));
+  box-sizing: border-box;
 }
 .lab-kit {
   min-width: 520px;
