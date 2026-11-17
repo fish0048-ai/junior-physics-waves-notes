@@ -71,7 +71,7 @@
       </table>
       </div>
       <p class="note sheet-top-note">材料核對、詳細數據在<strong>活動紀錄本</strong>；本單為流程、成像性質與延伸紀錄。</p>
-      <p class="note no-print">列印：<strong>A4 或 B4 雙面</strong>約 2 頁（第 1 頁甲乙丙；第 2 頁思・如果你是老師）；請取消「頁首與頁尾」。</p>
+      <p class="note no-print">列印：<strong>A4 或 B4</strong>（含成像照片可能 3～5 頁；思・如果你是老師會換頁）；請取消「頁首與頁尾」。</p>
     </header>
 
     <article class="card" id="p-a">
@@ -134,60 +134,218 @@
           <p>大於 2f → 等於 f → 小於 f；紙屏接得到＝實像</p>
         </div>
       </div>
-      <p class="note sheet-compact-note">光源從 2f 以外逐漸靠近透鏡。每次把紙屏前後移動到像<strong>最清楚</strong>。物距、像距數值填活動紀錄本；下表填<strong>性質</strong>（正倒／大小／實虛）。</p>
+      <p class="note sheet-compact-note">光源從 2f 以外逐漸靠近透鏡。每次把紙屏前後移動到像<strong>最清楚</strong>。物距、像距數值填活動紀錄本；下面每格填<strong>正倒／大小／實虛</strong>，並<strong>拍照上傳</strong>紙屏（或透過透鏡看到的像）。</p>
       <p class="note sheet-compact-note"><strong>誤差提醒：</strong>紙屏沒對準會聚點→像模糊；物距量錯（沒量到鏡心）→列別填錯。物距等於 <em>f</em> 時紙屏怎麼移都接不到，屬正常。</p>
-      <div class="sheet-scroll">
-      <table class="sheet-metal-ref" aria-label="凸透鏡成像性質表">
-        <thead>
-          <tr>
-            <th>物距與 f</th>
-            <th>像距與 f（對照）</th>
-            <th>正倒</th>
-            <th>大小</th>
-            <th>實虛</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr>
-            <td>大於 2f</td>
-            <td>介於 f～2f</td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="大於2f正倒" autocomplete="off"></td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="大於2f大小" autocomplete="off"></td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="大於2f實虛" autocomplete="off"></td>
-          </tr>
-          <tr>
-            <td>等於 2f</td>
-            <td>等於 2f</td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="等於2f正倒" autocomplete="off"></td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="等於2f大小" autocomplete="off"></td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="等於2f實虛" autocomplete="off"></td>
-          </tr>
-          <tr>
-            <td>介於 f～2f</td>
-            <td>大於 2f</td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="介於f2f正倒" autocomplete="off"></td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="介於f2f大小" autocomplete="off"></td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="介於f2f實虛" autocomplete="off"></td>
-          </tr>
-          <tr>
-            <td>等於 f</td>
-            <td colspan="4"><input type="text" class="sheet-field sheet-field-wide" aria-label="等於f成像" placeholder="無法成像／無法在紙屏成像" autocomplete="off"></td>
-          </tr>
-          <tr>
-            <td>小於 f</td>
-            <td>紙屏接不到</td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="小於f正倒" autocomplete="off"></td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="小於f大小" autocomplete="off"></td>
-            <td><input type="text" class="sheet-field sheet-field-sm" aria-label="小於f實虛" autocomplete="off"></td>
-          </tr>
-        </tbody>
-      </table>
+      <p class="note sheet-compact-note no-print">照片存在這臺裝置的瀏覽器；換平板要重新拍。列印前請確認預覽有圖。</p>
+
+      <div class="sheet-result-grid" aria-label="凸透鏡成像結果">
+        <section class="sheet-result" data-case="gt2f">
+          <header class="sheet-result-head">
+            <h3 class="sheet-result-title">物距大於 2f</h3>
+            <p class="sheet-result-hint">像距對照：介於 f～2f　｜　拍紙屏上的像</p>
+          </header>
+          <div class="sheet-result-props">
+            <label class="sheet-prop">正倒
+              <select class="sheet-select" aria-label="大於2f正倒">
+                <option value="">—</option>
+                <option>正立</option>
+                <option>倒立</option>
+              </select>
+            </label>
+            <label class="sheet-prop">大小
+              <select class="sheet-select" aria-label="大於2f大小">
+                <option value="">—</option>
+                <option>縮小</option>
+                <option>等大</option>
+                <option>放大</option>
+              </select>
+            </label>
+            <label class="sheet-prop">實虛
+              <select class="sheet-select" aria-label="大於2f實虛">
+                <option value="">—</option>
+                <option>實像</option>
+                <option>虛像</option>
+              </select>
+            </label>
+          </div>
+          <div class="sheet-photo" data-photo-id="4-3-convex-gt2f">
+            <div class="sheet-photo-frame">
+              <img class="sheet-photo-preview" alt="大於2f成像照片" hidden>
+              <span class="sheet-photo-placeholder">點下方按鈕拍照或上傳</span>
+            </div>
+            <div class="sheet-photo-actions no-print">
+              <label class="sheet-photo-btn">拍照／上傳
+                <input type="file" accept="image/*" capture="environment" aria-label="上傳大於2f成像照片">
+              </label>
+              <button type="button" class="sheet-photo-clear" disabled>清除</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="sheet-result" data-case="eq2f">
+          <header class="sheet-result-head">
+            <h3 class="sheet-result-title">物距等於 2f</h3>
+            <p class="sheet-result-hint">像距對照：等於 2f　｜　拍紙屏上的像</p>
+          </header>
+          <div class="sheet-result-props">
+            <label class="sheet-prop">正倒
+              <select class="sheet-select" aria-label="等於2f正倒">
+                <option value="">—</option>
+                <option>正立</option>
+                <option>倒立</option>
+              </select>
+            </label>
+            <label class="sheet-prop">大小
+              <select class="sheet-select" aria-label="等於2f大小">
+                <option value="">—</option>
+                <option>縮小</option>
+                <option>等大</option>
+                <option>放大</option>
+              </select>
+            </label>
+            <label class="sheet-prop">實虛
+              <select class="sheet-select" aria-label="等於2f實虛">
+                <option value="">—</option>
+                <option>實像</option>
+                <option>虛像</option>
+              </select>
+            </label>
+          </div>
+          <div class="sheet-photo" data-photo-id="4-3-convex-eq2f">
+            <div class="sheet-photo-frame">
+              <img class="sheet-photo-preview" alt="等於2f成像照片" hidden>
+              <span class="sheet-photo-placeholder">點下方按鈕拍照或上傳</span>
+            </div>
+            <div class="sheet-photo-actions no-print">
+              <label class="sheet-photo-btn">拍照／上傳
+                <input type="file" accept="image/*" capture="environment" aria-label="上傳等於2f成像照片">
+              </label>
+              <button type="button" class="sheet-photo-clear" disabled>清除</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="sheet-result" data-case="between">
+          <header class="sheet-result-head">
+            <h3 class="sheet-result-title">物距介於 f～2f</h3>
+            <p class="sheet-result-hint">像距對照：大於 2f　｜　拍紙屏上的像</p>
+          </header>
+          <div class="sheet-result-props">
+            <label class="sheet-prop">正倒
+              <select class="sheet-select" aria-label="介於f2f正倒">
+                <option value="">—</option>
+                <option>正立</option>
+                <option>倒立</option>
+              </select>
+            </label>
+            <label class="sheet-prop">大小
+              <select class="sheet-select" aria-label="介於f2f大小">
+                <option value="">—</option>
+                <option>縮小</option>
+                <option>等大</option>
+                <option>放大</option>
+              </select>
+            </label>
+            <label class="sheet-prop">實虛
+              <select class="sheet-select" aria-label="介於f2f實虛">
+                <option value="">—</option>
+                <option>實像</option>
+                <option>虛像</option>
+              </select>
+            </label>
+          </div>
+          <div class="sheet-photo" data-photo-id="4-3-convex-between">
+            <div class="sheet-photo-frame">
+              <img class="sheet-photo-preview" alt="介於f～2f成像照片" hidden>
+              <span class="sheet-photo-placeholder">點下方按鈕拍照或上傳</span>
+            </div>
+            <div class="sheet-photo-actions no-print">
+              <label class="sheet-photo-btn">拍照／上傳
+                <input type="file" accept="image/*" capture="environment" aria-label="上傳介於f2f成像照片">
+              </label>
+              <button type="button" class="sheet-photo-clear" disabled>清除</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="sheet-result" data-case="eqf">
+          <header class="sheet-result-head">
+            <h3 class="sheet-result-title">物距等於 f</h3>
+            <p class="sheet-result-hint">通常無法成像　｜　可拍紙屏「接不到清楚像」的畫面</p>
+          </header>
+          <div class="sheet-result-props sheet-result-props-single">
+            <label class="sheet-prop sheet-prop-wide">結果
+              <select class="sheet-select" aria-label="等於f成像">
+                <option value="">—</option>
+                <option>無法成像</option>
+                <option>無法在紙屏成像</option>
+              </select>
+            </label>
+          </div>
+          <div class="sheet-photo" data-photo-id="4-3-convex-eqf">
+            <div class="sheet-photo-frame">
+              <img class="sheet-photo-preview" alt="等於f無法成像照片" hidden>
+              <span class="sheet-photo-placeholder">點下方按鈕拍照或上傳</span>
+            </div>
+            <div class="sheet-photo-actions no-print">
+              <label class="sheet-photo-btn">拍照／上傳
+                <input type="file" accept="image/*" capture="environment" aria-label="上傳等於f照片">
+              </label>
+              <button type="button" class="sheet-photo-clear" disabled>清除</button>
+            </div>
+          </div>
+        </section>
+
+        <section class="sheet-result" data-case="ltf">
+          <header class="sheet-result-head">
+            <h3 class="sheet-result-title">物距小於 f</h3>
+            <p class="sheet-result-hint">紙屏接不到　｜　拍「透過透鏡用眼睛看」的像</p>
+          </header>
+          <div class="sheet-result-props">
+            <label class="sheet-prop">正倒
+              <select class="sheet-select" aria-label="小於f正倒">
+                <option value="">—</option>
+                <option>正立</option>
+                <option>倒立</option>
+              </select>
+            </label>
+            <label class="sheet-prop">大小
+              <select class="sheet-select" aria-label="小於f大小">
+                <option value="">—</option>
+                <option>縮小</option>
+                <option>等大</option>
+                <option>放大</option>
+              </select>
+            </label>
+            <label class="sheet-prop">實虛
+              <select class="sheet-select" aria-label="小於f實虛">
+                <option value="">—</option>
+                <option>實像</option>
+                <option>虛像</option>
+              </select>
+            </label>
+          </div>
+          <div class="sheet-photo" data-photo-id="4-3-convex-ltf">
+            <div class="sheet-photo-frame">
+              <img class="sheet-photo-preview" alt="小於f成像照片" hidden>
+              <span class="sheet-photo-placeholder">點下方按鈕拍照或上傳</span>
+            </div>
+            <div class="sheet-photo-actions no-print">
+              <label class="sheet-photo-btn">拍照／上傳
+                <input type="file" accept="image/*" capture="environment" aria-label="上傳小於f成像照片">
+              </label>
+              <button type="button" class="sheet-photo-clear" disabled>清除</button>
+            </div>
+          </div>
+        </section>
       </div>
+
       <ul class="q sheet-checklist sheet-graph-tips">
         <li><label><input type="checkbox" aria-label="紙屏接得到是實像"> 紙屏上清楚的像＝光線真的會聚＝<strong>實像</strong></label></li>
         <li><label><input type="checkbox" aria-label="虛像用眼睛看"> 虛像紙屏接不到，要從透鏡那一側用<strong>眼睛</strong>看</label></li>
         <li><label><input type="checkbox" aria-label="倒立通常實像"> 國中凸透鏡：紙屏上<strong>倒立</strong>的像通常是實像</label></li>
         <li><label><input type="checkbox" aria-label="物近像遠變大"> 物體靠近（仍在 f 外）時，像變<strong>大</strong>、像距變<strong>長</strong></label></li>
+        <li><label><input type="checkbox" aria-label="五格照片已上傳"> 五格成像結果都已<strong>拍照／上傳</strong>（或註明無法拍）</label></li>
       </ul>
       <p class="note sheet-compact-note">口訣：物遠像近縮小倒；物近像遠放大倒；物在焦點無法成；物進焦內正立虛（放大，紙屏沒有）。</p>
     </article>
@@ -200,17 +358,116 @@
           <p>紙屏通常接不到；改用眼睛透過透鏡看</p>
         </div>
       </div>
-      <div class="sheet-c-row">
-        <div class="sheet-c-main">
-          <p class="note sheet-compact-note">換成已知焦距的凹透鏡。物距在 <em>f</em> 外、f 內都觀察一次。紙屏通常接不到像。</p>
-          <ol class="lab-steps sheet-flow sheet-steps-inline">
-            <li class="lab-step"><strong>1</strong> 物距大於 <em>f</em>：紙屏 <input type="text" class="sheet-field sheet-field-sm" aria-label="凹大於f紙屏" autocomplete="off">（接得到／接不到）；用眼睛看像的性質：<input type="text" class="sheet-field sheet-field-md" aria-label="凹大於f性質" autocomplete="off"></li>
-            <li class="lab-step"><strong>2</strong> 物距小於 <em>f</em>：紙屏 <input type="text" class="sheet-field sheet-field-sm" aria-label="凹小於f紙屏" autocomplete="off">；用眼睛看：<input type="text" class="sheet-field sheet-field-md" aria-label="凹小於f性質" autocomplete="off"></li>
-            <li class="lab-step"><strong>3</strong> 結論：凹透鏡無論物距，成像都是 <input type="text" class="sheet-field sheet-field-wide" aria-label="凹透鏡結論" placeholder="正立縮小虛像" autocomplete="off"></li>
-          </ol>
-          <p class="note sheet-compact-note">凹透鏡讓平行光<strong>發散</strong>，實際光線不會會聚到紙屏，所以永遠沒有實像。</p>
-        </div>
+      <p class="note sheet-compact-note">換成已知焦距的凹透鏡。物距在 <em>f</em> 外、f 內都觀察一次。紙屏通常接不到像；請<strong>透過透鏡拍照</strong>記錄你看到的像。</p>
+      <div class="sheet-result-grid sheet-result-grid-2" aria-label="凹透鏡成像結果">
+        <section class="sheet-result" data-case="concave-gtf">
+          <header class="sheet-result-head">
+            <h3 class="sheet-result-title">物距大於 f</h3>
+            <p class="sheet-result-hint">紙屏多半接不到　｜　拍透過透鏡看到的像</p>
+          </header>
+          <div class="sheet-result-props">
+            <label class="sheet-prop">紙屏
+              <select class="sheet-select" aria-label="凹大於f紙屏">
+                <option value="">—</option>
+                <option>接得到</option>
+                <option>接不到</option>
+              </select>
+            </label>
+            <label class="sheet-prop">正倒
+              <select class="sheet-select" aria-label="凹大於f正倒">
+                <option value="">—</option>
+                <option>正立</option>
+                <option>倒立</option>
+              </select>
+            </label>
+            <label class="sheet-prop">大小
+              <select class="sheet-select" aria-label="凹大於f大小">
+                <option value="">—</option>
+                <option>縮小</option>
+                <option>等大</option>
+                <option>放大</option>
+              </select>
+            </label>
+            <label class="sheet-prop">實虛
+              <select class="sheet-select" aria-label="凹大於f實虛">
+                <option value="">—</option>
+                <option>實像</option>
+                <option>虛像</option>
+              </select>
+            </label>
+          </div>
+          <div class="sheet-photo" data-photo-id="4-3-concave-gtf">
+            <div class="sheet-photo-frame">
+              <img class="sheet-photo-preview" alt="凹透鏡物距大於f照片" hidden>
+              <span class="sheet-photo-placeholder">點下方按鈕拍照或上傳</span>
+            </div>
+            <div class="sheet-photo-actions no-print">
+              <label class="sheet-photo-btn">拍照／上傳
+                <input type="file" accept="image/*" capture="environment" aria-label="上傳凹透鏡大於f照片">
+              </label>
+              <button type="button" class="sheet-photo-clear" disabled>清除</button>
+            </div>
+          </div>
+        </section>
+        <section class="sheet-result" data-case="concave-ltf">
+          <header class="sheet-result-head">
+            <h3 class="sheet-result-title">物距小於 f</h3>
+            <p class="sheet-result-hint">紙屏多半接不到　｜　拍透過透鏡看到的像</p>
+          </header>
+          <div class="sheet-result-props">
+            <label class="sheet-prop">紙屏
+              <select class="sheet-select" aria-label="凹小於f紙屏">
+                <option value="">—</option>
+                <option>接得到</option>
+                <option>接不到</option>
+              </select>
+            </label>
+            <label class="sheet-prop">正倒
+              <select class="sheet-select" aria-label="凹小於f正倒">
+                <option value="">—</option>
+                <option>正立</option>
+                <option>倒立</option>
+              </select>
+            </label>
+            <label class="sheet-prop">大小
+              <select class="sheet-select" aria-label="凹小於f大小">
+                <option value="">—</option>
+                <option>縮小</option>
+                <option>等大</option>
+                <option>放大</option>
+              </select>
+            </label>
+            <label class="sheet-prop">實虛
+              <select class="sheet-select" aria-label="凹小於f實虛">
+                <option value="">—</option>
+                <option>實像</option>
+                <option>虛像</option>
+              </select>
+            </label>
+          </div>
+          <div class="sheet-photo" data-photo-id="4-3-concave-ltf">
+            <div class="sheet-photo-frame">
+              <img class="sheet-photo-preview" alt="凹透鏡物距小於f照片" hidden>
+              <span class="sheet-photo-placeholder">點下方按鈕拍照或上傳</span>
+            </div>
+            <div class="sheet-photo-actions no-print">
+              <label class="sheet-photo-btn">拍照／上傳
+                <input type="file" accept="image/*" capture="environment" aria-label="上傳凹透鏡小於f照片">
+              </label>
+              <button type="button" class="sheet-photo-clear" disabled>清除</button>
+            </div>
+          </div>
+        </section>
       </div>
+      <p class="lab-record">結論：凹透鏡無論物距，成像都是
+        <select class="sheet-select sheet-select-inline" aria-label="凹透鏡結論">
+          <option value="">—</option>
+          <option>正立縮小虛像</option>
+          <option>正立放大虛像</option>
+          <option>倒立縮小實像</option>
+        </select>
+      </p>
+      <p class="note sheet-compact-note">凹透鏡讓平行光<strong>發散</strong>，實際光線不會會聚到紙屏，所以永遠沒有實像。</p>
     </article>
 
     <article class="card" id="p-d">
@@ -276,8 +533,8 @@
         <p class="sheet-done-title">完成確認（勾選後交）</p>
         <ul class="q sheet-checklist sheet-done-grid">
           <li><label><input type="checkbox"> 甲　焦距與裝置（活動紀錄本＋本單）</label></li>
-          <li><label><input type="checkbox"> 乙　凸透鏡成像性質表</label></li>
-          <li><label><input type="checkbox"> 丙　凹透鏡觀察與結論</label></li>
+          <li><label><input type="checkbox"> 乙　凸透鏡結果＋照片</label></li>
+          <li><label><input type="checkbox"> 丙　凹透鏡結果＋照片</label></li>
           <li><label><input type="checkbox"> 思　如果你是老師：本次重點已整理</label></li>
           <li><label><input type="checkbox"> 思　必交：出題＋詳解</label></li>
         </ul>
@@ -289,5 +546,6 @@
   <script src="../js/config-lab.js"></script>
   <script src="../js/layout.js"></script>
   <script src="../js/app.js"></script>
+  <script src="../js/sheet-photos.js"></script>
 </body>
 </html>
