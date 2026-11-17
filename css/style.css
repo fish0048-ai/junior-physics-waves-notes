@@ -239,6 +239,9 @@ html.is-proj .video-card {
   position: relative;
   width: min(880px, calc(100% - 24px));
   margin: 16px auto 48px;
+  /* 避免 lab-kit 等寬表把整頁横向撐開（手機 CI） */
+  overflow-x: clip;
+  max-width: 100%;
 }
 
 .hero-practice {
@@ -472,6 +475,9 @@ html.is-proj .video-card {
   border-radius: 16px;
   padding: 14px 16px 14px 62px;
   box-shadow: 0 1px 0 rgba(21, 128, 61, 0.08);
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
 }
 .lab-step::before {
   counter-increment: labstep;
@@ -529,6 +535,9 @@ html.is-proj .video-card {
   overflow-x: auto;
   -webkit-overflow-scrolling: touch;
   margin: 8px 0 12px;
+  width: 100%;
+  max-width: min(100%, calc(100vw - 48px));
+  box-sizing: border-box;
 }
 .lab-kit {
   min-width: 520px;
@@ -1763,12 +1772,26 @@ svg.math-graph text {
 .lab-sheet-tight .sheet-done-grid label {
   margin: 0;
 }
+.lab-sheet-tight .sheet-scroll {
+  overflow-x: auto;
+  max-width: 100%;
+  width: 100%;
+  -webkit-overflow-scrolling: touch;
+}
 @media (max-width: 640px) {
   .lab-sheet-tight .sheet-b-row,
   .lab-sheet-tight .sheet-c-row {
     grid-template-columns: 1fr;
   }
   .lab-sheet-tight .sheet-graph-tips { columns: 1; }
+  .lab-sheet .sheet-field { min-width: 2.5em; }
+  .lab-sheet .sheet-field-wide { min-width: 0; width: 100%; }
+  .lab-sheet-tight .sheet-prompt-line .sheet-field-md { min-width: 3.5em; }
+  .lab-sheet-tight .sheet-prompt-line .sheet-field-lg { min-width: 4.5em; }
+  .lab-sheet-tight .sheet-members,
+  .lab-sheet-tight .sheet-metal-ref {
+    font-size: 11px;
+  }
 }
 
 .card > .section-head + .inquiry-ask {

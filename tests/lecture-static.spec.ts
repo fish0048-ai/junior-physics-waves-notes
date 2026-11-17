@@ -26,7 +26,7 @@ const BAD_MATH_PATTERNS: Array<{ name: string; re: RegExp }> = [
   { name: "全形等號當公式", re: /[＝／×÷]/ },
 ];
 
-/** 1-2 學習單：關鍵教學用語（科學／流程一致性） */
+/** 實驗學習單：關鍵教學用語（科學／流程一致性） */
 const LAB_SHEET_SCIENCE: Array<{ file: string; mustInclude: string[] }> = [
   {
     file: "sections/lab-1-2-sheet.html",
@@ -36,6 +36,16 @@ const LAB_SHEET_SCIENCE: Array<{ file: string; mustInclude: string[] }> = [
       "截留",
       "必交",
       "一般木炭不等於活性碳",
+    ],
+  },
+  {
+    file: "sections/lab-4-3-sheet.html",
+    mustInclude: [
+      "誤差提醒",
+      "必交",
+      "最小、最亮",
+      "如果你是老師",
+      "正立縮小虛像",
     ],
   },
 ];

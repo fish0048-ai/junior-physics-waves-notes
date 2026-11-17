@@ -71,6 +71,7 @@ window.JPWN_BOOK_MANIFEST = {
       { id: "lab-2-1", title: "混合物的分離", file: "sections/lab-2-1.html" },
       { id: "lab-2-3", title: "氧氣的製備及性質", file: "sections/lab-2-3.html" },
       { id: "lab-4-3", title: "透鏡的成像觀察", file: "sections/lab-4-3.html" },
+      { id: "lab-4-3-sheet", title: "4-3 實驗學習單", file: "sections/lab-4-3-sheet.html" },
       { id: "lab-4-5", title: "色光與顏色的關係", file: "sections/lab-4-5.html" },
       { id: "lab-5-1", title: "溫度計的原理", file: "sections/lab-5-1.html" },
       { id: "lab-5-2", title: "熱量與物質溫度變化", file: "sections/lab-5-2.html" },
