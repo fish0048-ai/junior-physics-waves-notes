@@ -5,7 +5,15 @@ import path from "node:path";
 const SHEET = "/sections/lab-4-3-sheet.html";
 
 /** 本頁關鍵教學標記（隨內容演進可調整；CI 測的是 checkout 當版） */
-const LAB_SHEET_MARKERS = ["必交", "誤差提醒", "最小、最亮", "如果你是老師", "拍照／上傳"];
+const LAB_SHEET_MARKERS = [
+  "必交",
+  "誤差提醒",
+  "最小、最亮",
+  "如果你是老師",
+  "拍照／上傳",
+  "透鏡組",
+  "第一次實像",
+];
 
 const viewports = [
   { name: "手機375", width: 375, height: 812 },
