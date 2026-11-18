@@ -48,6 +48,9 @@ const LAB_SHEET_SCIENCE: Array<{ file: string; mustInclude: string[] }> = [
       "正立縮小虛像",
       "拍照／上傳",
       "data-photo-id",
+      "透鏡組",
+      "第一次實像 → 第二次虛像",
+      "第一次實像 → 第二次實像",
     ],
   },
 ];

@@ -1942,6 +1942,18 @@ svg.math-graph text {
   opacity: 0.45;
   cursor: not-allowed;
 }
+.lab-sheet-tight .sheet-adv-block {
+  margin-bottom: 12px;
+}
+.lab-sheet-tight .sheet-adv-block + .sheet-adv-block {
+  margin-top: 4px;
+}
+.lab-sheet-tight .sheet-adv-sub {
+  margin: 10px 0 6px;
+  font-size: 13px;
+  font-weight: 800;
+  color: #1e3a8a;
+}
 
 @media (max-width: 640px) {
   .lab-sheet-tight .sheet-b-row,
@@ -4468,6 +4480,19 @@ html.is-immersive .brand > span:last-child {
   }
   .lab-sheet-tight .sheet-photo-placeholder { font-size: 7pt; }
   .lab-sheet-tight .sheet-photo-actions { display: none !important; }
+  .lab-sheet-tight .sheet-adv-block {
+    break-inside: avoid;
+    page-break-inside: avoid;
+    margin-bottom: 2mm;
+  }
+  .lab-sheet-tight .sheet-adv-sub {
+    font-size: 8pt;
+    margin: 1.5mm 0 1mm;
+    color: #1e3a8a !important;
+  }
+  .lab-sheet-tight #p-adv {
+    break-before: auto;
+  }
   .lab-sheet-tight,
   .lab-sheet-tight .card,
   .lab-sheet-tight .note,

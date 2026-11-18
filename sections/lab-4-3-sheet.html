@@ -20,7 +20,7 @@
       <section class="hero">
         <span class="kicker">國中八年級　理化　4-3 實驗學習單</span>
         <h1>透鏡的成像觀察</h1>
-        <p class="no-print">甲量焦距 → 乙凸透鏡成像 → 丙凹透鏡 → 思整理重點＋出題。投影：<a href="lab-4-3.html">實驗專區</a></p>
+        <p class="no-print">甲量焦距 → 乙凸透鏡 → 丙凹透鏡（一項）→ 進透鏡組 → 思整理＋出題。投影：<a href="lab-4-3.html">實驗專區</a></p>
       </section>
       <p class="sheet-meta-row">
         班級 <input type="text" class="sheet-field" aria-label="班級" autocomplete="off">
@@ -354,34 +354,34 @@
       <div class="section-head">
         <div class="badge">丙</div>
         <div>
-          <h2>換成凹透鏡，重複觀察</h2>
-          <p>紙屏通常接不到；改用眼睛透過透鏡看</p>
+          <h2>凹透鏡成像（一項即可）</h2>
+          <p>紙屏通常接不到；透過透鏡看並拍照</p>
         </div>
       </div>
-      <p class="note sheet-compact-note">換成已知焦距的凹透鏡。物距在 <em>f</em> 外、f 內都觀察一次。紙屏通常接不到像；請<strong>透過透鏡拍照</strong>記錄你看到的像。</p>
-      <div class="sheet-result-grid sheet-result-grid-2" aria-label="凹透鏡成像結果">
-        <section class="sheet-result" data-case="concave-gtf">
+      <p class="note sheet-compact-note">換成凹透鏡，任選一個物距觀察即可（不必分 f 內／外各做一次）。紙屏通常接不到像；請<strong>透過透鏡拍照</strong>。</p>
+      <div class="sheet-result-grid" aria-label="凹透鏡成像結果">
+        <section class="sheet-result" data-case="concave">
           <header class="sheet-result-head">
-            <h3 class="sheet-result-title">物距大於 f</h3>
-            <p class="sheet-result-hint">紙屏多半接不到　｜　拍透過透鏡看到的像</p>
+            <h3 class="sheet-result-title">凹透鏡觀察</h3>
+            <p class="sheet-result-hint">物距約 <input type="text" class="sheet-field sheet-field-sm" aria-label="凹透鏡物距" autocomplete="off"> cm　｜　拍透過透鏡看到的像</p>
           </header>
           <div class="sheet-result-props">
             <label class="sheet-prop">紙屏
-              <select class="sheet-select" aria-label="凹大於f紙屏">
+              <select class="sheet-select" aria-label="凹透鏡紙屏">
                 <option value="">—</option>
                 <option>接得到</option>
                 <option>接不到</option>
               </select>
             </label>
             <label class="sheet-prop">正倒
-              <select class="sheet-select" aria-label="凹大於f正倒">
+              <select class="sheet-select" aria-label="凹透鏡正倒">
                 <option value="">—</option>
                 <option>正立</option>
                 <option>倒立</option>
               </select>
             </label>
             <label class="sheet-prop">大小
-              <select class="sheet-select" aria-label="凹大於f大小">
+              <select class="sheet-select" aria-label="凹透鏡大小">
                 <option value="">—</option>
                 <option>縮小</option>
                 <option>等大</option>
@@ -389,70 +389,21 @@
               </select>
             </label>
             <label class="sheet-prop">實虛
-              <select class="sheet-select" aria-label="凹大於f實虛">
+              <select class="sheet-select" aria-label="凹透鏡實虛">
                 <option value="">—</option>
                 <option>實像</option>
                 <option>虛像</option>
               </select>
             </label>
           </div>
-          <div class="sheet-photo" data-photo-id="4-3-concave-gtf">
+          <div class="sheet-photo" data-photo-id="4-3-concave">
             <div class="sheet-photo-frame">
-              <img class="sheet-photo-preview" alt="凹透鏡物距大於f照片" hidden>
+              <img class="sheet-photo-preview" alt="凹透鏡成像照片" hidden>
               <span class="sheet-photo-placeholder">點下方按鈕拍照或上傳</span>
             </div>
             <div class="sheet-photo-actions no-print">
               <label class="sheet-photo-btn">拍照／上傳
-                <input type="file" accept="image/*" capture="environment" aria-label="上傳凹透鏡大於f照片">
-              </label>
-              <button type="button" class="sheet-photo-clear" disabled>清除</button>
-            </div>
-          </div>
-        </section>
-        <section class="sheet-result" data-case="concave-ltf">
-          <header class="sheet-result-head">
-            <h3 class="sheet-result-title">物距小於 f</h3>
-            <p class="sheet-result-hint">紙屏多半接不到　｜　拍透過透鏡看到的像</p>
-          </header>
-          <div class="sheet-result-props">
-            <label class="sheet-prop">紙屏
-              <select class="sheet-select" aria-label="凹小於f紙屏">
-                <option value="">—</option>
-                <option>接得到</option>
-                <option>接不到</option>
-              </select>
-            </label>
-            <label class="sheet-prop">正倒
-              <select class="sheet-select" aria-label="凹小於f正倒">
-                <option value="">—</option>
-                <option>正立</option>
-                <option>倒立</option>
-              </select>
-            </label>
-            <label class="sheet-prop">大小
-              <select class="sheet-select" aria-label="凹小於f大小">
-                <option value="">—</option>
-                <option>縮小</option>
-                <option>等大</option>
-                <option>放大</option>
-              </select>
-            </label>
-            <label class="sheet-prop">實虛
-              <select class="sheet-select" aria-label="凹小於f實虛">
-                <option value="">—</option>
-                <option>實像</option>
-                <option>虛像</option>
-              </select>
-            </label>
-          </div>
-          <div class="sheet-photo" data-photo-id="4-3-concave-ltf">
-            <div class="sheet-photo-frame">
-              <img class="sheet-photo-preview" alt="凹透鏡物距小於f照片" hidden>
-              <span class="sheet-photo-placeholder">點下方按鈕拍照或上傳</span>
-            </div>
-            <div class="sheet-photo-actions no-print">
-              <label class="sheet-photo-btn">拍照／上傳
-                <input type="file" accept="image/*" capture="environment" aria-label="上傳凹透鏡小於f照片">
+                <input type="file" accept="image/*" capture="environment" aria-label="上傳凹透鏡照片">
               </label>
               <button type="button" class="sheet-photo-clear" disabled>清除</button>
             </div>
@@ -468,6 +419,206 @@
         </select>
       </p>
       <p class="note sheet-compact-note">凹透鏡讓平行光<strong>發散</strong>，實際光線不會會聚到紙屏，所以永遠沒有實像。</p>
+    </article>
+
+    <article class="card" id="p-adv">
+      <div class="section-head">
+        <div class="badge calc">進</div>
+        <div>
+          <h2>進階題　透鏡組（兩片凸透鏡）</h2>
+          <p>兩次都放大：①第一次實像、第二次虛像　②第一次實像、第二次實像</p>
+        </div>
+      </div>
+      <p class="note sheet-compact-note">用兩片凸透鏡串接。先調整第一片，讓中間有清楚的像；再放入第二片。每一段都填<strong>正倒／大小／實虛</strong>並<strong>拍照</strong>（實像拍紙屏；虛像拍透過第二片透鏡看到的畫面）。</p>
+
+      <section class="sheet-result sheet-adv-block" data-case="lens-rv">
+        <header class="sheet-result-head">
+          <h3 class="sheet-result-title">1　兩次放大：第一次實像 → 第二次虛像</h3>
+          <p class="sheet-result-hint">像複式顯微鏡：第一片（物鏡）先成放大實像；第二片（目鏡）把該實像放在焦點內，再成放大虛像給眼睛看。</p>
+        </header>
+        <p class="lab-record">裝置示意（自行標物、第一片、中間像、第二片、眼睛）：
+          <input type="text" class="sheet-field sheet-field-wide" aria-label="透鏡組1裝置" autocomplete="off">
+        </p>
+        <h4 class="sheet-adv-sub">第一次成像（第一片凸透鏡 → 紙屏）</h4>
+        <div class="sheet-result-props">
+          <label class="sheet-prop">正倒
+            <select class="sheet-select" aria-label="透鏡組1第一次正倒">
+              <option value="">—</option>
+              <option>正立</option>
+              <option>倒立</option>
+            </select>
+          </label>
+          <label class="sheet-prop">大小
+            <select class="sheet-select" aria-label="透鏡組1第一次大小">
+              <option value="">—</option>
+              <option>縮小</option>
+              <option>等大</option>
+              <option>放大</option>
+            </select>
+          </label>
+          <label class="sheet-prop">實虛
+            <select class="sheet-select" aria-label="透鏡組1第一次實虛">
+              <option value="">—</option>
+              <option>實像</option>
+              <option>虛像</option>
+            </select>
+          </label>
+        </div>
+        <div class="sheet-photo" data-photo-id="4-3-adv-rv-1">
+          <div class="sheet-photo-frame">
+            <img class="sheet-photo-preview" alt="透鏡組1第一次實像照片" hidden>
+            <span class="sheet-photo-placeholder">第一次：拍紙屏上的實像</span>
+          </div>
+          <div class="sheet-photo-actions no-print">
+            <label class="sheet-photo-btn">拍照／上傳
+              <input type="file" accept="image/*" capture="environment" aria-label="上傳透鏡組1第一次照片">
+            </label>
+            <button type="button" class="sheet-photo-clear" disabled>清除</button>
+          </div>
+        </div>
+        <h4 class="sheet-adv-sub">第二次成像（第二片凸透鏡 → 眼睛看）</h4>
+        <div class="sheet-result-props">
+          <label class="sheet-prop">正倒
+            <select class="sheet-select" aria-label="透鏡組1第二次正倒">
+              <option value="">—</option>
+              <option>正立</option>
+              <option>倒立</option>
+            </select>
+          </label>
+          <label class="sheet-prop">大小
+            <select class="sheet-select" aria-label="透鏡組1第二次大小">
+              <option value="">—</option>
+              <option>縮小</option>
+              <option>等大</option>
+              <option>放大</option>
+            </select>
+          </label>
+          <label class="sheet-prop">實虛
+            <select class="sheet-select" aria-label="透鏡組1第二次實虛">
+              <option value="">—</option>
+              <option>實像</option>
+              <option>虛像</option>
+            </select>
+          </label>
+        </div>
+        <div class="sheet-photo" data-photo-id="4-3-adv-rv-2">
+          <div class="sheet-photo-frame">
+            <img class="sheet-photo-preview" alt="透鏡組1第二次虛像照片" hidden>
+            <span class="sheet-photo-placeholder">第二次：拍透過第二片透鏡看到的虛像</span>
+          </div>
+          <div class="sheet-photo-actions no-print">
+            <label class="sheet-photo-btn">拍照／上傳
+              <input type="file" accept="image/*" capture="environment" aria-label="上傳透鏡組1第二次照片">
+            </label>
+            <button type="button" class="sheet-photo-clear" disabled>清除</button>
+          </div>
+        </div>
+        <p class="lab-record">這組比較像哪種儀器？
+          <select class="sheet-select sheet-select-inline" aria-label="透鏡組1儀器">
+            <option value="">—</option>
+            <option>複式顯微鏡</option>
+            <option>投影機／放映</option>
+            <option>其他</option>
+          </select>
+         　一句話說明：
+          <input type="text" class="sheet-field sheet-field-wide" aria-label="透鏡組1說明" autocomplete="off">
+        </p>
+      </section>
+
+      <section class="sheet-result sheet-adv-block" data-case="lens-rr">
+        <header class="sheet-result-head">
+          <h3 class="sheet-result-title">2　兩次放大：第一次實像 → 第二次實像</h3>
+          <p class="sheet-result-hint">兩片都讓紙屏接得到像：第一片先成放大實像；把該實像當作物體，調第二片，使紙屏再接到放大實像（類似投影放大）。</p>
+        </header>
+        <p class="lab-record">裝置示意（自行標物、第一片、中間像、第二片、紙屏）：
+          <input type="text" class="sheet-field sheet-field-wide" aria-label="透鏡組2裝置" autocomplete="off">
+        </p>
+        <h4 class="sheet-adv-sub">第一次成像（第一片凸透鏡 → 紙屏）</h4>
+        <div class="sheet-result-props">
+          <label class="sheet-prop">正倒
+            <select class="sheet-select" aria-label="透鏡組2第一次正倒">
+              <option value="">—</option>
+              <option>正立</option>
+              <option>倒立</option>
+            </select>
+          </label>
+          <label class="sheet-prop">大小
+            <select class="sheet-select" aria-label="透鏡組2第一次大小">
+              <option value="">—</option>
+              <option>縮小</option>
+              <option>等大</option>
+              <option>放大</option>
+            </select>
+          </label>
+          <label class="sheet-prop">實虛
+            <select class="sheet-select" aria-label="透鏡組2第一次實虛">
+              <option value="">—</option>
+              <option>實像</option>
+              <option>虛像</option>
+            </select>
+          </label>
+        </div>
+        <div class="sheet-photo" data-photo-id="4-3-adv-rr-1">
+          <div class="sheet-photo-frame">
+            <img class="sheet-photo-preview" alt="透鏡組2第一次實像照片" hidden>
+            <span class="sheet-photo-placeholder">第一次：拍紙屏上的實像</span>
+          </div>
+          <div class="sheet-photo-actions no-print">
+            <label class="sheet-photo-btn">拍照／上傳
+              <input type="file" accept="image/*" capture="environment" aria-label="上傳透鏡組2第一次照片">
+            </label>
+            <button type="button" class="sheet-photo-clear" disabled>清除</button>
+          </div>
+        </div>
+        <h4 class="sheet-adv-sub">第二次成像（第二片凸透鏡 → 紙屏）</h4>
+        <div class="sheet-result-props">
+          <label class="sheet-prop">正倒
+            <select class="sheet-select" aria-label="透鏡組2第二次正倒">
+              <option value="">—</option>
+              <option>正立</option>
+              <option>倒立</option>
+            </select>
+          </label>
+          <label class="sheet-prop">大小
+            <select class="sheet-select" aria-label="透鏡組2第二次大小">
+              <option value="">—</option>
+              <option>縮小</option>
+              <option>等大</option>
+              <option>放大</option>
+            </select>
+          </label>
+          <label class="sheet-prop">實虛
+            <select class="sheet-select" aria-label="透鏡組2第二次實虛">
+              <option value="">—</option>
+              <option>實像</option>
+              <option>虛像</option>
+            </select>
+          </label>
+        </div>
+        <div class="sheet-photo" data-photo-id="4-3-adv-rr-2">
+          <div class="sheet-photo-frame">
+            <img class="sheet-photo-preview" alt="透鏡組2第二次實像照片" hidden>
+            <span class="sheet-photo-placeholder">第二次：拍紙屏上的實像</span>
+          </div>
+          <div class="sheet-photo-actions no-print">
+            <label class="sheet-photo-btn">拍照／上傳
+              <input type="file" accept="image/*" capture="environment" aria-label="上傳透鏡組2第二次照片">
+            </label>
+            <button type="button" class="sheet-photo-clear" disabled>清除</button>
+          </div>
+        </div>
+        <p class="lab-record">這組比較像哪種儀器？
+          <select class="sheet-select sheet-select-inline" aria-label="透鏡組2儀器">
+            <option value="">—</option>
+            <option>複式顯微鏡</option>
+            <option>投影機／放映</option>
+            <option>其他</option>
+          </select>
+         　一句話說明：
+          <input type="text" class="sheet-field sheet-field-wide" aria-label="透鏡組2說明" autocomplete="off">
+        </p>
+        <p class="note sheet-compact-note"><strong>對照：</strong>第 1 題第二次是<strong>虛像</strong>（紙屏接不到、用眼睛看）；第 2 題第二次仍是<strong>實像</strong>（紙屏接得到）。差別在中間像相對第二片透鏡的物距。</p>
+      </section>
     </article>
 
     <article class="card" id="p-d">
@@ -504,6 +655,9 @@
             <strong>丙</strong>　凹透鏡無論物距都是 <input type="text" class="sheet-field sheet-field-lg" aria-label="丙凹透鏡性質" autocomplete="off">；紙屏 <input type="text" class="sheet-field sheet-field-sm" aria-label="丙紙屏" autocomplete="off">（接得到／接不到）。
           </li>
           <li class="sheet-prompt-line">
+            <strong>進</strong>　兩片凸透鏡、兩次都放大：第 1 種是第一次 <input type="text" class="sheet-field sheet-field-sm" aria-label="進1第一次" autocomplete="off">、第二次 <input type="text" class="sheet-field sheet-field-sm" aria-label="進1第二次" autocomplete="off">（像顯微鏡）；第 2 種是第一次 <input type="text" class="sheet-field sheet-field-sm" aria-label="進2第一次" autocomplete="off">、第二次 <input type="text" class="sheet-field sheet-field-sm" aria-label="進2第二次" autocomplete="off">（紙屏都接得到）。
+          </li>
+          <li class="sheet-prompt-line">
             <strong>易錯</strong>　本次我最可能搞錯 <input type="text" class="sheet-field sheet-field-lg" aria-label="易錯項目" autocomplete="off">；正確應 <input type="text" class="sheet-field sheet-field-lg" aria-label="易錯改正" autocomplete="off">。
           </li>
           <li class="sheet-prompt-line sheet-prompt-free">
@@ -514,7 +668,7 @@
       </div>
       <div class="sheet-extra-block sheet-mcq sheet-mcq-wide sheet-mcq-fill">
         <h3 class="subh sheet-extra-head">出題</h3>
-        <p class="note sheet-compact-note"><strong>必交：</strong>依本節實驗（量焦距、物距像距、凸透鏡五種位置、凹透鏡成像、實像虛像判斷等）自出<strong>四選一單選題</strong>，附答案與詳解。下方留白夠寬，可直接手寫。</p>
+        <p class="note sheet-compact-note"><strong>必交：</strong>依本節實驗（量焦距、凸透鏡成像、凹透鏡、透鏡組兩次放大等）自出<strong>四選一單選題</strong>，附答案與詳解。下方留白夠寬，可直接手寫。</p>
         <p class="lab-record"><strong>題幹</strong></p>
         <textarea class="sheet-write sheet-write-wide sheet-write-stem" rows="3" aria-label="自編題幹"></textarea>
         <ol class="q sheet-mcq-options sheet-mcq-wide-list" type="A">
@@ -534,7 +688,8 @@
         <ul class="q sheet-checklist sheet-done-grid">
           <li><label><input type="checkbox"> 甲　焦距與裝置（活動紀錄本＋本單）</label></li>
           <li><label><input type="checkbox"> 乙　凸透鏡結果＋照片</label></li>
-          <li><label><input type="checkbox"> 丙　凹透鏡結果＋照片</label></li>
+          <li><label><input type="checkbox"> 丙　凹透鏡（一項）＋照片</label></li>
+          <li><label><input type="checkbox"> 進　透鏡組兩題＋照片</label></li>
           <li><label><input type="checkbox"> 思　如果你是老師：本次重點已整理</label></li>
           <li><label><input type="checkbox"> 思　必交：出題＋詳解</label></li>
         </ul>
