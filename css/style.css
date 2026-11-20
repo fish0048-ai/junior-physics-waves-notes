@@ -974,9 +974,12 @@ svg.diagram.diagram-lg {
 .gear-photos.eye-defect-figs {
   margin: 10px 0 6px;
 }
+.gear-photos.eye-defect-figs img.diagram,
 .gear-photos.eye-defect-figs .diagram {
   width: 100%;
   height: auto;
+  max-height: none;
+  object-fit: contain;
   display: block;
   background: #fff;
   border: 1px solid #e2e8f0;
@@ -4121,6 +4124,9 @@ html.is-immersive .brand > span:last-child {
   }
   .gear-photos-pair img {
     max-height: 32mm;
+  }
+  .gear-photos.eye-defect-figs img.diagram {
+    max-height: 78mm;
   }
   .gear-photo-single {
     max-width: 55% !important;
