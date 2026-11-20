@@ -971,6 +971,29 @@ svg.diagram.diagram-lg {
 .gear-photos-pair img {
   height: 168px;
 }
+.gear-photos.eye-defect-figs {
+  margin: 10px 0 6px;
+}
+.gear-photos.eye-defect-figs .diagram {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: #fff;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+}
+.gear-photos.eye-defect-figs figcaption {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--green-800);
+  text-align: center;
+}
+@media (max-width: 700px) {
+  .gear-photos.eye-defect-figs {
+    grid-template-columns: 1fr;
+  }
+}
 .gear-photo-single {
   max-width: 320px;
   margin: 10px auto 6px;
