@@ -1002,6 +1002,20 @@ svg.diagram.diagram-lg {
   margin: 10px auto 6px;
   text-align: center;
 }
+.gear-photo-single.color-mix-fig {
+  max-width: 280px;
+}
+.gear-photo-single.color-mix-fig img.diagram {
+  height: auto;
+  max-height: 280px;
+}
+.gear-photo-single.color-mix-fig figcaption {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--green-800);
+  text-align: center;
+}
 .gear-photo-single img {
   display: block;
   width: 100%;
@@ -4127,6 +4141,13 @@ html.is-immersive .brand > span:last-child {
   }
   .gear-photos.eye-defect-figs img.diagram {
     max-height: 78mm;
+  }
+  .gear-photo-single.color-mix-fig {
+    max-width: 55mm !important;
+  }
+  .gear-photo-single.color-mix-fig img.diagram {
+    max-height: 50mm;
+    height: auto;
   }
   .gear-photo-single {
     max-width: 55% !important;
