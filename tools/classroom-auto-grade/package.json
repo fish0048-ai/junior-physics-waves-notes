@@ -1,0 +1,24 @@
+{
+  "name": "classroom-auto-grade",
+  "version": "2.0.0",
+  "private": true,
+  "description": "本機檢查學生紙本是否自行批改與訂正（不對答案、不計分；不接 Classroom API）",
+  "type": "module",
+  "bin": {
+    "classroom-auto-grade": "./bin/grade.js"
+  },
+  "scripts": {
+    "check": "node bin/grade.js",
+    "grade": "node bin/grade.js",
+    "test": "node --test test/*.test.js",
+    "demo": "node bin/grade.js --input fixtures/submissions --out reports --provider mock --title 樣例：自行批改訂正檢查"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.24.0",
+    "adm-zip": "^0.5.16",
+    "dotenv": "^16.4.7"
+  }
+}
