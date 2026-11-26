@@ -1016,6 +1016,21 @@ svg.diagram.diagram-lg {
   color: var(--green-800);
   text-align: center;
 }
+.gear-photo-single.color-attrs-fig {
+  max-width: 420px;
+}
+.gear-photo-single.color-attrs-fig img.diagram {
+  height: auto;
+  max-height: 320px;
+  background: #0f172a;
+}
+.gear-photo-single.color-attrs-fig figcaption {
+  margin-top: 4px;
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--green-800);
+  text-align: center;
+}
 .gear-photo-single img {
   display: block;
   width: 100%;
@@ -4147,6 +4162,13 @@ html.is-immersive .brand > span:last-child {
   }
   .gear-photo-single.color-mix-fig img.diagram {
     max-height: 50mm;
+    height: auto;
+  }
+  .gear-photo-single.color-attrs-fig {
+    max-width: 85mm !important;
+  }
+  .gear-photo-single.color-attrs-fig img.diagram {
+    max-height: 58mm;
     height: auto;
   }
   .gear-photo-single {

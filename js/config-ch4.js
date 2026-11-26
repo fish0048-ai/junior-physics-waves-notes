@@ -78,7 +78,7 @@ window.APP_CONFIG = {
       exam: "exams/4-5.html",
       ready: true,
       ask: "白光裡真的藏著彩虹嗎？",
-      summary: "色散、物體顏色、色光與色料三原色"
+      summary: "色散、物體顏色、色光與色料三原色；色相／明度／彩度"
     }
   ]
 };
