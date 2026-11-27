@@ -61,6 +61,7 @@ window.APP_CONFIG = {
       title: "色光與顏色的關係",
       file: "sections/lab-4-5.html",
       ready: true,
+      sheet: "sections/lab-4-5-sheet.html",
       ask: "紅光照到白紙和綠紙，看起來會一樣嗎？",
       summary: "暗箱、色紙、吸收與反射"
     },
