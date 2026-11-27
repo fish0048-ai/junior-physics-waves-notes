@@ -2234,6 +2234,16 @@ ol.q li, ul.q li { margin: 5px 0; }
   min-width: 0;
   margin: 8px 0;
 }
+.two-col > .ex-box {
+  min-width: 0;
+  margin-top: 0;
+}
+.two-col .formula {
+  max-width: 100%;
+}
+.two-col .katex-display {
+  margin: 0.4em 0;
+}
 
 .footer {
   text-align: center;
