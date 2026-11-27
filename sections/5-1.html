@@ -371,13 +371,14 @@
         <div class="badge calc">算</div>
         <div>
           <h2>計算演練　溫標換算</h2>
-          <p>先對齊冰點沸點，再交叉相乘</p>
+          <p>先對齊冰點沸點，再交叉相乘（範例＋類題）</p>
         </div>
       </div>
       <p class="formula">\[\dfrac{\,^{\circ}N-B}{A-B}=\dfrac{\,^{\circ}\mathrm{C}}{100}=\dfrac{\,^{\circ}\mathrm{F}-32}{180}\]</p>
+      <p class="tips">口訣：\(^{\circ}\mathrm{F}=\dfrac{9}{5}\,^{\circ}\mathrm{C}+32\)，反過來 \(^{\circ}\mathrm{C}=\dfrac{5}{9}(\,^{\circ}\mathrm{F}-32)\)。自製溫標先找冰點 \(B\)、沸點 \(A\)，再用比例。</p>
       <div class="two-col">
         <section class="ex-box skill">
-          <div class="ex-title"><span class="tag tag-blue">範例 1</span></div>
+          <div class="ex-title"><span class="tag tag-blue">範例 1</span> °F → °C</div>
           <p>美國雜誌寫「嬰兒洗澡最佳水溫約 104°F」。約等於多少 °C？</p>
           <p>解：</p>
           <p class="formula">\[\,^{\circ}\mathrm{C}=\dfrac{5}{9}(104-32)=\dfrac{5}{9}\times 72\]</p>
@@ -387,12 +388,106 @@
           </p>
         </section>
         <section class="ex-box skill">
-          <div class="ex-title"><span class="tag tag-blue">類題 1</span></div>
+          <div class="ex-title"><span class="tag tag-blue">類題 1</span> 自製溫標 → °F</div>
           <p>自製溫度計：1 大氣壓下水的冰點 50°X、沸點 140°X。則 100°X 相當於多少 °F？</p>
           <p>解：</p>
           <p class="formula">\[\dfrac{100-50}{140-50}=\dfrac{\,^{\circ}\mathrm{F}-32}{180}\quad\Rightarrow\quad \dfrac{50}{90}=\dfrac{\,^{\circ}\mathrm{F}-32}{180}\]</p>
           <p>得 \(^{\circ}\mathrm{F}=\)
             <input class="blank" data-answer="132" style="width:3.5em">。
+          </p>
+        </section>
+      </div>
+      <div class="two-col">
+        <section class="ex-box skill">
+          <div class="ex-title"><span class="tag tag-blue">範例 2</span> °C → °F</div>
+          <p>教室冷氣設在 \(26\,^{\circ}\mathrm{C}\)。合多少 °F？</p>
+          <p>解：</p>
+          <p class="formula">\[\,^{\circ}\mathrm{F}=\dfrac{9}{5}\times 26+32=\dfrac{234}{5}+32\]</p>
+          <p>得
+            <input class="blank" data-answer="78.8|78.8°F|394/5" style="width:4em">
+            \(^{\circ}\mathrm{F}\)。
+          </p>
+        </section>
+        <section class="ex-box skill">
+          <div class="ex-title"><span class="tag tag-blue">類題 2</span> °F → °C</div>
+          <p>天氣預報說「華氏 68 度」。合多少 °C？</p>
+          <p>解：</p>
+          <p class="formula">\[\,^{\circ}\mathrm{C}=\dfrac{5}{9}(68-32)=\dfrac{5}{9}\times 36\]</p>
+          <p>得
+            <input class="blank" data-answer="20" style="width:3em">
+            \(^{\circ}\mathrm{C}\)。
+          </p>
+        </section>
+      </div>
+      <div class="two-col">
+        <section class="ex-box skill">
+          <div class="ex-title"><span class="tag tag-blue">範例 3</span> 改變量</div>
+          <p>水溫從 \(20\,^{\circ}\mathrm{C}\) 升到 \(45\,^{\circ}\mathrm{C}\)。溫度改變了多少 °F？</p>
+          <p>解：改變量 \(\Delta T_{\mathrm{C}}=25\,^{\circ}\mathrm{C}\)，間隔 \(1\,^{\circ}\mathrm{C}=\dfrac{9}{5}\,^{\circ}\mathrm{F}\)。</p>
+          <p class="formula">\[\Delta T_{\mathrm{F}}=\dfrac{9}{5}\times 25\]</p>
+          <p>得
+            <input class="blank" data-answer="45" style="width:3em">
+            \(^{\circ}\mathrm{F}\)（注意：不要先各自換成 °F 再相減也行，但別把 32 加進去）。
+          </p>
+        </section>
+        <section class="ex-box skill">
+          <div class="ex-title"><span class="tag tag-blue">類題 3</span> 改變量</div>
+          <p>水溫從 \(50\,^{\circ}\mathrm{F}\) 升到 \(86\,^{\circ}\mathrm{F}\)。溫度改變了多少 °C？</p>
+          <p>解：\(\Delta T_{\mathrm{F}}=36\,^{\circ}\mathrm{F}\)，\(1\,^{\circ}\mathrm{F}=\dfrac{5}{9}\,^{\circ}\mathrm{C}\)。</p>
+          <p class="formula">\[\Delta T_{\mathrm{C}}=\dfrac{5}{9}\times 36\]</p>
+          <p>得
+            <input class="blank" data-answer="20" style="width:3em">
+            \(^{\circ}\mathrm{C}\)。
+          </p>
+        </section>
+      </div>
+      <div class="two-col">
+        <section class="ex-box skill">
+          <div class="ex-title"><span class="tag tag-blue">範例 4</span> 自製溫標 → °C</div>
+          <p>自製溫度計：冰點 \(0\,^{\circ}\mathrm{Y}\)、沸點 \(50\,^{\circ}\mathrm{Y}\)。讀數 \(20\,^{\circ}\mathrm{Y}\) 合多少 °C？</p>
+          <p>解：</p>
+          <p class="formula">\[\dfrac{20-0}{50-0}=\dfrac{\,^{\circ}\mathrm{C}}{100}\quad\Rightarrow\quad \dfrac{20}{50}=\dfrac{\,^{\circ}\mathrm{C}}{100}\]</p>
+          <p>得
+            <input class="blank" data-answer="40" style="width:3em">
+            \(^{\circ}\mathrm{C}\)。
+          </p>
+        </section>
+        <section class="ex-box skill">
+          <div class="ex-title"><span class="tag tag-blue">類題 4</span> °C → 自製溫標</div>
+          <p>同上 Y 溫標。體溫約 \(37\,^{\circ}\mathrm{C}\) 時，約為多少 °Y？</p>
+          <p>解：</p>
+          <p class="formula">\[\dfrac{\,^{\circ}\mathrm{Y}-0}{50-0}=\dfrac{37}{100}\quad\Rightarrow\quad \,^{\circ}\mathrm{Y}=50\times\dfrac{37}{100}\]</p>
+          <p>得
+            <input class="blank" data-answer="18.5" style="width:3.5em">
+            \(^{\circ}\mathrm{Y}\)。
+          </p>
+        </section>
+      </div>
+      <div class="two-col">
+        <section class="ex-box skill">
+          <div class="ex-title"><span class="tag tag-blue">範例 5</span> 讀數相同？</div>
+          <p>攝氏與華氏讀數相同時，溫度是多少？（令 \(^{\circ}\mathrm{C}=\,^{\circ}\mathrm{F}=x\)）</p>
+          <p>解：</p>
+          <p class="formula">\[x=\dfrac{9}{5}x+32\quad\Rightarrow\quad x-\dfrac{9}{5}x=32\quad\Rightarrow\quad -\dfrac{4}{5}x=32\]</p>
+          <p>得 \(x=\)
+            <input class="blank" data-answer="-40" style="width:3.5em">
+            （即 \(-40\,^{\circ}\mathrm{C}=-40\,^{\circ}\mathrm{F}\)）。
+          </p>
+        </section>
+        <section class="ex-box skill">
+          <div class="ex-title"><span class="tag tag-blue">類題 5</span> 綜合</div>
+          <p>某日氣溫 \(15\,^{\circ}\mathrm{C}\)。（1）合多少 °F？（2）若再升高 \(9\,^{\circ}\mathrm{F}\)，最後約多少 °C？</p>
+          <p>解：（1）</p>
+          <p class="formula">\[\,^{\circ}\mathrm{F}=\dfrac{9}{5}\times 15+32=27+32\]</p>
+          <p>得
+            <input class="blank" data-answer="59" style="width:3em">
+            \(^{\circ}\mathrm{F}\)。
+          </p>
+          <p>（2）升高 \(9\,^{\circ}\mathrm{F}\) 等於升高 \(\dfrac{5}{9}\times 9=\)
+            <input class="blank" data-answer="5" style="width:2.5em">
+            \(^{\circ}\mathrm{C}\)，最後
+            <input class="blank" data-answer="20" style="width:3em">
+            \(^{\circ}\mathrm{C}\)。
           </p>
         </section>
       </div>
