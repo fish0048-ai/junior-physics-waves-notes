@@ -92,10 +92,46 @@ ${bodyBlock}
 <script>
 (function(){
   var done = false;
+  var MAX_EDGE = 960;
+  var JPEG_Q = 0.72;
+  function compressImages() {
+    var imgs = Array.prototype.slice.call(document.querySelectorAll("img"));
+    return Promise.all(imgs.map(function(img) {
+      return new Promise(function(resolve) {
+        function run() {
+          try {
+            if (!img.naturalWidth) return resolve();
+            var maxDim = Math.max(img.naturalWidth, img.naturalHeight);
+            var needsResize = maxDim > MAX_EDGE;
+            var isPng = /\\.png($|\\?)/i.test(img.currentSrc || img.src || "");
+            if (!needsResize && !isPng) return resolve();
+            var scale = needsResize ? (MAX_EDGE / maxDim) : 1;
+            var w = Math.max(1, Math.round(img.naturalWidth * scale));
+            var h = Math.max(1, Math.round(img.naturalHeight * scale));
+            var canvas = document.createElement("canvas");
+            canvas.width = w; canvas.height = h;
+            var ctx = canvas.getContext("2d");
+            if (!ctx) return resolve();
+            ctx.fillStyle = "#fff";
+            ctx.fillRect(0, 0, w, h);
+            ctx.drawImage(img, 0, 0, w, h);
+            img.removeAttribute("srcset");
+            img.src = canvas.toDataURL("image/jpeg", JPEG_Q);
+          } catch (e) {}
+          resolve();
+        }
+        if (img.complete) run();
+        else {
+          img.addEventListener("load", run, {once:true});
+          img.addEventListener("error", function(){ resolve(); }, {once:true});
+        }
+      });
+    }));
+  }
   function go() {
     if (done) return;
     done = true;
-    window.print();
+    compressImages().then(function(){ window.print(); }).catch(function(){ window.print(); });
   }
   function boot() {
     if (document.fonts && document.fonts.ready) {

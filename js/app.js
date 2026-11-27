@@ -523,6 +523,52 @@
     return new Promise((resolve) => window.setTimeout(resolve, ms));
   }
 
+  /** 列印前把大圖壓成 JPEG，避免「另存為 PDF」塞進原圖導致檔案暴衝。 */
+  async function compressImagesForPrint(maxEdge = 960, quality = 0.72) {
+    const imgs = $$("img");
+    const backups = [];
+    const tasks = imgs.map(async (img) => {
+      try {
+        if (!img.complete || img.naturalWidth < 2) return;
+        const maxDim = Math.max(img.naturalWidth, img.naturalHeight);
+        const needsResize = maxDim > maxEdge;
+        const looksHeavy = /\.(png|PNG)$/.test(img.currentSrc || img.src || "") || needsResize;
+        if (!looksHeavy && maxDim <= maxEdge) return;
+        const scale = needsResize ? maxEdge / maxDim : 1;
+        const w = Math.max(1, Math.round(img.naturalWidth * scale));
+        const h = Math.max(1, Math.round(img.naturalHeight * scale));
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return;
+        ctx.fillStyle = "#ffffff";
+        ctx.fillRect(0, 0, w, h);
+        ctx.drawImage(img, 0, 0, w, h);
+        const dataUrl = canvas.toDataURL("image/jpeg", quality);
+        if (!dataUrl || dataUrl.length < 32) return;
+        backups.push({
+          img,
+          src: img.getAttribute("src"),
+          srcset: img.getAttribute("srcset"),
+        });
+        img.removeAttribute("srcset");
+        img.src = dataUrl;
+      } catch (_err) {
+        /* 跨域或壞圖就略過，仍用原圖列印 */
+      }
+    });
+    await Promise.all(tasks);
+    return () => {
+      backups.forEach(({ img, src, srcset }) => {
+        if (src == null) img.removeAttribute("src");
+        else img.setAttribute("src", src);
+        if (srcset == null) img.removeAttribute("srcset");
+        else img.setAttribute("srcset", srcset);
+      });
+    };
+  }
+
   async function printPdf(withAnswers) {
     const snap = collectRevealState();
     const oldTitle = document.title;
@@ -562,6 +608,7 @@
     document.body.classList.add("is-printing");
     document.body.classList.toggle("is-print-answers", !!withAnswers);
     window.NotesLayout?.preparePrintFolios?.();
+    const restoreImages = await compressImagesForPrint();
     let restored = false;
     function restore() {
       if (restored) return;
@@ -569,6 +616,7 @@
       document.title = oldTitle;
       applyRevealState(snap);
       if (typeof restoreScale === "function") restoreScale();
+      if (typeof restoreImages === "function") restoreImages();
       document.body.classList.remove("is-printing", "is-print-answers");
       window.JPWNPrintFolios?.remove?.();
       window.dispatchEvent(new Event("jpwn-after-print"));
